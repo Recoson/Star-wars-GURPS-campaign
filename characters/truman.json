@@ -355,10 +355,10 @@
       "notes": "2× natural healing, extra HP & stamina, +1 kolto saturation tier. Dependency drawback."
     },
     {
-      "name": "Cybernetic respirator",
+      "name": "Memory Implant",
       "cost": 5,
       "mods": [],
-      "notes": "Filter toxins; survive vacuum/water (short)"
+      "notes": "Reroll Knowledge checks. Scholar's & slicer's edge. Needs socket."
     }
   ],
   "weapons": [
@@ -1006,7 +1006,7 @@
     }
   ],
   "combat": {
-    "hp": -181,
+    "hp": null,
     "fp": null,
     "statuses": [],
     "concentrations": [],
@@ -1014,20 +1014,20 @@
     "turn": 0,
     "log": [],
     "wounds": {
-      "Skull": 0,
-      "Face": 0,
-      "Neck": 0,
+      "Skull": 5,
+      "Face": 4,
+      "Neck": 1,
       "Torso": 0,
-      "Vitals": 0,
-      "Groin": 0,
-      "Right Arm": 0,
+      "Vitals": 3,
+      "Groin": 4,
+      "Right Arm": 1,
       "Left Arm": 0,
-      "Right Hand": 0,
-      "Left Hand": 0,
-      "Right Leg": 0,
+      "Right Hand": 2,
+      "Left Hand": 5,
+      "Right Leg": 1,
       "Left Leg": 0,
-      "Right Foot": 0,
-      "Left Foot": 0
+      "Right Foot": 2,
+      "Left Foot": 3
     },
     "inits": []
   },
@@ -1057,7 +1057,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T14:17:04.858Z",
+    "savedAt": "2026-06-05T14:18:21.841Z",
     "savedBy": "Csuman"
   }
 }
