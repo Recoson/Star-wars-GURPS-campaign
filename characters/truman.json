@@ -1082,7 +1082,7 @@
     ],
     "actor": 0
   },
-  "notes": "Imported from Truman_SW.xlsm.\nTrait details from source: Social Stigma (subjugated) = force user; Social Stigma (minority group) / Fanaticism = iktotchi (telepathy & strong); Code of Honor (high) = 'grey code'.\nDefenses (source): Dodge 14, Parry 22 (Force Sword), Parry 22 (Staff), Parry 18 (Brawling), DR 3.\nSource point totals (ignored on import): 833 spent, attrs 537, advantages 110, disadvantages -85, skills 271. hehe gey",
+  "notes": "Imported from Truman_SW.xlsm.\nTrait details from source: Social Stigma (subjugated) = force user; Social Stigma (minority group) / Fanaticism = iktotchi (telepathy & strong); Code of Honor (high) = 'grey code'.\nDefenses (source): Dodge 14, Parry 22 (Force Sword), Parry 22 (Staff), Parry 18 (Brawling), DR 3.\nSource point totals (ignored on import): 833 spent, attrs 537, advantages 110, disadvantages -85, skills 271. ",
   "trainRate": 200,
   "study": [],
   "ptTarget": 1053,
@@ -1094,7 +1094,20 @@
       "wr": 3
     }
   ],
-  "layout": {},
+  "layout": {
+    "sheet#0::Identity": {
+      "x": 0,
+      "y": 411,
+      "w": 1283,
+      "h": 232
+    },
+    "sheet#1::💳 Credits": {
+      "x": 0,
+      "y": 0,
+      "w": 1284,
+      "h": 102
+    }
+  },
   "builder": {
     "droid": {
       "parts": {},
@@ -1108,7 +1121,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T14:30:27.502Z",
+    "savedAt": "2026-06-05T14:31:51.197Z",
     "savedBy": "Csuman"
   },
   "xpForceTrained": 0,
