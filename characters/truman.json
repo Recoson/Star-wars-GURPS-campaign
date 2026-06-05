@@ -139,7 +139,7 @@
       "pts": 8,
       "attr": "IQ",
       "diff": "A",
-      "spec": ""
+      "spec": "Power Systems"
     },
     {
       "name": "",
@@ -166,7 +166,7 @@
       "pts": 4,
       "attr": "DX",
       "diff": "E",
-      "spec": ""
+      "spec": "Cannon"
     },
     {
       "name": "Spacer",
@@ -180,7 +180,7 @@
       "pts": 16,
       "attr": "DX",
       "diff": "A",
-      "spec": ""
+      "spec": "Starfighter"
     },
     {
       "name": "Merchant",
@@ -232,7 +232,7 @@
       "pts": 12,
       "attr": "IQ",
       "diff": "A",
-      "spec": ""
+      "spec": "Special Ops"
     }
   ],
   "traits": [
@@ -1115,7 +1115,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T14:37:33.034Z",
+    "savedAt": "2026-06-05T14:38:38.796Z",
     "savedBy": "Csuman"
   },
   "xpForceTrained": 0,
