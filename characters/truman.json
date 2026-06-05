@@ -13,8 +13,8 @@
   "age": "135",
   "gender": "",
   "hand": "Right",
-  "statusLevel": 5,
-  "wealthLevel": "Wealthy",
+  "statusLevel": 40,
+  "wealthLevel": "Multimillionaire",
   "reputation": "",
   "rank": "adjudicator",
   "react": "",
@@ -1063,7 +1063,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T14:19:22.546Z",
+    "savedAt": "2026-06-05T14:20:58.508Z",
     "savedBy": "Csuman"
   }
 }
