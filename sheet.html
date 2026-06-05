@@ -699,7 +699,7 @@ let C = load() || blankChar();
 // ─────────────────────────────────────────────────────
 // PERSISTENCE
 // ─────────────────────────────────────────────────────
-function save(){try{localStorage.setItem(ACTIVE_STORE_KEY,JSON.stringify(C));flashSave()}catch(e){}}
+function save(){try{localStorage.setItem(ACTIVE_STORE_KEY,JSON.stringify(C));flashSave()}catch(e){};try{cloudTouch()}catch(e){}}
 function load(){try{const s=localStorage.getItem(ACTIVE_STORE_KEY);return s?JSON.parse(s):null}catch(e){return null}}
 function touch(){clearTimeout(saveTimer);saveTimer=setTimeout(save,400)}
 function flashSave(){const el=document.getElementById('saveIndicator');if(!el)return;el.textContent='● SAVED';el.style.color='var(--green)';setTimeout(()=>{el.textContent='● AUTO'},900)}
@@ -767,15 +767,28 @@ async function cloudInit(){
   C=mergeChar(cloud);save();renderAll();
  }
 }
-async function cloudSave(){
- let id=CHAR_ID;
- if(!id){
-  id=prompt('Save to cloud as (character id):',charSlug(C.name));
-  if(!id)return; id=charSlug(id);
- }
- const t=ghToken(); if(!t)return;
+// Cloud autosave: any edit schedules a push CLOUD_AUTOSAVE_MS after the
+// last change (per burst); closing/hiding the tab pushes immediately.
+// Runs only when a character is open (?char=) and a token is stored.
+var CLOUD_AUTOSAVE_MS=60000;
+let _cloudDirty=false,_cloudTimer=null,_cloudBusy=false;
+function cloudTouch(){
+ if(!CHAR_ID)return;
+ let t=null;try{t=localStorage.getItem('kotor_gh_token')}catch(e){}
+ if(!t)return;
+ _cloudDirty=true;
+ if(_cloudTimer)return;
+ _cloudTimer=setTimeout(()=>{_cloudTimer=null;
+  let tk=null;try{tk=localStorage.getItem('kotor_gh_token')}catch(e){}
+  if(_cloudDirty&&tk)_cloudWrite(CHAR_ID,tk,true);
+ },CLOUD_AUTOSAVE_MS);
+}
+async function _cloudWrite(id,t,silent){
+ if(_cloudBusy){_cloudDirty=true;return false}
+ _cloudBusy=true;
  const el=document.getElementById('saveIndicator'); if(el)el.textContent='● CLOUD…';
  try{
+  _cloudDirty=false;
   C._meta=Object.assign({},C._meta,{savedAt:new Date().toISOString(),savedBy:C.player||C.name||''});
   const existing=await ghGetFile('characters/'+id+'.json');
   const body={message:'Update character: '+(C.name||id),branch:GH_BRANCH,content:b64u(JSON.stringify(C,null,2))};
@@ -784,17 +797,40 @@ async function cloudSave(){
    method:'PUT',
    headers:{'Accept':'application/vnd.github+json','Authorization':'Bearer '+t,'Content-Type':'application/json'},
    body:JSON.stringify(body)});
-  if(r.status===401||r.status===403){try{localStorage.removeItem('kotor_gh_token')}catch(e){};throw new Error('token rejected ('+r.status+'). It was cleared — click ☁ Save again with a valid token.')}
+  if(r.status===401||r.status===403){try{localStorage.removeItem('kotor_gh_token')}catch(e){};throw new Error('token rejected ('+r.status+'). It was cleared — click ☁ Save and enter a valid token.')}
   if(r.status===409)throw new Error('conflict — someone saved this character meanwhile. Reload the page (your local copy is safe) and save again.');
   if(!r.ok)throw new Error('GitHub '+r.status+': '+(await r.text()).slice(0,180));
-  save();
-  if(!CHAR_ID){try{const u=new URL(location.href);u.searchParams.set('char',id);history.replaceState(null,'',u)}catch(e){}}
+  try{localStorage.setItem(ACTIVE_STORE_KEY,JSON.stringify(C))}catch(e){}
   if(el){el.textContent='● CLOUD ✓';el.style.color='var(--green)';setTimeout(()=>{el.textContent='● AUTO'},1600)}
+  _cloudBusy=false;
+  if(_cloudDirty)cloudTouch();
+  return true;
  }catch(e){
+  _cloudBusy=false;_cloudDirty=true;
   if(el){el.textContent='● CLOUD ✗';setTimeout(()=>{el.textContent='● AUTO'},2600)}
-  alert('Cloud save failed: '+e.message);
+  if(!silent)alert('Cloud save failed: '+e.message);
+  return false;
  }
 }
+async function cloudSave(){
+ let id=CHAR_ID;
+ if(!id){
+  id=prompt('Save to cloud as (character id):',charSlug(C.name));
+  if(!id)return; id=charSlug(id);
+ }
+ const t=ghToken(); if(!t)return;
+ const ok=await _cloudWrite(id,t,false);
+ if(ok&&!CHAR_ID){
+  // first cloud save of a new character: reopen under its cloud identity
+  try{const u=new URL(location.href);u.searchParams.set('char',id);location.href=u.toString()}catch(e){}
+ }
+}
+document.addEventListener('visibilitychange',()=>{
+ if(document.visibilityState==='hidden'&&_cloudDirty&&CHAR_ID){
+  let t=null;try{t=localStorage.getItem('kotor_gh_token')}catch(e){}
+  if(t){if(_cloudTimer){clearTimeout(_cloudTimer);_cloudTimer=null}_cloudWrite(CHAR_ID,t,true)}
+ }
+});
 async function openCharPicker(){
  let list=[];
  try{
