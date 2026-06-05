@@ -953,7 +953,13 @@
     "droidParts": [],
     "cyber": []
   },
-  "conditions": {},
+  "conditions": {
+    "prone": false,
+    "hidden": false,
+    "blinded": false,
+    "restrained": false,
+    "pinned": false
+  },
   "credits": 669583,
   "creditLog": [
     {
@@ -1006,7 +1012,7 @@
     }
   ],
   "combat": {
-    "hp": null,
+    "hp": -39,
     "fp": null,
     "statuses": [],
     "concentrations": [],
@@ -1014,20 +1020,20 @@
     "turn": 0,
     "log": [],
     "wounds": {
-      "Skull": 5,
-      "Face": 4,
-      "Neck": 1,
+      "Skull": 0,
+      "Face": 0,
+      "Neck": 0,
       "Torso": 0,
-      "Vitals": 3,
-      "Groin": 4,
-      "Right Arm": 1,
+      "Vitals": 0,
+      "Groin": 0,
+      "Right Arm": 0,
       "Left Arm": 0,
-      "Right Hand": 2,
-      "Left Hand": 5,
-      "Right Leg": 1,
+      "Right Hand": 0,
+      "Left Hand": 0,
+      "Right Leg": 0,
       "Left Leg": 0,
-      "Right Foot": 2,
-      "Left Foot": 3
+      "Right Foot": 0,
+      "Left Foot": 0
     },
     "inits": []
   },
@@ -1057,7 +1063,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T14:18:21.841Z",
+    "savedAt": "2026-06-05T14:19:22.546Z",
     "savedBy": "Csuman"
   }
 }
