@@ -1094,32 +1094,7 @@
       "wr": 3
     }
   ],
-  "layout": {
-    "sheet#2::[left-column]": {
-      "x": 0,
-      "y": 0,
-      "w": 744,
-      "h": 671
-    },
-    "sheet#2::Skills (quick ref)": {
-      "x": 0,
-      "y": 0,
-      "w": 528,
-      "h": 876
-    },
-    "sheet#3::Attacks": {
-      "x": 0,
-      "y": 0,
-      "w": 1284,
-      "h": 138
-    },
-    "sheet#4::Active Styles": {
-      "x": 0,
-      "y": 0,
-      "w": 1284,
-      "h": 132
-    }
-  },
+  "layout": {},
   "builder": {
     "droid": {
       "parts": {},
@@ -1133,7 +1108,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T14:32:52.785Z",
+    "savedAt": "2026-06-05T14:33:57.857Z",
     "savedBy": "Csuman"
   },
   "xpForceTrained": 0,
