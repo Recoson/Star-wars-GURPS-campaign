@@ -400,7 +400,13 @@
       }
     }
   },
-  "forms": [],
+  "forms": [
+    {
+      "name": "Form IX: Saberstaff",
+      "tier": 5,
+      "active": false
+    }
+  ],
   "techniques": [
     {
       "name": "Saber Throw",
@@ -416,6 +422,34 @@
     },
     {
       "name": "Bolt Deflection",
+      "active": false
+    },
+    {
+      "name": "Sokan",
+      "active": false
+    },
+    {
+      "name": "Trakata",
+      "active": false
+    },
+    {
+      "name": "Blade Barrier",
+      "active": false
+    },
+    {
+      "name": "Guided Strike",
+      "active": false
+    },
+    {
+      "name": "Sundering Strike",
+      "active": false
+    },
+    {
+      "name": "Saber Split",
+      "active": false
+    },
+    {
+      "name": "Force Cadence",
       "active": false
     }
   ],
@@ -540,7 +574,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T13:21:53.441Z",
+    "savedAt": "2026-06-05T13:23:04.994Z",
     "savedBy": "Csuman"
   }
 }
