@@ -1095,17 +1095,29 @@
     }
   ],
   "layout": {
-    "sheet#0::Identity": {
+    "sheet#2::[left-column]": {
       "x": 0,
-      "y": 411,
-      "w": 1283,
-      "h": 232
+      "y": 0,
+      "w": 744,
+      "h": 671
     },
-    "sheet#1::💳 Credits": {
+    "sheet#2::Skills (quick ref)": {
+      "x": 0,
+      "y": 0,
+      "w": 528,
+      "h": 876
+    },
+    "sheet#3::Attacks": {
       "x": 0,
       "y": 0,
       "w": 1284,
-      "h": 102
+      "h": 138
+    },
+    "sheet#4::Active Styles": {
+      "x": 0,
+      "y": 0,
+      "w": 1284,
+      "h": 132
     }
   },
   "builder": {
@@ -1121,7 +1133,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T14:31:51.197Z",
+    "savedAt": "2026-06-05T14:32:52.785Z",
     "savedBy": "Csuman"
   },
   "xpForceTrained": 0,
