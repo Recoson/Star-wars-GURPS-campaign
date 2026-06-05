@@ -547,7 +547,122 @@
       "hfNow": 6
     }
   ],
-  "droids": [],
+  "droids": [
+    {
+      "name": "2-1B Surgical Droid",
+      "deg": "1st",
+      "size": "SM 0",
+      "hp": 28,
+      "hpMax": 28,
+      "dr": 6,
+      "iq": 12,
+      "move": 4,
+      "weapons": "Surgery 15; Diagnosis 14",
+      "skills": "",
+      "cost": 54000,
+      "notes": "Galactic standard surgeon. Common in major medcentres.",
+      "fn": "Surgeon",
+      "parts": [
+        {
+          "cat": "Chassis",
+          "name": "Frame & shell",
+          "status": "ok"
+        },
+        {
+          "cat": "Core",
+          "name": "Logic core",
+          "status": "ok"
+        },
+        {
+          "cat": "Power",
+          "name": "Power cell",
+          "status": "ok"
+        },
+        {
+          "cat": "Mobility",
+          "name": "Locomotion system",
+          "status": "ok"
+        },
+        {
+          "cat": "Sensors",
+          "name": "Photoreceptor cluster",
+          "status": "ok"
+        },
+        {
+          "cat": "Manipulators",
+          "name": "Manipulator arms",
+          "status": "ok"
+        },
+        {
+          "cat": "Comms",
+          "name": "Comms suite",
+          "status": "ok"
+        },
+        {
+          "cat": "Programming",
+          "name": "Behavioral core",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "R7 advanced astromech",
+      "deg": "2nd",
+      "size": "SM-2",
+      "hp": 24,
+      "hpMax": 24,
+      "dr": 10,
+      "iq": 11,
+      "move": 5,
+      "weapons": "Astrogation 14; Mechanic 13",
+      "skills": "",
+      "cost": 42000,
+      "notes": "Premium R-series. Newer architecture.",
+      "fn": "Astromech",
+      "parts": [
+        {
+          "cat": "Chassis",
+          "name": "Frame & shell",
+          "status": "ok"
+        },
+        {
+          "cat": "Core",
+          "name": "Logic core",
+          "status": "ok"
+        },
+        {
+          "cat": "Power",
+          "name": "Power cell",
+          "status": "ok"
+        },
+        {
+          "cat": "Mobility",
+          "name": "Locomotion system",
+          "status": "ok"
+        },
+        {
+          "cat": "Sensors",
+          "name": "Photoreceptor cluster",
+          "status": "ok"
+        },
+        {
+          "cat": "Manipulators",
+          "name": "Manipulator arms",
+          "status": "ok"
+        },
+        {
+          "cat": "Comms",
+          "name": "Comms suite",
+          "status": "ok"
+        },
+        {
+          "cat": "Programming",
+          "name": "Behavioral core",
+          "status": "ok"
+        }
+      ]
+    }
+  ],
   "customDB": {
     "weapons": [],
     "armour": [],
@@ -666,7 +781,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T13:25:23.019Z",
+    "savedAt": "2026-06-05T13:26:28.205Z",
     "savedBy": "Csuman"
   }
 }
