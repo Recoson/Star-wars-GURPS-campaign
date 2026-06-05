@@ -7,7 +7,7 @@
   "species": "Iktotchi",
   "tl": 10,
   "sm": 0,
-  "appearance": "Transcendent",
+  "appearance": "Beautiful",
   "height": "",
   "weight": "",
   "age": "135",
@@ -533,7 +533,7 @@
     },
     "tradition": "",
     "darkSurgeLog": [],
-    "activeBook": "Bonded Blade",
+    "activeBook": "Concordance",
     "training": {
       "Common Force": {
         "tier": 1,
@@ -591,7 +591,8 @@
         "mentor": "",
         "log": []
       }
-    }
+    },
+    "viewBook": "Bonded Blade"
   },
   "forms": [
     {
@@ -1037,7 +1038,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T13:35:53.625Z",
+    "savedAt": "2026-06-05T13:51:17.285Z",
     "savedBy": "Csuman"
   }
 }
