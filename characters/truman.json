@@ -274,7 +274,8 @@
       "levels": 1,
       "enh": [],
       "lim": [],
-      "varCost": 0
+      "varCost": 0,
+      "_mods": false
     },
     {
       "name": "Damage Resistance_Normal",
@@ -341,7 +342,25 @@
       "varCost": 0
     }
   ],
-  "cyber": [],
+  "cyber": [
+    {
+      "name": "Regenerative / Cardio Implant",
+      "cost": 25,
+      "mods": [
+        {
+          "target": "HP",
+          "value": 2
+        }
+      ],
+      "notes": "2× natural healing, extra HP & stamina, +1 kolto saturation tier. Dependency drawback."
+    },
+    {
+      "name": "",
+      "cost": 0,
+      "mods": [],
+      "notes": ""
+    }
+  ],
   "weapons": [
     {
       "name": "Double-bladed lightsaber",
@@ -1038,7 +1057,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T14:14:48.897Z",
+    "savedAt": "2026-06-05T14:16:00.834Z",
     "savedBy": "Csuman"
   }
 }
