@@ -149,10 +149,10 @@
       "spec": ""
     },
     {
-      "name": "Blasters",
-      "spec": "Pistol",
+      "name": "Ion Pistol",
+      "spec": "",
       "attr": "DX",
-      "diff": "E",
+      "diff": "A",
       "pts": 9
     },
     {
@@ -657,7 +657,7 @@
       "shieldNow": 75,
       "hpMax": 1100,
       "hpNow": 1100,
-      "weapons": "2\u00d7 light blaster turrets",
+      "weapons": "2× light blaster turrets",
       "crew": "2",
       "fuel": "30/6",
       "cost": "450,000",
@@ -1038,7 +1038,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T14:11:35.000Z",
-    "savedBy": "James (skill-name fix \u2014 reload to accept)"
+    "savedAt": "2026-06-05T14:10:01.297Z",
+    "savedBy": "Csuman"
   }
 }
