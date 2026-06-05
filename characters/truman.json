@@ -987,7 +987,7 @@
     }
   ],
   "combat": {
-    "hp": -60,
+    "hp": -181,
     "fp": null,
     "statuses": [],
     "concentrations": [],
@@ -1038,7 +1038,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T14:13:40.412Z",
+    "savedAt": "2026-06-05T14:14:48.897Z",
     "savedBy": "Csuman"
   }
 }
