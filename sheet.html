@@ -680,7 +680,7 @@ function blankChar(){
   skills:[],traits:[],cyber:[],
   weapons:[],armour:[],shields:[],
   explosives:[],gear:[],inventory:[],
-  force:{primary:'IQ',bonded:false,saberPoints:0,powers:[],books:{},bookTiers:{},tradition:''},
+  force:{primary:'IQ',bonded:false,saberPoints:0,powers:[],books:{},bookTiers:{},tradition:'',activeBook:'',viewBook:''},
   forms:[],techniques:[],stances:[],vehicles:[],droids:[],customDB:{weapons:[],armour:[],shields:[],explosives:[],gear:[]},
   conditions:{},
   credits:0,creditLog:[],
@@ -3093,8 +3093,12 @@ function renderForce(){
  const bookNames=[...new Set(FORCE_POWERS.map(p=>p.book))];
  const enabledBooks=bookNames.filter(b=>(C.force.books||{})[b]);
  if(!enabledBooks.includes(C.force.activeBook)) C.force.activeBook=enabledBooks[0]||'';
+ // viewBook = which enabled book the power browser is showing. Independent of
+ // the Primary tradition (activeBook): browsing other known books must NOT
+ // change your Primary or its rules.
+ if(!enabledBooks.includes(C.force.viewBook)) C.force.viewBook=C.force.activeBook||enabledBooks[0]||'';
  (C.force.powers||[]).forEach(p=>{if(p.name&&!p.book){const d=FORCE_POWERS.find(x=>x.name===p.name);if(d)p.book=d.book;}});
- const aBook=C.force.activeBook;
+ const aBook=C.force.viewBook;
 
  el.innerHTML=`
  <div class="char-grid">
@@ -3134,14 +3138,15 @@ function renderForce(){
    return `<button onclick="setForceBook('${b}')" style="cursor:pointer;border:1px solid ${on?'var(--cyan)':'var(--line,#394150)'};background:${on?'var(--cyan)':'transparent'};color:${on?'#0b1220':'var(--text2)'};font-weight:${on?'600':'400'};border-radius:6px;padding:4px 11px;font-size:12px">${esc(b)}${cnt?` <span style="opacity:.65">(${cnt})</span>`:''}</button>`;}).join('')}
  </div>
  <div class="sec-head" style="margin-top:0"><span style="color:var(--cyan)">${esc(aBook)}</span>
+  ${aBook===C.force.activeBook?'<span style="font-size:10px;font-weight:700;color:var(--amber);margin-left:6px">★ PRIMARY</span>':''}
   <span class="dim" style="font-weight:400;font-size:11px;margin-left:8px">— tick a power to mark it known</span>
   <span style="float:right;color:var(--text2);font-weight:400;font-size:11px">${esc(aBook)} pts: <b style="color:var(--amber)">${bookPts(aBook)}</b></span></div>
  ${bookLevelSelector(aBook)}
  ${forceBookChecklist(aBook)}`:`<div class="dim" style="padding:10px 2px">Tick a book under <b>Active Books</b> above and its powers — grouped by tier — will appear here to select.</div>`}
  <div class="dim" style="font-size:11px;margin-top:10px">Lightsaber Forms &amp; form-neutral Techniques are managed on the <b style="color:var(--cyan)">Stances &amp; Forms</b> tab — learn them, set their tier, and activate them there. Active modifiers flow into your sheet automatically.</div>${forceTrainingSection()}${customForcePowersSection()}`;
 }
-function addForcePower(book){C.force.powers=C.force.powers||[];C.force.powers.push({name:'',tier:1,pts:5,book:book||C.force.activeBook||''});touch();renderForce()}
-function setForceBook(b){C.force.activeBook=b;touch();renderForce();}
+function addForcePower(book){C.force.powers=C.force.powers||[];C.force.powers.push({name:'',tier:1,pts:5,book:book||C.force.viewBook||C.force.activeBook||''});touch();renderForce()}
+function setForceBook(b){C.force.viewBook=b;touch();renderForce();}
 function setForcePower(i,name){
  const db=FORCE_POWERS.find(x=>x.name===name);
  const prev=(C.force.powers[i]||{});
