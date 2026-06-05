@@ -375,40 +375,16 @@
   "inventory": [],
   "force": {
     "morality": 50,
-    "primary": "DX",
+    "primary": "ST",
     "bonded": false,
     "saberPoints": 0,
     "conflict": 0,
     "channeling": false,
     "powers": [
       {
-        "name": "Blade Velocity",
-        "skill": "DX (blade)",
-        "fp": "var",
-        "tier": 1,
-        "pts": 5,
-        "book": "Bonded Blade"
-      },
-      {
         "name": "Force Torrent",
         "skill": "ST (blade)",
         "fp": "2",
-        "tier": 1,
-        "pts": 5,
-        "book": "Bonded Blade"
-      },
-      {
-        "name": "Force Vessel",
-        "skill": "Will (blade)",
-        "fp": "var",
-        "tier": 1,
-        "pts": 5,
-        "book": "Bonded Blade"
-      },
-      {
-        "name": "Tempered Blade",
-        "skill": "HT (blade)",
-        "fp": "3",
         "tier": 1,
         "pts": 5,
         "book": "Bonded Blade"
@@ -1055,7 +1031,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T13:32:32.995Z",
+    "savedAt": "2026-06-05T13:34:36.877Z",
     "savedBy": "Csuman"
   }
 }
