@@ -233,6 +233,13 @@
       "attr": "IQ",
       "diff": "A",
       "spec": ""
+    },
+    {
+      "name": "Blaster (Pistol)",
+      "pts": 1,
+      "attr": "DX",
+      "diff": "E",
+      "spec": ""
     }
   ],
   "traits": [
@@ -1038,7 +1045,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T13:54:29.552Z",
+    "savedAt": "2026-06-05T13:58:48.345Z",
     "savedBy": "Csuman"
   }
 }
