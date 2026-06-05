@@ -380,22 +380,184 @@
     "saberPoints": 0,
     "conflict": 0,
     "channeling": false,
-    "powers": [],
+    "powers": [
+      {
+        "name": "Blade Velocity",
+        "skill": "DX (blade)",
+        "fp": "var",
+        "tier": 1,
+        "pts": 5,
+        "book": "Bonded Blade"
+      },
+      {
+        "name": "Force Torrent",
+        "skill": "ST (blade)",
+        "fp": "2",
+        "tier": 1,
+        "pts": 5,
+        "book": "Bonded Blade"
+      },
+      {
+        "name": "Force Vessel",
+        "skill": "Will (blade)",
+        "fp": "var",
+        "tier": 1,
+        "pts": 5,
+        "book": "Bonded Blade"
+      },
+      {
+        "name": "Tempered Blade",
+        "skill": "HT (blade)",
+        "fp": "3",
+        "tier": 1,
+        "pts": 5,
+        "book": "Bonded Blade"
+      },
+      {
+        "name": "Animal Bond",
+        "skill": "IQ",
+        "fp": "2",
+        "tier": 1,
+        "pts": 5,
+        "book": "Living Path"
+      },
+      {
+        "name": "Cure Poison",
+        "skill": "IQ",
+        "fp": "4",
+        "tier": 1,
+        "pts": 5,
+        "book": "Living Path"
+      },
+      {
+        "name": "Force Empathy",
+        "skill": "IQ",
+        "fp": "1",
+        "tier": 1,
+        "pts": 5,
+        "book": "Living Path"
+      },
+      {
+        "name": "Force Guidance",
+        "skill": "IQ",
+        "fp": "1",
+        "tier": 1,
+        "pts": 5,
+        "book": "Living Path"
+      },
+      {
+        "name": "Force Soothing",
+        "skill": "IQ",
+        "fp": "1",
+        "tier": 1,
+        "pts": 5,
+        "book": "Living Path"
+      },
+      {
+        "name": "Truth-Sense",
+        "skill": "IQ",
+        "fp": "2",
+        "tier": 1,
+        "pts": 5,
+        "book": "Living Path"
+      },
+      {
+        "name": "Affect Mind",
+        "skill": "IQ",
+        "fp": "1",
+        "tier": 2,
+        "pts": 10,
+        "book": "Living Path"
+      },
+      {
+        "name": "Cure Disease",
+        "skill": "IQ",
+        "fp": "8",
+        "tier": 2,
+        "pts": 10,
+        "book": "Living Path"
+      },
+      {
+        "name": "Force Aura",
+        "skill": "IQ",
+        "fp": "1",
+        "tier": 2,
+        "pts": 10,
+        "book": "Living Path"
+      },
+      {
+        "name": "Force Heal",
+        "skill": "IQ",
+        "fp": "2",
+        "tier": 2,
+        "pts": 10,
+        "book": "Living Path"
+      },
+      {
+        "name": "Force Resolve",
+        "skill": "IQ",
+        "fp": "1",
+        "tier": 2,
+        "pts": 10,
+        "book": "Living Path"
+      },
+      {
+        "name": "Force Shelter",
+        "skill": "IQ",
+        "fp": "1",
+        "tier": 2,
+        "pts": 10,
+        "book": "Living Path"
+      },
+      {
+        "name": "Force Valor",
+        "skill": "IQ",
+        "fp": "6",
+        "tier": 2,
+        "pts": 10,
+        "book": "Living Path"
+      },
+      {
+        "name": "Ionize",
+        "skill": "IQ",
+        "fp": "3",
+        "tier": 2,
+        "pts": 10,
+        "book": "Living Path"
+      },
+      {
+        "name": "Electric Judgment",
+        "skill": "IQ",
+        "fp": "2",
+        "tier": 3,
+        "pts": 20,
+        "book": "Living Path"
+      },
+      {
+        "name": "Force Barrier",
+        "skill": "IQ",
+        "fp": "8",
+        "tier": 3,
+        "pts": 20,
+        "book": "Living Path"
+      }
+    ],
     "books": {
       "Common Force": true,
       "Bonded Blade": true,
-      "Living Path": true,
+      "Living Path": false,
       "Concordance": true,
       "The Hollowing": true,
       "Inscribed Voice": true,
-      "Unchained Path": true
+      "Unchained Path": true,
+      "Minor Traditions": true
     },
     "bookTiers": {
       "Common Force": 3
     },
     "tradition": "",
     "darkSurgeLog": [],
-    "activeBook": "Common Force",
+    "activeBook": "Bonded Blade",
     "training": {
       "Common Force": {
         "tier": 1,
@@ -440,6 +602,13 @@
         "log": []
       },
       "Unchained Path": {
+        "tier": 1,
+        "hours": 0,
+        "regimen": "Open Hours",
+        "mentor": "",
+        "log": []
+      },
+      "Minor Traditions": {
         "tier": 1,
         "hours": 0,
         "regimen": "Open Hours",
@@ -886,7 +1055,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T13:29:04.209Z",
+    "savedAt": "2026-06-05T13:30:04.389Z",
     "savedBy": "Csuman"
   }
 }
