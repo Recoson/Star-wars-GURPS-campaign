@@ -4847,9 +4847,14 @@ const GTIP={ST:'Strength — melee damage, lifting, HP. 10 = average human.',DX:
 function _roll1d(){return Math.floor(Math.random()*6)+1;}
 function rollDice(n,mod){ n=Math.max(0,+n||0); mod=+mod||0; const rolls=[]; let sum=0; for(let i=0;i<n;i++){const r=_roll1d();rolls.push(r);sum+=r;} return {rolls, sum:sum+mod, mod, total:sum+mod}; }
 /* parse a GURPS dice string like "8d+8", "3d", "1d-2", "6dx2(10)" -> {n, mod, mult, ad} */
-function parseDmg(str){ if(!str)return null; str=(''+str).replace(/\s/g,''); const ad=(str.match(/\((\d+(?:\.\d+)?)\)/)||[])[1]; const mult=(str.match(/[x×](\d+)/i)||[])[1]; const m=str.match(/(\d+)d([+\-]\d+)?/i); if(!m)return null; return {n:+m[1], mod:+(m[2]||0), mult:+(mult||1), ad:+(ad||1)}; }
+function parseDmg(str){ if(!str)return null; str=(''+str).replace(/\s/g,'');
+ const ad=(str.match(/\((\d+(?:\.\d+)?)\)/)||[])[1]; str=str.replace(/\(\d+(?:\.\d+)?\)/,'');
+ // Nd [+pre] [×M] [+post] — a mod before the multiplier is multiplied with the
+ // dice ("6d+1×3" = (6d+1)×3); a mod after it is added last ("6d×2+5" = (6d×2)+5)
+ const m=str.match(/(\d+)d([+\-]\d+)?(?:[x×](\d+))?([+\-]\d+)?/i); if(!m)return null;
+ return {n:+m[1], mod:+(m[2]||0), mult:+(m[3]||1), ad:+(ad||1), post:+(m[4]||0)}; }
 /* roll a parsed damage spec, applying multiplier */
-function rollDmgSpec(spec){ if(!spec)return null; const r=rollDice(spec.n,spec.mod); let total=r.total*spec.mult; total=Math.max(0,total); return {rolls:r.rolls, base:r.total, mult:spec.mult, ad:spec.ad, total}; }
+function rollDmgSpec(spec){ if(!spec)return null; const r=rollDice(spec.n,spec.mod); let total=r.total*spec.mult+(+spec.post||0); total=Math.max(0,total); return {rolls:r.rolls, base:r.total, mult:spec.mult, ad:spec.ad, total}; }
 /* WOUND mult by damage type code */
 function woundMult(dtype){ if(!dtype)return 1; const d=(''+dtype).toLowerCase(); const order=['pi++','pi+','pi-','pi','imp','cut','cr','burn','tox','cor','fat','son','ion']; for(const k of order){ if(d.includes(k)) return (typeof WOUND_MULT!=='undefined'&&WOUND_MULT[k]!=null)?WOUND_MULT[k]:1; } return 1; }
 /* AD vs DR: penetrating = dmg - floor(DR / AD); then x woundMult = injury */
@@ -4910,9 +4915,9 @@ function _charWeapons(){ return (C.weapons||[]).map((it,i)=>({it,i,w:effWeapon(i
 
 function combatRollAttack(i){ const o=_charWeapons().find(x=>x.i==i); if(!o)return; const sk=weaponSkillLevel(o.w.name)||10; const r=rollDice(3,0); const margin=sk-r.total; COMBAT_UI.lastAtk={name:o.w.name, sk, roll:r.total, dice:r.rolls, hit:r.total<=sk, crit:r.total<=4, fail:r.total>=17, margin}; if(typeof _rollLog!=='undefined'){ const oc=r.total<=4?'Crit hit':r.total>=17?'Crit miss':(r.total<=sk?'HIT':'MISS'); const cl=r.total<=4?'crit':(r.total>=17?'fail':(r.total<=sk?'ok':'miss')); (_rollCount++,_rollLog).unshift({label:'Atk: '+o.w.name, target:sk, dice:r.rolls, sum:r.total, outcome:oc, cls:cl, margin:margin}); if(_rollLog.length>14)_rollLog.pop(); if(typeof _renderRollPanel==='function')_renderRollPanel(); } renderCombat(); }
 
-function combatRollDamage(i,mode){ const o=_charWeapons().find(x=>x.i==i); if(!o)return; const w=o.w; let dmgStr='', dtype='', ad=1;
-  if(w.sw||w.th){ const part = (mode==='th'&&w.th)?w.th:(w.sw||w.th); dmgStr = part.fixed?part.fixed:addDiceMod(mode==='th'?thrust():swing(), +part.mod||0); ad=+part.ad||1; dtype=part.dtype||''; }
-  else { dmgStr = w.fixed || (w.swMod!=null?addDiceMod(swing(),+w.swMod||0):(w.thMod!=null?addDiceMod(thrust(),+w.thMod||0):'')); ad=+w.ad||1; dtype=w.dtype||''; }
+function combatRollDamage(i,mode){ const o=_charWeapons().find(x=>x.i==i); if(!o)return; const w=o.w; const dmgB=wDmgBonus(o.it,w); let dmgStr='', dtype='', ad=1;
+  if(w.sw||w.th){ const part = (mode==='th'&&w.th)?w.th:(w.sw||w.th); dmgStr = part.fixed?addDiceMod(part.fixed,dmgB):addDiceMod(mode==='th'?thrust():swing(), (+part.mod||0)+dmgB); ad=+part.ad||1; dtype=part.dtype||''; }
+  else { const base = w.fixed || (w.swMod!=null?addDiceMod(swing(),+w.swMod||0):(w.thMod!=null?addDiceMod(thrust(),+w.thMod||0):'')); dmgStr = base?addDiceMod(base,dmgB):base; ad=+w.ad||1; dtype=w.dtype||''; }
   const spec=parseDmg(dmgStr); if(!spec)return; spec.ad=ad; const res=rollDmgSpec(spec); COMBAT_UI.lastRoll={name:w.name, dmgStr, dtype, ad, res, mode}; if(typeof _rollLog!=='undefined'){ (_rollCount++,_rollLog).unshift({label:'Dmg: '+w.name+(mode==='th'?' (Th)':(w.sw?' (Sw)':'')), target:null, dice:res.rolls, sum:res.total, outcome:(dtype||'')+(ad&&ad!==1?' AD'+ad:''), cls:'', margin:null}); if(_rollLog.length>14)_rollLog.pop(); if(typeof _renderRollPanel==='function')_renderRollPanel(); } renderCombat(); }
 
 
@@ -4955,10 +4960,11 @@ function locWoundMult(loc,dtype,baseWM){
   return baseWM;
 }
 // roll a weapon's damage (mirrors combatRollDamage but returns the result)
-function _rollWeaponDamage(w,mode){
+function _rollWeaponDamage(w,mode,it){
+  const dmgB=it?wDmgBonus(it,w):0;
   let dmgStr='',dtype='',ad=1;
-  if(w.sw||w.th){ const part=(mode==='th'&&w.th)?w.th:(w.sw||w.th); dmgStr=part.fixed?part.fixed:addDiceMod(mode==='th'?thrust():swing(),+part.mod||0); ad=+part.ad||1; dtype=part.dtype||''; }
-  else { dmgStr=w.fixed||(w.swMod!=null?addDiceMod(swing(),+w.swMod||0):(w.thMod!=null?addDiceMod(thrust(),+w.thMod||0):'')); ad=+w.ad||1; dtype=w.dtype||''; }
+  if(w.sw||w.th){ const part=(mode==='th'&&w.th)?w.th:(w.sw||w.th); dmgStr=part.fixed?addDiceMod(part.fixed,dmgB):addDiceMod(mode==='th'?thrust():swing(),(+part.mod||0)+dmgB); ad=+part.ad||1; dtype=part.dtype||''; }
+  else { const base=w.fixed||(w.swMod!=null?addDiceMod(swing(),+w.swMod||0):(w.thMod!=null?addDiceMod(thrust(),+w.thMod||0):'')); dmgStr=base?addDiceMod(base,dmgB):base; ad=+w.ad||1; dtype=w.dtype||''; }
   const spec=parseDmg(dmgStr); if(!spec)return {dmgStr,dtype,ad,res:{rolls:[],base:0,mult:1,ad:ad,total:0}};
   spec.ad=ad; const res=rollDmgSpec(spec); return {dmgStr:dmgStr,dtype:dtype,ad:ad,res:res};
 }
@@ -4985,7 +4991,7 @@ function resolveFullAttack(){
   let dmg=null;
   if(isHit){
     const mode=(w.sw||w.th)?((u.atkMode==='th'&&w.th)?'th':(w.sw?'sw':'th')):'sw';
-    const dd=_rollWeaponDamage(w,mode);
+    const dd=_rollWeaponDamage(w,mode,o.it);
     const phase=resolvePhase(u.atkPhase,dd.dtype);
     const dr=phase==='energy'?(+u.enDrE||0):(+u.enDrK||0);
     const tdd=Math.max(0.0001,parseFloat(u.enDD)||1);
