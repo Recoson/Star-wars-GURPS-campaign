@@ -1,0 +1,496 @@
+{
+  "name": "Truman",
+  "player": "Csuman",
+  "gm": "some loser",
+  "homeworld": "",
+  "concept": "",
+  "species": "Iktotchi",
+  "tl": 10,
+  "sm": 0,
+  "appearance": "Average",
+  "height": "",
+  "weight": "",
+  "age": "135",
+  "gender": "",
+  "hand": "Right",
+  "statusLevel": 5,
+  "wealthLevel": "Wealthy",
+  "reputation": "",
+  "rank": "adjudicator",
+  "react": "",
+  "fright": "",
+  "bio": "",
+  "attr": {
+    "ST": 60,
+    "DX": 320,
+    "IQ": 20,
+    "HT": 60
+  },
+  "sec": {
+    "HP": 40,
+    "Will": 10,
+    "Per": 5,
+    "FP": 42,
+    "Speed": 0,
+    "Move": 0
+  },
+  "skills": [
+    {
+      "name": "Staff",
+      "pts": 24,
+      "attr": "DX",
+      "diff": "A",
+      "spec": ""
+    },
+    {
+      "name": "Acrobatics",
+      "pts": 16,
+      "attr": "DX",
+      "diff": "H"
+    },
+    {
+      "name": "Intimidation",
+      "pts": 4,
+      "attr": "Will",
+      "diff": "A"
+    },
+    {
+      "name": "Meditation",
+      "pts": 0,
+      "attr": "Will",
+      "diff": "H",
+      "spec": ""
+    },
+    {
+      "name": "Fast-Draw",
+      "pts": 8,
+      "attr": "DX",
+      "diff": "E"
+    },
+    {
+      "name": "Climbing",
+      "pts": 4,
+      "attr": "DX",
+      "diff": "A"
+    },
+    {
+      "name": "Brawling",
+      "pts": 8,
+      "attr": "DX",
+      "diff": "E"
+    },
+    {
+      "name": "Streetwise",
+      "pts": 4,
+      "attr": "IQ",
+      "diff": "A"
+    },
+    {
+      "name": "Urban Survival",
+      "pts": 4,
+      "attr": "Per",
+      "diff": "A"
+    },
+    {
+      "name": "Throwing",
+      "pts": 4,
+      "attr": "DX",
+      "diff": "A"
+    },
+    {
+      "name": "Dancing",
+      "pts": 4,
+      "attr": "DX",
+      "diff": "A"
+    },
+    {
+      "name": "Persuade",
+      "pts": 16,
+      "attr": "Will",
+      "diff": "H"
+    },
+    {
+      "name": "Fast-Talk",
+      "pts": 4,
+      "attr": "IQ",
+      "diff": "A"
+    },
+    {
+      "name": "Smuggling",
+      "pts": 4,
+      "attr": "IQ",
+      "diff": "A"
+    },
+    {
+      "name": "Search",
+      "pts": 8,
+      "attr": "Per",
+      "diff": "A"
+    },
+    {
+      "name": "Astrogation (Hyperspace Navigation)",
+      "pts": 16,
+      "attr": "IQ",
+      "diff": "A",
+      "spec": ""
+    },
+    {
+      "name": "Mechanic",
+      "pts": 8,
+      "attr": "IQ",
+      "diff": "A",
+      "spec": ""
+    },
+    {
+      "name": "",
+      "pts": 0,
+      "attr": "",
+      "diff": "",
+      "spec": ""
+    },
+    {
+      "name": "Blaster (Pistol)",
+      "pts": 8,
+      "attr": "DX",
+      "diff": "E",
+      "spec": ""
+    },
+    {
+      "name": "Gambling",
+      "pts": 8,
+      "attr": "IQ",
+      "diff": "A"
+    },
+    {
+      "name": "Gunner",
+      "pts": 4,
+      "attr": "DX",
+      "diff": "E",
+      "spec": ""
+    },
+    {
+      "name": "Spacer",
+      "pts": 12,
+      "attr": "IQ",
+      "diff": "E",
+      "spec": ""
+    },
+    {
+      "name": "Piloting",
+      "pts": 16,
+      "attr": "DX",
+      "diff": "A",
+      "spec": ""
+    },
+    {
+      "name": "Merchant",
+      "pts": 12,
+      "attr": "IQ",
+      "diff": "A"
+    },
+    {
+      "name": "Mind Block",
+      "pts": 12,
+      "attr": "Will",
+      "diff": "A"
+    },
+    {
+      "name": "Teaching",
+      "pts": 16,
+      "attr": "IQ",
+      "diff": "A"
+    },
+    {
+      "name": "Submersible Piloting",
+      "pts": 1,
+      "attr": "DX",
+      "diff": "A",
+      "spec": ""
+    },
+    {
+      "name": "Submarine",
+      "pts": 1,
+      "attr": "DX",
+      "diff": "A",
+      "spec": ""
+    },
+    {
+      "name": "Lightsaber",
+      "pts": 32,
+      "attr": "DX",
+      "diff": "VH",
+      "spec": ""
+    },
+    {
+      "name": "Strategy",
+      "pts": 1,
+      "attr": "IQ",
+      "diff": "H"
+    },
+    {
+      "name": "Soldier",
+      "pts": 12,
+      "attr": "IQ",
+      "diff": "A",
+      "spec": ""
+    }
+  ],
+  "traits": [
+    {
+      "name": "Combat Reflexes",
+      "type": "advantage",
+      "levels": 1,
+      "enh": [],
+      "lim": [],
+      "varCost": 0
+    },
+    {
+      "name": "High Pain Threshold",
+      "type": "advantage",
+      "levels": 1,
+      "enh": [],
+      "lim": [],
+      "varCost": 0
+    },
+    {
+      "name": "Very Fit",
+      "type": "advantage",
+      "levels": 1,
+      "enh": [],
+      "lim": [],
+      "varCost": 0
+    },
+    {
+      "name": "Ambidexterity",
+      "type": "advantage",
+      "levels": 1,
+      "enh": [],
+      "lim": [],
+      "varCost": 0
+    },
+    {
+      "name": "Precognition",
+      "type": "advantage",
+      "levels": 1,
+      "enh": [],
+      "lim": [],
+      "varCost": 0
+    },
+    {
+      "name": "Damage Resistance_Normal",
+      "type": "advantage",
+      "levels": 3,
+      "enh": [],
+      "lim": [],
+      "varCost": 0
+    },
+    {
+      "name": "Extra Attack",
+      "type": "advantage",
+      "levels": 1,
+      "enh": [],
+      "lim": [],
+      "varCost": 0
+    },
+    {
+      "name": "Ham-Fisted 2",
+      "type": "disadvantage",
+      "levels": 1,
+      "enh": [],
+      "lim": [],
+      "varCost": 0
+    },
+    {
+      "name": "Incurious",
+      "type": "disadvantage",
+      "levels": 1,
+      "enh": [],
+      "lim": [],
+      "varCost": 0
+    },
+    {
+      "name": "Social Stigma (subjugated)",
+      "type": "disadvantage",
+      "levels": 1,
+      "enh": [],
+      "lim": [],
+      "varCost": 0
+    },
+    {
+      "name": "Social Stigma (minority group)",
+      "type": "disadvantage",
+      "levels": 1,
+      "enh": [],
+      "lim": [],
+      "varCost": 0
+    },
+    {
+      "name": "Stubbornness",
+      "type": "disadvantage",
+      "levels": 1,
+      "enh": [],
+      "lim": [],
+      "varCost": 0
+    },
+    {
+      "name": "Fanaticism",
+      "type": "disadvantage",
+      "levels": 1,
+      "enh": [],
+      "lim": [],
+      "varCost": 0
+    }
+  ],
+  "cyber": [],
+  "weapons": [
+    {
+      "name": "Double-bladed lightsaber",
+      "cls": "Melee",
+      "_cat": "Jedi Order"
+    },
+    {
+      "name": "Ion pistol",
+      "cls": "Ranged",
+      "_cat": "BlasTech",
+      "material": 0,
+      "quality": 0,
+      "mods": [
+        {
+          "label": "",
+          "note": ""
+        }
+      ]
+    }
+  ],
+  "armour": [
+    {
+      "name": "Iktotchi stormguard plate",
+      "_cat": "Iktotchi"
+    }
+  ],
+  "shields": [],
+  "explosives": [],
+  "gear": [],
+  "inventory": [],
+  "force": {
+    "morality": 50,
+    "primary": "DX",
+    "bonded": false,
+    "saberPoints": 0,
+    "conflict": 0,
+    "channeling": false,
+    "powers": [],
+    "books": {
+      "Common Force": true
+    },
+    "bookTiers": {
+      "Common Force": 3
+    },
+    "tradition": "",
+    "darkSurgeLog": [],
+    "activeBook": "Common Force",
+    "training": {
+      "Common Force": {
+        "tier": 1,
+        "hours": 0,
+        "regimen": "Open Hours",
+        "mentor": "",
+        "log": []
+      }
+    }
+  },
+  "forms": [],
+  "techniques": [
+    {
+      "name": "Saber Throw",
+      "active": false
+    },
+    {
+      "name": "Saber Bind",
+      "active": false
+    },
+    {
+      "name": "Saber Bash",
+      "active": false
+    },
+    {
+      "name": "Bolt Deflection",
+      "active": false
+    }
+  ],
+  "stances": [],
+  "vehicles": [],
+  "droids": [],
+  "customDB": {
+    "weapons": [],
+    "armour": [],
+    "shields": [
+      {
+        "name": "Personal shield",
+        "dr": "50",
+        "vs": "both",
+        "cost": 0
+      }
+    ],
+    "explosives": [],
+    "gear": [],
+    "skills": [],
+    "species": [],
+    "forcePowers": [],
+    "shipParts": [],
+    "droidParts": [],
+    "cyber": []
+  },
+  "conditions": {},
+  "combat": {
+    "hp": null,
+    "fp": null,
+    "statuses": [],
+    "concentrations": [],
+    "charges": [],
+    "turn": 0,
+    "log": [],
+    "wounds": {
+      "Skull": 0,
+      "Face": 0,
+      "Neck": 0,
+      "Torso": 0,
+      "Vitals": 0,
+      "Groin": 0,
+      "Right Arm": 0,
+      "Left Arm": 0,
+      "Right Hand": 0,
+      "Left Hand": 0,
+      "Right Leg": 0,
+      "Left Leg": 0,
+      "Right Foot": 0,
+      "Left Foot": 0
+    },
+    "inits": []
+  },
+  "credits": 0,
+  "creditLog": [],
+  "notes": "Imported from Truman_SW.xlsm.\nTrait details from source: Social Stigma (subjugated) = force user; Social Stigma (minority group) / Fanaticism = iktotchi (telepathy & strong); Code of Honor (high) = 'grey code'.\nDefenses (source): Dodge 14, Parry 22 (Force Sword), Parry 22 (Staff), Parry 18 (Brawling), DR 3.\nSource point totals (ignored on import): 833 spent, attrs 537, advantages 110, disadvantages -85, skills 271.",
+  "trainRate": 200,
+  "study": [],
+  "ptTarget": 1053,
+  "languages": "",
+  "builder": {
+    "droid": {
+      "parts": {},
+      "name": "My Droid",
+      "deg": "5th"
+    },
+    "ship": {
+      "parts": {},
+      "name": "My Custom Vessel",
+      "role": ""
+    }
+  },
+  "languages2": [],
+  "layout": {},
+  "_meta": {
+    "savedAt": "2026-06-05T13:08:07.271Z",
+    "savedBy": "Csuman"
+  }
+}
