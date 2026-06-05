@@ -21,7 +21,7 @@
   "fright": "",
   "bio": "",
   "attr": {
-    "ST": 670,
+    "ST": 60,
     "DX": 460,
     "IQ": 20,
     "HT": 60
@@ -365,7 +365,8 @@
   "armour": [
     {
       "name": "Iktotchi stormguard plate",
-      "_cat": "Iktotchi"
+      "_cat": "Iktotchi",
+      "_bought": true
     }
   ],
   "shields": [],
@@ -442,8 +443,29 @@
     "cyber": []
   },
   "conditions": {},
-  "credits": 0,
-  "creditLog": [],
+  "credits": 670000,
+  "creditLog": [
+    {
+      "d": -330000,
+      "l": "Bought: Iktotchi stormguard plate"
+    },
+    {
+      "d": -75,
+      "l": "Lodging: inn night"
+    },
+    {
+      "d": -6,
+      "l": "Food: ration day"
+    },
+    {
+      "d": -15,
+      "l": "Food: cantina meal"
+    },
+    {
+      "d": -75,
+      "l": "Utility: power cell"
+    }
+  ],
   "combat": {
     "hp": null,
     "fp": null,
@@ -490,7 +512,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T13:10:33.780Z",
+    "savedAt": "2026-06-05T13:20:47.960Z",
     "savedBy": "Csuman"
   }
 }
