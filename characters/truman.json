@@ -454,7 +454,99 @@
     }
   ],
   "stances": [],
-  "vehicles": [],
+  "vehicles": [
+    {
+      "name": "Dynamic-class light freighter",
+      "cat": "Light Freighter",
+      "hullDR": "62",
+      "shieldDR": "75",
+      "shieldNow": 75,
+      "hpMax": 1100,
+      "hpNow": 1100,
+      "weapons": "2× light blaster turrets",
+      "crew": "2",
+      "fuel": "30/6",
+      "cost": "450,000",
+      "lc": "Lic",
+      "notes": "YT-class equivalent. Stock-modifiable.",
+      "parts": [
+        {
+          "cat": "Hull",
+          "name": "Hull plating",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Sublight",
+          "name": "Sublight engines",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Reactor",
+          "name": "Power plant",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Shields",
+          "name": "Shield generator",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Sensors",
+          "name": "Sensor array",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Targeting",
+          "name": "Targeting computer",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Life Support",
+          "name": "Life-support system",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Astrogation",
+          "name": "Navicomputer",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Hyperdrive",
+          "name": "Hyperdrive motivator",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Crew",
+          "name": "Crew quarters",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Cargo",
+          "name": "Cargo hold",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Weapon",
+          "name": "Defensive turret",
+          "status": "ok",
+          "hpPct": 100
+        }
+      ],
+      "rfNow": 30,
+      "hfNow": 6
+    }
+  ],
   "droids": [],
   "customDB": {
     "weapons": [],
@@ -477,8 +569,12 @@
     "cyber": []
   },
   "conditions": {},
-  "credits": 669733,
+  "credits": 669583,
   "creditLog": [
+    {
+      "d": -150,
+      "l": "Refuel: Dynamic-class light freighter"
+    },
     {
       "d": -75,
       "l": "Utility: power cell"
@@ -522,10 +618,6 @@
     {
       "d": -15,
       "l": "Food: cantina meal"
-    },
-    {
-      "d": -75,
-      "l": "Utility: power cell"
     }
   ],
   "combat": {
@@ -574,7 +666,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T13:23:04.994Z",
+    "savedAt": "2026-06-05T13:25:23.019Z",
     "savedBy": "Csuman"
   }
 }
