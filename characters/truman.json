@@ -661,6 +661,63 @@
           "status": "ok"
         }
       ]
+    },
+    {
+      "name": "Assassin Droid (heavy HK-47)",
+      "deg": "4th",
+      "size": "SM 0",
+      "hp": 38,
+      "hpMax": 38,
+      "dr": 18,
+      "iq": 13,
+      "move": 6,
+      "weapons": "Beam Wpns (Rifle) 16; Tactics 13; Sarcasm 18",
+      "skills": "",
+      "cost": 270000,
+      "notes": "Self-aware. The classic murder-droid.",
+      "fn": "Heavy assassin",
+      "parts": [
+        {
+          "cat": "Chassis",
+          "name": "Frame & shell",
+          "status": "ok"
+        },
+        {
+          "cat": "Core",
+          "name": "Logic core",
+          "status": "ok"
+        },
+        {
+          "cat": "Power",
+          "name": "Power cell",
+          "status": "ok"
+        },
+        {
+          "cat": "Mobility",
+          "name": "Locomotion system",
+          "status": "ok"
+        },
+        {
+          "cat": "Sensors",
+          "name": "Photoreceptor cluster",
+          "status": "ok"
+        },
+        {
+          "cat": "Manipulators",
+          "name": "Manipulator arms",
+          "status": "ok"
+        },
+        {
+          "cat": "Comms",
+          "name": "Comms suite",
+          "status": "ok"
+        },
+        {
+          "cat": "Programming",
+          "name": "Behavioral core",
+          "status": "ok"
+        }
+      ]
     }
   ],
   "customDB": {
@@ -781,7 +838,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T13:26:28.205Z",
+    "savedAt": "2026-06-05T13:27:32.106Z",
     "savedBy": "Csuman"
   }
 }
