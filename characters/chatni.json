@@ -1,0 +1,476 @@
+{
+  "name": "Chatni",
+  "player": "Zoe",
+  "gm": "some loser",
+  "homeworld": "",
+  "concept": "Force-user \u00b7 Sith alchemist / saber duelist",
+  "species": "Human",
+  "tl": 10,
+  "sm": 0,
+  "appearance": "Handsome",
+  "hand": "Right",
+  "statusLevel": 0,
+  "wealthLevel": "Average",
+  "ptTarget": 250,
+  "attr": {
+    "ST": 30,
+    "DX": 0,
+    "IQ": 160,
+    "HT": 70
+  },
+  "sec": {
+    "HP": 40,
+    "Will": 85,
+    "Per": 0,
+    "FP": 156,
+    "Speed": 0,
+    "Move": 0
+  },
+  "skills": [
+    {
+      "name": "Ritual Magic",
+      "attr": "IQ",
+      "diff": "VH",
+      "pts": 12,
+      "spec": "Sith"
+    },
+    {
+      "name": "Meditation",
+      "attr": "Will",
+      "diff": "H",
+      "pts": 4
+    },
+    {
+      "name": "Breath Control",
+      "attr": "HT",
+      "diff": "H",
+      "pts": 4
+    },
+    {
+      "name": "Throwing Art",
+      "attr": "DX",
+      "diff": "H",
+      "pts": 56,
+      "spec": "Pike"
+    },
+    {
+      "name": "Escape",
+      "attr": "DX",
+      "diff": "H",
+      "pts": 16
+    },
+    {
+      "name": "Fast-Draw",
+      "attr": "DX",
+      "diff": "E",
+      "pts": 20,
+      "spec": "Lightsaber"
+    },
+    {
+      "name": "Holdout",
+      "attr": "IQ",
+      "diff": "A",
+      "pts": 1
+    },
+    {
+      "name": "Lockpicking",
+      "attr": "IQ",
+      "diff": "A",
+      "pts": 1
+    },
+    {
+      "name": "Spacer",
+      "attr": "IQ",
+      "diff": "E",
+      "pts": 1
+    },
+    {
+      "name": "Acrobatics",
+      "attr": "DX",
+      "diff": "H",
+      "pts": 12
+    },
+    {
+      "name": "Body Language",
+      "attr": "Per",
+      "diff": "A",
+      "pts": 1
+    },
+    {
+      "name": "Persuade",
+      "attr": "Will",
+      "diff": "H",
+      "pts": 2
+    },
+    {
+      "name": "Intimidation",
+      "attr": "Will",
+      "diff": "A",
+      "pts": 1
+    },
+    {
+      "name": "Fast-Talk",
+      "attr": "IQ",
+      "diff": "A",
+      "pts": 1
+    },
+    {
+      "name": "Suggest",
+      "attr": "Will",
+      "diff": "H",
+      "pts": 1
+    },
+    {
+      "name": "Explosives",
+      "attr": "IQ",
+      "diff": "A",
+      "pts": 8,
+      "spec": "Demolition"
+    },
+    {
+      "name": "Hazardous Materials",
+      "attr": "IQ",
+      "diff": "A",
+      "pts": 1,
+      "spec": "Chemical"
+    },
+    {
+      "name": "Lip Reading",
+      "attr": "Per",
+      "diff": "A",
+      "pts": 1
+    },
+    {
+      "name": "Blasters",
+      "attr": "DX",
+      "diff": "E",
+      "pts": 16,
+      "spec": "Pistol"
+    },
+    {
+      "name": "Observation",
+      "attr": "Per",
+      "diff": "A",
+      "pts": 1
+    },
+    {
+      "name": "Intelligence Analysis",
+      "attr": "IQ",
+      "diff": "H",
+      "pts": 2
+    },
+    {
+      "name": "Shadowing",
+      "attr": "IQ",
+      "diff": "A",
+      "pts": 2
+    },
+    {
+      "name": "Stealth",
+      "attr": "DX",
+      "diff": "A",
+      "pts": 16
+    },
+    {
+      "name": "Smuggling",
+      "attr": "IQ",
+      "diff": "A",
+      "pts": 2
+    },
+    {
+      "name": "Traps",
+      "attr": "IQ",
+      "diff": "A",
+      "pts": 4
+    },
+    {
+      "name": "Piloting",
+      "attr": "DX",
+      "diff": "A",
+      "pts": 16,
+      "spec": "Starfighter"
+    },
+    {
+      "name": "Driving",
+      "attr": "DX",
+      "diff": "A",
+      "pts": 8,
+      "spec": "Repulsorlift"
+    },
+    {
+      "name": "Counterfeiting",
+      "attr": "IQ",
+      "diff": "H",
+      "pts": 2
+    },
+    {
+      "name": "Mind Block",
+      "attr": "Will",
+      "diff": "A",
+      "pts": 12
+    },
+    {
+      "name": "Submarine",
+      "attr": "DX",
+      "diff": "A",
+      "pts": 2
+    },
+    {
+      "name": "Submariner",
+      "attr": "IQ",
+      "diff": "E",
+      "pts": 1
+    },
+    {
+      "name": "Tracking",
+      "attr": "Per",
+      "diff": "A",
+      "pts": 1
+    },
+    {
+      "name": "Sith Alchemy",
+      "attr": "IQ",
+      "diff": "VH",
+      "pts": 2
+    },
+    {
+      "name": "Tactics",
+      "attr": "IQ",
+      "diff": "H",
+      "pts": 1
+    },
+    {
+      "name": "Leadership",
+      "attr": "IQ",
+      "diff": "A",
+      "pts": 1
+    },
+    {
+      "name": "Computer Operation",
+      "attr": "IQ",
+      "diff": "E",
+      "pts": 2,
+      "spec": "Droids"
+    },
+    {
+      "name": "Electrician",
+      "attr": "IQ",
+      "diff": "A",
+      "pts": 1,
+      "spec": "Lightsaber"
+    },
+    {
+      "name": "Smith",
+      "attr": "IQ",
+      "diff": "A",
+      "pts": 1,
+      "spec": "Lightsaber Components"
+    },
+    {
+      "name": "Machinist",
+      "attr": "IQ",
+      "diff": "A",
+      "pts": 2,
+      "spec": "Lightsaber"
+    },
+    {
+      "name": "Electronics Repair",
+      "attr": "IQ",
+      "diff": "A",
+      "pts": 1,
+      "spec": "Lightsaber"
+    },
+    {
+      "name": "Lightsaber",
+      "attr": "DX",
+      "diff": "A",
+      "pts": 28,
+      "bonus": 20
+    },
+    {
+      "name": "Acting",
+      "attr": "IQ",
+      "diff": "A",
+      "pts": 1
+    },
+    {
+      "name": "Strategy",
+      "attr": "IQ",
+      "diff": "H",
+      "pts": 1
+    },
+    {
+      "name": "Detect Lies",
+      "attr": "Per",
+      "diff": "H",
+      "pts": 4
+    },
+    {
+      "name": "Brawling",
+      "attr": "DX",
+      "diff": "E",
+      "pts": 1,
+      "bonus": 20
+    },
+    {
+      "name": "Computer Programming",
+      "attr": "IQ",
+      "diff": "H",
+      "pts": 1,
+      "spec": "Shields"
+    },
+    {
+      "name": "Teaching",
+      "attr": "IQ",
+      "diff": "A",
+      "pts": 1
+    },
+    {
+      "name": "Gambling",
+      "attr": "IQ",
+      "diff": "A",
+      "pts": 4
+    },
+    {
+      "name": "Metallurgy",
+      "attr": "IQ",
+      "diff": "H",
+      "pts": 1,
+      "spec": "Holocrons"
+    },
+    {
+      "name": "History",
+      "attr": "IQ",
+      "diff": "H",
+      "pts": 1,
+      "spec": "Krath / war-droids"
+    }
+  ],
+  "traits": [
+    {
+      "name": "Magery 4 (Force aptitude)",
+      "type": "Advantage",
+      "levels": 1,
+      "varCost": 45
+    },
+    {
+      "name": "Combat Reflexes",
+      "type": "Advantage",
+      "levels": 1,
+      "varCost": 15
+    },
+    {
+      "name": "High Pain Threshold",
+      "type": "Advantage",
+      "levels": 1,
+      "varCost": 10
+    },
+    {
+      "name": "Very Fit",
+      "type": "Advantage",
+      "levels": 1,
+      "varCost": 15
+    },
+    {
+      "name": "Appearance (Handsome/Beautiful)",
+      "type": "Advantage",
+      "levels": 1,
+      "varCost": 12
+    },
+    {
+      "name": "Ambidexterity",
+      "type": "Advantage",
+      "levels": 1,
+      "varCost": 5
+    },
+    {
+      "name": "Favor Soc",
+      "type": "Advantage",
+      "levels": 1,
+      "varCost": 2
+    },
+    {
+      "name": "Less Sleep (x2)",
+      "type": "Advantage",
+      "levels": 1,
+      "varCost": 8
+    },
+    {
+      "name": "Weapon Master (Single Wpn)",
+      "type": "Advantage",
+      "levels": 1,
+      "varCost": 20
+    },
+    {
+      "name": "Empathy (Full)",
+      "type": "Advantage",
+      "levels": 1,
+      "varCost": 15
+    },
+    {
+      "name": "Compartmentalized Mind",
+      "type": "Advantage",
+      "levels": 1,
+      "varCost": 50
+    },
+    {
+      "name": "Extra Attack",
+      "type": "Advantage",
+      "levels": 1,
+      "varCost": 25
+    },
+    {
+      "name": "Social Stigma (subjugated)",
+      "type": "Disadvantage",
+      "levels": 1,
+      "varCost": -20
+    },
+    {
+      "name": "Curious",
+      "type": "Disadvantage",
+      "levels": 1,
+      "varCost": -5
+    },
+    {
+      "name": "Enemies",
+      "type": "Disadvantage",
+      "levels": 1,
+      "varCost": -15
+    },
+    {
+      "name": "Enemies",
+      "type": "Disadvantage",
+      "levels": 1,
+      "varCost": -10
+    },
+    {
+      "name": "Sense of Duty (small group)",
+      "type": "Disadvantage",
+      "levels": 1,
+      "varCost": -5
+    },
+    {
+      "name": "Code of Honor (high)",
+      "type": "Disadvantage",
+      "levels": 1,
+      "varCost": -20
+    }
+  ],
+  "weapons": [
+    {
+      "name": "Lightsaber (Ghost-fire crystal)"
+    }
+  ],
+  "armour": [],
+  "shields": [],
+  "explosives": [],
+  "gear": [],
+  "inventory": [],
+  "cyber": [],
+  "credits": 50,
+  "notes": "Imported from SW Zoe (1).xlsm \u2014 250-pt start, 640 exp, ~910 spent.\n\u2022 Force Sword \u2192 equipped as the dual-mode Lightsaber (Ghost-fire crystal). Toggle 'Silent / invisible mode' on its Equipment card: silent = foe \u22123 to Parry at 6d+6; audible = full 8d+8 with sound/light. Lightsaber & Brawling skills carry +20 (Weapon Master + Force deflection) so they read 37 / 30 as on the original.\n\u2022 Heavy Cloak (defensive): Block DB 2, DR 1/5 \u2014 no catalogue equivalent on this sheet, tracked here.\n\u2022 Detect Lies gets +3 vs others via Empathy (Full).\n\u2022 Skill specialties (Sith, Pike, lightsaber-crafting, droids, etc.) preserved as notes on each skill.\n\u2022 'Navigation' \u2192 Astrogation convention applied; 'Guns (blaster pistols)' \u2192 Blasters (Pistol).",
+  "_meta": {
+    "savedAt": "2026-06-05T12:00:00Z",
+    "savedBy": "James (initial import)"
+  }
+}

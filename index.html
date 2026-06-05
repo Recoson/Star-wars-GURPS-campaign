@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KOTOR · GURPS Campaign Database</title>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--text:#e6edf3;--dim:#8b949e;--gold:#d4a843;--blue:#58a6ff;--green:#3fb950}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 -apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh}
+.wrap{max-width:760px;margin:0 auto;padding:40px 20px 60px}
+h1{font-size:26px;margin:0;letter-spacing:.5px}
+h1 .era{color:var(--gold);font-weight:400}
+.sub{color:var(--dim);margin:4px 0 34px;font-size:13px;letter-spacing:.4px;text-transform:uppercase}
+h2{font-size:13px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin:30px 0 10px;border-bottom:1px solid var(--line);padding-bottom:6px}
+a.card{display:block;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin:8px 0;text-decoration:none;color:var(--text);transition:border-color .15s}
+a.card:hover{border-color:var(--gold)}
+a.card .t{font-weight:600}
+a.card .d{color:var(--dim);font-size:13px;margin-top:2px}
+.char-row{display:flex;align-items:center;justify-content:space-between}
+.badge{color:var(--green);font-size:12px}
+#charList .empty{color:var(--dim);font-style:italic;padding:10px 2px}
+footer{margin-top:44px;color:var(--dim);font-size:12px;border-top:1px solid var(--line);padding-top:14px}
+footer a{color:var(--blue);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <h1>KOTOR <span class="era">· GURPS 4e</span></h1>
+ <div class="sub">Knights of the Old Republic — Campaign Database</div>
+
+ <h2>Rules &amp; Reference</h2>
+ <a class="card" href="compendium.html">
+  <div class="t">📜 The Force &amp; the Fight — Complete Compendium</div>
+  <div class="d">The authoritative rules document. Source of truth for all mechanics.</div>
+ </a>
+
+ <h2>Characters</h2>
+ <a class="card" href="sheet.html">
+  <div class="t">📄 Character Sheet (blank)</div>
+  <div class="d">Open a fresh sheet — use ☁ Save to add a new character to the database.</div>
+ </a>
+ <div id="charList"><div class="empty">Loading characters…</div></div>
+
+ <footer>
+  Characters live in <a href="https://github.com/Recoson/Star-wars-GURPS-campaign/tree/main/characters">/characters</a> on GitHub — every save is versioned, nothing is ever lost.
+ </footer>
+</div>
+
+<script>
+(async function(){
+ const el=document.getElementById('charList');
+ try{
+  const r=await fetch('https://api.github.com/repos/Recoson/Star-wars-GURPS-campaign/contents/characters?_='+Date.now(),
+   {headers:{'Accept':'application/vnd.github+json'}});
+  if(r.status===404){el.innerHTML='<div class="empty">No characters yet — open the blank sheet and ☁ Save one.</div>';return}
+  if(!r.ok)throw new Error('GitHub '+r.status);
+  const dir=await r.json();
+  const chars=(dir||[]).filter(f=>f.name&&f.name.endsWith('.json')).map(f=>f.name.replace(/\.json$/,''));
+  if(!chars.length){el.innerHTML='<div class="empty">No characters yet — open the blank sheet and ☁ Save one.</div>';return}
+  el.innerHTML=chars.map(id=>
+   '<a class="card" href="sheet.html?char='+encodeURIComponent(id)+'">'
+   +'<div class="char-row"><div><div class="t">🧝 '+id.charAt(0).toUpperCase()+id.slice(1)+'</div>'
+   +'<div class="d">Open sheet — autosaves locally, ☁ Save syncs to the database.</div></div>'
+   +'<span class="badge">cloud ✓</span></div></a>').join('');
+ }catch(e){
+  el.innerHTML='<div class="empty">Could not load character list ('+e.message+').</div>';
+ }
+})();
+</script>
+</body>
+</html>

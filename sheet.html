@@ -567,6 +567,8 @@ input[type=checkbox]{accent-color:var(--cyan)}
   <button onclick="exportChar()">Export</button>
   <button onclick="document.getElementById('importFile').click()">Import</button>
   <input type="file" id="importFile" accept=".json" style="display:none" onchange="importChar(event)">
+  <button onclick="openCharPicker()" title="Browse campaign characters stored in the cloud">☁ Characters</button>
+  <button onclick="cloudSave()" title="Save this character to the campaign cloud (GitHub)">☁ Save</button>
   <button onclick="printSheet()">Print</button>
   <button id="arrangeBtn" onclick="toggleArrange()" title="Free-arrange mode: drag the ✣ handle to move any panel anywhere (overlap allowed); drag the bottom-right corner to resize. Saved to this character.">✣ Arrange</button>
   <button id="resetLayBtn" onclick="resetLayout()" style="display:none" title="Reset every panel to the default layout for this character.">↺ Reset layout</button>
@@ -659,6 +661,10 @@ const ENC_MULT=[1,0.8,0.6,0.4,0.2,0];
 const WOUND_MULT={cr:1,cut:1.5,imp:2,'pi-':0.5,pi:1,'pi+':1.5,'pi++':2,burn:1,tox:1,cor:1,fat:1,son:1,ion:1};
 const HIT_LOCS=['Skull','Face','Neck','Torso','Vitals','Groin','Right Arm','Left Arm','Right Hand','Left Hand','Right Leg','Left Leg','Right Foot','Left Foot'];
 const STORE_KEY='kotor_gurps_v2';
+// ── Cloud campaign database (GitHub) ──
+const GH_OWNER='Recoson', GH_REPO='Star-wars-GURPS-campaign', GH_BRANCH='main';
+const CHAR_ID=((new URLSearchParams(location.search)).get('char')||'').replace(/[^a-zA-Z0-9_-]/g,'')||null;
+const ACTIVE_STORE_KEY=CHAR_ID?STORE_KEY+'_'+CHAR_ID:STORE_KEY;
 let saveTimer;
 
 // ─────────────────────────────────────────────────────
@@ -693,8 +699,8 @@ let C = load() || blankChar();
 // ─────────────────────────────────────────────────────
 // PERSISTENCE
 // ─────────────────────────────────────────────────────
-function save(){try{localStorage.setItem(STORE_KEY,JSON.stringify(C));flashSave()}catch(e){}}
-function load(){try{const s=localStorage.getItem(STORE_KEY);return s?JSON.parse(s):null}catch(e){return null}}
+function save(){try{localStorage.setItem(ACTIVE_STORE_KEY,JSON.stringify(C));flashSave()}catch(e){}}
+function load(){try{const s=localStorage.getItem(ACTIVE_STORE_KEY);return s?JSON.parse(s):null}catch(e){return null}}
 function touch(){clearTimeout(saveTimer);saveTimer=setTimeout(save,400)}
 function flashSave(){const el=document.getElementById('saveIndicator');if(!el)return;el.textContent='● SAVED';el.style.color='var(--green)';setTimeout(()=>{el.textContent='● AUTO'},900)}
 
@@ -710,6 +716,104 @@ function importChar(e){
  };r.readAsText(f);e.target.value='';
 }
 function newChar(){if(confirm('Start new character?')){C=blankChar();save();renderAll()}}
+
+// ─────────────────────────────────────────────────────
+// CLOUD SYNC — GitHub campaign database (additive layer).
+// Reads: unauthenticated (public repo). Writes: fine-grained PAT
+// (Contents read/write on the campaign repo) stored once per browser.
+// Offline behaviour (localStorage autosave, Export/Import) is unchanged.
+// ─────────────────────────────────────────────────────
+function mergeChar(data){
+ const base=blankChar();
+ for(const k in data){ if(data[k]!==undefined) base[k]=data[k]; }
+ return base;
+}
+function charSlug(n){return (n||'character').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'character'}
+function b64u(str){const b=new TextEncoder().encode(str);let s='';for(const c of b)s+=String.fromCharCode(c);return btoa(s)}
+function ghToken(force){
+ let t=null; try{t=localStorage.getItem('kotor_gh_token')}catch(e){}
+ if(!t||force){
+  t=prompt('GitHub token for cloud saves.\n(Fine-grained PAT with Contents read/write on '+GH_OWNER+'/'+GH_REPO+'. Stored only in this browser.)');
+  if(t){t=t.trim();try{localStorage.setItem('kotor_gh_token',t)}catch(e){}}
+ }
+ return t||null;
+}
+async function ghGetFile(path,raw){
+ const url='https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/'+path+'?ref='+GH_BRANCH+'&_='+Date.now();
+ const headers={'Accept':raw?'application/vnd.github.raw':'application/vnd.github+json'};
+ let t=null; try{t=localStorage.getItem('kotor_gh_token')}catch(e){}
+ if(t)headers['Authorization']='Bearer '+t;
+ const r=await fetch(url,{headers});
+ if(r.status===404)return null;
+ if(!r.ok)throw new Error('GitHub '+r.status+': '+(await r.text()).slice(0,180));
+ return raw?await r.text():await r.json();
+}
+async function cloudLoad(id,silent){
+ try{
+  const txt=await ghGetFile('characters/'+id+'.json',true);
+  if(txt==null){if(!silent)alert('No cloud character "'+id+'" found.');return null}
+  return JSON.parse(txt);
+ }catch(e){if(!silent)alert('Cloud load failed: '+e.message);return null}
+}
+async function cloudInit(){
+ if(!CHAR_ID)return;
+ const cloud=await cloudLoad(CHAR_ID,true);
+ if(!cloud)return;
+ const localAt=(C._meta&&C._meta.savedAt)||'';
+ const cloudAt=(cloud._meta&&cloud._meta.savedAt)||'';
+ const localEmpty=!C.name&&!(C.skills||[]).length&&!(C.traits||[]).length;
+ if(localEmpty||cloudAt>localAt){
+  if(!localEmpty&&!confirm('Cloud copy of "'+CHAR_ID+'" is newer than this device\'s copy\n('+cloudAt+' vs '+(localAt||'never')+').\n\nOK = load cloud version  ·  Cancel = keep local')) return;
+  C=mergeChar(cloud);save();renderAll();
+ }
+}
+async function cloudSave(){
+ let id=CHAR_ID;
+ if(!id){
+  id=prompt('Save to cloud as (character id):',charSlug(C.name));
+  if(!id)return; id=charSlug(id);
+ }
+ const t=ghToken(); if(!t)return;
+ const el=document.getElementById('saveIndicator'); if(el)el.textContent='● CLOUD…';
+ try{
+  C._meta=Object.assign({},C._meta,{savedAt:new Date().toISOString(),savedBy:C.player||C.name||''});
+  const existing=await ghGetFile('characters/'+id+'.json');
+  const body={message:'Update character: '+(C.name||id),branch:GH_BRANCH,content:b64u(JSON.stringify(C,null,2))};
+  if(existing&&existing.sha)body.sha=existing.sha;
+  const r=await fetch('https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/characters/'+id+'.json',{
+   method:'PUT',
+   headers:{'Accept':'application/vnd.github+json','Authorization':'Bearer '+t,'Content-Type':'application/json'},
+   body:JSON.stringify(body)});
+  if(r.status===401||r.status===403){try{localStorage.removeItem('kotor_gh_token')}catch(e){};throw new Error('token rejected ('+r.status+'). It was cleared — click ☁ Save again with a valid token.')}
+  if(r.status===409)throw new Error('conflict — someone saved this character meanwhile. Reload the page (your local copy is safe) and save again.');
+  if(!r.ok)throw new Error('GitHub '+r.status+': '+(await r.text()).slice(0,180));
+  save();
+  if(!CHAR_ID){try{const u=new URL(location.href);u.searchParams.set('char',id);history.replaceState(null,'',u)}catch(e){}}
+  if(el){el.textContent='● CLOUD ✓';el.style.color='var(--green)';setTimeout(()=>{el.textContent='● AUTO'},1600)}
+ }catch(e){
+  if(el){el.textContent='● CLOUD ✗';setTimeout(()=>{el.textContent='● AUTO'},2600)}
+  alert('Cloud save failed: '+e.message);
+ }
+}
+async function openCharPicker(){
+ let list=[];
+ try{
+  const dir=await ghGetFile('characters',false);
+  list=(dir||[]).filter(f=>f.name&&f.name.endsWith('.json')).map(f=>f.name.replace(/\.json$/,''));
+ }catch(e){alert('Could not list cloud characters: '+e.message);return}
+ const old=document.getElementById('charPickerOv'); if(old)old.remove();
+ const ov=document.createElement('div'); ov.id='charPickerOv';
+ ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;display:flex;align-items:center;justify-content:center';
+ ov.onclick=e=>{if(e.target===ov)ov.remove()};
+ const box=document.createElement('div');
+ box.style.cssText='background:var(--panel,#fff);border:1px solid var(--line,#888);min-width:280px;max-width:90vw;max-height:70vh;overflow:auto;padding:14px 16px;font:inherit;box-shadow:0 8px 30px rgba(0,0,0,.4)';
+ box.innerHTML='<div style="font-weight:700;margin-bottom:8px">☁ Campaign characters</div>'
+  +(list.length?list.map(id=>'<a href="?char='+id+'" style="display:block;padding:6px 2px;text-decoration:none;color:inherit;border-bottom:1px solid var(--line,#ddd)">'+(id===CHAR_ID?'▶ ':'')+id+'</a>').join(''):'<div style="opacity:.7">No characters in the cloud yet — use ☁ Save to add this one.</div>')
+  +'<div style="margin-top:10px;opacity:.7;font-size:11px">Each link opens that character (its own local autosave). ☁ Save writes back to the campaign database.</div>';
+ ov.appendChild(box);document.body.appendChild(ov);
+}
+window.addEventListener('load',()=>{cloudInit()});
+
 
 // ─────────────────────────────────────────────────────
 // ATTRIBUTE MATH
