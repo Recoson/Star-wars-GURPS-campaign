@@ -382,7 +382,13 @@
     "channeling": false,
     "powers": [],
     "books": {
-      "Common Force": true
+      "Common Force": true,
+      "Bonded Blade": true,
+      "Living Path": true,
+      "Concordance": true,
+      "The Hollowing": true,
+      "Inscribed Voice": true,
+      "Unchained Path": true
     },
     "bookTiers": {
       "Common Force": 3
@@ -392,6 +398,48 @@
     "activeBook": "Common Force",
     "training": {
       "Common Force": {
+        "tier": 1,
+        "hours": 0,
+        "regimen": "Open Hours",
+        "mentor": "",
+        "log": []
+      },
+      "Bonded Blade": {
+        "tier": 1,
+        "hours": 0,
+        "regimen": "Open Hours",
+        "mentor": "",
+        "log": []
+      },
+      "Living Path": {
+        "tier": 1,
+        "hours": 0,
+        "regimen": "Open Hours",
+        "mentor": "",
+        "log": []
+      },
+      "Concordance": {
+        "tier": 1,
+        "hours": 0,
+        "regimen": "Open Hours",
+        "mentor": "",
+        "log": []
+      },
+      "The Hollowing": {
+        "tier": 1,
+        "hours": 0,
+        "regimen": "Open Hours",
+        "mentor": "",
+        "log": []
+      },
+      "Inscribed Voice": {
+        "tier": 1,
+        "hours": 0,
+        "regimen": "Open Hours",
+        "mentor": "",
+        "log": []
+      },
+      "Unchained Path": {
         "tier": 1,
         "hours": 0,
         "regimen": "Open Hours",
@@ -838,7 +886,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T13:27:32.106Z",
+    "savedAt": "2026-06-05T13:29:04.209Z",
     "savedBy": "Csuman"
   }
 }
