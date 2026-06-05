@@ -6,9 +6,9 @@
   "concept": "",
   "species": "Iktotchi",
   "tl": 10,
-  "sm": 0,
-  "appearance": "Beautiful",
-  "height": "",
+  "sm": 10,
+  "appearance": "Transcendent",
+  "height": "8.0m",
   "weight": "",
   "age": "135",
   "gender": "",
@@ -1025,7 +1025,7 @@
     }
   ],
   "combat": {
-    "hp": -39,
+    "hp": 36,
     "fp": 30,
     "statuses": [],
     "concentrations": [],
@@ -1087,13 +1087,7 @@
   "study": [],
   "ptTarget": 1053,
   "languages": "",
-  "languages2": [
-    {
-      "name": "",
-      "sp": 3,
-      "wr": 3
-    }
-  ],
+  "languages2": [],
   "layout": {},
   "builder": {
     "droid": {
@@ -1108,7 +1102,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T14:33:57.857Z",
+    "savedAt": "2026-06-05T14:35:42.430Z",
     "savedBy": "Csuman"
   },
   "xpForceTrained": 0,
