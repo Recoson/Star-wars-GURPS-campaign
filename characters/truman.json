@@ -355,10 +355,10 @@
       "notes": "2× natural healing, extra HP & stamina, +1 kolto saturation tier. Dependency drawback."
     },
     {
-      "name": "",
-      "cost": 0,
+      "name": "Cybernetic respirator",
+      "cost": 5,
       "mods": [],
-      "notes": ""
+      "notes": "Filter toxins; survive vacuum/water (short)"
     }
   ],
   "weapons": [
@@ -1057,7 +1057,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T14:16:00.834Z",
+    "savedAt": "2026-06-05T14:17:04.858Z",
     "savedBy": "Csuman"
   }
 }
