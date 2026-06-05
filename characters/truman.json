@@ -381,17 +381,27 @@
       ]
     }
   ],
-  "armour": [
+  "armour": [],
+  "shields": [],
+  "explosives": [],
+  "gear": [
     {
+      "name": "Durasteel cargo case",
+      "qty": 1,
+      "_type": "Storage",
+      "_cat": "Czerka Corporation",
+      "_bought": false,
+      "_bagId": "bagclrmvbf"
+    }
+  ],
+  "inventory": [
+    {
+      "kind": "armour",
       "name": "Iktotchi stormguard plate",
       "_cat": "Iktotchi",
       "_bought": true
     }
   ],
-  "shields": [],
-  "explosives": [],
-  "gear": [],
-  "inventory": [],
   "force": {
     "morality": 50,
     "primary": "ST",
@@ -1063,7 +1073,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T14:20:58.508Z",
+    "savedAt": "2026-06-05T14:22:52.381Z",
     "savedBy": "Csuman"
   }
 }
