@@ -1051,6 +1051,16 @@
     "inits": [
       {
         "name": "",
+        "spd": 13,
+        "you": false
+      },
+      {
+        "name": "",
+        "spd": 5,
+        "you": false
+      },
+      {
+        "name": "",
         "spd": 5,
         "you": false
       },
@@ -1063,8 +1073,14 @@
         "name": "",
         "spd": 5,
         "you": false
+      },
+      {
+        "name": "Truman",
+        "spd": 12.5,
+        "you": true
       }
-    ]
+    ],
+    "actor": 0
   },
   "notes": "Imported from Truman_SW.xlsm.\nTrait details from source: Social Stigma (subjugated) = force user; Social Stigma (minority group) / Fanaticism = iktotchi (telepathy & strong); Code of Honor (high) = 'grey code'.\nDefenses (source): Dodge 14, Parry 22 (Force Sword), Parry 22 (Staff), Parry 18 (Brawling), DR 3.\nSource point totals (ignored on import): 833 spent, attrs 537, advantages 110, disadvantages -85, skills 271. hehe gey",
   "trainRate": 200,
@@ -1092,7 +1108,10 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T14:28:26.350Z",
+    "savedAt": "2026-06-05T14:29:26.570Z",
     "savedBy": "Csuman"
-  }
+  },
+  "xpForceTrained": 0,
+  "xpSkillTrained": 0,
+  "xpEarned": 0
 }
