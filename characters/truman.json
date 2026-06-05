@@ -149,11 +149,11 @@
       "spec": ""
     },
     {
-      "name": "Blaster (Pistol)",
-      "pts": 8,
+      "name": "Blasters",
+      "spec": "Pistol",
       "attr": "DX",
       "diff": "E",
-      "spec": ""
+      "pts": 9
     },
     {
       "name": "Gambling",
@@ -232,13 +232,6 @@
       "pts": 12,
       "attr": "IQ",
       "diff": "A",
-      "spec": ""
-    },
-    {
-      "name": "Blaster (Pistol)",
-      "pts": 1,
-      "attr": "DX",
-      "diff": "E",
       "spec": ""
     }
   ],
@@ -664,7 +657,7 @@
       "shieldNow": 75,
       "hpMax": 1100,
       "hpNow": 1100,
-      "weapons": "2× light blaster turrets",
+      "weapons": "2\u00d7 light blaster turrets",
       "crew": "2",
       "fuel": "30/6",
       "cost": "450,000",
