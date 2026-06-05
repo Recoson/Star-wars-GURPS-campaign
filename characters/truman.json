@@ -557,7 +557,7 @@
     },
     "tradition": "",
     "darkSurgeLog": [],
-    "activeBook": "Minor Traditions",
+    "activeBook": "Bonded Blade",
     "training": {
       "Common Force": {
         "tier": 1,
@@ -1055,7 +1055,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-05T13:31:10.521Z",
+    "savedAt": "2026-06-05T13:32:32.995Z",
     "savedBy": "Csuman"
   }
 }
