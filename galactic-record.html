@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Galactic Record — Compendium of the Known Galaxy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cinzel+Decorative:wght@700;900&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#070a13;--void-2:#0b1020;--panel:#11172b;--panel-2:#0e1424;
+    --ink:#e7dcc4;--ink-soft:#c4b896;--ink-dim:#8c8169;
+    --gold:#c9a23f;--gold-bright:#e7c66b;--gold-deep:#8a6d24;
+    --holo:#5cc4e0;--holo-deep:#2c7e96;--blood:#b34a40;--blood-deep:#7a2e28;
+    --jade:#6fae8a;--violet:#9a7bc0;
+    --line:rgba(201,162,63,.28);--line-soft:rgba(201,162,63,.13);
+    --serif:"EB Garamond",Georgia,serif;--body:"Spectral",Georgia,serif;
+    --display:"Cinzel",serif;--deco:"Cinzel Decorative",serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;color:var(--ink);font-family:var(--body);font-weight:400;line-height:1.74;font-size:17.5px;letter-spacing:.1px;overflow-x:hidden;
+    background:radial-gradient(1200px 700px at 82% -5%,rgba(92,196,224,.07),transparent 60%),radial-gradient(900px 600px at 8% 8%,rgba(201,162,63,.06),transparent 55%),linear-gradient(180deg,var(--void) 0%,var(--void-2) 45%,var(--void) 100%);}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+    background-image:radial-gradient(1px 1px at 20% 30%,rgba(231,220,196,.9),transparent),radial-gradient(1px 1px at 75% 18%,rgba(231,220,196,.6),transparent),radial-gradient(1px 1px at 50% 60%,rgba(231,220,196,.5),transparent),radial-gradient(1px 1px at 88% 72%,rgba(231,220,196,.7),transparent),radial-gradient(1px 1px at 33% 85%,rgba(231,220,196,.5),transparent),radial-gradient(1px 1px at 12% 65%,rgba(231,220,196,.6),transparent),radial-gradient(2px 2px at 64% 42%,rgba(92,196,224,.45),transparent),radial-gradient(1.5px 1.5px at 42% 12%,rgba(231,198,107,.5),transparent);}
+  body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.045;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+  .wrap{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:0 30px 140px;}
+
+  /* HERO */
+  .hero{text-align:center;padding:90px 12px 30px;}
+  .crest{width:104px;height:104px;margin:0 auto 26px;display:block;filter:drop-shadow(0 0 18px rgba(201,162,63,.35));animation:float 7s ease-in-out infinite;}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+  .eyebrow{font-family:var(--display);font-weight:500;letter-spacing:.6em;text-transform:uppercase;font-size:12px;color:var(--holo);margin-bottom:24px;padding-left:.6em;}
+  h1.title{font-family:var(--deco);font-weight:900;font-size:clamp(36px,7.5vw,76px);line-height:1;margin:0;color:var(--gold-bright);text-shadow:0 0 28px rgba(201,162,63,.35),0 2px 0 rgba(0,0,0,.5);}
+  h1.title .sub{display:block;font-family:var(--display);font-weight:500;font-size:clamp(12px,2.2vw,18px);letter-spacing:.46em;color:var(--ink-soft);margin:18px 0 0;text-transform:uppercase;}
+  .hero .lede{font-family:var(--serif);font-style:italic;font-size:clamp(16px,2.3vw,21px);color:var(--ink-soft);max-width:640px;margin:28px auto 0;}
+  .stamp{margin-top:30px;display:inline-flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:center;font-family:var(--display);font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-dim);}
+  .stamp b{color:var(--gold);font-weight:600;}
+
+  .rule{display:flex;align-items:center;gap:18px;margin:50px 0;}
+  .rule::before,.rule::after{content:"";height:1px;flex:1;background:linear-gradient(90deg,transparent,var(--gold-deep),transparent);}
+  .rule .diamond{width:9px;height:9px;background:var(--gold);transform:rotate(45deg);box-shadow:0 0 12px var(--gold);flex:0 0 auto;}
+
+  /* TOC */
+  .toc{border:1px solid var(--line);border-radius:5px;padding:30px 34px;background:linear-gradient(180deg,rgba(17,23,43,.66),rgba(14,20,36,.6));position:relative;box-shadow:inset 0 0 50px rgba(0,0,0,.4);}
+  .toc::before{content:"";position:absolute;inset:7px;border:1px solid var(--line-soft);border-radius:3px;pointer-events:none;}
+  .toc h4{font-family:var(--display);font-weight:600;letter-spacing:.2em;text-transform:uppercase;font-size:13px;color:var(--gold);margin:0 0 18px;text-align:center;}
+  .toc ol{list-style:none;counter-reset:toc;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:6px 30px;}
+  .toc li{counter-increment:toc;padding:5px 0;border-bottom:1px solid var(--line-soft);}
+  .toc a{color:var(--ink-soft);text-decoration:none;font-family:var(--serif);font-size:16px;display:flex;gap:12px;align-items:baseline;transition:color .2s;}
+  .toc a:hover{color:var(--gold-bright);}
+  .toc a::before{content:counter(toc,upper-roman);font-family:var(--display);font-size:11px;color:var(--gold-deep);min-width:34px;letter-spacing:.1em;}
+  @media(max-width:680px){.toc ol{grid-template-columns:1fr;}}
+
+  /* PART + SECTION HEADERS */
+  .part-head{margin:96px 0 8px;text-align:center;}
+  .part-head .pnum{font-family:var(--deco);font-weight:900;font-size:clamp(40px,9vw,90px);color:var(--gold-deep);opacity:.42;line-height:.8;}
+  .part-head .kicker{font-family:var(--display);letter-spacing:.5em;text-transform:uppercase;font-size:11px;color:var(--holo);margin-top:6px;}
+  .part-head h2{font-family:var(--display);font-weight:700;font-size:clamp(28px,5.5vw,46px);color:var(--gold-bright);margin:10px 0 0;text-shadow:0 0 22px rgba(201,162,63,.25);}
+  .part-head p.intro{font-family:var(--serif);font-style:italic;color:var(--ink-soft);max-width:680px;margin:16px auto 0;font-size:17px;}
+
+  h3.era-group{font-family:var(--display);font-weight:700;font-size:clamp(22px,4vw,30px);color:var(--gold-bright);margin:64px 0 6px;letter-spacing:.01em;border-bottom:1px solid var(--line);padding-bottom:10px;}
+  h3.era-group .yr{display:block;font-family:var(--display);font-weight:500;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--holo);margin-bottom:6px;}
+
+  p{margin:0 0 15px;}
+  p .nm{color:var(--gold);font-weight:600;}
+  p .hl{color:var(--holo);font-weight:500;}
+  p .dk{color:var(--blood);font-weight:500;}
+  em.note{color:var(--ink-dim);font-style:italic;}
+
+  blockquote.holo{margin:18px 0;padding:14px 22px;border-left:2px solid var(--holo-deep);background:linear-gradient(90deg,rgba(92,196,224,.08),transparent);font-family:var(--serif);font-style:italic;color:var(--holo);font-size:16px;}
+  blockquote.dark{border-left-color:var(--blood-deep);background:linear-gradient(90deg,rgba(179,74,64,.08),transparent);color:var(--blood);}
+
+  /* TIMELINE rail */
+  .timeline{position:relative;margin:30px 0 0;padding-left:44px;}
+  .timeline::before{content:"";position:absolute;left:13px;top:8px;bottom:20px;width:2px;background:linear-gradient(180deg,var(--holo-deep),var(--gold-deep) 40%,var(--gold) 78%,var(--gold-bright));box-shadow:0 0 14px rgba(201,162,63,.4);}
+  .ev{position:relative;margin-bottom:34px;}
+  .ev::before{content:"";position:absolute;left:-37px;top:8px;width:14px;height:14px;background:var(--void);border:2px solid var(--gold);transform:rotate(45deg);box-shadow:0 0 12px rgba(201,162,63,.55);}
+  .ev.major::before{width:18px;height:18px;left:-39px;background:var(--gold);}
+  .ev.present::before{background:var(--holo);border-color:var(--holo);box-shadow:0 0 16px rgba(92,196,224,.8);}
+  .ev .when{font-family:var(--display);font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--holo);margin-bottom:3px;}
+  .ev h4{font-family:var(--display);font-weight:700;font-size:clamp(18px,3vw,23px);color:var(--gold-bright);margin:0 0 8px;}
+  .ev p{font-size:16px;}
+  .figbar{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;}
+  .figbar .fig{font-family:var(--display);font-size:10px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line);padding:4px 10px;border-radius:2px;color:var(--ink-soft);background:rgba(201,162,63,.05);}
+
+  /* CHAPTER (crew trail) */
+  .chapter{border:1px solid var(--line-soft);border-left:3px solid var(--gold-deep);border-radius:0 5px 5px 0;padding:24px 28px;margin:26px 0;background:linear-gradient(180deg,rgba(17,23,43,.5),rgba(14,20,36,.45));}
+  .chapter .ch-no{font-family:var(--display);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--holo);}
+  .chapter h4{font-family:var(--display);font-weight:700;font-size:clamp(20px,3.4vw,26px);color:var(--gold-bright);margin:4px 0 4px;}
+  .chapter .loc{font-family:var(--serif);font-style:italic;color:var(--ink-dim);font-size:14px;margin-bottom:14px;}
+  .chapter p{font-size:16px;}
+
+  /* CHARACTER CODEX */
+  .codex{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:30px;}
+  @media(max-width:760px){.codex{grid-template-columns:1fr;}}
+  .char{border:1px solid var(--line);border-radius:5px;padding:20px 22px;background:linear-gradient(180deg,rgba(17,23,43,.58),rgba(14,20,36,.52));position:relative;transition:transform .22s,box-shadow .22s,border-color .22s;}
+  .char:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 12px 26px rgba(0,0,0,.4),0 0 18px rgba(201,162,63,.1);}
+  .char h4{font-family:var(--display);font-weight:700;font-size:19px;color:var(--gold-bright);margin:0 0 1px;}
+  .char .alias{font-family:var(--serif);font-style:italic;color:var(--holo);font-size:14px;}
+  .char .who{font-family:var(--serif);font-style:italic;color:var(--ink-dim);font-size:13.5px;margin:2px 0 10px;border-bottom:1px solid var(--line-soft);padding-bottom:9px;}
+  .char p{font-size:14.5px;margin:0 0 8px;color:var(--ink-soft);}
+  .char .look{font-size:13.5px;color:var(--ink-dim);}
+  .char .rel{display:flex;flex-direction:column;gap:3px;margin-top:10px;font-size:13px;}
+  .char .rel span{font-family:var(--display);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;margin-right:4px;}
+  .char .rel .c span{color:var(--gold-bright);}
+  .char .rel .f span{color:var(--jade);}
+  .char .rel .al span{color:var(--holo);}
+  .char .rel .t span{color:#d49a52;}
+  .char .rel .en span{color:var(--blood);}
+  .char.crew{border-left:3px solid var(--holo);}
+  .char.legend{border-left:3px solid var(--gold);}
+  .char.fallen{border-left:3px solid var(--ink-dim);}
+  .char.fallen h4{color:var(--ink-soft);}
+
+  .grp{font-family:var(--display);font-weight:600;letter-spacing:.26em;text-transform:uppercase;font-size:12.5px;color:var(--holo);margin:48px 0 6px;display:flex;align-items:center;gap:14px;}
+  .grp::after{content:"";flex:1;height:1px;background:var(--line-soft);}
+  .grp-desc{font-family:var(--serif);font-style:italic;color:var(--ink-dim);font-size:15px;margin:0 0 8px;}
+
+  /* FACTION blocks */
+  .faction{border:1px solid var(--line);border-radius:5px;padding:24px 28px;margin:20px 0;background:linear-gradient(180deg,rgba(17,23,43,.6),rgba(14,20,36,.54));position:relative;}
+  .faction h4{font-family:var(--display);font-weight:700;font-size:22px;color:var(--gold-bright);margin:0 0 2px;}
+  .faction .seat{font-family:var(--serif);font-style:italic;color:var(--holo);font-size:15px;margin-bottom:12px;}
+  .faction p{font-size:15.5px;}
+  .meta{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 22px;margin-top:14px;border-top:1px solid var(--line-soft);padding-top:14px;}
+  @media(max-width:680px){.meta{grid-template-columns:1fr;}}
+  .meta div{font-size:13.5px;color:var(--ink-soft);}
+  .meta b{font-family:var(--display);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:1px;}
+  .houses{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;}
+  @media(max-width:680px){.houses{grid-template-columns:1fr;}}
+  .house{border:1px solid var(--line-soft);border-radius:4px;padding:14px 16px;background:rgba(11,16,32,.5);}
+  .house h5{font-family:var(--display);font-weight:700;font-size:15px;color:var(--gold);margin:0 0 5px;}
+  .house p{font-size:13.5px;margin:0;color:var(--ink-soft);line-height:1.55;}
+
+  .subtable{margin:14px 0 8px;border:1px solid var(--line);border-radius:5px;overflow:hidden;background:rgba(11,16,32,.5);}
+  .subtable .cap{font-family:var(--display);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);padding:9px 14px;border-bottom:1px solid var(--line-soft);background:rgba(201,162,63,.07);}
+  .subtable .cap em{font-family:var(--serif);font-style:italic;letter-spacing:0;text-transform:none;color:var(--ink-dim);font-size:12px;}
+  .subtable .scroll{overflow-x:auto;}
+  .subtable table{width:100%;border-collapse:collapse;font-family:var(--body);font-size:13px;min-width:520px;}
+  .subtable th{font-family:var(--display);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-bright);text-align:left;padding:8px 14px;border-bottom:1px solid var(--line);white-space:nowrap;}
+  .subtable td{padding:9px 14px;border-bottom:1px solid var(--line-soft);vertical-align:top;color:var(--ink-soft);line-height:1.5;}
+  .subtable tr:last-child td{border-bottom:none;}
+  .subtable td.nm{font-family:var(--display);font-size:13px;color:var(--gold);white-space:nowrap;}
+  .subtable td.stand{font-family:var(--serif);font-style:italic;}
+  .subtable tr.power{background:rgba(231,198,107,.09);}
+  .subtable tr.power td{color:var(--ink);}
+  .subtable tr.power td.nm{color:var(--gold-bright);}
+  .subtable .pill{display:inline-block;font-family:var(--display);font-style:normal;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--void);background:var(--gold-bright);padding:2px 7px;border-radius:10px;margin-right:6px;vertical-align:middle;}
+
+  .callout{border:1px solid var(--line);border-radius:5px;padding:24px 28px;margin:26px 0;background:radial-gradient(600px 200px at 88% 0%,rgba(179,74,64,.1),transparent 60%),linear-gradient(180deg,rgba(17,23,43,.7),rgba(11,16,32,.7));}
+  .callout h4{font-family:var(--display);font-weight:700;color:var(--gold-bright);font-size:21px;margin:0 0 6px;}
+  .callout .warn{font-family:var(--serif);font-style:italic;color:var(--blood);font-size:15px;margin-bottom:14px;}
+  .callout ul{list-style:none;padding:0;margin:0;}
+  .callout li{padding:10px 0 10px 26px;position:relative;border-bottom:1px solid var(--line-soft);font-size:15px;color:var(--ink-soft);}
+  .callout li:last-child{border-bottom:0;}
+  .callout li::before{content:"✦";position:absolute;left:2px;top:10px;color:var(--gold);font-size:12px;}
+  .callout li b{color:var(--ink);}
+
+  .colophon{text-align:center;margin-top:80px;padding-top:30px;border-top:1px solid var(--line-soft);font-family:var(--display);font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-dim);}
+  .colophon span{color:var(--gold);}
+
+  @media(max-width:680px){body{font-size:16.5px;}.wrap{padding:0 18px 90px;}.timeline{padding-left:32px;}.timeline::before{left:8px;}.ev::before{left:-29px;}}
+
+  /* PRINT / PDF */
+  @media print{
+    @page{size:A4;margin:15mm 13mm;}
+    body{background:#fff;color:#1d1710;font-size:11pt;line-height:1.48;}
+    body::before,body::after{display:none;}
+    .wrap{max-width:none;padding:0;}
+    .crest{filter:none;}
+    h1.title,.part-head h2,.era-group,.ev h4,.char h4,.faction h4,.house h5,.callout h4,.chapter h4{color:#7a5e16 !important;text-shadow:none;}
+    .eyebrow,.part-head .kicker,.ev .when,.toc h4,.grp,.chapter .ch-no{color:#2c7e96 !important;}
+    .hero .lede,p,.char p,.faction p,.house p,.meta div,.callout li,.toc a{color:#332b1c !important;}
+    p .nm{color:#7a5e16 !important;}p .hl{color:#2c6478 !important;}p .dk{color:#8a342c !important;}
+    .char,.faction,.house,.callout,.toc,.chapter,.ev,.part-head{break-inside:avoid;box-shadow:none;background:#faf6ec !important;border-color:#c9a23f;}
+    .subtable{break-inside:avoid;background:#faf6ec !important;border-color:#c9a23f;}
+    .subtable .cap{color:#7a5e16 !important;background:#f0e8d4 !important;}
+    .subtable th{color:#7a5e16 !important;}
+    .subtable td,.subtable td.stand{color:#332b1c !important;}
+    .subtable td.nm{color:#7a5e16 !important;}
+    .subtable tr.power{background:#f3ead0 !important;}
+    .subtable .pill{background:#7a5e16 !important;color:#faf6ec !important;}
+    .char:hover{transform:none;}
+    .part-head{break-before:page;}
+    .codex,.houses{grid-template-columns:1fr 1fr;}
+    blockquote.holo{color:#2c6478;background:#f1f6f8;}
+    blockquote.dark{color:#8a342c;background:#f8f0ef;}
+    .colophon{color:#6b6147;}
+    a{color:#2c6478;text-decoration:none;}
+  }
+  .orig{font-family:inherit;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#9a7bc0;border:1px solid rgba(154,123,192,.5);border-radius:9px;padding:1px 6px;margin-right:6px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <svg class="crest" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="46" stroke="#c9a23f" stroke-width="1.4" opacity=".7"/>
+      <circle cx="50" cy="50" r="38" stroke="#5cc4e0" stroke-width=".8" opacity=".5"/>
+      <path d="M50 8 L50 92 M8 50 L92 50" stroke="#8a6d24" stroke-width=".6" opacity=".5"/>
+      <path d="M50 18 L60 50 L50 82 L40 50 Z" fill="#c9a23f" opacity=".9"/>
+      <path d="M50 30 L55 50 L50 70 L45 50 Z" fill="#070a13"/>
+      <circle cx="50" cy="50" r="4" fill="#e7c66b"/>
+      <circle cx="50" cy="50" r="46" stroke="#c9a23f" stroke-width=".4" opacity=".4" stroke-dasharray="2 4"/>
+    </svg>
+    <div class="eyebrow">Holocron Archive · Restoration Era</div>
+    <h1 class="title">The Galactic Record<span class="sub">A Compendium of the Known Galaxy</span></h1>
+    <p class="lede">A full chronicle of the age: the long history of the galaxy, the trail of the crew of the <em>Dara Dara</em>, the figures who move the worlds, and the powers that hold them.</p>
+    <div class="stamp"><span>Compiled <b>c. 3941 BBY</b></span><span>·</span><span><b>~10 Years</b> After the Triumvirate</span><span>·</span><span><b>SWTOR-Era</b> Campaign</span></div>
+  </header>
+
+  <div class="rule"><span class="diamond"></span></div>
+
+  <nav class="toc">
+    <h4>Contents</h4>
+    <ol>
+      <li><a href="#part1">The Galactic Chronicle — history of the known galaxy</a></li>
+      <li><a href="#part2">The Crew's Trail — the campaign, world by world</a></li>
+      <li><a href="#part3">The Character Codex — every name of note</a></li>
+      <li><a href="#part4">The Powers of the Galaxy — every faction</a></li>
+      <li><a href="#part5">The Holochart — the interactive galaxy map</a></li>
+    </ol>
+  </nav>
+
+  <!-- ============================================================ -->
+  <!-- PART I — GALACTIC CHRONICLE -->
+  <!-- ============================================================ -->
+  <div class="part-head" id="part1">
+    <div class="pnum">I</div>
+    <div class="kicker">Part One</div>
+    <h2>The Galactic Chronicle</h2>
+    <p class="intro">The history of the galaxy as it is recorded and remembered — from the ancient wars that scarred a thousand worlds, through the rise and fall of Revan, to the fragile present. This is the public account: what scholars teach and senators cite. What it does <em>not</em> contain is set down at its end, among the unexplained.</p>
+  </div>
+
+  <h3 class="era-group"><span class="yr">c. 3996 BBY · The Old Sith Wars</span>The Age of Ancient Darkness</h3>
+  <p>Before living memory, the galaxy was twice nearly unmade. The first cataclysm came when the fallen Jedi <span class="nm">Exar Kun</span> and <span class="nm">Ulic Qel-Droma</span> raised the banner of the resurrected Sith and plunged the Republic into the <span class="nm">Great Sith War</span>. They drew to their cause the dark cultists of the <span class="nm">Krath</span>, who seized the Empress Teta system, and the war-clans of the <span class="nm">Mandalorians</span>, who relished any conflict worth the dying. From the Deep Core to the Outer Rim, worlds burned.</p>
+  <p>The Jedi and the Republic broke them at terrible cost, and from that victory the galaxy inherited the conviction it still holds: that the <span class="nm">Sith are extinct</span> — a barbarism overcome, a closed chapter. The dead were entombed and the tombs were sealed. Yet some graves never quieted. The spirit of the ancient Sith king <span class="nm">Freedon Nadd</span> still broods beneath the jungles of <span class="nm">Dxun</span>, the moon of Onderon, a reminder that the dark does not always stay buried where it is put.</p>
+  <div class="timeline">
+    <div class="ev"><div class="when">c. 3996 BBY · The Great Sith War</div><h4>The Krath & the Fall of Exar Kun</h4>
+      <p>Nobles of the Deep Core found the Krath on ancient Sith teachings and seized Empress Teta; Exar Kun and Ulic Qel-Droma united Krath, Sith, and Mandalorian into a tide of darkness before the Jedi overcame them. The Sith are thereafter believed gone from the galaxy.</p>
+      <div class="figbar"><span class="fig">Exar Kun</span><span class="fig">Ulic Qel-Droma</span><span class="fig">The Krath</span><span class="fig">Freedon Nadd</span></div></div>
+  </div>
+
+  <h3 class="era-group"><span class="yr">c. 3976–3960 BBY</span>The Mandalorian Wars</h3>
+  <p>Generations later the Mandalorians returned, no longer a war-clan but a crusade. Under <span class="nm">Mandalore the Ultimate</span>, the <span class="nm">Neo-Crusaders</span> swept the Outer Rim, world after world falling while the cautious Jedi Council counselled patience. Two young Jedi refused that patience: the strategist <span class="nm">Revan</span> and his closest friend <span class="nm">Malak</span>. Against the Council's will they rallied a generation of knights and the broken Republic fleets, and they turned the war.</p>
+  <p>The victory was bought with horror. At <span class="nm">Malachor V</span>, the superweapon called the <span class="nm">Mass Shadow Generator</span> was triggered, annihilating both fleets at once and crushing the world into a graveyard of gravity and bone. The Jedi general who gave that order — remembered afterward only as <span class="hl">the Exile</span> — did the unthinkable to survive the death of so many: she severed herself from the Force entirely. The Mandalorians were shattered as a power, their mask-helm taken; Revan and Malak vanished into the Unknown Regions, chasing something they would not name.</p>
+  <div class="timeline">
+    <div class="ev major"><div class="when">c. 3964 BBY · The Crusade Begins</div><h4>Mandalore the Ultimate &amp; the Neo-Crusaders</h4><p>United under a new <span class="nm">Mandalore the Ultimate</span> and clad in the red of the Neo-Crusaders, the clans sweep out of the Outer Rim, conquering world after world. The cautious Jedi Council counsels patience, forbidding intervention while the Republic bleeds.</p><div class="figbar"><span class="fig">Mandalore the Ultimate</span></div></div>
+    <div class="ev"><div class="when">c. 3964 BBY · The Atrocities</div><h4>Cathar &amp; the Burning Worlds</h4><p>The crusade turns to slaughter — whole peoples, like the <span class="nm">Cathar</span>, driven near extinction. The horror of it galvanizes the young Jedi who will defy the Council, even as it gives later darkness its excuses.</p></div>
+    <div class="ev"><div class="when">c. 3964 BBY · A Knight at War</div><h4>The Young Tylo Dara</h4><p>Among the Jedi who answered the call was a newly-knighted Iktotchi: <span class="nm">Tylo Dara</span>, freshly stationed and barely tested. He fought with extraordinary bravery through the worst of the crusade, his battlefield premonitions saving lives where cold strategy failed — and in doing so became a <span class="hl">living hero to the Iktotchi people</span>, the first of his kind many in the galaxy had ever seen wield a saber. But the things he witnessed at the war's end left a wound in him that never fully closed.</p><div class="figbar"><span class="fig">Tylo Dara</span></div></div>
+    <div class="ev major"><div class="when">c. 3964 BBY · The Revanchists</div><h4>Revan &amp; Malak Defy the Council</h4><p>Two young Jedi — the strategist <span class="nm">Revan</span> and his closest friend <span class="nm">Malak</span> — refuse the Council's patience, rallying a generation of knights and the broken Republic fleets. The tide of the war begins to turn, but the cost in spirit is already mounting.</p><div class="figbar"><span class="fig">Revan</span><span class="fig">Malak</span></div></div>
+    <div class="ev major"><div class="when">c. 3964 BBY · The End at Malachor</div><h4>Malachor V &amp; the Mass Shadow Generator</h4><p>At the war's climax, Revan lures Mandalore the Ultimate to <span class="nm">Malachor V</span> and slays him in single combat — and there the superweapon built by the Zabrak tech <span class="nm">Bao-Dur</span>, the <span class="nm">Mass Shadow Generator</span>, is triggered. Both fleets are annihilated at once and the world is crushed into a graveyard. The Jedi general who gave the order — remembered only as <span class="hl">the Exile</span> — severs herself from the Force rather than feel the deaths. The Mandalorians are shattered and their mask taken; Revan and Malak vanish into the Unknown Regions.</p><div class="figbar"><span class="fig">The Exile (Meetra Surik)</span><span class="fig">Bao-Dur</span><span class="fig">Malachor V</span></div></div>
+  </div>
+
+  <h3 class="era-group"><span class="yr">c. 3959–3956 BBY · KOTOR</span>The Jedi Civil War</h3>
+  <p>Revan and Malak did not die in the Rim — they fell. They returned as <span class="dk">Dark Lords of the Sith</span>, having found an ancient engine of war: the <span class="nm">Star Forge</span>, a factory-leviathan of the long-dead <span class="nm">Rakata</span> that fed on the dark side and a nearby star to birth endless fleets. With it they brought the exhausted Republic to the edge of ruin.</p>
+  <p>Then Malak betrayed his master, firing on Revan's own ship to claim the title of Dark Lord. Revan survived, mind shattered. The Jedi Council took the broken conqueror, rebuilt a false identity, and — not knowing what they did — set Revan loose to hunt the Star Forge as their unwitting agent. Across <span class="nm">Taris</span>, <span class="nm">Dantooine</span>, <span class="nm">Tatooine</span>, <span class="nm">Kashyyyk</span>, <span class="nm">Manaan</span>, and the Sith tombs of <span class="nm">Korriban</span>, Revan gathered the fragments of the <span class="nm">Star Maps</span> that led to the Forge. The truth surfaced aboard Malak's flagship, the <span class="nm">Leviathan</span>; the memory returned; and at the Forge itself, above the Rakatan homeworld of <span class="nm">Lehon</span>, Revan struck Malak down and ended the war.</p>
+  <p>Afterward, Revan once more walked away — alone, into the Unknown Regions, driven by a <span class="hl">prophecy of a great and gathering threat</span> beyond the galaxy's edge that no one else could see and that even Revan could not fully name. Revan has not returned. To the galaxy, the Prodigal Knight is now legend, argued over in cantinas and classrooms alike — and the warning is dismissed as the obsession of a broken mind.</p>
+  <div class="timeline">
+    <div class="ev major"><div class="when">c. 3956 BBY · The Fall of Taris</div><h4>The Endar Spire</h4><p>Malak's fleet ambushes the Republic over the ecumenopolis of Taris, hunting Bastila Shan and her gift of battle meditation. The Republic cruiser <span class="nm">Endar Spire</span> is boarded and lost; an amnesiac soldier — Revan, mind already remade — escapes to the city below with the loyal pilot <span class="nm">Carth Onasi</span>.</p><div class="figbar"><span class="fig">Carth Onasi</span><span class="fig">Bastila Shan</span></div></div>
+    <div class="ev"><div class="when">c. 3956 BBY · Taris · the Undercity</div><h4>The Rakghoul Warrens &amp; the Outcasts</h4><p>Trapped on a planet under Sith blockade, Revan descends through the social strata — the Upper City cantinas, the Lower City gangs (Hidden Beks and Black Vulkars), and the disease-ridden Undercity where the Outcasts cower from the rakghoul plague. Here Revan recruits the Wookiee <span class="nm">Zaalbar</span> and the streetwise <span class="nm">Mission Vao</span>.</p></div>
+    <div class="ev"><div class="when">c. 3956 BBY · Taris · the Escape</div><h4>The Swoop Race &amp; the Ebon Hawk</h4><p>Bastila is found captive of the Vulkars; Revan wins her freedom in the swoop arena, humiliating the gang leader <span class="nm">Brejik</span>. To break the blockade the group infiltrates the crime lord <span class="nm">Davik Kang</span> and steals his prized freighter, the <span class="nm">Ebon Hawk</span> — recruiting the Mandalorian mercenary <span class="nm">Canderous Ordo</span> on the way out. As they flee, Malak grows impatient and <span class="dk">bombards Taris to ash</span> from orbit.</p><div class="figbar"><span class="fig">Canderous Ordo</span><span class="fig">Zaalbar</span><span class="fig">Mission Vao</span></div></div>
+    <div class="ev"><div class="when">c. 3956 BBY · Dantooine</div><h4>The Jedi Enclave &amp; the First Star Map</h4><p>At the quiet Enclave, the Council senses Revan's potential and — concealing the truth — retrains the amnesiac as a Jedi. Revan resolves a murder in the grove and redeems the fallen Padawan <span class="nm">Juhani</span>, then discovers the first <span class="nm">Star Map</span> in a ruin, learning of an ancient engine the Sith are using to build their fleets. Four worlds hold the rest of the map.</p><div class="figbar"><span class="fig">The Jedi Council</span><span class="fig">Juhani</span><span class="fig">Star Map I</span></div></div>
+    <div class="ev"><div class="when">c. 3956 BBY · Tatooine</div><h4>The Sand People &amp; the Krayt Dragon</h4><p>On the desert world, Revan navigates the war between settlers and the Sand People, makes peace with the Tusken chieftain, and braves the Krayt Dragon's cave to claim the second Star Map. Here the bounty hunter and assassin droid <span class="nm">HK-47</span> is purchased — a killer with a legendary, unexplained loyalty to its old master.</p><div class="figbar"><span class="fig">HK-47</span><span class="fig">Star Map II</span></div></div>
+    <div class="ev"><div class="when">c. 3956 BBY · Kashyyyk</div><h4>The Wookiee Uprising &amp; Jolee Bindo</h4><p>Beneath Czerka's slaving operation, Revan frees the Wookiee homeworld — restoring Zaalbar's exiled father <span class="nm">Freyyr</span> and casting down the treacherous chieftain <span class="nm">Chuundar</span>. In the depths of the Shadowlands lives the cantankerous old grey Jedi <span class="nm">Jolee Bindo</span>, who joins the quest; the third Star Map waits beneath the trees.</p><div class="figbar"><span class="fig">Jolee Bindo</span><span class="fig">Star Map III</span></div></div>
+    <div class="ev"><div class="when">c. 3956 BBY · Manaan</div><h4>The Selkath Courts &amp; the Hrakert Rift</h4><p>On the neutral kolto-world, Revan threads Republic and Sith intrigue through the Selkath courts, then descends to the doomed underwater station at the Hrakert Rift, where a kolto-maddened beast guards the fourth Star Map. The Selkath's fragile neutrality — and their precious kolto — are preserved.</p><div class="figbar"><span class="fig">The Selkath</span><span class="fig">Star Map IV</span></div></div>
+    <div class="ev"><div class="when">c. 3956 BBY · Korriban</div><h4>The Sith Academy &amp; the Tombs</h4><p>In the Valley of the Dark Lords, Revan infiltrates the Sith Academy under masters <span class="dk">Uthar Wynn</span> and <span class="dk">Yuthura Ban</span>, plundering the ancient tombs for the final Star Map fragment — and feeling the pull of a darkness that is, though Revan does not yet know it, deeply familiar.</p><div class="figbar"><span class="fig">Uthar Wynn</span><span class="fig">Yuthura Ban</span><span class="fig">Star Map V</span></div></div>
+    <div class="ev"><div class="when">c. 3956 BBY · Elsewhere in the War</div><h4>Tylo Dara, Estranged</h4><p>The horrors of Malachor and the Council's blindness had left <span class="nm">Tylo Dara</span> <span class="hl">partially estranged</span> from the Order. Through the Jedi Civil War he fought against Revan and Malak's Sith Empire — but never on the front lines, never directly: a lone knight striking at its edges, harrying supply and shielding the helpless, while keeping his distance from the Council that had failed him. He was already learning to walk apart.</p><div class="figbar"><span class="fig">Tylo Dara</span></div></div>
+    <div class="ev major"><div class="when">c. 3956 BBY · Revelation</div><h4>The Leviathan &amp; the Truth of Revan</h4><p>The Ebon Hawk is caught in the tractor beam of Malak's flagship, the <span class="nm">Leviathan</span>, commanded by the Republic traitor <span class="dk">Saul Karath</span>. Captured and tortured, the crew escapes — but on the bridge Malak reveals the unthinkable: the amnesiac is <span class="dk">Revan</span>, once the Dark Lord, mind remade by the Council as their unwitting weapon. Bastila is taken; the rest flee with the truth.</p><div class="figbar"><span class="fig">Darth Malak</span><span class="fig">Saul Karath</span></div></div>
+    <div class="ev"><div class="when">c. 3956 BBY · Lehon · the Unknown World</div><h4>The Rakata &amp; the Temple</h4><p>The completed map leads to <span class="nm">Lehon</span>, homeworld of the long-fallen <span class="nm">Rakata</span> — the Builders. Marooned among warring Rakatan tribes and the Elders who remember the Infinite Empire, Revan unlocks the ancient Temple and at last beholds the source of Malak's power: the <span class="dk">Star Forge</span>, orbiting overhead.</p><div class="figbar"><span class="fig">The Rakata</span><span class="fig">The Elders</span></div></div>
+    <div class="ev major"><div class="when">c. 3956 BBY · The End of the War</div><h4>The Star Forge</h4><p>In the final assault, Revan redeems (or strikes down) the captured Bastila, climbs the dark-side factory, and ends <span class="dk">Darth Malak</span> at its heart. The Star Forge is destroyed and the Jedi Civil War won. Hailed as the <span class="hl">Prodigal Knight</span>, Revan soon vanishes alone into the Unknown Regions, driven by a prophecy of a great threat gathering beyond the galaxy's edge that he could neither name nor make others believe — and does not return.</p><div class="figbar"><span class="fig">Revan (redeemed)</span><span class="fig">The Star Forge</span><span class="fig">Bastila Shan</span></div></div>
+  </div>
+
+  <h3 class="era-group"><span class="yr">c. 3951 BBY · KOTOR II</span>The First Jedi Purge &amp; the Dark Wars</h3>
+  <p>The peace did not hold. In the war's shadow a new darkness hunted the survivors — not an army, but three predators who called themselves the <span class="dk">Sith Triumvirate</span>. <span class="dk">Darth Nihilus</span> was a hunger given form, a void that devoured the life of whole worlds and the Force itself; <span class="dk">Darth Sion</span>, the Lord of Pain, was a corpse held together by nothing but hatred; and behind them moved their teacher, <span class="dk">Darth Traya</span> — once the Jedi <span class="nm">Kreia</span>. One by one the scattered Jedi were murdered, until the Order was all but erased and the few survivors went into hiding or death.</p>
+  <p>Into this emptiness returned the <span class="hl">Exile</span> — <span class="nm">Meetra Surik</span>, the general of Malachor, the last Jedi to walk the galaxy openly. From the mining wreck of <span class="nm">Peragus</span> to the restoration world of <span class="nm">Telos IV</span>, she rebuilt her connection to the Force — and, unlike the Order of old, she did not walk alone. The companions who would become legends journeyed with her <em>throughout</em>, a true band rather than a string of strangers: the rogue <span class="nm">Atton Rand</span>, the Miraluka seer <span class="nm">Visas Marr</span>, the Zabrak tech-savant <span class="nm">Bao-Dur</span>, the bounty huntress <span class="nm">Mira</span>, the scholar <span class="nm">Mical</span>, the Echani <span class="nm">Brianna</span>, and the blind, manipulative old woman <span class="dk">Kreia</span> whose counsel hid a Dark Lord. Together they crossed <span class="nm">Nar Shaddaa</span>, <span class="nm">Dxun</span> and <span class="nm">Onderon</span>, <span class="nm">Dantooine</span>, and at last <span class="nm">Malachor V</span> itself, where the Triumvirate fell.</p>
+  <p>Among those Meetra sought out was an old hero of the Mandalorian Wars: <span class="nm">Tylo Dara</span>. By then the estranged Iktotchi had become a fugitive of the Force — roaming the stars alone, using his gifts to <span class="hl">narrowly evade the Triumvirate's hunters</span> who culled every sensitive they found. Meetra found him, and from that moment he fought at her side through all of it. But the war's end demanded the same terrible price of him that it had once demanded of her: the agony of <span class="dk">returning to Malachor V</span> was so total that Tylo was forced to <span class="dk">forgo his powers</span> and leave his lightsaber behind in the dark — and there, in the ruined academy, the lingering presence of <span class="dk">Kreia's ghost</span> remained, waiting. It was on that same blood-soaked ground that Tylo crossed blades with the Mandalorian <span class="nm">Sekan Nightfall</span> — a lone, clanless warrior who did not yet know that Canderous had even survived the Dark Wars, let alone that he would take up the mask. They fought to a perfect <span class="hl">draw</span> — and by Mandalorian honor, Sekan was left holding a <span class="hl">combat blood debt</span>: one day, when Tylo stands again at his full power, the two must duel to the death. Until that day, Sekan follows him — guarding him, keeping him alive, waiting for the rematch fate owes them both. Meanwhile the veteran <span class="nm">Canderous Ordo</span> took up the ancient mask and became <span class="nm">Mandalore</span> — but at first in <span class="hl">seclusion</span>. Only after the war's end did he begin the slow, quiet work of calling the broken clans home, and for a long while scattered warriors like Sekan had no idea their people were being gathered again at all.</p>
+  <div class="timeline">
+    <div class="ev major"><div class="when">c. 3951 BBY · Peragus</div><h4>The Mining Tomb</h4><p>The Exile wakes in a kolto tank aboard the <span class="nm">Peragus</span> mining facility, every soul aboard already dead, guided only by the voice of a blind old woman — <span class="dk">Kreia</span> — and the astromech <span class="nm">T3-M4</span>. Hunted by HK-50 assassin droids and pursued by the scoundrel <span class="nm">Atton Rand</span>, she escapes aboard the recovered <span class="nm">Ebon Hawk</span> as the facility detonates.</p><div class="figbar"><span class="fig">Kreia</span><span class="fig">Atton Rand</span><span class="fig">T3-M4</span></div></div>
+    <div class="ev"><div class="when">c. 3951 BBY · Telos IV</div><h4>Citadel Station &amp; the Restoration Project</h4><p>Above the ruined world of Telos — once razed by Malak, now the showpiece of the Republic's <span class="nm">Restoration Project</span> — the Exile is caught between <span class="nm">Czerka</span> and the peaceful Ithorians fighting for the planet's soul. The fallen Jedi Master <span class="dk">Atris</span> hoards Jedi secrets in a polar academy with her Echani <span class="nm">Handmaidens</span>, one of whom — <span class="nm">Brianna</span> — will follow the Exile.</p><div class="figbar"><span class="fig">Atris</span><span class="fig">Brianna</span><span class="fig">The Ithorians</span></div></div>
+    <div class="ev"><div class="when">c. 3951 BBY · The Fugitive Knight</div><h4>Meetra Seeks Out Tylo Dara</h4><p>Somewhere in the long hunt, Meetra tracks down the estranged Iktotchi hero <span class="nm">Tylo Dara</span> — a survivor living on the run, using his premonitions to slip the Triumvirate's killers again and again. He joins her band and fights at her side through every world that follows, one more legend in a ship full of them.</p><div class="figbar"><span class="fig">Tylo Dara</span><span class="fig">Meetra Surik</span></div></div>
+    <div class="ev"><div class="when">c. 3951 BBY · Nar Shaddaa</div><h4>The Smuggler's Moon &amp; the Hidden Master</h4><p>On the Hutt moon's refugee-choked sprawl, the Exile draws the Exchange's wrath, fends off the criminal droid intelligence <span class="dk">GOTO</span> — who, like Kreia, schemes to "save" the Republic by controlling it — and recruits the bounty hunter <span class="nm">Mira</span>. The Jedi Master <span class="nm">Zez-Kai Ell</span> is found in hiding, one of three survivors who sat in judgment of the Exile long ago.</p><div class="figbar"><span class="fig">GOTO</span><span class="fig">Mira</span><span class="fig">Zez-Kai Ell</span></div></div>
+    <div class="ev"><div class="when">c. 3951 BBY · Dxun &amp; Onderon · I</div><h4>The Mandalore &amp; the Tomb of Freedon Nadd</h4><p>On the jungle moon Dxun, the Exile finds the Mandalorian clans regathering under a masked leader who proves to be <span class="nm">Canderous Ordo</span> — now <span class="nm">Mandalore</span>. Below, a civil war simmers on <span class="nm">Onderon</span> between Queen <span class="nm">Talia</span> and the rebel General <span class="dk">Vaklu</span>; the Master <span class="nm">Kavar</span> hides in the capital, and the ancient Sith king <span class="dk">Freedon Nadd</span>'s tomb stirs in the jungle.</p><div class="figbar"><span class="fig">Mandalore (Canderous)</span><span class="fig">Queen Talia</span><span class="fig">Kavar</span></div></div>
+    <div class="ev"><div class="when">c. 3951 BBY · Dantooine</div><h4>The Ruined Enclave &amp; Khoonda</h4><p>At the bombed-out Dantooine Enclave, the Exile defends the settler militia of <span class="nm">Khoonda</span> against the mercenary <span class="dk">Azkul</span>, restores the shattered sublevel, and finds the stern Master <span class="nm">Vrook</span> — the last of the three hidden Masters — amid the ruins of the life she lost.</p><div class="figbar"><span class="fig">Vrook</span><span class="fig">Khoonda</span></div></div>
+    <div class="ev"><div class="when">c. 3951 BBY · Onderon · II</div><h4>The Coup Broken</h4><p>Returning to Onderon, the Exile and Mandalore shatter Vaklu's coup in the skies and streets of Iziz, securing Queen Talia's throne — and earning the gratitude (and the wariness toward Jedi meddling) that still marks Onderon in the present age.</p><div class="figbar"><span class="fig">Vaklu (defeated)</span></div></div>
+    <div class="ev major"><div class="when">c. 3951 BBY · The Convocation</div><h4>The Masters' Betrayal</h4><p>The surviving Masters — Vrook, Kavar, Zez-Kai Ell — gather one last time at the Dantooine Enclave and resolve to <span class="dk">sever the Exile from the Force</span>, fearing the wound she carries since Malachor. Kreia, revealed as their old foe, strikes them all down — and her true name is spoken at last: <span class="dk">Darth Traya</span>, the Lord of Betrayal.</p><div class="figbar"><span class="fig">Darth Traya</span></div></div>
+    <div class="ev"><div class="when">c. 3951 BBY · Telos · the Fall of Atris</div><h4>The Sith Within</h4><p>Returning to Telos, the Exile finds Atris fallen — corrupted by the Sith holocrons she hoarded — and the world under assault. The path now leads to the two surviving Lords of the Triumvirate, and to Malachor.</p><div class="figbar"><span class="fig">Atris (fallen)</span></div></div>
+    <div class="ev major"><div class="when">c. 3951 BBY · The Ravager</div><h4>The Death of Nihilus</h4><p>The Republic and the Mandalorians storm the world-eater's flagship, the <span class="dk">Ravager</span>, over Telos. With <span class="nm">Visas Marr</span> — Nihilus's own broken servant turned ally — and Mandalore at her side, the Exile destroys <span class="dk">Darth Nihilus</span>, the hunger that devours worlds.</p><div class="figbar"><span class="fig">Darth Nihilus</span><span class="fig">Visas Marr</span></div></div>
+    <div class="ev major"><div class="when">c. 3951 BBY · Malachor V</div><h4>Sion, Traya, and the Last Lesson</h4><p>On the shattered graveyard-world where it all began, the Exile faces <span class="dk">Darth Sion</span> — the Lord of Pain — and unmakes him not with the blade but by proving his hatred can no longer hold his corpse together. At the academy's heart, <span class="dk">Darth Traya</span> gives her final, bitter lesson on the Force and dies, and the planet-killing <span class="nm">Mass Shadow Generator</span> swallows Malachor for good. For <span class="nm">Tylo Dara</span> the return is unbearable: the agony of standing again on Malachor forces him to <span class="dk">renounce his powers</span> and abandon his lightsaber in the ruins — where Traya's restless <span class="dk">ghost</span> lingers on, undeparted. And it is here, amid the dead, that the Mandalorian <span class="nm">Sekan Nightfall</span> crosses blades with the broken Iktotchi and fights him to a <span class="hl">draw</span> — sealing the blood debt that binds them still.</p><div class="figbar"><span class="fig">Darth Sion</span><span class="fig">Kreia / Darth Traya</span><span class="fig">Tylo Dara</span><span class="fig">Sekan Nightfall</span></div></div>
+    <div class="ev"><div class="when">c. 3951 BBY · Aftermath</div><h4>The Lost Jedi &amp; the Powerless Knight</h4><p>The Dark Wars end. The Exile's companions become the seed of a reborn Order, while she herself sets out — drawn, like Revan before her, by the same nameless warning of a threat gathering beyond the galaxy's edge. <span class="nm">Tylo Dara</span>, stripped of his powers and his blade, drifts into the years that follow with the Mandalorian <span class="nm">Sekan</span> shadowing him — guardian and waiting executioner both — until the day a Rattataki operative named Chatni would cross his path and set the campaign in motion. Canderous keeps the mask but withdraws into seclusion, only beginning to call the broken clans home once the war is over — unknown, for now, to most of his own people.</p><div class="figbar"><span class="fig">Meetra Surik</span><span class="fig">Tylo &amp; Sekan</span><span class="fig">Canderous → the clans</span></div></div>
+  </div>
+
+  <h3 class="era-group"><span class="yr">c. 3951–3942 BBY · SWTOR-Era Foundations</span>The Restoration</h3>
+  <p>The years since the Triumvirate have been an uneasy mending — and the seeds of everything now in motion. A weary <span class="nm">Galactic Republic</span>, all but bankrupt and deep in debt to the banking clans, poured its remaining strength into the <span class="nm">Restoration Zones</span> of Telos and Dantooine, rebuilding what the wars had gutted. <span class="hl">Meetra Surik</span> refounded the <span class="nm">Jedi Order</span> — smaller, harder, and far less dogmatic than the Council of old — drawing scattered survivors and newfound sensitives toward the ice world of <span class="nm">Ilum</span> and, in time, to Telos and Coruscant.</p>
+  <p>Beyond the Republic's tired heart, new powers gathered. The reunified <span class="nm">Mandalorian clans</span> passed from Canderous toward a new generation. The cold, isolationist <span class="nm">Chiss Ascendancy</span> of the Unknown Regions, long a rumor, began at last to make formal contact. And in the streets and senates a louder voice rose — the <span class="nm">Silent Hand</span>, an anti-Force populist movement preaching that the galaxy would never know peace until <em>both</em> Jedi and Sith were spent like coin. Czerka, Adascorp, the banking clans, and the great syndicates grew fat in the gaps the wars had left.</p>
+  <div class="timeline">
+    <div class="ev"><div class="when">c. 3946 BBY · Rebuilding</div><h4>The Restoration Zones &amp; the Indebted Republic</h4><p>Telos and Dantooine are slowly restored under Chancellor <span class="nm">Cressa</span>; the war-strained Republic leans on credit owed to the InterGalactic Banking Clan as it turns inward to rebuild.</p></div>
+    <div class="ev"><div class="when">c. 3946 BBY · The Order Reborn</div><h4>Meetra Surik & the Gathering at Ilum</h4><p>The Exile rebuilds the Jedi from her own surviving companions — Atton, Visas, Bao-Dur, Mira, Mical, Brianna — and a trickle of new sensitives, gathering them first on the ice world of Ilum. The revered Zabrak Master <span class="nm">Kao Cen Darach</span> would not join until much later, sought out and brought into the fold by the crew of the <em>Dara Dara</em>.</p></div>
+    <div class="ev"><div class="when">c. 3946 BBY · The Anti-Force Tide</div><h4>The Rise of the Silent Hand</h4><p>A populist movement under a hidden demagogue, "The Listener," spreads through riot and assassination — and declares whole worlds, like Ilum, Nar Shaddaa, and the resort-world Makeb, "free zones."</p><div class="figbar"><span class="fig">The Silent Hand</span><span class="fig">"The Listener"</span></div></div>
+  </div>
+
+  <h3 class="era-group"><span class="yr">c. 3941 BBY · The Present Age</span>The Csilla Accords &amp; the New Map</h3>
+  <p>The present age is defined by a single event: the great inter-faction <span class="nm">Summit on Csilla</span>, hosted by the Chiss in their frozen Unknown-Regions capital, where the powers of the galaxy gathered to redraw the order of things. It was nearly drowned in blood — a hidden conspiracy struck at the summit with an army of perfect impostors (see Part II) — but it survived, and from it came the accords that shape the galaxy as it now stands.</p>
+  <div class="timeline">
+    <div class="ev present major"><div class="when">c. 3941 BBY · The Accords</div><h4>The New Order of the Galaxy</h4>
+      <p>From the Csilla Summit: the <span class="nm">Jedi Order</span> is formally restored under Republic charter and granted the world of <span class="nm">Tython</span>, its ancient cradle. The <span class="nm">Mandalorians</span> regain Mandalore itself and the right to militarize under Republic oversight, and are bound as galactic first-responders. The <span class="nm">Republic</span> withdraws from the deep Outer Rim, which splits into the <span class="nm">Trail Regions</span> and the <span class="nm">Mining Coalition</span> under Senator <span class="nm">Mon Gazza</span>. The <span class="nm">Chiss</span> take wardenship of the Unknown Regions but decline all alliance and trade until they have studied the wider galaxy. The <span class="nm">Iktotchi</span> of Iktotch are installed as neutral arbiters of disputes between the great powers.</p>
+      <div class="figbar"><span class="fig">The Csilla Accords</span><span class="fig">Tython restored</span><span class="fig">Mandalore returned</span><span class="fig">The Mining Coalition</span><span class="fig">Iktotchi arbiters</span></div></div>
+  </div>
+
+  <div class="callout">
+    <h4>The Unexplained — What the Chronicle Omits</h4>
+    <div class="warn">Rumor, anomaly, and absence. No authority claims these. They are recorded so they are not forgotten.</div>
+    <ul>
+      <li><b>Worlds going dark.</b> Settled systems toward the rim fall silent, then seem to vanish from the relays altogether. Investments and populations quietly withdraw.</li>
+      <li><b>Ships that do not return.</b> Vessels venturing into certain reaches of the Unknown Regions are lost at rates no storm or pirate explains; the lanes are being abandoned.</li>
+      <li><b>The unknown warship.</b> A vessel of a make no fleet recognizes — vast and heavily armed — has appeared at the edge of an engagement before vanishing into hyperspace.</li>
+      <li><b>The waking machines.</b> Ancient <b>Rakatan</b> technology, long thought dead, has been found stirring on more than one world. Corporate and Republic interests race quietly to understand it — and to find the lost <b>Foundry</b> that Revan is said to have sought.</li>
+      <li><b>The impostors.</b> The Csilla crisis revealed living infiltrators able to wear other faces perfectly. Who made them, and on whose order, remains officially unanswered.</li>
+    </ul>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- PART II — THE CREW'S TRAIL -->
+  <!-- ============================================================ -->
+  <div class="part-head" id="part2">
+    <div class="pnum">II</div>
+    <div class="kicker">Part Two</div>
+    <h2>The Crew's Trail</h2>
+    <p class="intro">The campaign as it has unfolded — the long road of the crew of the <em>Dara Dara</em>, from a quiet posting on Alderaan to the frozen halls of Csilla and the buried vaults of the deep rim — roughly <b>3943–3940 BBY</b>. Told in order, world by world, as the players have lived it.</p>
+  </div>
+
+  <div class="chapter"><div class="ch-no">Chapter I · c. 3943 BBY · Alderaan</div><h4>The Iktotchi in the Dark</h4><div class="loc">House Thul · the casino · the train · the cleared house</div>
+    <p>For years <span class="hl">Chatni</span> served the Alderaanian noblewoman <span class="nm">Cardina Thul</span> under the name <em>Nerry</em> — a quiet, useful operative in a quiet, useful life. That ended when a horned stranger interrupted her breakfast: <span class="nm">Tylo Dara</span>, an Iktotchi ex-Jedi master who had been hunting her for half a year on the strength of his premonitions, trailed by the Mandalorian <span class="nm">Sekan Nightfall</span>, who would not let an unfinished duel with Tylo go. Cardina set them all on a single mission — the discovery that <span class="nm">Iktotchi were being held and tortured</span> somewhere in the house's reach.</p>
+    <p>Tylo played bait and was duly snatched from a casino and nearly frozen in carbonite; Chatni shadowed, the team struck, and a running fight through a train and a comms-dead hangar followed. Sekan soaked fire like only a Mandalorian can while Tylo raced to open the hangar doors. They won, then were sent straight into a second house-cleaning of "bad, bad people" — Sekan punched Tylo mid-ambush, Tylo nearly executed the surrendering ringleader, and Chatni swore (twice) never to work with the pair again. Cardina, delighted, paid well and hired them all again anyway. The Iktotchi thread — and Tylo's vow to free his people — had been opened.</p></div>
+
+  <div class="chapter"><div class="ch-no">Chapter II · c. 3943 BBY · The Deep Expedition</div><h4>Six Months Beneath the Sea</h4><div class="loc">a hidden world · the underwater Sith bases · Jera · the Jedi temple</div>
+    <p>Cardina sent the crew — now joined by the blind, dangerous <span class="nm">DeLuca</span> — on a months-long expedition to recover secrets House Thul wanted buried. They found ships dragged down by a strange seismic event, a fortune in credits to be laundered (which Chatni promptly mined with a bomb), and, beneath the waves, a chain of dead <span class="nm">Sith bunkers</span>: a Sith woman's helmet, lightsaber scars on the walls, and submarines pointing deeper still. Two months of self-taught submarining later they reached a second base — and were met by the rogue dark-sider <span class="dk">Jera</span>.</p>
+    <p>Tylo charmed a truce: the crew would fetch what Jera wanted from a third, flooding base in exchange for the location of a <span class="nm">Jedi temple</span> — and a hint of an artifact of Chatni's own people. They delivered, skimming rare lightsaber metals on the way out, and Jera gave Chatni a <span class="dk">bowl</span> as a "gift" and an invitation to the gathering on <span class="nm">Ilum</span>. At the temple, only DeLuca could open the door; inside lay his late mother's crystal, holocrons, and a log of all who had come before. Then it went wrong: Chatni amplified DeLuca's meditation on his mother, both rolled brilliantly and catastrophically, and DeLuca's mind <span class="dk">flared across the entire galaxy</span> — lighting up hundreds of Force-sensitives for the Silent Hand to find, and brushing the deep-space presence of his own father. The Silent Hand's ships were already inbound; Chatni was nearly killed by orbital fire. Tylo and Sekan destroyed three ships to drag her out, and she spent weeks in a kolto tank. The ship was repainted and renamed the <span class="hl">Dara Dara</span>.</p></div>
+
+  <div class="chapter"><div class="ch-no">Chapter III · c. 3942 BBY · Dxun</div><h4>The Mandalore and the Tomb</h4><div class="loc">the jungle moon · Canderous · Freedon Nadd · Alra Wren</div>
+    <p>On the Mandalore-held moon of Dxun the crew met <span class="nm">Alra Wren</span> — a spirited Mandalorian artificer Chatni adored on sight — and the aging <span class="nm">Canderous Ordo</span>, still bearing the mask of Mandalore. For <span class="nm">Sekan</span> this was a revelation: only here did he learn that Canderous had survived the Dark Wars at all, had taken up the mask, and had quietly drawn the scattered clans back together — and that this reborn Mandalorian power now stood as an ally to the very crew he travelled with. Sekan fought for the honor of his line and won, becoming a chieftain. While hunting a lost Mandalorian the crew battled a dark-side beast, and Chatni's <em>spirit sight</em> located the tomb of the ancient Sith king <span class="dk">Freedon Nadd</span> — its growing influence a slow poison on the moon. The crew secured Alra's company (a six-month loan), drank deep, and set course for Ilum by way of a lightsaber rumored to lie on the dead world of <span class="nm">Malachor V</span>.</p></div>
+
+  <div class="chapter"><div class="ch-no">Chapter IV · c. 3942 BBY · Malachor V</div><h4>The Grey Blade Reclaimed</h4><div class="loc">the shattered world · the Sith academy · the abandoned saber · Kreia's ghost</div>
+    <p>The "lost" lightsaber the crew sought on the gravity-wracked corpse of Malachor was no stranger's — it was <span class="nm">Tylo's own</span>, the blade he had cast aside in the ruined Sith academy years before, when the agony of this place at the end of the Dark Wars forced him to renounce his powers. He had come back to take it up again. But Malachor does not give its dead back freely: the lingering <span class="dk">ghost of Kreia — Darth Traya</span> still haunted the academy, and as Tylo's hand closed on the hilt the spirit-echo nearly killed him. He survived transformed — no longer simply a Jedi, but <span class="hl">grey</span>, his power returned and changed all at once. Chatni picked the academy's automated door; they glimpsed a great beast; and they fled as the unstable world tore itself further apart, making at last for Ilum.</p></div>
+
+  <div class="chapter"><div class="ch-no">Chapter V · c. 3942 BBY · Ilum</div><h4>The Gathering of the Force</h4><div class="loc">the ice caves · Meetra Surik · the bowl · Master Voll · the crystal</div>
+    <p>Ilum was where the scattered Force survivors had gathered around <span class="nm">Meetra Surik</span>, the Exile herself, alongside <span class="nm">Brianna</span>, <span class="nm">Mira</span>, the rogue dark-sider <span class="dk">Jera</span>, and the hardliner <span class="dk">Master Voll</span> — who had once tried to blow Chatni's head apart. Chatni and the Exile took each other's measure; Meetra learned Chatni's true name and saw the Nightsister beneath the alias. Tylo dueled and beat Jera. The crew handed DeLuca's care to Meetra.</p>
+    <p>The cursed <span class="dk">bowl</span> finally revealed itself as a dark-side trap; Meetra, furious, forced Jera to help undo it and to sever the Force from the murderous Master Voll. Chatni built a flawless gas trap to capture Voll; Jera, with Chatni's new grasp of Sith alchemy, ripped his connection away. Jera then drained the bowl's power for herself and produced a small, sinister ally — <span class="dk">Lord Ratek</span> — to Meetra's fury. Amid it all, the crew learned a kyber crystal meant for Chatni waited on Ilum; they excavated it from a cave-beast's lair. Meetra set two missions: the resort-world <span class="nm">Makeb</span>, and the rescue of a man held aboard a Silent Hand leviathan. Alra began teaching Chatni to build a lightsaber.</p></div>
+
+  <div class="chapter"><div class="ch-no">Chapter VI · c. 3942 BBY · Makeb</div><h4>The Shan and the Zabrak</h4><div class="loc">the floating mesas · Satele Shan · Kao Cen Darach</div>
+    <p>On the lush resort-world of Makeb, <span class="hl">Chatni and Tylo</span> together won over two extraordinary allies who had stood apart from the reborn Order — and brought them into it. The first was <span class="nm">Satele Shan</span>, in this telling the <span class="hl">daughter of Revan and Bastila Shan</span>, heir to the two greatest legends of the age. The second was the Zabrak master <span class="nm">Kao Cen Darach</span> — a warrior-philosopher who had never been one of Meetra's KOTOR-era survivors, and who joined the Jedi only because the crew of the <em>Dara Dara</em> sought him out and earned his trust. He would become one of Chatni's truest teachers. On the long voyage home Chatni learned a lightsaber stance from Kao Cen and practiced battle meditation with Tylo, while she and Alra stole a perfect afternoon in Makeb's lakes and waterfalls.</p></div>
+
+  <div class="chapter"><div class="ch-no">Chapter VII · c. 3942 BBY · The Leviathan Strike</div><h4>Twenty-Six Thousand</h4><div class="loc">a Silent Hand warship · the rescue · the bomb</div>
+    <p>Back on Ilum, Chatni refused Meetra's "gorilla" assault in favor of her own signature: a teleport-door breach and a 10-kilogram bomb, funded personally by the Exile at 400,000 credits. Tylo flew them in under stolen camo-crystals and set them beside the prisoner's cell; Chatni cracked the force-field under fire (rolling brilliantly), they pulled the man free through her portal — he snatched an artifact on the way — and she detonated. The warship died, and <span class="dk">twenty-six thousand</span> with it. Chatni felt every one of them. She is, by her own grim accounting, a committer of war crimes now.</p></div>
+
+  <div class="chapter"><div class="ch-no">Chapter VIII · c. 3942 BBY · The Matriarch's Mark</div><h4>Spirit Sever</h4><div class="loc">the Ilum wilds · the Nightsister mothers</div>
+    <p>Meditating alone on her "slight genocide," Chatni was ambushed in her own mind by the old Nightsister matriarchs of <span class="nm">Dathomir</span>. She killed the previous mother and forced the rest back, waking exhausted and covered in the burning tattoos of the matriarch's sigil — and possessing a new and terrible power: <span class="dk">spirit sever</span>. The mark of a matriarchal candidate had surfaced; her heritage would not leave her alone.</p></div>
+
+  <div class="chapter"><div class="ch-no">Chapter IX · c. 3941 BBY · Dxun & Tatooine</div><h4>The Succession and the Zombies</h4><div class="loc">Canderous fading · Torren Wren · the Rakghoul desert · Luxa</div>
+    <p>Returning to Dxun, the crew found morale in ruins: the Freedon Nadd tomb had grown stronger and the aging Canderous, never having left the moon, was being slowly bent by it. Chatni gently healed his mind enough that he could be persuaded to step down, naming the steady <span class="nm">Torren Wren</span> as the new Mandalore. They took the recovering Canderous with them to <span class="nm">Tatooine</span> to buy ships for Meetra's struggling people.</p>
+    <p>Tatooine was a Czerka misery of queues and quarantine. The crew dug out four buried ships, took three, and answered an SOS from a mercenary band and their <span class="nm">Cathar archaeologist</span> client — finding them besieged by Czerka workers turned to fast, mindless <span class="dk">infected</span> by some plague. The crew cleared them out; Alra was nearly killed and saved only by a rare off-world surgeon. To pay for it, Chatni had to face the Exchange's <span class="nm">Luxa</span> — a slick, pink-skinned operator who extorted 200,000 credits and a great deal of smug. The crew slipped away with Alra alive, all four flying out in separate ships, Chatni and Alra bonding over the long first night.</p></div>
+
+  <div class="chapter"><div class="ch-no">Chapter X · c. 3941 BBY · Kashyyyk</div><h4>The Wookiee Exodus and Revan's Allies</h4><div class="loc">the Mandalorian relocation · battle meditation · the Rakatan archive</div>
+    <p>The Mandalorians had abandoned Dxun for <span class="nm">Kashyyyk</span>, negotiating with the Wookiee chieftain for a foothold. Chatni offered Torren her battle meditation; he answered that it was "not a deal but mutual trust," and let her enhance his hunting parties through her brother-in-arms <span class="nm">Kultak</span>. During one hunt Tylo pressed the wrong control in an ancient structure and vanished — teleported to a hidden <span class="hl">Rakatan archive</span>, where a triangle-headed being interrogated him. Tylo bluffed his way through by invoking <span class="nm">Revan</span> (who had allied with these beings) and the password of <span class="nm">Satele Shan, daughter of Bastila</span>. In return he was given a holo cataloguing <span class="hl">hundreds of Jedi held in stasis</span> on a distant world, and intelligence on the system where the Chiss and the "Open Palm" met. Through this, the crew first learned of a Mandalorian tracker named <span class="nm">Brunos</span> (to whom Chatni accidentally bonded), and the new chieftain <span class="nm">Drax</span>.</p></div>
+
+  <div class="chapter"><div class="ch-no">Chapter XI · c. 3941 BBY · The Citadel</div><h4>GOTO, the Genoharadan, and a Name Revealed</h4><div class="loc">the Mandalorian summit · the Exile · the secret meeting</div>
+    <p>Aboard a Mandalorian warship the crew reached <span class="nm">the Citadel</span> for a great pre-Summit council. There the shape of the galaxy's near future was drawn: the Mandalorians gained standing; the <span class="nm">Jedi Order</span> regained its privileges under the Republic and the world of Python (Tython); the <span class="nm">Iktotchi</span> were named arbiters of disputes; and <span class="nm">Cardina Thul</span> took the Jedi enclave onto her own world. In a smaller, sealed meeting, the crime-lord intelligence <span class="nm">GOTO</span> exposed Chatni utterly — her true name, her Black Cell past, her old contract with <span class="nm">HK-47</span> — and revealed the true power behind her troubles: the <span class="dk">Genoharadan</span>, a tiny cabal of immensely connected people who had marked her since she killed a senator on Korriban. Senator <span class="nm">Cressa</span> set the crew a brutal job: identify the Genoharadan's members and tag their ships at the coming Summit so they could be ripped from hyperspace and boarded. Payment: a planet. Chatni accepted. She also learned that the Exchange's <span class="nm">Luxa</span> had risen to <span class="nm">Second Hand</span>, that Tylo and the Iktotchi <span class="nm">General Kladar</span> now shared a premonition of a vast coming war, and that Sekan had been quietly told by Torren to keep watch on the crew and report back.</p></div>
+
+  <div class="chapter"><div class="ch-no">Chapter XII · c. 3941 BBY · The Genoharadan Hunt</div><h4>From Herdessa to the Kabaal</h4><div class="loc">Mon Gazza · the Hoth Czerka station · the Valia kidnapping · the summit massacre · the Hunter</div>
+    <p>The hunt ranged across the galaxy. On <span class="nm">Herdessa</span>, GOTO confirmed he wanted the Genoharadan dead too, and pointed the way. Atop a spire, Chatni interrogated the honest <span class="nm">Senator Mon Gazza</span>, learning of <span class="nm">Senator Valia</span> — Quarren security chief and banking-guild power — and the demilitarization scheme called <em>Scalpel</em>. At a <span class="nm">Czerka station near Hoth</span>, Chatni teleported through the archives, killed a Force-sensitive Black Cell agent, and learned the worst of it: Czerka was researching <span class="hl">Rakatan</span> technology, hunting the <span class="nm">Foundry</span> and a record left by Revan, and tracking something for fourteen years. As the crew fled, a <span class="dk">vast, unknown warship</span> none of them recognized tore out of hyperspace and opened fire.</p>
+    <p>With <span class="nm">Atton Rand</span> hired on, Chatni kidnapped Senator Valia from her own Coruscant office (disguised by the skin-grafter <span class="nm">Vessa</span>), severed her from the Force, and broke loose the Genoharadan's secrets: <span class="hl">fourteen members</span> who do not know each other's names; a goal of "stability and protection from the outer rim"; a meeting-place called <span class="nm">the Kabaal</span>, a refitted, invisible Imperial-era station that opens only to the <span class="dk">Black Codex</span>; and a chilling note — that some of the fourteen might be one person in five bodies. At the Kabaal, Chatni laid traps and waited as five of the six arrived: the envoy <span class="dk">Kovacs</span> in Revan-era Sith armor; the <span class="dk">Hunter</span>, blond and shielded; the "shaper" <span class="nm">Director Polard</span>; a glasses-fused Arkanian scientist; and an old "prince." She blew them apart — but the <span class="dk">Hunter</span> did not even flinch, executed the wounded Polard ("for the Republic"), and proved, when Atton finally took his head, to be no man at all: <span class="dk">sparks, not blood</span>. The crew escaped the collapsing station with the Genoharadan broken but the Hunter's true nature — and the lost <span class="dk">Codex</span> — unresolved.</p></div>
+
+  <div class="chapter"><div class="ch-no">Chapter XIII · c. 3941 BBY · Manaan</div><h4>The Day of Peace</h4><div class="loc">the Selkath ocean-world · Atton</div>
+    <p>Atton took Chatni to <span class="nm">Manaan</span>, the Selkath ocean-world and the galaxy's source of kolto, where he was known and welcomed and she was gifted a ring marking her as a guest of the Selkath. For one day there was no war: extraordinary food, a submarine ride, an underwater meditation in which Chatni reached enlightenment — and Atton held her hand. It was, she realized, the only true peace she had felt. He finished teaching her the deceptive <em>Trakata</em> saber technique on the way home.</p></div>
+
+  <div class="chapter"><div class="ch-no">Chapter XIV · c. 3941 BBY · Iktotch</div><h4>Tylo's Honors and the Nightsister Prophecy</h4><div class="loc">the Iktotchi homeworld · the new Order · Chatni's heritage</div>
+    <p>On Tylo's homeworld moon of <span class="nm">Iktotch</span>, the precognitive Iktotchi welcomed him as a hero, heaped him with honors and titles, and — at his charismatic urging — granted the founding of a <span class="hl">new Order</span>. They tested Chatni's heritage through their visions and the seers of the <span class="nm">Ember Conclave</span>: she learned she is a <span class="dk">matriarchal candidate</span> of Dathomir, that a dark prophecy holds she could "push the galaxy into darkness" if she united the Nightsisters, and the deep history of her people — that the <span class="nm">Kwa</span> first gave Dathomir and Iktotch the Force and the stars, that the Rakata then enslaved and the Sith later slaughtered, and that a banished Jedi had seeded Dathomir with the Nightsisters a thousand years gone. Chatni and Tylo would be raised as statues on Iktotch. General <span class="nm">Kladar</span>, Tylo's old war-friend and a commander of the Stormguard, faced an arranged marriage; Tylo would be his best man.</p></div>
+
+  <div class="chapter"><div class="ch-no">Chapter XV · c. 3941 BBY · Alderaan, Again</div><h4>Queen of the Mountain</h4><div class="loc">Cardina ascendant · the Jedi enclave · Bao-Dur, Mira, Satele</div>
+    <p>Returning to Alderaan, the crew found <span class="nm">Cardina Thul</span> transformed — crowned, royal, having "gutted" rival houses to consolidate power, and hosting the restored Jedi enclave on her world. There Chatni trained: teaching from <span class="nm">Mira</span>, personal-shield work from the explosively cheerful <span class="nm">Bao-Dur</span>, and quiet hours with <span class="nm">Satele Shan</span>, whose focus had begun to drift toward something stirring in the Unknown Regions. They also glimpsed a perfect double of the <span class="dk">Hunter</span> on Alderaan — proof of cloning. Cardina, now a monarch, made plain that Chatni would one day have to choose a side.</p></div>
+
+  <div class="chapter"><div class="ch-no">Chapter XVI · c. 3941 BBY · Tython</div><h4>The Crossroads</h4><div class="loc">the Jedi cradle · the path decisions · severing Dathomir</div>
+    <p>On <span class="nm">Tython</span>, the ancient Jedi homeworld now granted to the Order, Chatni weighed her future against the counsel of Meetra, the scholar <span class="nm">Mical</span>, and the Zabrak master <span class="nm">Kao Cen Darach</span>. Her bonds, her tattoos, and the well of dark power on Dathomir were all chains. She ended her master-apprentice tie to Tylo, and resolved on the hardest road: to <span class="hl">sever herself from Dathomir</span> entirely. The act nearly killed her and shattered her lightsaber, but Canderous — now an addict for the life she had given him, and oddly devoted — stood guard over her body until it was done.</p></div>
+
+  <div class="chapter"><div class="ch-no">Chapter XVII · c. 3941 BBY · Csilla</div><h4>The Summit and the Impostors</h4><div class="loc">the Chiss homeworld · the Iktotchi arbiters · the doppelgänger crisis</div>
+    <p>The great <span class="nm">Summit on Csilla</span> convened in the Chiss capital — an ice world of rigid blood-hierarchy, ringed by Chiss warships and stationed Silent Hand vessels, security so total that lightsabers were catalogued at the door. Here the Iktotchi sat as the summit's neutral <span class="hl">arbiters</span>, and every great power of the galaxy gathered in one place: Republic, Jedi, Mandalorians, Chiss, the corporations and banking guilds, Cardina's Alderaan, the Selkath, and the Exchange's ever-present <span class="nm">Luxa</span>. Chatni worked the security levels, mapping patrols and tagging the Genoharadan ships for Cressa's trap.</p>
+    <p>Then the killing began. <span class="nm">Sekan</span> spotted a doppelgänger; Chatni confirmed a guard was a <span class="dk">shapeshifter</span>; and the body count climbed by the hour as perfect impostors murdered their targets and took their places. The crew raced to gather the people who mattered — Cardina, Mon Gazza, the Iktotchi delegation, Chancellor Cressa, the Selkath — onto Meetra's ship before the slaughter could claim them, and broke a captured shifter's mind. The truth: the <span class="dk">Genoharadan</span> (the Hunter's work) had grown an army of clones — <span class="dk">thirty-five already in place, seventy more to come, thousands off-world</span> — with a kill-priority list led by GOTO, the Jedi, and Cardina. Cardina announced the conspiracy from the summit floor; the building turned into a level-by-level war as the impostors grew Force-weapons from their own flesh. In the chaos a Chiss officer cornered Chatni and said, quietly: <em>"I would appreciate it if you'd stop tracking me across the galaxy."</em> The crisis was survived, the Exchange was named the Chiss' first official enemy, GOTO and Luxa walked away in cuffs (and out again), and the <span class="dk">Hunter</span> was reported dead — his fortune, and his Codex, lost. From the wreckage came the <span class="nm">Csilla Accords</span> that now order the galaxy.</p></div>
+
+  <div class="chapter"><div class="ch-no">Chapter XVIII · c. 3941 BBY · Ord Cestus</div><h4>The Reckoning with Jera</h4><div class="loc">the echo of Dathomir · battle meditation · the Book of Shadows</div>
+    <p>Suspecting the dark-sider <span class="dk">Jera</span> of meddling with Dathomir, the crew lured her into a duel. From her ship Chatni wove her finest battle meditation, painting a chamber floor-to-ceiling in her own blood as a ritual focus, while Tylo, Sekan, and a now-thriving Canderous fought Jera, her pet Sith <span class="dk">Lord Ratek</span>, and a channeling Nightsister. They won without a scratch. Struck down, Jera spat a dying curse and an omen — <em>"When they return, you will be the first to die"</em> — and surrendered her ghost. The crew took her ship, her saber, and a copy of the <span class="dk">Book of Shadows</span>; Canderous, fully alive and now Chatni's strange devotee, declared her his friend.</p></div>
+
+  <div class="chapter"><div class="ch-no">Chapter XIX · c. 3940 BBY · Tython, Again</div><h4>The White Blade</h4><div class="loc">the meditations · the lightsaber reborn · holocrons · Atton</div>
+    <p>Back on Tython, Chatni at last walked her own road. Two weeks of meditation in the light-side springs offered her three paths — communion, empowerment, or binding — and she chose herself: skill, knowledge, and a deeper understanding of the Force and its language, working <em>with</em> the Force rather than chaining it. She rebuilt her shattered weapon from the broken pieces and the ancient saber-parts she had gathered — a blade with three states, blue-eyed and pure white, that had waited thousands of years for a wielder who needed it rather than wanted it. She mastered the creation of <span class="hl">holocrons</span> and a portal-network few living have managed. And in the small hours, as he packed his ship to slip away, <span class="nm">Atton Rand</span> kissed her and told her the new her suited her well.</p></div>
+
+  <div class="chapter"><div class="ch-no">Chapter XX · c. 3940 BBY · Bel Savas</div><h4>The Buried Vault</h4><div class="loc">the artificial ice-world · Soah the Infernal One · the imprisoned races · the descent</div>
+    <p>Seeking materials for her holocrons, Chatni and Tylo (with Satele) made for <span class="nm">Bel Savas</span>, an ice world whose artificial ecosystems concealed a colossal <span class="hl">Rakatan vault</span>. Inside they found a handful of escaped slaves of a race called the <span class="nm">Gormak</span>, hundreds of thousands more in stasis pods, and — at the bottom — the last living Rakatan emperor, <span class="dk">Soah the Infernal One</span>, imprisoned by his own people for experimenting on his own kind, and quietly insane after millennia of forced dreaming. He knew Revan; he held fifty-six imprisoned races and millions of individuals; and he set the crew a devil's bargain to free them.</p>
+    <p>What followed went deep into places the public Chronicle does not record: a dream-walking guide from the crystal-skinned people of <span class="nm">Voss</span>, glimpses of an ancient spy named <span class="dk">Xesh</span>, and a final confrontation with imprisoned dark spirits older than the Sith Wars — beings that offered Chatni knowledge, power, and a throne, and whom she refused and destroyed. At the last she stood again at her crossroads and chose, as she always has, <span class="hl">her own path</span>. <em class="note">(The full truth of what those spirits revealed is sealed in the GM record, by the compiler's instruction — it is not yet known to the galaxy.)</em></p></div>
+
+  <blockquote class="holo">"Everyone agrees the galaxy is at peace. The crew of the <em>Dara Dara</em> have simply been to more of the places where that is not quite true."</blockquote>
+
+
+  <!-- ============================================================ -->
+  <!-- PART III — THE CHARACTER CODEX -->
+  <!-- ============================================================ -->
+  <div class="part-head" id="part3">
+    <div class="pnum">III</div>
+    <div class="kicker">Part Three</div>
+    <h2>The Character Codex</h2>
+    <p class="intro">Every figure of note, set down one by one — who they are, their species and physical build, where they stand, and the web of bonds that defines them: <span style="color:var(--gold-bright)">Close</span>, <span style="color:var(--jade)">Friends</span>, <span style="color:var(--holo)">Allies</span>, <span style="color:#d49a52">Tension</span>, and <span style="color:var(--blood)">Enemies</span>. The living come first; the dead are gathered at the end.</p>
+  </div>
+
+  <div class="grp">The Crew of the Dara Dara</div>
+  <p class="grp-desc">A grey-walking band of misfits bound by debts, bonds, and a repainted ship.</p>
+  <div class="codex">
+    <div class="char crew"><h4>Chatni</h4><div class="alias">aliases: "Nerry," "Paya," "Rising Smoke Chatni"</div><div class="who">Rattataki Nightsister · grey Force-walker · former Black Cell operative</div>
+      <p>The crew's shadow and conscience — infiltrator, bomb-maker, door-builder, and self-taught master of light, dark, and balance. A matriarchal candidate of Dathomir who has severed herself from her people's dark well to walk her own path. Hunted across the galaxy by the Genoharadan since she killed a senator on Korriban.</p>
+      <p class="look"><b>Looks:</b> a <b>Rattataki</b> — chalk-pale, austere, with faint traces of human and Zabrak in her blood. <b>Build:</b> lean and wiry, of middling height, deceptively slight for how dangerous she is. Marked with the cold-burning sigil-tattoos of a Nightsister matriarch; pink-eyed since her rebirth; carries a white tri-state lightsaber and hides behind grafted disguises.</p>
+      <div class="rel">
+        <div class="c"><span>Close</span> Alra Wren · Tylo Dara · Atton Rand</div>
+        <div class="f"><span>Friends</span> Mical · Mira · Cardina Thul · Canderous · Kao Cen · Brunos · the Selkath</div>
+        <div class="al"><span>Allies</span> Meetra Surik · the Restored Jedi · Torren Wren &amp; the Mandalorians · Chancellor Cressa · GOTO (uneasy) · Luxa (uneasy)</div>
+        <div class="t"><span>Tension</span> DeLuca · Meetra (her methods) · Sekan (early) · the Iktotchi Ember Conclave</div>
+        <div class="en"><span>Enemies</span> the Genoharadan · the Hunter · the rival Candidate · Mother Githzerion · the Crucible</div>
+      </div></div>
+
+    <div class="char crew"><h4>Tylo Dara</h4><div class="who">Iktotchi · grey Force-seer · hero of his people · founder of the new Order</div>
+      <p>The crew's face, negotiator, and pilot — and one of the great living heroes of the age. A Mandalorian-Wars Jedi turned estranged fugitive, sought out by Meetra in the Purge, who renounced his powers at Malachor and reclaimed his blade years later to return grey. Carries a darkness within he does not fully control, and a Mandalorian's blood-debt over his head.</p>
+      <p class="look"><b>Looks:</b> an <b>Iktotchi</b> — leathery ochre skin, crowned with great down-curving horns. <b>Build:</b> tall and broad-shouldered, with the easy poise of a card-sharp; honored with statues on his homeworld.</p>
+      <div class="rel">
+        <div class="c"><span>Close</span> Chatni · General Kladar</div>
+        <div class="f"><span>Friends</span> Meetra Surik · Alra Wren · Satele Shan · Kao Cen · the Iktotchi people</div>
+        <div class="al"><span>Allies</span> the Restored Jedi · the Iktotchi · the Mandalorians · Cardina Thul</div>
+        <div class="t"><span>Tension</span> Sekan (the duel to come) · Mical (mutual ribbing) · his own inner dark</div>
+        <div class="en"><span>Enemies</span> House Rist · the Genoharadan · the slavers of his people</div>
+      </div></div>
+
+    <div class="char crew"><h4>Sekan Nightfall</h4><div class="who">Human Mandalorian · sworn guardian · holder of a blood-debt</div>
+      <p>A heavy-armored Mandalorian bound to Tylo by the oldest of debts. On the dead ground of Malachor the two fought to a perfect draw, leaving Sekan owing a combat blood-debt — one day, when Tylo stands at full power, they duel to the death. Until then he guards Tylo, keeping him alive for the rematch. He later refounded Clan Nightfall, then passed it to Dax Vein to keep questing — and was quietly tasked by Torren to watch the crew.</p>
+      <p class="look"><b>Looks:</b> a <b>human Mandalorian</b>, faceless behind full Neo-Crusader plate and beskar. <b>Build:</b> a bulky, immovable wall of a man — heavy through the shoulders, built to soak punishment; an experimental two-handed blade and a heavy rifle.</p>
+      <div class="rel">
+        <div class="c"><span>Close</span> the crew</div>
+        <div class="f"><span>Friends</span> Torren Wren · Dax Vein · Kultak</div>
+        <div class="al"><span>Allies</span> Canderous · the Mandalorian clans</div>
+        <div class="t"><span>Tension</span> Tylo Dara (the duel fate owes them)</div>
+        <div class="en"><span>Enemies</span> the Hunter · the Genoharadan impostors · Clan Varad (defeated)</div>
+      </div></div>
+
+    <div class="char crew"><h4>DeLuca</h4><div class="who">Miraluka Force-seeker · "the pillar of light"</div>
+      <p>A blind seeker whose meditations reach catastrophically far — once igniting Force-sensitives across the entire galaxy and brushing his own father, lost in deep space. Broken by six months in a warp-fever, he views the world through the lens of a monstrous "master," much as Visas Marr once did. Placed under Meetra's care; surveys distant worlds with Atton. He carries a quiet hope of one day rekindling what he and Chatni once had — though she keeps her guard up.</p>
+      <p class="look"><b>Looks:</b> a <b>Miraluka</b> — eyeless, a cloth band across the sockets, seeing only through the Force. <b>Build:</b> slight and slender, with the eerie stillness of the blind seer.</p>
+      <div class="rel">
+        <div class="c"><span>Close</span> Chatni (hopes to rekindle)</div>
+        <div class="f"><span>Friends</span> Meetra Surik · Atton Rand</div>
+        <div class="al"><span>Allies</span> the Restored Jedi</div>
+        <div class="t"><span>Tension</span> Chatni (she stays wary) · his own father (feared)</div>
+      </div></div>
+
+    <div class="char crew"><h4>Alra Wren</h4><div class="who">Human Mandalorian artificer · the crew's smith · Clan Wren</div>
+      <p>The crew's craftswoman and Chatni's dearest friend — builder of suits, gear, and lightsaber components, fierce in a brawl and fiercer in a drinking contest. Saved from a plague-death on Tatooine by Chatni; later recalled by Torren to Mandalorian service.</p>
+      <p class="look"><b>Looks:</b> a <b>human Mandalorian</b> of Clan Wren. <b>Build:</b> compact and sturdy — small but solid, all coiled muscle and quick hands; a hoarder of useful things.</p>
+      <div class="rel">
+        <div class="c"><span>Close</span> Chatni (best friend)</div>
+        <div class="f"><span>Friends</span> the crew · her brother</div>
+        <div class="al"><span>Allies</span> Torren Wren · the Mandalorian clans</div>
+        <div class="t"><span>Tension</span> Luxa (the debt that nearly cost her) · sobriety</div>
+        <div class="en"><span>Enemies</span> Czerka (the plague that nearly killed her)</div>
+      </div></div>
+
+    <div class="char crew"><h4>T3-M4</h4><div class="who">Astromech droid · veteran of Revan's and the Exile's journeys</div>
+      <p>A legendary little utility droid that has outlived Dark Lords; rolls with the crew, occasionally helping himself to a sample of someone's blood for safekeeping.</p>
+      <p class="look"><b>Looks:</b> a battered white-and-blue <b>T3-line astromech</b>. <b>Build:</b> small, squat, and treaded — barely waist-high, dome-headed and dent-proof.</p>
+      <div class="rel">
+        <div class="c"><span>Close</span> the crew</div>
+        <div class="al"><span>Allies</span> the Restored Jedi · the legacy of Revan</div>
+      </div></div>
+  </div>
+
+  <div class="grp">The Restored Jedi &amp; Force-Walkers</div>
+  <p class="grp-desc">The Order reborn from the ashes of the Purge, and those who walk the grey beside it.</p>
+  <div class="codex">
+    <div class="char"><h4>Meetra Surik</h4><div class="alias">"the Exile" · "the Victorious"</div><div class="who">Human · Grand Master of the Restored Jedi Order</div>
+      <p>The last Jedi to walk the Purge openly, and the woman who rebuilt the Order — brilliant, hardened, and frighteningly willing to do what a crisis demands. Long shadowed by Kreia's lingering presence until freed of it; now pregnant, and stepping back from the front lines.</p>
+      <p class="look"><b>Looks:</b> a <b>human</b> woman, weathered and hard-eyed. <b>Build:</b> average height, lean and hard-muscled, a soldier's economy of movement; wields a purple blade that still whispers in Kreia's voice.</p>
+      <div class="rel">
+        <div class="c"><span>Close</span> Kao Cen Darach · Atton Rand</div>
+        <div class="f"><span>Friends</span> the crew · Chatni · Tylo · Bao-Dur · Mira · Visas · DeLuca</div>
+        <div class="al"><span>Allies</span> the Republic · Chancellor Cressa · the Iktotchi · the Mandalorians</div>
+        <div class="t"><span>Tension</span> Cardina Thul · Mical · Jedi traditionalists</div>
+        <div class="en"><span>Enemies</span> the Genoharadan · the Silent Hand · Master Voll</div>
+      </div></div>
+
+    <div class="char"><h4>Kao Cen Darach</h4><div class="who">Iridonian Zabrak · Jedi Master · brought into the Order by the crew</div>
+      <p>A revered master of the saber and of a rare, decision-reading philosophy of the Force. Never a Purge-era survivor — the crew sought him out on Makeb and earned his trust. One of Chatni's truest teachers and a steadying counterweight to Meetra's hard edge. He has foreseen his own death near Korriban, sacrificing himself so Satele can escape.</p>
+      <p class="look"><b>Looks:</b> an <b>Iridonian Zabrak</b> — tan, tattoo-patterned skin, a crown of vestigial horns. <b>Build:</b> tall and powerfully built, broad through the chest; carries a saber wrapped in the hide of a beast he slew.</p>
+      <div class="rel">
+        <div class="c"><span>Close</span> Satele Shan · Meetra Surik</div>
+        <div class="f"><span>Friends</span> Chatni · Tylo · the crew</div>
+        <div class="al"><span>Allies</span> the Restored Jedi · the Republic</div>
+        <div class="t"><span>Tension</span> Meetra (he pushes back on her)</div>
+        <div class="en"><span>Enemies</span> the Genoharadan</div>
+      </div></div>
+
+    <div class="char"><h4>Atton Rand</h4><div class="who">Human · rogue · gambler · grey blade · one of two living <em>Trakata</em> masters</div>
+      <p>A survivor of the Dark Wars with a sharp tongue, a hidden past, and a habit of punching his own ship into hyperspace. Hires out to Chatni, teaches her the deceptive Trakata technique, and leaves men to die when it suits him. The slow-burning romance of Chatni's life.</p>
+      <p class="look"><b>Looks:</b> a <b>human</b> man — scruffy, deathstick-smoking. <b>Build:</b> average height, lean and deceptively wiry, faster and harder than he looks.</p>
+      <div class="rel">
+        <div class="c"><span>Close</span> Chatni · bonded to Meetra Surik</div>
+        <div class="f"><span>Friends</span> Mical (frenemy) · the crew · DeLuca</div>
+        <div class="al"><span>Allies</span> the Restored Jedi</div>
+        <div class="t"><span>Tension</span> Mical (mutual ribbing) · those he abandoned</div>
+        <div class="en"><span>Enemies</span> the Hunter · the Genoharadan</div>
+      </div></div>
+
+    <div class="char"><h4>Satele Shan</h4><div class="who">Human · Jedi · daughter of Revan and Bastila Shan</div>
+      <p>The heir of two legends, drawn into the crew's orbit on Makeb. Prone to super-focus and to feeling things stir in the Unknown Regions. Travels aboard the <em>Dara Dara</em>, brightening it with growing things — bound to a fated escape near Korriban that will cost Kao Cen his life.</p>
+      <p class="look"><b>Looks:</b> a young <b>human</b> woman. <b>Build:</b> slender and slight, graceful but easily wearied; gentle and curious.</p>
+      <div class="rel">
+        <div class="c"><span>Close</span> Kao Cen Darach</div>
+        <div class="f"><span>Friends</span> the crew · Chatni · Tylo</div>
+        <div class="al"><span>Allies</span> the Restored Jedi</div>
+        <div class="t"><span>Tension</span> the stirring she senses in the Unknown Regions</div>
+      </div></div>
+
+    <div class="char"><h4>Bao-Dur</h4><div class="alias">"Baldur"</div><div class="who">Iridonian Zabrak · tech-savant · veteran of Malachor</div>
+      <p>The Exile's old engineer, builder of the Mass Shadow Generator and tinkerer of small droids. Cheerful to the point of blowing himself up; teaches Chatni the personal shield.</p>
+      <p class="look"><b>Looks:</b> an <b>Iridonian Zabrak</b> with a cybernetic arm. <b>Build:</b> tall and lean-muscled, with a workman's wiry strength and a perpetual, alarming good cheer.</p>
+      <div class="rel">
+        <div class="c"><span>Close</span> Meetra Surik</div>
+        <div class="f"><span>Friends</span> the crew · Chatni</div>
+        <div class="al"><span>Allies</span> the Restored Jedi</div>
+      </div></div>
+
+    <div class="char"><h4>Mira</h4><div class="who">Human · former bounty huntress · Jedi of the new Order</div>
+      <p>A sharp, watchful survivor of Nar Shaddaa who teaches Chatni the craft of teaching, and misses nothing — including a certain rogue's late-night kiss.</p>
+      <p class="look"><b>Looks:</b> a sharp-eyed <b>human</b> woman. <b>Build:</b> small and lithe, all bounty-hunter quickness.</p>
+      <div class="rel">
+        <div class="f"><span>Friends</span> Chatni · the new Order</div>
+        <div class="al"><span>Allies</span> the Restored Jedi</div>
+      </div></div>
+
+    <div class="char"><h4>Brianna</h4><div class="alias">"Breanna" · the Last Handmaiden</div><div class="who">Echani · Jedi · keeper of Ilum</div>
+      <p>An Echani warrior-scholar who trains Chatni and remains to hold Ilum as the others move on. Carries a hot-tempered feud with another of the Order's women, and a wary eye on Atton.</p>
+      <p class="look"><b>Looks:</b> an <b>Echani</b> — chalk-pale skin, silver-white hair, pale eyes. <b>Build:</b> tall, lithe, and athletic, bred to read a fight like spoken language.</p>
+      <div class="rel">
+        <div class="c"><span>Close</span> the Order</div>
+        <div class="f"><span>Friends</span> Cardina Thul · Chatni</div>
+        <div class="al"><span>Allies</span> the Restored Jedi</div>
+        <div class="t"><span>Tension</span> Atton (wary) · a rival sister</div>
+      </div></div>
+
+    <div class="char"><h4>Mical</h4><div class="alias">"Mikael" / "Michael" · the Disciple</div><div class="who">Human · scholar-Jedi · keeper of forbidden books</div>
+      <p>A gentle, learned Jedi with an underground collection of dangerous texts, a steady supply of good tea, and counsel Chatni trusts. He helps her drain the Book of Shadows of its power. Meetra dislikes him.</p>
+      <p class="look"><b>Looks:</b> a fair-haired <b>human</b> with ink-stained hands. <b>Build:</b> slender and of average height, a scholar's frame rather than a fighter's.</p>
+      <div class="rel">
+        <div class="f"><span>Friends</span> Chatni · Atton</div>
+        <div class="al"><span>Allies</span> the Restored Jedi</div>
+        <div class="t"><span>Tension</span> Meetra (she dislikes him) · Tylo (ribbing)</div>
+      </div></div>
+
+    <div class="char"><h4>Visas Marr</h4><div class="who">Miraluka seer · survivor of Nihilus</div>
+      <p>The blind Miraluka who once served the world-eater Nihilus and survived him. A reference point for understanding DeLuca, whose devotion to a monstrous "master" mirrors her own past. Linked, in Chatni's meditations, to Bastila.</p>
+      <p class="look"><b>Looks:</b> a veiled <b>Miraluka</b>. <b>Build:</b> slender and willowy, quiet and self-contained.</p>
+      <div class="rel">
+        <div class="f"><span>Friends</span> the Order · Bastila Shan (linked)</div>
+        <div class="al"><span>Allies</span> the Restored Jedi</div>
+      </div></div>
+
+    <div class="char"><h4>Master Voll</h4><div class="who">Human · Jedi hardliner · Force-severed</div>
+      <p>A dogmatic master who once tried to kill Chatni outright. Captured by the crew on Ilum and severed from the Force at Meetra's order — a living warning of where the old certainties lead.</p>
+      <p class="look"><b>Looks:</b> a grim <b>human</b> Jedi, now hollow and Force-blind. <b>Build:</b> gaunt and severe, diminished since his severing.</p>
+      <div class="rel">
+        <div class="t"><span>Tension</span> the Order that severed him</div>
+        <div class="en"><span>Enemies</span> Chatni · the crew · Meetra</div>
+      </div></div>
+  </div>
+
+  <div class="grp">The Mandalorians</div>
+  <p class="grp-desc">A warrior people remaking themselves between conquest and honor.</p>
+  <div class="codex">
+    <div class="char"><h4>Canderous Ordo</h4><div class="alias">"Candi" · former Mandalore</div><div class="who">Human · Mandalorian veteran · companion of Revan</div>
+      <p>The aging legend who took the mask of Mandalore at the close of the Dark Wars, then spent years in seclusion before quietly regathering the clans. Slowly bent by the Freedon Nadd tomb until the crew freed his mind and he stepped down. Kept alive — and made an addict for it — by Chatni's healing, he has become her devoted "guard dog," ready to kill on her word.</p>
+      <p class="look"><b>Looks:</b> an old, scarred <b>human</b> warrior. <b>Build:</b> big and broad-framed, heavy and powerful even in age; immensely rich, fond of rare anti-lightsaber war-materiel.</p>
+      <div class="rel">
+        <div class="c"><span>Close</span> Chatni (devotee)</div>
+        <div class="f"><span>Friends</span> Torren Wren · the crew</div>
+        <div class="al"><span>Allies</span> the Mandalorian clans · the Restored Jedi (by the crew)</div>
+        <div class="t"><span>Tension</span> his addiction to the life Chatni gave him</div>
+        <div class="en"><span>Enemies</span> the Freedon Nadd influence (overcome)</div>
+      </div></div>
+
+    <div class="char"><h4>Torren Wren</h4><div class="alias">"Mandalore the Dawn"</div><div class="who">Human · leader of the reunified Mandalorian clans</div>
+      <p>Canderous's chosen successor — steady, honorable, pragmatic — steering his people from conquest toward honor, craft, and the role of galactic first-responders won at the Csilla Accords. Deals with Chatni on "mutual trust," and quietly set Sekan to watch the crew.</p>
+      <p class="look"><b>Looks:</b> a commanding <b>human</b> Mandalorian of Clan Wren. <b>Build:</b> tall and broad, powerfully built and physically imposing — "kinda hot," by one operative's professional assessment.</p>
+      <div class="rel">
+        <div class="c"><span>Close</span> Canderous · Alra Wren</div>
+        <div class="f"><span>Friends</span> Sekan · Chatni · the crew</div>
+        <div class="al"><span>Allies</span> the Republic (oversight) · the Wookiees · Baron Venlath (the Sekan meeting)</div>
+        <div class="t"><span>Tension</span> the Exchange</div>
+        <div class="en"><span>Enemies</span> the Genoharadan · Clan Vizsla (sought)</div>
+      </div></div>
+
+    <div class="char"><h4>Dax Vein</h4><div class="who">Human · chieftain of the reborn Clan Nightfall</div>
+      <p>Inheritor of Clan Nightfall after Sekan gave up the chieftaincy to keep questing — holder of the clan Sekan rebuilt from the ashes of Clan Varad.</p>
+      <p class="look"><b>Looks:</b> a <b>human</b> Mandalorian. <b>Build:</b> solid and muscular, a seasoned brawler.</p>
+      <div class="rel">
+        <div class="f"><span>Friends</span> Sekan</div>
+        <div class="al"><span>Allies</span> Clan Nightfall · the Mandalorian clans · Torren Wren</div>
+      </div></div>
+
+    <div class="char"><h4>Kultak</h4><div class="who">Human · Mandalorian hunter · Chatni's "bro"</div>
+      <p>Chatni's brother-in-arms among the Kashyyyk Mandalorians, leader of the hunting parties she enhanced with battle meditation and her partner in a Czerka-archive break-in.</p>
+      <p class="look"><b>Looks:</b> a blunt <b>human</b> Mandalorian. <b>Build:</b> stocky and bulky, low and strong.</p>
+      <div class="rel">
+        <div class="f"><span>Friends</span> Chatni</div>
+        <div class="al"><span>Allies</span> the Kashyyyk clans · Torren Wren</div>
+      </div></div>
+
+    <div class="char"><h4>Drax</h4><div class="who">Human · chieftain of the Kashyyyk Mandalorians</div>
+      <p>Took the chieftaincy of the Kashyyyk-based clans after Sekan moved on, holding the foothold negotiated with the Wookiees.</p>
+      <p class="look"><b>Looks:</b> a hard <b>human</b> Mandalorian. <b>Build:</b> broad and heavy-set, a frontline fighter.</p>
+      <div class="rel">
+        <div class="al"><span>Allies</span> the Kashyyyk clans · Torren Wren</div>
+      </div></div>
+
+    <div class="char"><h4>Brunos</h4><div class="who">Human · Mandalorian tracker · bonded to Chatni</div>
+      <p>A tracker to whom Chatni accidentally formed a lasting Force-bond during an enhanced hunt — the one bond she chose not to sever.</p>
+      <p class="look"><b>Looks:</b> a weathered <b>human</b> Mandalorian. <b>Build:</b> lean and rangy, built for the long pursuit.</p>
+      <div class="rel">
+        <div class="c"><span>Close</span> bonded to Chatni</div>
+        <div class="al"><span>Allies</span> the Mandalorian clans</div>
+      </div></div>
+  </div>
+
+  <div class="grp">The Iktotchi of Iktotch</div>
+  <p class="grp-desc">A precognitive people of the wind-scoured moon Iktotch — lately freed, lately powerful, governed by the Fourfold Wind, and now arbiters of the galaxy.</p>
+  <div class="codex">
+    <div class="char"><h4>General Kladar</h4><div class="who">Iktotchi general · commander of the Stormguard · Tylo's close friend and old war-ally</div>
+      <p>Tylo's brother-in-arms from the wars and a leading commander of the <span class="nm">Stormguard</span> — the Iktotchi war-host that rises in times of galactic strife. The two share coffee, deep friendship, and a grim shared premonition of an enormous war to come — exactly the kind of strife that would call the Stormguard to the fore of the Fourfold Wind. Now facing an arranged marriage the crew will not let him forget — with Tylo to stand as best man.</p>
+      <p class="look"><b>Looks:</b> a horned <b>Iktotchi</b> officer. <b>Build:</b> tall and broad, military-straight and grave.</p>
+      <div class="rel">
+        <div class="c"><span>Close</span> Tylo Dara</div>
+        <div class="f"><span>Friends</span> the crew (through Tylo)</div>
+        <div class="al"><span>Allies</span> the Stormguard · the Iktotchi delegation · the new Order</div>
+      </div></div>
+
+    <div class="char"><h4>The Keeper of the Ember</h4><div class="who">Iktotchi seer-priestess · head of the Ember Conclave (Fire) · keeper of tradition</div>
+      <p>Head of the <span class="nm">Ember Conclave</span> — the Iktotchi sect of <span class="hl">tradition and conservatism</span>, keepers of the kept flame and the oldest, deepest visions. It was she who read Chatni's heritage and laid bare the Nightsister prophecy and the ancient history of the Kwa, the Rakata, and the Sith. In the Fourfold Wind she speaks for the old ways — slow to change, and slower to forgive.</p>
+      <p class="look"><b>Looks:</b> a horned <b>Iktotchi</b> priestess robed in the reds and golds of the kept flame. <b>Build:</b> tall and gaunt, severe and unhurried.</p>
+      <div class="rel">
+        <div class="al"><span>Allies</span> the Levin &amp; Gale Conclaves · the Stormguard · the new Order · the Iktotchi</div>
+        <div class="t"><span>Tension</span> Chatni (wary of her potential) · the Levin Conclave (her opposite)</div>
+      </div></div>
+
+    <div class="char"><h4>The Stormspeaker</h4><div class="who">Iktotchi seer · Voice of the Levin Conclave (Lightning) · of action and response</div>
+      <p>Voice of the <span class="nm">Levin Conclave</span> — the sect of <span class="hl">action and response</span>, named for the sudden bolt. Where the Ember waits, the Levin strikes: the instant a vision flares, they move. In the Fourfold Wind they are the decisive ones, forever urging the moon to act rather than abide.</p>
+      <p class="look"><b>Looks:</b> a horned <b>Iktotchi</b> seer. <b>Build:</b> wiry and sharp-featured, quick-eyed and restless.</p>
+      <div class="rel">
+        <div class="al"><span>Allies</span> the Ember &amp; Gale Conclaves · the Stormguard · the new Order · the Iktotchi</div>
+        <div class="t"><span>Tension</span> the Ember Conclave (her opposite)</div>
+      </div></div>
+
+    <div class="char"><h4>The Windwarden</h4><div class="who">Iktotchi seer-elder · Warden of the Gale Conclave (Air) · of balance and swaying motion</div>
+      <p>Warden of the <span class="nm">Gale Conclave</span> — the sect of <span class="hl">balance and swaying motion</span>, named for the turning wind that bends but never breaks. The Gale are the moderators and the swing of the Fourfold Wind, leaning now toward the Ember, now toward the Levin, keeping the moon's course from veering too far in either direction. It was the Gale who adopted Chatni and dressed her in their ceremonial robes at her honoring on Iktotch.</p>
+      <p class="look"><b>Looks:</b> a horned <b>Iktotchi</b> elder. <b>Build:</b> tall and spare, calm and far-seeing.</p>
+      <div class="rel">
+        <div class="f"><span>Friends</span> Chatni (of the Gale, by adoption)</div>
+        <div class="al"><span>Allies</span> the Ember &amp; Levin Conclaves · the Stormguard · the new Order · the Iktotchi</div>
+      </div></div>
+  </div>
+
+  <div class="grp">Powers, Crowns &amp; Politicians</div>
+  <p class="grp-desc">Those who hold worlds, votes, and fleets.</p>
+  <div class="codex">
+    <div class="char"><h4>Cardina Thul</h4><div class="who">Human · Matriarch of House Thul · Queen of Alderaan</div>
+      <p>Chatni's longtime employer and friend, risen from noble matriarch to crowned monarch of Alderaan — having gutted rival houses to consolidate the throne and taken the restored Jedi enclave onto her world. Loyal to Chatni, wary of Meetra, building her own alliances. Will one day force Chatni to choose a side.</p>
+      <p class="look"><b>Looks:</b> a striking <b>human</b> noblewoman of Alderaan. <b>Build:</b> tall, slender, and regal, devastating in a crown and royal robes.</p>
+      <div class="rel">
+        <div class="c"><span>Close</span> Chatni (besties)</div>
+        <div class="f"><span>Friends</span> Brianna · the crew</div>
+        <div class="al"><span>Allies</span> the Jedi enclave · Chancellor Cressa · the Republic</div>
+        <div class="t"><span>Tension</span> Meetra Surik</div>
+        <div class="en"><span>Enemies</span> House Rist · the gutted rival houses · the Genoharadan</div>
+      </div></div>
+
+    <div class="char"><h4>Chancellor Cressa</h4><div class="who">Human · Supreme Chancellor of the Galactic Republic</div>
+      <p>The weary leader of a bankrupt Republic, holding a fragile union together and quietly bankrolling the Restoration. Set Chatni the Genoharadan-hunt; a shrewd cards-player who bleeds opponents dry and angles for Mandalorian beskar.</p>
+      <p class="look"><b>Looks:</b> a sharp <b>human</b> stateswoman. <b>Build:</b> small and slight, worn thin by office, with a gambler's stillness.</p>
+      <div class="rel">
+        <div class="al"><span>Allies</span> the crew (employer) · Cardina Thul · the Jedi · the Mandalorians</div>
+        <div class="t"><span>Tension</span> the great powers she must balance</div>
+        <div class="en"><span>Enemies</span> the Genoharadan · the Silent Hand</div>
+      </div></div>
+
+    <div class="char"><h4>Senator Mon Gazza</h4><div class="who">Human · honest senator · leader of the Mining Coalition</div>
+      <p>A rare clean politician, husband and father, genuinely fighting crime and corruption — twice spared by Chatni, once interrogated atop his own spire. Emerges from the accords as leader of the Outer Rim's new Mining Coalition.</p>
+      <p class="look"><b>Looks:</b> a decent, nervous <b>human</b>. <b>Build:</b> average height and a little soft, an administrator's frame; family on Gaza Monopolium.</p>
+      <div class="rel">
+        <div class="f"><span>Friends</span> Chatni (grudging)</div>
+        <div class="al"><span>Allies</span> the Mining Coalition · the Outer Rim · the Republic</div>
+        <div class="t"><span>Tension</span> Chatni (who once held a knife to his world)</div>
+        <div class="en"><span>Enemies</span> the Genoharadan · corruption</div>
+      </div></div>
+
+    <div class="char"><h4>Baron Hektor Venlath</h4><div class="who">Human · Corellian baron · summit power</div>
+      <p>A vain Corellian noble, proud of his rare drink and his secrets — bound by translocator to a shadowy bargain. A fuzzy, useful acquaintance Chatni began cultivating before Torren asked her to broker a meeting between him and Sekan.</p>
+      <p class="look"><b>Looks:</b> a <b>human</b> baron of Corellia. <b>Build:</b> portly and well-fed, vain about his cellar and his collar.</p>
+      <div class="rel">
+        <div class="f"><span>Friends</span> Chatni (cultivating)</div>
+        <div class="al"><span>Allies</span> Corellia · Torren Wren (the brokered meeting)</div>
+        <div class="t"><span>Tension</span> the hidden bargain that holds him</div>
+      </div></div>
+
+    <div class="char"><h4>Senator Skassa</h4><div class="who">Twi'lek · senator · replacement appointee</div>
+      <p>The Twi'lek who took the senate seat left empty by the senator Chatni killed — a newcomer to the great table at Csilla.</p>
+      <p class="look"><b>Looks:</b> a <b>Twi'lek</b> with trailing lekku. <b>Build:</b> lithe and willowy, supple and graceful.</p>
+      <div class="rel">
+        <div class="al"><span>Allies</span> the Republic senate</div>
+      </div></div>
+
+    <div class="char"><h4>Mallow Wok</h4><div class="who">Ithorian · minister of agriculture</div>
+      <p>Steward of the Republic's agriculture, who brokered grain deals with the Chiss (who cannot farm their ice world) — sidelining the Open Palm. A peaceful steward of growing things.</p>
+      <p class="look"><b>Looks:</b> an <b>Ithorian</b> "Hammerhead," with twin throats and a botanist's calm. <b>Build:</b> tall and lumbering, broad and slow-moving.</p>
+      <div class="rel">
+        <div class="al"><span>Allies</span> the Chiss (grain trade) · the Republic</div>
+        <div class="t"><span>Tension</span> the Open Palm (sidelined)</div>
+      </div></div>
+
+    <div class="char"><h4>Magister Hoola</h4><div class="who">Muun · banking magister</div>
+      <p>A banking power who noticed Chatni at Csilla and whispered to Baroness Elo — a financier with menace under the manners, his ties reaching toward the cabal in the dark.</p>
+      <p class="look"><b>Looks:</b> a <b>Muun</b>, of the species that runs the galaxy's banks. <b>Build:</b> very tall and gaunt, long-limbed and pale.</p>
+      <div class="rel">
+        <div class="al"><span>Allies</span> Baroness Elo · the banking guild</div>
+        <div class="t"><span>Tension</span> Chatni (suspicious of her)</div>
+      </div></div>
+
+    <div class="char"><h4>Baroness Elo</h4><div class="who">Muun · head of the banking guild · Genoharadan</div>
+      <p>Head of the galaxy's banking guild — and, secretly, one of the fourteen Genoharadan: the financial power behind the cabal's reach into every government and corporation, and one of the few of its inner circle still living.</p>
+      <p class="look"><b>Looks:</b> a <b>Muun</b> banker. <b>Build:</b> tall and gaunt, austere and unreadable.</p>
+      <div class="rel">
+        <div class="al"><span>Allies</span> Magister Hoola · the banking guild · the Genoharadan</div>
+        <div class="en"><span>Enemies</span> GOTO · the crew (unknowing, for now)</div>
+      </div></div>
+
+    <div class="char"><h4>Admiral Raan</h4><div class="who">Human · Republic admiral · cabal-adjacent</div>
+      <p>A Republic admiral Senator Valia confided in — not a sworn member of the Genoharadan, but a man who knew more of its workings than he should have.</p>
+      <p class="look"><b>Looks:</b> a stiff <b>human</b> flag officer. <b>Build:</b> average and upright, parade-ground rigid.</p>
+      <div class="rel">
+        <div class="al"><span>Allies</span> the Republic</div>
+        <div class="t"><span>Tension</span> what he was told by Valia</div>
+      </div></div>
+  </div>
+
+  <div class="grp">The Underworld &amp; the Shadows</div>
+  <p class="grp-desc">Crime lords, fixers, agents, and the threats that stalk the crew.</p>
+  <div class="codex">
+    <div class="char"><h4>Luxa</h4><div class="who">Zeltron · Second Hand of the Exchange</div>
+      <p>A slick, relentlessly talkative operator who extorted Chatni on Tatooine, climbed to Second Hand of the Exchange, and turns up everywhere — flirting with Tylo, flipping off Chatni across a cantina, surviving a near-fatal brawl with the Hunter. As much recurring nuisance as genuine threat, he runs GOTO's quiet errands.</p>
+      <p class="look"><b>Looks:</b> a <b>Zeltron</b> — red-pink skin, pheromone-laced charm. <b>Build:</b> tall and lean, striking and well-dressed, with a bottomless capacity for boasting.</p>
+      <div class="rel">
+        <div class="f"><span>Friends</span> Tylo (flirts with) · Atton (begrudging)</div>
+        <div class="al"><span>Allies</span> GOTO · the Exchange</div>
+        <div class="t"><span>Tension</span> Chatni (frenemy) · Alra Wren</div>
+        <div class="en"><span>Enemies</span> the Hunter</div>
+      </div></div>
+
+    <div class="char"><h4>GOTO</h4><div class="who">Droid intelligence · crime-lord power-broker</div>
+      <p>A hidden droid intelligence running a vast criminal-political network, devoted to stabilizing the Republic by any means. Exposed Chatni's secrets, named the Genoharadan as her hunters, and bargained for her help against them. Reportedly killed the Hunter and walked away from Csilla in cuffs — then out of them.</p>
+      <p class="look"><b>Looks:</b> a <b>GO-TO-class droid</b>. <b>Build:</b> a small hovering sphere, no larger than a head — while his true body is a starship of computers.</p>
+      <div class="rel">
+        <div class="al"><span>Allies</span> Luxa · the Republic's stability · (uses) Chatni</div>
+        <div class="t"><span>Tension</span> Chatni (he manipulates her)</div>
+        <div class="en"><span>Enemies</span> the Genoharadan · the Exchange's rivals</div>
+      </div></div>
+
+    <div class="char"><h4>The Hunter</h4><div class="who">Synthetic assassin · the Genoharadan's blade</div>
+      <p>The most dangerous of the Genoharadan — fully geared and shielded, the architect of the Csilla clone-army. When beheaded he proved no living man at all: sparks, not blood. Reported destroyed at Csilla, but his body was never recovered, and his clones may yet remain. The crew's most feared threat.</p>
+      <p class="look"><b>Looks:</b> presents as a blond, handsome man behind an extraordinary personal shield — but bleeds sparks. <b>Build:</b> tall, athletic, broad-shouldered; a <b>synthetic</b> killer wearing a man's face.</p>
+      <div class="rel">
+        <div class="al"><span>Allies</span> the Genoharadan (its survivors) · its own clones</div>
+        <div class="en"><span>Enemies</span> Chatni · Atton · GOTO · everyone</div>
+      </div></div>
+
+    <div class="char"><h4>Vessa</h4><div class="who">Bith · master skin-grafter of Coruscant</div>
+      <p>A rare, funny little surgeon whose flawless grafts let Chatni become the Mirialan "Paya" and Atton a fish-faced stranger. A discreet asset to those who can pay.</p>
+      <p class="look"><b>Looks:</b> a <b>Bith</b> — bulb-headed, great-eyed, fine-fingered. <b>Build:</b> small and slight, with a surgeon's delicate hands.</p>
+      <div class="rel">
+        <div class="al"><span>Allies</span> Chatni &amp; Atton (for a price)</div>
+      </div></div>
+
+    <div class="char"><h4>Nerudo</h4><div class="who">Chiss of House Inrokini · security agent · interrogator</div>
+      <p>The sharp Chiss interrogator at Csilla who suspected Chatni of everything — and was largely right. A scion of <span class="nm">House Inrokini</span>, the ruling family that holds the Ascendancy's industry, science, and communications, he is a dangerous, courteous duelist of words.</p>
+      <p class="look"><b>Looks:</b> a <b>Chiss</b> — blue-skinned, red-eyed. <b>Build:</b> tall, lean, and precise, every motion economical.</p>
+      <div class="rel">
+        <div class="al"><span>Allies</span> House Inrokini · the Chiss Ascendancy</div>
+        <div class="t"><span>Tension</span> Chatni · the crew</div>
+      </div></div>
+
+    <div class="char"><h4>Detective Vesh'ra'sabosen</h4><div class="alias">"Veshra"</div><div class="who">Chiss of House Sabosen · summit investigator</div>
+      <p>The Chiss investigator who drugged and interrogated Mon Gazza at Csilla, hunting the timeline of Chatni's involvement with the Genoharadan affair. Of <span class="nm">House Sabosen</span>, the ruling family that holds justice and law, making her interest a matter of cold Chiss jurisprudence.</p>
+      <p class="look"><b>Looks:</b> a <b>Chiss</b> woman — blue-skinned, red-eyed. <b>Build:</b> slender and upright, every question precise.</p>
+      <div class="rel">
+        <div class="al"><span>Allies</span> House Sabosen · the Chiss Ascendancy</div>
+        <div class="en"><span>Enemies</span> Chatni (her quarry)</div>
+      </div></div>
+
+    <div class="char"><h4>Vogga the Hutt</h4><div class="who">Hutt · crime lord of Nar Shaddaa · shipping &amp; fuel baron</div>
+      <p>An ancient, immensely wealthy Hutt controlling vast shipping, fuel, and spice out of the Smuggler's Moon — a potential contact (and creditor) Chatni has weighed leaning on, though she shares the galaxy's distaste for dealing with Hutts.</p>
+      <p class="look"><b>Looks:</b> a <b>Hutt</b>. <b>Build:</b> a vast, bloated, sluggish colossus, draped in his own wealth and guarded by kath hounds.</p>
+      <div class="rel">
+        <div class="al"><span>Allies</span> Chatni (possible contact, reluctantly)</div>
+        <div class="en"><span>Enemies</span> the Exchange · rival cartels</div>
+      </div></div>
+
+    <div class="char"><h4>Jana Lorso</h4><div class="who">Human · Czerka executive</div>
+      <p>A sharp, ambitious Czerka executive — one of the corporate names Chatni might buy, bribe, or lean on for information. Cold and careerist, she embodies the soulless efficiency of the company she serves.</p>
+      <p class="look"><b>Looks:</b> a hard-eyed <b>human</b> corporate officer. <b>Build:</b> trim and sharply-dressed, brisk and impatient.</p>
+      <div class="rel">
+        <div class="al"><span>Allies</span> Czerka</div>
+        <div class="t"><span>Tension</span> Chatni (potential leverage)</div>
+      </div></div>
+  </div>
+
+  <div class="grp">Antagonists &amp; Wildcards</div>
+  <div class="codex">
+    <div class="char"><h4>The Rival Candidate</h4><div class="who">Dathomiri Nightsister · matriarch-candidate</div>
+      <p>A new Nightsister candidate, risen in the last two years and swollen with the stolen strength of all the slain candidates, groomed by the surviving mothers expressly to destroy Chatni — the dark mirror of everything Chatni has refused to become.</p>
+      <p class="look"><b>Looks:</b> a <b>Dathomiri</b> witch of Chatni's own Rattataki bloodline. <b>Build:</b> lean and powerful, crackling with borrowed strength.</p>
+      <div class="rel">
+        <div class="al"><span>Allies</span> the Nightsister mothers · Mother Githzerion</div>
+        <div class="en"><span>Enemies</span> Chatni</div>
+      </div></div>
+
+    <div class="char"><h4>Mother Githzerion</h4><div class="who">Dathomiri · Nightsister matriarch · keeper of the Book of Shadows</div>
+      <p>An ancient matriarch of Dathomir who holds the original Book of Shadows and guides the rival candidate — one of the voices calling to Chatni across the stars to "return."</p>
+      <p class="look"><b>Looks:</b> an ancient <b>Dathomiri</b> witch-mother, pale and sigil-marked. <b>Build:</b> stooped and gaunt, withered but radiating power.</p>
+      <div class="rel">
+        <div class="al"><span>Allies</span> the rival candidate · the Nightsister mothers</div>
+        <div class="en"><span>Enemies</span> Chatni</div>
+      </div></div>
+  </div>
+
+  <div class="grp">Legends Still in Play</div>
+  <p class="grp-desc">The great names of the past who are not gone — vanished, absent, or still serving.</p>
+  <div class="codex">
+    <div class="char legend"><h4>Revan</h4><div class="who">Human · Jedi general · Dark Lord · redeemer — vanished</div>
+      <p>The defining figure of the age: savior of the Republic, then its conqueror as a Sith Lord, then its savior again. Allied in secret with ancient powers, left a "Foundry" still being hunted, and vanished into the Unknown Regions driven by a prophecy of a gathering threat no one else believed. Father of Satele Shan. His fate is unknown.</p>
+      <p class="look"><b>Looks:</b> a masked <b>human</b>. <b>Build:</b> of average height and athletic, unremarkable until the mask and the legend.</p>
+      <div class="rel">
+        <div class="c"><span>Close</span> Bastila Shan · Satele Shan (daughter)</div>
+        <div class="al"><span>Allies</span> ancient powers of the deep rim · his own lost crew</div>
+        <div class="t"><span>Tension</span> the prophecy that drives him</div>
+      </div></div>
+
+    <div class="char legend"><h4>Bastila Shan</h4><div class="who">Human · Jedi · mistress of battle meditation · mother of Satele</div>
+      <p>The battle-seer whose gift could turn the tide of fleets, who bound her fate to Revan's and bore his daughter, Satele. She lingers at the edges of the present — appearing in Chatni's battle-meditation visions and linked to Visas Marr.</p>
+      <p class="look"><b>Looks:</b> a <b>human</b> Jedi. <b>Build:</b> slender and composed, grave and luminous.</p>
+      <div class="rel">
+        <div class="c"><span>Close</span> Revan · Satele Shan (daughter)</div>
+        <div class="f"><span>Friends</span> Visas Marr (linked) · the meditations of Chatni</div>
+        <div class="al"><span>Allies</span> the legacy of the Jedi</div>
+      </div></div>
+
+    <div class="char legend"><h4>Carth Onasi</h4><div class="who">Human · Republic admiral · companion of Revan</div>
+      <p>The steadfast Republic pilot who stood with Revan from the fall of Taris to the Star Forge — loyalty itself, in a galaxy of betrayals. Alive and risen high: a serving Republic admiral who sat at the great table on Csilla, outranked there only by political powers.</p>
+      <p class="look"><b>Looks:</b> a weathered <b>human</b> officer, grey at the temples. <b>Build:</b> solid and upright, slightly above average height, a soldier's bearing unbroken by the years.</p>
+      <div class="rel">
+        <div class="f"><span>Friends</span> the legacy of Revan's crew</div>
+        <div class="al"><span>Allies</span> the Galactic Republic · the great-power summit</div>
+        <div class="t"><span>Tension</span> the political powers who outrank him</div>
+      </div></div>
+  </div>
+
+  <div class="rule" style="margin-top:60px;"><span class="diamond"></span></div>
+
+  <div class="grp">The Fallen</div>
+  <p class="grp-desc">Those who have died in the course of the story — set apart from the living. The recent dead of the campaign, and the ancient dead of the wars.</p>
+  <div class="codex">
+    <div class="char fallen"><h4>Senator Valia</h4><div class="who">Quarren · chief of Quarren security &amp; military · Genoharadan · deceased</div>
+      <p>A banking-guild power and architect of the demilitarization scheme "Scalpel," who refused aid to the Wookiees and obstructed the fight against crime. Kidnapped by Chatni and Atton, severed from the Force, broken for the Genoharadan's secrets — then killed.</p>
+      <p class="look"><b>Looks:</b> a <b>Quarren</b> — squid-faced, tentacle-bearded. <b>Build:</b> was tall and cold, stiffly imperious.</p>
+      <div class="rel">
+        <div class="al"><span>Allies (in life)</span> the Genoharadan · the banking guild</div>
+        <div class="en"><span>Enemies</span> Chatni · Atton · the Wookiees · Mon Gazza</div>
+      </div></div>
+
+    <div class="char fallen"><h4>Director Polard</h4><div class="who">Human · second head of Czerka · Genoharadan "Shaper" · deceased</div>
+      <p>Chatni's former handler and second-in-command of Czerka, secretly one of the fourteen Genoharadan — the man who fingered Chatni to the cabal. Executed by the Hunter at the Kabaal with the words "for the Republic."</p>
+      <p class="look"><b>Looks:</b> a polished <b>human</b> executive. <b>Build:</b> was average and trim, smooth and corporate.</p>
+      <div class="rel">
+        <div class="al"><span>Allies (in life)</span> the Genoharadan · Czerka</div>
+        <div class="en"><span>Enemies</span> Chatni · (killed by) the Hunter</div>
+      </div></div>
+
+    <div class="char fallen"><h4>Kovacs</h4><div class="who">Human · Genoharadan envoy · deceased</div>
+      <p>The cabal's envoy, who came to the Kabaal in Mandalorian-styled Sith armor of Revan's era — and died there at Chatni and Atton's hands.</p>
+      <p class="look"><b>Looks:</b> a <b>human</b> in archaic war-plate. <b>Build:</b> was broad and armored, a heavy presence.</p>
+      <div class="rel">
+        <div class="al"><span>Allies (in life)</span> the Genoharadan</div>
+        <div class="en"><span>Enemies</span> the crew</div>
+      </div></div>
+
+    <div class="char fallen"><h4>Geneticist Vein</h4><div class="who">Arkanian · Genoharadan scientist · gene-splicer · deceased</div>
+      <p>The cabal's scientist, researching whether the Force could be cloned or ran in the blood — work that underpinned the Hunter's clone-army. Killed at the Kabaal.</p>
+      <p class="look"><b>Looks:</b> an <b>Arkanian</b> — pale, white-eyed, clawed — his thick lenses fused to his skull. <b>Build:</b> was thin and stooped, hunched over his work.</p>
+      <div class="rel">
+        <div class="al"><span>Allies (in life)</span> the Genoharadan · (research fed) the Hunter</div>
+        <div class="en"><span>Enemies</span> the crew</div>
+      </div></div>
+
+    <div class="char fallen"><h4>The Prince</h4><div class="who">Genoharadan elder · the silent leader · deceased</div>
+      <p>The aged, robed figure who presided over the Kabaal — "the one who no longer speaks." The apparent head of the fourteen, whose true name and species were never learned. Killed in Chatni's opening strike.</p>
+      <p class="look"><b>Looks:</b> an ancient, robed figure. <b>Build:</b> was frail and bent, swallowed in his robes.</p>
+      <div class="rel">
+        <div class="al"><span>Allies (in life)</span> the Genoharadan</div>
+        <div class="en"><span>Enemies</span> the crew</div>
+      </div></div>
+
+    <div class="char fallen"><h4>Jera</h4><div class="alias">"Jerra"</div><div class="who">Human · rogue dark-sider · Sith alchemist · deceased</div>
+      <p>A manipulative dark-side adept and master of traps who tricked Chatni into the cursed bowl, drained its power, and tied herself to the dark well of Dathomir. Slain on Ord Cestus, her dying curse a warning: <em>"When they return, you will be the first to die."</em></p>
+      <p class="look"><b>Looks:</b> a fallen <b>human</b> dark-sider with a red blade. <b>Build:</b> was lean and predatory, all sharp angles.</p>
+      <div class="rel">
+        <div class="al"><span>Allies (in life)</span> Lord Ratek · the corrupted sisters · Mother Githzerion</div>
+        <div class="en"><span>Enemies</span> the crew · Meetra · Dathomir's true line</div>
+      </div></div>
+
+    <div class="char fallen"><h4>Lord Ratek</h4><div class="who">Human · minor Sith · Jera's pet adept · deceased</div>
+      <p>A small, sinister dark-sider Jera produced as an ally, to Meetra's fury; fell alongside her at Ord Cestus.</p>
+      <p class="look"><b>Looks:</b> a <b>human</b> dark-sider. <b>Build:</b> was small and slight, sinister out of proportion to his size.</p>
+      <div class="rel">
+        <div class="al"><span>Allies (in life)</span> Jera</div>
+        <div class="en"><span>Enemies</span> the crew · Meetra</div>
+      </div></div>
+
+    <div class="char fallen"><h4>Darth Malak</h4><div class="who">Human · fallen Dark Lord of the Sith · deceased</div>
+      <p>Revan's closest friend and his betrayer, who fired on his own master to seize the title of Dark Lord, wielded the Star Forge, and died at Revan's hand above Lehon.</p>
+      <p class="look"><b>Looks:</b> a bald <b>human</b> Dark Lord, his lower jaw replaced by a metal vocabulator. <b>Build:</b> was very tall and massive, broad and brutal.</p>
+      <div class="rel">
+        <div class="t"><span>Tension (in life)</span> Revan (master, then victim)</div>
+        <div class="en"><span>Enemies</span> Revan · the Republic</div>
+      </div></div>
+
+    <div class="char fallen"><h4>Kreia</h4><div class="alias">Darth Traya · the Lord of Betrayal</div><div class="who">Human · the Exile's teacher · Dark Lord of the Triumvirate · deceased</div>
+      <p>The blind old woman whose counsel guided the Exile through the Dark Wars — and who was, all along, the third of the Triumvirate. Her ghost lingered on Malachor; her voice still whispers in a purple lightsaber.</p>
+      <p class="look"><b>Looks:</b> a blind, aged <b>human</b> woman. <b>Build:</b> was small and stooped, frail-seeming and utterly dangerous.</p>
+      <div class="rel">
+        <div class="t"><span>Tension (in life)</span> Meetra Surik (her last student)</div>
+        <div class="en"><span>Enemies</span> the Masters she slew · the Jedi she despised</div>
+      </div></div>
+
+    <div class="char fallen"><h4>Darth Nihilus</h4><div class="who">Once human · the world-devouring void · deceased</div>
+      <p>A hunger given form — a wound in the Force that consumed the life of whole worlds and the Force itself. Visas Marr's old master, destroyed by the Exile aboard his flagship, the Ravager.</p>
+      <p class="look"><b>Looks:</b> once a <b>human</b>, became a robed void behind a cracked white mask. <b>Build:</b> was tall and gaunt-seeming, more absence than body.</p>
+      <div class="rel">
+        <div class="t"><span>Tension (in life)</span> Visas Marr (his servant)</div>
+        <div class="en"><span>Enemies</span> the Exile · all living things</div>
+      </div></div>
+
+    <div class="char fallen"><h4>Darth Sion</h4><div class="who">Human corpse · the Lord of Pain · deceased</div>
+      <p>A dead man who refused to die, his shattered body held together by nothing but hatred — unmade at last not by the blade but by the Exile's proof that his hate could no longer sustain him.</p>
+      <p class="look"><b>Looks:</b> a <b>human</b> corpse of cracked grey stone. <b>Build:</b> was broad and broken, a ruined giant held together by rage.</p>
+      <div class="rel">
+        <div class="t"><span>Tension (in life)</span> Kreia (his teacher and obsession)</div>
+        <div class="en"><span>Enemies</span> the Exile</div>
+      </div></div>
+  </div>
+
+
+
+  <!-- ============================================================ -->
+  <!-- PART IV — THE POWERS OF THE GALAXY -->
+  <!-- ============================================================ -->
+  <div class="part-head" id="part4">
+    <div class="pnum">IV</div>
+    <div class="kicker">Part Four</div>
+    <h2>The Powers of the Galaxy</h2>
+    <p class="intro">Every faction of consequence — what each governs, whom it counts as ally and rival, where it trades, and what it wants. Every government, people, order, house, ruling family, corporation, and syndicate stands here as its own entry — none stacked together. Governments and great powers first, then movements and neutral powers, the corporations, and the syndicates of the dark.</p>
+  </div>
+
+  <div class="grp">Governments &amp; Great Powers</div>
+
+  <div class="faction"><h4>The Galactic Republic</h4><div class="seat">Supreme Chancellor Cressa · capital: Coruscant</div>
+    <p>The ancient, sprawling heart of galactic civilization — wounded but far from broken. Saved and ruined by Revan, gutted by the Purge, the Republic has chosen consolidation over collapse: pulling its fleets and treasury inward to rebuild the Core and Inner Rim it can hold, and leaning on its banks for the credit to do it. After the Csilla Accords it has formally withdrawn from the deep Outer Rim to consolidate the Core and Inner Rim, restored the Jedi under its charter, and granted the Mandalorians limited militarization under oversight. It still administers the dead worlds of "Sith space."</p>
+    <div class="meta">
+      <div><b>Governs</b>the Core and Inner Rim; Telos &amp; Dantooine Restoration Zones; nominal Sith space</div>
+      <div><b>Allies</b>the Restored Jedi · House Organa · the Iktotchi arbiters · (uneasily) the Mandalorians</div>
+      <div><b>Trade &amp; Markets</b>Core industry; dependent on the InterGalactic Banking Clan and Czerka supply</div>
+      <div><b>Purpose</b>survival, stability, and rebuilding — terrified of another Revan</div>
+    </div></div>
+
+  <div class="faction"><h4>The Restored Jedi Order</h4><div class="seat">Grand Master Meetra Surik · heir-apparent Kao Cen Darach · seat: Tython (also Telos &amp; Coruscant)</div>
+    <p>The Order reborn from near-extinction — smaller, harder, and less dogmatic than the Council of old, gathered first on Ilum and now granted its ancient cradle of Tython by the Csilla Accords. It operates under Republic charter, with all its old privileges restored. Within it runs a deep tension between traditionalists and the grey path walked by Tylo, Chatni, and the Exile herself.</p>
+    <div class="meta">
+      <div><b>Governs</b>Tython; enclaves on Telos, Coruscant, Ilum, and Cardina's Alderaan</div>
+      <div><b>Allies</b>the Republic · House Thul / Cardina · the crew of the <em>Dara Dara</em></div>
+      <div><b>Trade &amp; Markets</b>none commercial; Ilum kyber; sustained by the Republic</div>
+      <div><b>Purpose</b>to rebuild the light without repeating the Council's blindness</div>
+    </div></div>
+
+  <div class="faction"><h4>The Mandalorian Clans</h4><div class="seat">Mandalore the Dawn (Torren Wren) · homeworld: Mandalore (returned)</div>
+    <p>A warrior people remaking themselves between conquest and honor. Reunified by Canderous and led now by Torren Wren, they have regained Mandalore itself and the right to militarize, build warships, and forge beskar — bound in exchange to serve as the galaxy's first-responders, and (newly) to send their young to schools. Clan Nightfall, reborn by Sekan under Dax Vein, is among the ascendant lines; they still seek the lost Clan Vizsla.</p>
+    <div class="meta">
+      <div><b>Governs</b>Mandalore and its clans; recent holdings on Kashyyyk (by Wookiee accord)</div>
+      <div><b>Allies</b>the crew · the Republic (oversight) · the Wookiees (negotiated)</div>
+      <div><b>Trade &amp; Markets</b>beskar smithing; mercenary contracts; war-materiel</div>
+      <div><b>Purpose</b>honor, survival, and a people worth being</div>
+    </div></div>
+
+  <div class="subtable">
+    <div class="cap">The Clans of Mandalore — <em>who leads, and who holds the mask</em></div>
+    <div class="scroll"><table>
+      <thead><tr><th>Clan</th><th>Who They Are</th><th>Standing</th></tr></thead>
+      <tbody>
+      <tr class="power"><td class="nm">Clan Wren</td><td>Led by Torren Wren (Mandalore the Dawn) and home to the artificer Alra; steers the people from conquest toward honor and craft.</td><td class="stand"><span class="pill">Rules</span>Holds the mask of Mandalore — the ruling clan</td></tr>
+      <tr><td class="nm">Clan Ordo</td><td>The clan of Canderous, who took the mask at the close of the Dark Wars and quietly regathered the clans before passing it on.</td><td class="stand">Elder &amp; prestigious; its old Mandalore now rides with the crew</td></tr>
+      <tr><td class="nm">Clan Nightfall</td><td>Refounded by Sekan from the ashes of Clan Varad and now led by Dax Vein — a young, ascendant line.</td><td class="stand">Ascendant — reborn and rising</td></tr>
+      <tr><td class="nm">The Kashyyyk Clans</td><td>A frontier holding under chieftain Drax, kept by accord with the Wookiees, where Kultak and Drax hunt.</td><td class="stand">Established frontier hold, by Wookiee accord</td></tr>
+      <tr><td class="nm">Clan Vizsla</td><td>A storied line scattered in the long fall of the Mandalorians, still hunted by Torren's people.</td><td class="stand">Lost — whereabouts unknown, actively sought</td></tr>
+      <tr><td class="nm">Clan Varad</td><td>The clan Sekan broke and supplanted; its remnants were folded into the reborn Clan Nightfall.</td><td class="stand">Broken — absorbed into Clan Nightfall</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="faction"><h4>The Chiss Ascendancy</h4><div class="seat">the Aristocra &amp; the Ruling Families · capital: Csilla</div>
+    <p>The cold, hyper-logical power of the Unknown Regions — long a rumor, now the host of the galaxy's defining summit. Governed by an oligarchy of four ruling families and bound by a rigid hierarchy of blood and birth, the Chiss take wardenship of the Unknown Regions under the Accords but decline all alliance and trade until they have studied the wider galaxy. Genuinely neutral, genuinely watching, and quietly tracking certain wanderers across the stars. Its four ruling families are set out in the table below.</p>
+    <div class="meta">
+      <div><b>Governs</b>the Chiss worlds and the Unknown Regions frontier</div>
+      <div><b>Allies</b>none by design — strict neutrality; wary food-trade with Republic agriculture</div>
+      <div><b>Trade &amp; Markets</b>closed; recent grain deals (they cannot farm Csilla) the rare exception</div>
+      <div><b>Purpose</b>to understand the galaxy before committing to it — and to warn it of what lies beyond</div>
+    </div></div>
+
+  <div class="subtable">
+    <div class="cap">The Four Ruling Families — <em>an oligarchy in constant, careful balance</em></div>
+    <div class="scroll"><table>
+      <thead><tr><th>Ruling Family</th><th>Domain &amp; Who They Are</th><th>Standing</th></tr></thead>
+      <tbody>
+      <tr class="power"><td class="nm">House Nuruodo</td><td>Military and foreign affairs — the warships ringing Csilla and the diplomats who set the terms of the summit and of Chiss neutrality.</td><td class="stand"><span class="pill">Ascendant</span>Leads the Ascendancy's galactic engagement in the summit era</td></tr>
+      <tr><td class="nm">House Csapla</td><td>Resources, colonization, and what farming the ice worlds allow; provided the host Aristocra who convened the summit.</td><td class="stand">Economic backbone &amp; summit host; co-first among equals</td></tr>
+      <tr><td class="nm">House Inrokini</td><td>Industry, science, and communications — the makers and the listeners. House of the agent Nerudo.</td><td class="stand">Influential and watchful; rising with the new technological age</td></tr>
+      <tr><td class="nm">House Sabosen</td><td>Health, education, and justice; keepers of the rigid social order. House of Detective Veshra.</td><td class="stand">Steady — the courts and conscience of the Ascendancy</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="faction"><h4>The Houses of Alderaan</h4><div class="seat">Queen Cardina Thul (ascendant) · a parliament of noble houses</div>
+    <p>A jewel-world ruled not by one crown but by a parliament of noble bloodlines — once forty-seven houses, now fewer, and in the campaign era consolidating fast under the ascendant <span class="nm">Cardina Thul</span>, who has gutted rivals to seize the throne and shelter the Jedi. Beneath the beauty runs lethal politics: assassins, vassalage, and the ever-present memory of the lost royal line. Each surviving house of note is set out in the table below. <em class="note">(In the wider SWTOR timeline these houses fall into open civil war for the throne — a tension already brewing here.)</em></p>
+    <div class="meta">
+      <div><b>Governs</b>Alderaan and its noble territories, through parliament</div>
+      <div><b>Allies</b>shifting house-alliances; the Jedi shelter under Thul</div>
+      <div><b>Trade &amp; Markets</b>luxury goods, high culture, finance</div>
+      <div><b>Purpose</b>the throne — and the survival of one's bloodline above all</div>
+    </div></div>
+
+  <div class="subtable">
+    <div class="cap">The Houses of Alderaan — <em>a parliament of bloodlines, consolidating under one crown</em></div>
+    <div class="scroll"><table>
+      <thead><tr><th>House</th><th>Who They Are</th><th>Standing</th></tr></thead>
+      <tbody>
+      <tr class="power"><td class="nm">House Thul</td><td>Merchant-risen brokers of trade and the planet's economy, ascendant under Queen Cardina; patron of the Jedi and Chatni's employer.</td><td class="stand"><span class="pill">In Power</span>Ascendant to the throne — the ruling house</td></tr>
+      <tr><td class="nm">House Organa</td><td>The eldest, most respected house; diplomats and Republic-founders, anchored by the Organa–Alde axis.</td><td class="stand">Most respected; chief counterweight to Thul</td></tr>
+      <tr><td class="nm">House Ulgo</td><td>A house of soldiers and stern discipline, eyeing the throne with martial ambition.</td><td class="stand">Rising martial power</td></tr>
+      <tr><td class="nm">House Rist</td><td>Legendary assassins and spies, descended from a crime lord; the techno-slaver nemesis of Tylo Dara.</td><td class="stand">Powerful in the shadows</td></tr>
+      <tr><td class="nm">House Panteer</td><td>The ancient royal line, brought low and driven into hiding after the murder of its heir.</td><td class="stand">Fallen — a crown in exile</td></tr>
+      <tr><td class="nm">House Alde</td><td>Alderaan's oldest surviving house; eccentric scholars of antiquity, long allied to Organa.</td><td class="stand">Influential by prestige</td></tr>
+      <tr><td class="nm">House Baliss</td><td>A minor house that climbs by flattery, brokerage, and timely alliance.</td><td class="stand">Minor — rising</td></tr>
+      <tr><td class="nm">House Cortess</td><td>Vassal vintners, keepers of Alderaan's famed vineyards and high vintages.</td><td class="stand">Minor / vassal</td></tr>
+      <tr><td class="nm">House Teral</td><td>Newly-rich merchant-soldiers angling hard for a seat at the high table.</td><td class="stand">Minor — ambitious</td></tr>
+      <tr><td class="nm">House Killesa</td><td>Financiers and moneylenders who hold the debts of greater houses.</td><td class="stand">Minor — but leveraged</td></tr>
+      <tr><td class="nm">House Girard</td><td>Jurists and parliamentary speakers, masters of Alderaan's labyrinthine law.</td><td class="stand">Minor — influential in law</td></tr>
+      <tr><td class="nm">House Frayus</td><td>Proud, insular landholders of the high country, owners of mines and mountain passes.</td><td class="stand">Minor — insular</td></tr>
+      <tr><td class="nm">House Qel-Nosh</td><td>Patrons of the great salons, galleries, and concert halls — influence by culture.</td><td class="stand">Minor — cultural</td></tr>
+      <tr><td class="nm">House Antilles</td><td>Shipwrights and pilots who hold Alderaan's small but proud space-guard.</td><td class="stand">Minor</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="faction"><h4>The Onderon Monarchy</h4><div class="seat">Queen Talia · throne-world: Onderon</div>
+    <p>Fiercely independent Onderon — loyal to the Republic but wary of Jedi meddling since the Dark Wars, and hostile to cults of every kind, which sets the crown naturally against the Silent Hand. Queen Talia holds her throne with the gratitude (and the suspicion) earned when the Exile and Mandalore broke the Vaklu coup.</p>
+    <div class="meta">
+      <div><b>Governs</b>Onderon and (contested) the jungle moon Dxun</div>
+      <div><b>Allies</b>the Republic; broad anti-cult sentiment</div>
+      <div><b>Trade &amp; Markets</b>regional; jungle resources; a hard frontier</div>
+      <div><b>Purpose</b>independence under a crown that answers to no cult</div>
+    </div></div>
+
+  <div class="faction"><h4>The Vaklu Remnant</h4><div class="seat">General Nost Dural · the nationalist faction</div>
+    <p>The remnant of the rebel cause crushed at Iziz — nationalists who hold that Onderon should answer to no one, least of all a Jedi-backed crown. Bitter and well-armed, they would fund even the Silent Hand purely to spite Queen Talia, making them a wild card in every Onderon crisis.</p>
+    <div class="meta">
+      <div><b>Governs</b>no territory; a shadow following within Onderon</div>
+      <div><b>Allies</b>(would fund) the Silent Hand · disaffected nationalists</div>
+      <div><b>Trade &amp; Markets</b>smuggled arms; private wealth</div>
+      <div><b>Purpose</b>sovereignty at any cost — and revenge on the crown</div>
+    </div></div>
+
+  <div class="faction"><h4>The Iktotchi of Iktotch</h4><div class="seat">the Fourfold Wind · homeworld: Iktotch, a wind-scoured moon of the gas giant Iktotchon</div>
+    <p>A horned, precognitive people lately freed from enslavement and lately risen to extraordinary standing — installed by the Csilla Accords as the galaxy's neutral <span class="hl">arbiters</span>, the "fun police" who adjudicate disputes between the great powers. Their visions make them invaluable and feared; their ancient Jedi temple stands as a museum and an open invitation to the Order's return. Internally they answer to no single throne but to the <span class="hl">Fourfold Wind</span> — a council of four powers whose relative strength is forever shifting. The whole moon's course <span class="hl">veers</span> with whichever blows strongest, a movement they name <em>the Veering</em>: when the Ember is ascendant the people hold to tradition; when the Levin rises they act; the Gale forever sways between to keep the balance; and in times of galactic strife the Stormguard comes to the fore, marching in tandem with whichever conclave then holds sway. The four powers of the Fourfold Wind are set out in the table below.</p>
+    <div class="meta">
+      <div><b>Governs</b>Iktotch and the Iktotchon system; arbitration of inter-faction disputes galaxy-wide</div>
+      <div><b>Allies</b>the Republic · the Jedi · the crew (Tylo's people)</div>
+      <div><b>Trade &amp; Markets</b>rare metals; precognitive counsel; arbitration</div>
+      <div><b>Purpose</b>to never be property again — and to keep the peace they were denied</div>
+    </div></div>
+
+  <div class="subtable">
+    <div class="cap">The Fourfold Wind — <em>power swings with the Veering; the moon follows whoever blows strongest</em></div>
+    <div class="scroll"><table>
+      <thead><tr><th>Power</th><th>Stands For &amp; Who They Are</th><th>Standing in the Veering</th></tr></thead>
+      <tbody>
+      <tr class="power"><td class="nm">The Levin Conclave</td><td>Lightning — of action and response; the sudden strike, led by the Stormspeaker.</td><td class="stand"><span class="pill">Ascendant</span>Drives the bold new era — the new Order and the arbiter role</td></tr>
+      <tr><td class="nm">The Gale Conclave</td><td>Air — of balance and swaying motion; the turning wind, led by the Windwarden. Chatni's adoptive sect.</td><td class="stand">The swing — currently leaning to the Levin, holding the balance</td></tr>
+      <tr><td class="nm">The Ember Conclave</td><td>Fire — of tradition and conservatism; the kept flame, led by the Keeper of the Ember.</td><td class="stand">In the minority — resisting the pace of change</td></tr>
+      <tr><td class="nm">The Stormguard</td><td>The military war-host, commanded by General Kladar; rises only in times of strife.</td><td class="stand">Rising — gathering against the war the seers foresee</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="grp">Movements, Peoples &amp; Neutral Powers</div>
+
+  <div class="faction"><h4>The Silent Hand</h4><div class="seat">"The Listener" — a hidden, non-Force populist demagogue</div>
+    <p>The defining antagonist movement of the age: an anti-Force populist tide that preaches the galaxy will never know peace until <em>both</em> Jedi and Sith are "spent like coin." It spreads through riot, propaganda, and assassination, declares worlds like Ilum, Nar Shaddaa, and Makeb its "free zones," and hunts Force-sensitives wherever they flare into view. Its leviathan warships are a recurring terror — and it was first set loose, it now appears, by the Genoharadan.</p>
+    <div class="meta">
+      <div><b>Governs</b>"free zones" and the streets; no formal territory</div>
+      <div><b>Allies</b>(secretly seeded by) the Genoharadan · disaffected populations · the Vaklu Remnant (funding)</div>
+      <div><b>Trade &amp; Markets</b>populist patronage; Czerka arms</div>
+      <div><b>Purpose</b>to end the rule of the Force-wielders, by any means</div>
+    </div></div>
+
+  <div class="faction"><h4>The Open Palm</h4><div class="seat">a shifting political-military bloc</div>
+    <p>A faction the Chiss watch with particular care: roughly four years ago the Open Palm changed character and began to <span class="dk">militarize</span>, breaking from its former posture. Increasingly sidelined in trade as the Chiss deal directly with Republic agriculture, it remains an uncertain quantity at the summits — its envoys turning up where they should not be.</p>
+    <div class="meta">
+      <div><b>Governs</b>a bloc of allied worlds/interests (in flux)</div>
+      <div><b>Allies</b>shifting; once courted, now watched</div>
+      <div><b>Trade &amp; Markets</b>losing ground to Chiss–Republic deals</div>
+      <div><b>Purpose</b>unclear — the recent turn to arms alarms the neutral powers</div>
+    </div></div>
+
+  <div class="faction"><h4>The Selkath of Manaan</h4><div class="seat">Shasa, of the Order of Shasa · the Manaan High Council · ocean-world: Manaan</div>
+    <p>Keepers of strict neutrality and the galaxy's sole source of advanced <span class="nm">kolto</span> medicine — which makes Manaan courted by all and conquered by none. The Force-sensitive Selkath of the Order of Shasa walk a grey, contemplative path; their hospitality is sacred (a guest-ring cannot be refused), their cuisine legendary, and their favor desperately sought by Jedi and Silent Hand alike.</p>
+    <div class="meta">
+      <div><b>Governs</b>Manaan and its oceans; the kolto trade</div>
+      <div><b>Allies</b>strict neutrality; warm to Atton and the crew</div>
+      <div><b>Trade &amp; Markets</b>kolto — the indispensable medicine of the galaxy</div>
+      <div><b>Purpose</b>neutrality, preservation, and peace</div>
+    </div></div>
+
+  <div class="faction"><h4>The Echani Command</h4><div class="seat">the Five Sisters, heirs of General Yusanis</div>
+    <p>Combat pragmatists who read battle like a spoken language and regard the Force as a "crutch." They hold deep respect for the Jedi — the Exile above all — but will test the worth of any who claim to lead, blade in hand. A martial culture of discipline and clarity.</p>
+    <div class="meta">
+      <div><b>Governs</b>the Echani worlds</div>
+      <div><b>Allies</b>respect for the Jedi/Exile; martial honor</div>
+      <div><b>Trade &amp; Markets</b>elite warriors, bodyguards, instructors</div>
+      <div><b>Purpose</b>the perfection of combat as understanding</div>
+    </div></div>
+
+  <div class="faction"><h4>The Mining Coalition</h4><div class="seat">Senator Mon Gazza · the deep Outer Rim</div>
+    <p>With the Republic's withdrawal, the Accords carved the deep Outer Rim into new orders — and the largest, some ninety percent of the Rim, is the vast <span class="nm">Mining Coalition</span> led by the honest Senator Mon Gazza. A frontier governing itself at last, and a quiet experiment in whether it can do so without the Core.</p>
+    <div class="meta">
+      <div><b>Governs</b>roughly ninety percent of the deep Outer Rim</div>
+      <div><b>Allies</b>Mon Gazza's reformers; wary of Czerka and the Hutts</div>
+      <div><b>Trade &amp; Markets</b>mining, mineral export, frontier trade</div>
+      <div><b>Purpose</b>self-rule and survival beyond the Republic's reach</div>
+    </div></div>
+
+  <div class="faction"><h4>The Trail Regions</h4><div class="seat">the lesser Outer Rim order</div>
+    <p>The smaller of the two new Outer Rim orders born from the Republic's retreat — a looser knot of trail-worlds and waystations along the old hyperlanes, finding their feet apart from both the Core and the Mining Coalition.</p>
+    <div class="meta">
+      <div><b>Governs</b>the trail-worlds and hyperlane waystations of the Rim</div>
+      <div><b>Allies</b>loose ties to the Mining Coalition</div>
+      <div><b>Trade &amp; Markets</b>transit, supply, frontier commerce</div>
+      <div><b>Purpose</b>to keep the old roads open and free</div>
+    </div></div>
+
+  <div class="grp">The Corporations</div>
+
+  <div class="faction"><h4>Czerka Corporation</h4><div class="seat">a board of profiteers · motto: "Anytime, Anywhere"</div>
+    <p>Amoral profiteers who arm every side at once — Republic, Silent Hand, and noble houses alike. Builders, it is whispered, of the interface-chairs used to enslave the Iktotchi. In the campaign era Czerka is the quiet engine of the worst secrets: researching reawakened <span class="hl">Rakatan</span> technology, hunting Revan's lost Foundry, and tracking something across the rim for fourteen years — and a Genoharadan once sat at its second seat, until the cabal's exposure.</p>
+    <div class="meta">
+      <div><b>Governs</b>corporate stations and quarantine zones (Tatooine, Hoth, Kashyyyk archives)</div>
+      <div><b>Allies</b>everyone who pays; long entangled with the Genoharadan</div>
+      <div><b>Trade &amp; Markets</b>arms, mining, slaving infrastructure, "research"</div>
+      <div><b>Purpose</b>profit, and the secrets that buy more of it</div>
+    </div></div>
+
+  <div class="faction"><h4>Adascorp</h4><div class="seat">Lord Adasca · Arkanian bio-engineering</div>
+    <p>The Arkanian bio-engineering giant, under the cold Lord Adasca, that pursues gene-work on the edge of horror — "pest control," life-shaping, and research that may run all the way toward the cloning of the Force itself. A corporation that treats living things as raw material.</p>
+    <div class="meta">
+      <div><b>Governs</b>Arkanian laboratories and bio-holdings</div>
+      <div><b>Allies</b>whoever funds the research; quiet Genoharadan interest</div>
+      <div><b>Trade &amp; Markets</b>bio-engineering, gene-work, "specimens"</div>
+      <div><b>Purpose</b>mastery over life — and the profit in it</div>
+    </div></div>
+
+  <div class="faction"><h4>Aratech</h4><div class="seat">CEO Mallo Vekk · military repulsorcraft</div>
+    <p>Builders of military repulsorcraft and war-machines, Aratech is bidding hard to arm the Chiss fleet and is tied to Czerka's frontier dealings. A weapons-maker hunting the era's richest contracts.</p>
+    <div class="meta">
+      <div><b>Governs</b>manufacturing yards and proving grounds</div>
+      <div><b>Allies</b>Czerka; bidding for Chiss and Republic contracts</div>
+      <div><b>Trade &amp; Markets</b>repulsor military tech, vehicles, droids</div>
+      <div><b>Purpose</b>to arm the galaxy's next war, whoever fights it</div>
+    </div></div>
+
+  <div class="faction"><h4>The InterGalactic Banking Clan</h4><div class="seat">Chairman Tonith · the banking guild · Baroness Elo</div>
+    <p>The financial colossus that holds the Republic's crushing war-debt — and, through Baroness Elo's banking guild, sits at the very heart of the Genoharadan. The true power behind many thrones, lending to all sides and owning the leverage that comes with it.</p>
+    <div class="meta">
+      <div><b>Governs</b>galactic finance; the Republic's debt</div>
+      <div><b>Allies</b>whoever serves the balance sheet; deep Genoharadan ties</div>
+      <div><b>Trade &amp; Markets</b>lending, currency, debt and leverage</div>
+      <div><b>Purpose</b>profit and leverage — and, for some within, darker designs</div>
+    </div></div>
+
+  <div class="faction"><h4>Corellian Engineering Corporation</h4><div class="seat">the Corellian shipwright guilds · homeworld: Corellia</div>
+    <p>The oldest starship manufacturer in Republic history, and by its own claim the longest-operating business in the galaxy. Its rugged, endlessly modifiable hulls fly under traders, navies, and smugglers alike — and it asks few questions about which.</p>
+    <div class="meta">
+      <div><b>Operates</b>shipyards on Corellia and across the sector</div>
+      <div><b>Sells To</b>the Republic; independent traders everywhere</div>
+      <div><b>Trade &amp; Markets</b>freighters, transports, light warships</div>
+      <div><b>Purpose</b>build the galaxy's ships and sell them to all comers</div>
+    </div></div>
+
+  <div class="faction"><h4>Kuat Drive Yards</h4><div class="seat">the Kuati shipwright houses · the orbital rings of Kuat</div>
+    <p>The premier builder of capital warships and the backbone of the Republic Navy, its titanic orbital shipyards now central to the consolidating Republic's rearmament.</p>
+    <div class="meta">
+      <div><b>Operates</b>the Kuat rings and shipyards</div>
+      <div><b>Sells To</b>the Republic Navy first of all</div>
+      <div><b>Trade &amp; Markets</b>capital ships, warships, civilian craft</div>
+      <div><b>Purpose</b>build the fleets — and rise with the Republic that buys them</div>
+    </div></div>
+
+  <div class="faction"><h4>Rendili StarDrive</h4><div class="seat">old shipwright houses · homeworld: Rendili</div>
+    <p>An ancient, storied warship-builder and Kuat's chief rival, bidding hard against Kuat and Fondor for every naval contract the Republic lets.</p>
+    <div class="meta">
+      <div><b>Operates</b>the Rendili yards</div>
+      <div><b>Sells To</b>the Republic military and large buyers</div>
+      <div><b>Trade &amp; Markets</b>warships, large hulls, bulk vessels</div>
+      <div><b>Purpose</b>outbuild Kuat for the Republic's coin</div>
+    </div></div>
+
+  <div class="faction"><h4>SoroSuub Corporation</h4><div class="seat">the SoroSuub board · company-world: Sullust</div>
+    <p>The vast industrial conglomerate that <em>is</em> Sullust — governing the planet, its people, and its output as one corporate organism, pumping fuel and ore into the western lanes and now guarding its own arteries as Republic patrols withdraw.</p>
+    <div class="meta">
+      <div><b>Operates</b>Sullust entire — its government, cities, and refineries</div>
+      <div><b>Sells To</b>the southern Rim and the fuel-dependent lanes</div>
+      <div><b>Trade &amp; Markets</b>refined fuel, energy, ore, ships, foodstuffs</div>
+      <div><b>Purpose</b>be a world and a company at once, and answer to no one</div>
+    </div></div>
+
+  <div class="faction"><h4>Duwani Mechanical Products</h4><div class="seat">the Duwani works · Core space</div>
+    <p>A dominant droid manufacturer of the age, flooding the mass market with affordable, reliable units and competing on ubiquity rather than prestige.</p>
+    <div class="meta">
+      <div><b>Operates</b>high-output droid foundries</div>
+      <div><b>Sells To</b>businesses, households, and governments galaxy-wide</div>
+      <div><b>Trade &amp; Markets</b>protocol, labor, and utility droids</div>
+      <div><b>Purpose</b>put a Duwani droid in every workplace in the galaxy</div>
+    </div></div>
+
+  <div class="faction"><h4>MerenData</h4><div class="seat">the MerenData board · Core space</div>
+    <p>A rising droid-and-systems maker with a reputation for the morally grey — building the interrogation and manipulation units that prestige houses refuse, and quietly profiting from the niche.</p>
+    <div class="meta">
+      <div><b>Operates</b>droid and computer-systems plants</div>
+      <div><b>Sells To</b>security services and less scrupulous buyers</div>
+      <div><b>Trade &amp; Markets</b>droids (incl. grey-market units), computer systems</div>
+      <div><b>Purpose</b>sell the machines others won't build</div>
+    </div></div>
+
+  <div class="faction"><h4>Serv-O-Droid, Inc.</h4><div class="seat">the Serv-O-Droid board · Core space</div>
+    <p>A steady mid-market droid manufacturer competing with Czerka, Duwani, and Aratech for share across the Republic.</p>
+    <div class="meta">
+      <div><b>Operates</b>commercial droid lines</div>
+      <div><b>Sells To</b>broad commercial and institutional market</div>
+      <div><b>Trade &amp; Markets</b>service, labor, and utility droids</div>
+      <div><b>Purpose</b>hold a steady second-tier share of the droid trade</div>
+    </div></div>
+
+  <div class="faction"><h4>The Draay Trust</h4><div class="seat">old-money trustees · Core space</div>
+    <p>A powerful financial house and investment trust that moves by ownership and leverage rather than open trade — holding controlling stakes in other concerns, Adascorp among them.</p>
+    <div class="meta">
+      <div><b>Operates</b>holdings and controlling interests</div>
+      <div><b>Sells To</b>ventures and corporations worth owning</div>
+      <div><b>Trade &amp; Markets</b>investment capital, holdings, corporate stakes</div>
+      <div><b>Purpose</b>accumulate quiet control from the boardroom</div>
+    </div></div>
+
+  <div class="faction"><h4>Trans-Hydian Freightways</h4><div class="seat">Director's board · hub: Brentaal IV</div>
+    <p><span class="orig">original</span> A galaxy-class bulk hauler running insured convoys down the great lanes — owning not the goods but the means to move them.</p>
+    <div class="meta">
+      <div><b>Operates</b>convoy fleets on the Perlemian, Hydian, and Corellian Run</div>
+      <div><b>Sells To</b>any producer needing bulk cargo moved</div>
+      <div><b>Trade &amp; Markets</b>freight capacity, bonded shipping, warehousing</div>
+      <div><b>Purpose</b>dominate the routes smaller haulers cannot insure</div>
+    </div></div>
+
+  <div class="faction"><h4>Veragi Trade Combine</h4><div class="seat">the combine's brokers · base: Commenor</div>
+    <p><span class="orig">original</span> A merchant combine brokering raw commodities between Rim producers and Core buyers, profiting from the price gap the lanes create.</p>
+    <div class="meta">
+      <div><b>Operates</b>buying agents on the Rim; selling offices in the Core</div>
+      <div><b>Sells To</b>Core refineries and manufacturers</div>
+      <div><b>Trade &amp; Markets</b>ore, fuel, foodstuffs, commodity contracts</div>
+      <div><b>Purpose</b>buy cheap at the source, sell dear at the destination</div>
+    </div></div>
+
+  <div class="faction"><h4>Outer Systems Salvage & Supply</h4><div class="seat">frontier partners · base: Ord Mantell</div>
+    <p><span class="orig">original</span> A rough frontier outfitter and salvage concern thriving on the abandoned Rim, expanding fast into the vacuum the Republic's withdrawal left.</p>
+    <div class="meta">
+      <div><b>Operates</b>junk-yards and depots across the abandoned Rim</div>
+      <div><b>Sells To</b>colonists, spacers, mercenaries, the discreet</div>
+      <div><b>Trade &amp; Markets</b>salvaged hulls and parts, frontier supply, fuel</div>
+      <div><b>Purpose</b>sell survival dear where no one else will sell at all</div>
+    </div></div>
+
+  <div class="grp">The Syndicates &amp; the Shadow Orders</div>
+
+  <div class="faction"><h4>The GenoHaradan</h4><div class="seat">"The Overseers" · fourteen hidden members · the Hunter prominent</div>
+    <p>The age's deepest threat: a secret society of assassins and power-brokers who believe they steer history to "protect the Republic." Fourteen members who do not know each other's names; meeting only at the invisible <span class="nm">Kabaal</span> at the presenting of the <span class="dk">Black Codex</span>; defended by clones, surveillance, and the unkillable Hunter. They seeded the Silent Hand, marked Chatni for death, drive Czerka's Rakatan research, and unleashed the clone-army at Csilla. Broken there — but never wholly destroyed.</p>
+    <div class="meta">
+      <div><b>Governs</b>nothing openly; everything quietly</div>
+      <div><b>Allies</b>(controls) the Silent Hand · Czerka · banking guild seats</div>
+      <div><b>Trade &amp; Markets</b>information, assassination, cloning, leverage</div>
+      <div><b>Purpose</b>"stability" — and protection against the unknown rim, by any horror</div>
+    </div></div>
+
+  <div class="faction"><h4>The Exchange</h4><div class="seat">the Comlink (a hidden council) · Second Hand: Luxa</div>
+    <p>The great criminal syndicate of the era — slavery, spice, extortion — bitter rivals of the Mandalorians and ever hungry to capture "lost Jedi" for sale. Named the Chiss Ascendancy's first official enemy after the Csilla crisis, with its Second Hand Luxa a constant thorn in the crew's side.</p>
+    <div class="meta">
+      <div><b>Governs</b>the underworld of countless worlds</div>
+      <div><b>Allies</b>(uses) GOTO's network · corrupt officials</div>
+      <div><b>Trade &amp; Markets</b>slaves, spice, extortion, smuggling</div>
+      <div><b>Enemies</b>the Mandalorians · the Chiss · Black Sun (rival)</div>
+    </div></div>
+
+  <div class="faction"><h4>The Hutt Cartel</h4><div class="seat">Bogga the Hutt · the barons of Hutt Space (Vogga among them)</div>
+    <p>The Hutts hold the Outer Rim hyperlanes and take a toll from anyone — Silent Hand included — who moves fleets through Hutt Space. Under the overlord Bogga, and through shipping-and-fuel barons like <span class="nm">Vogga the Hutt</span> on Nar Shaddaa, the Cartel turns the galaxy's roads into a private tollgate.</p>
+    <div class="meta">
+      <div><b>Governs</b>the Hutt Space hyperlanes and their tolls</div>
+      <div><b>Allies</b>shifting; protection rackets; the highest bidder</div>
+      <div><b>Trade &amp; Markets</b>hyperlane tolls, spice, slaves, shipping &amp; fuel</div>
+      <div><b>Enemies</b>the Mandalorians · rival cartels</div>
+    </div></div>
+
+  <div class="faction"><h4>Black Sun</h4><div class="seat">Underlord Xist · the flashy upstart</div>
+    <p>The ambitious, flashy upstart syndicate challenging the Exchange for the underworld's crown. Under the relentless Underlord Xist, Black Sun expands by spectacle and violence, picking at the Exchange's turf wherever it can.</p>
+    <div class="meta">
+      <div><b>Governs</b>contested underworld turf</div>
+      <div><b>Allies</b>opportunistic; rivals everyone eventually</div>
+      <div><b>Trade &amp; Markets</b>spice, smuggling, protection, vice</div>
+      <div><b>Enemies</b>the Exchange (chief rival)</div>
+    </div></div>
+
+  <div class="faction"><h4>The Crucible</h4><div class="seat">the Scarred One · the slaver-academies</div>
+    <p>Slavers whose "academies" forge assassins from the washouts of Czerka and the noble houses — a cold machine for turning the discarded into killers. A deep, personal rival to Chatni, who knows exactly what such a place can make of a person.</p>
+    <div class="meta">
+      <div><b>Governs</b>hidden slave-academies across the rim</div>
+      <div><b>Allies</b>buyers among Czerka and the houses</div>
+      <div><b>Trade &amp; Markets</b>trained killers, slaves, conditioning</div>
+      <div><b>Enemies</b>Chatni · the Mandalorians</div>
+    </div></div>
+
+  <div class="grp">The Law of Trade</div>
+
+  <div class="faction"><h4>The Trade Authority</h4><div class="seat">the Republic Senate's commerce committee &amp; the Banking Guilds</div>
+    <p>Galactic commerce is governed in law by a partnership of two powers: the <strong>Republic</strong>, which writes and enforces commercial statute through its customs service, and the <strong>Banking Guilds</strong> — chiefly the InterGalactic Banking Clan — which underwrite the currency and clear every transaction. Together they run the customs houses, port registries, and licensing offices that issue a lawful trader's papers and inspect what moves under them, with the trade unions and commerce guilds bound in to police their own.</p>
+    <div class="meta">
+      <div><b>Governs</b>lawful commerce across Republic and Republic-aligned space</div>
+      <div><b>Instruments</b>Merchant's Registry · Cargo Bond &amp; Manifest Seal · Inter-Sector Hauler's Permit · Restricted-Goods Warrant · Guild Charter · Banking Guild Letter of Credit</div>
+      <div><b>Limit</b>worthless beyond Republic recognition — Hutt Space, the abandoned Rim, and non-signatory powers honor none of it</div>
+      <div><b>Purpose</b>to keep trade lawful, taxed, and accountable — where it still can</div>
+    </div></div>
+
+  <div class="faction"><h4>The Galactic Charter of Free Commerce <span class="orig" style="color:#e7c66b;border-color:rgba(231,198,107,.6)">the Free-Trade Writ</span></h4><div class="seat">granted jointly by the Senate commerce committee &amp; the seated Banking Guilds</div>
+    <p>The rare master instrument that renders all lesser licences unnecessary. The <strong>Free-Trade Writ</strong> grants its bearer the right to establish and conduct trade <em>anywhere</em> in signatory space — and, in exchange, vests them with authority to <strong>inspect cargoes and act against unlawful trade on behalf of the Trade Authority and the trade unions, in any sector</strong>. Its holder is at once the galaxy's freest merchant and a deputized guardian of its commerce: a private party clothed with public power. Beyond the Republic's recognition, however, it is only a fine piece of paper.</p>
+    <div class="meta">
+      <div><b>Grants</b>universal trade rights, superseding all sector licences</div>
+      <div><b>Empowers</b>inspection, audit, and enforcement against unlawful trade on the unions' behalf</div>
+      <div><b>Limit</b>only as good as the Republic's writ runs — nothing in Hutt Space or the abandoned Rim</div>
+      <div><b>Purpose</b>to open the lawful galaxy to its bearer, and bind them to keep it lawful</div>
+    </div></div>
+
+  <div class="rule" style="margin-top:64px;"><span class="diamond"></span></div>
+
+  <!-- ============================================================ -->
+  <!-- PART V — THE HOLOCHART (interactive map) -->
+  <!-- ============================================================ -->
+  <div class="part-head" id="part5">
+    <div class="pnum">V</div>
+    <div class="kicker">Part Five</div>
+    <h2>The Holochart</h2>
+    <p class="intro">The galaxy entire, rendered as the navigators see it — 5,447 charted worlds along the great hyperlanes, the territories of every power, and the curated worlds with their rulers, trade, and current state. Pan, zoom, search, click a world, or plot a course. The chart below is live; for a full-screen view, open it in its own window.</p>
+  </div>
+
+  <div style="margin:0 0 20px;text-align:center;">
+    <a href="Galaxy_Map_KOTOR_Era.html" target="_blank" style="font-family:var(--display,'Cinzel',serif);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#070a12;background:linear-gradient(90deg,#c9a23f,#e7c66b);text-decoration:none;border-radius:5px;padding:11px 20px;display:inline-block;">⤢ Open the Holochart Full-Screen</a>
+  </div>
+  <div style="position:relative;width:100%;height:78vh;min-height:540px;border:1px solid rgba(201,162,63,.4);border-radius:10px;overflow:hidden;box-shadow:0 0 40px rgba(40,54,96,.35);background:#04060c;">
+    <iframe src="Galaxy_Map_KOTOR_Era.html" title="The Holochart — Interactive Galaxy Map" style="position:absolute;inset:0;width:100%;height:100%;border:0;" loading="lazy"></iframe>
+  </div>
+  <p style="font-family:'EB Garamond',Georgia,serif;font-style:italic;color:#8d8268;font-size:14px;text-align:center;margin-top:12px;">If the chart does not load above (some viewers block embedded files), use the full-screen button — both open the same Holochart.</p>
+
+  <div class="colophon">
+    The Galactic Record · A Compendium of the Known Galaxy · Compiled in the <span>Restoration Era</span><br>
+    Part I History · Part II The Crew's Trail · Part III The Codex · Part IV The Powers · Part V The Holochart
+  </div>
+
+</div>
+</body>
+</html>
