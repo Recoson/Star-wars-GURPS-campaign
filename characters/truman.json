@@ -80,7 +80,7 @@
       "varCost": 15
     },
     {
-      "name": "Sense of Duty (Crew)",
+      "name": "Sense of Duty (small group)",
       "type": "Disadvantage",
       "levels": 1,
       "varCost": -5
@@ -165,7 +165,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-05T14:40:09.840Z",
-    "savedBy": "Truman"
+    "savedAt": "2026-06-06T08:46:03.000Z",
+    "savedBy": "Claude (catalog-name lint — reload to accept)"
   }
 }
