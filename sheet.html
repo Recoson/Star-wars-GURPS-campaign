@@ -685,7 +685,6 @@ function blankChar(){
   conditions:{},
   credits:0,creditLog:[],
   combat:{hp:null,fp:null,statuses:[],concentrations:[],charges:[],turn:0,log:[]},
-  credits:0,creditLog:[],
   notes:'',trainRate:200,study:[],ptTarget:150,languages:'',languages2:null,
   layout:{}
  };
@@ -837,6 +836,11 @@ async function openCharPicker(){
   const dir=await ghGetFile('characters',false);
   list=(dir||[]).filter(f=>f.name&&f.name.endsWith('.json')).map(f=>f.name.replace(/\.json$/,''));
  }catch(e){alert('Could not list cloud characters: '+e.message);return}
+ const meta={};
+ await Promise.all(list.map(async id=>{
+  try{const d=JSON.parse(await ghGetFile('characters/'+id+'.json',true));meta[id]={n:d.name||id,p:d.player||'',c:d.concept||''};}
+  catch(e){meta[id]={n:id,p:'',c:''}}
+ }));
  const old=document.getElementById('charPickerOv'); if(old)old.remove();
  const ov=document.createElement('div'); ov.id='charPickerOv';
  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;display:flex;align-items:center;justify-content:center';
@@ -844,7 +848,10 @@ async function openCharPicker(){
  const box=document.createElement('div');
  box.style.cssText='background:var(--panel,#fff);border:1px solid var(--line,#888);min-width:280px;max-width:90vw;max-height:70vh;overflow:auto;padding:14px 16px;font:inherit;box-shadow:0 8px 30px rgba(0,0,0,.4)';
  box.innerHTML='<div style="font-weight:700;margin-bottom:8px">☁ Campaign characters</div>'
-  +(list.length?list.map(id=>'<a href="?char='+id+'" style="display:block;padding:6px 2px;text-decoration:none;color:inherit;border-bottom:1px solid var(--line,#ddd)">'+(id===CHAR_ID?'▶ ':'')+id+'</a>').join(''):'<div style="opacity:.7">No characters in the cloud yet — use ☁ Save to add this one.</div>')
+  +(list.length?list.map(id=>{const m=meta[id]||{n:id,p:'',c:''};
+    return '<a href="?char='+id+'" style="display:block;padding:6px 2px;text-decoration:none;color:inherit;border-bottom:1px solid var(--line,#ddd)">'
+    +(id===CHAR_ID?'\u25b6 ':'')+'<b>'+esc(m.n)+'</b>'+(m.p?' <span style="opacity:.65">\u00b7 '+esc(m.p)+'</span>':'')
+    +(m.c?'<div style="opacity:.55;font-size:10px">'+esc(m.c)+'</div>':'')+'</a>';}).join(''):'<div style="opacity:.7">No characters in the cloud yet — use ☁ Save to add this one.</div>')
   +'<div style="margin-top:10px;opacity:.7;font-size:11px">Each link opens that character (its own local autosave). ☁ Save writes back to the campaign database.</div>';
  ov.appendChild(box);document.body.appendChild(ov);
 }

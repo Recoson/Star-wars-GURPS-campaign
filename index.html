@@ -72,11 +72,21 @@ footer a{color:var(--blue);text-decoration:none}
   const dir=await r.json();
   const chars=(dir||[]).filter(f=>f.name&&f.name.endsWith('.json')).map(f=>f.name.replace(/\.json$/,''));
   if(!chars.length){el.innerHTML='<div class="empty">No characters yet — open the blank sheet and ☁ Save one.</div>';return}
-  el.innerHTML=chars.map(id=>
-   '<a class="card" href="sheet.html?char='+encodeURIComponent(id)+'">'
-   +'<div class="char-row"><div><div class="t">🧝 '+id.charAt(0).toUpperCase()+id.slice(1)+'</div>'
-   +'<div class="d">Open sheet — autosaves locally, ☁ Save syncs to the database.</div></div>'
-   +'<span class="badge">cloud ✓</span></div></a>').join('');
+  const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const meta={};
+  await Promise.all(chars.map(async id=>{
+   try{
+    const cr=await fetch('https://api.github.com/repos/Recoson/Star-wars-GURPS-campaign/contents/characters/'+encodeURIComponent(id)+'.json?_='+Date.now(),{headers:{'Accept':'application/vnd.github.raw'}});
+    const d=await cr.json();
+    meta[id]={n:d.name||id,p:d.player||'',c:d.concept||''};
+   }catch(e){meta[id]={n:id.charAt(0).toUpperCase()+id.slice(1),p:'',c:''}}
+  }));
+  el.innerHTML=chars.map(id=>{
+   const m=meta[id];
+   return '<a class="card" href="sheet.html?char='+encodeURIComponent(id)+'">'
+   +'<div class="char-row"><div><div class="t">🧝 '+esc(m.n)+(m.p?' <span style="color:var(--dim);font-weight:400">· '+esc(m.p)+'</span>':'')+'</div>'
+   +'<div class="d">'+(m.c?esc(m.c):'Open sheet — autosaves locally, ☁ Save syncs to the database.')+'</div></div>'
+   +'<span class="badge">cloud ✓</span></div></a>';}).join('');
  }catch(e){
   el.innerHTML='<div class="empty">Could not load character list ('+e.message+').</div>';
  }
