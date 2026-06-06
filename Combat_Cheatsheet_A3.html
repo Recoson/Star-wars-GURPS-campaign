@@ -181,9 +181,15 @@
 .masthead{margin-bottom:1mm; padding-bottom:.7mm;}
 .foot{margin-top:.6mm; padding-top:.5mm;}
 .grid{gap:1.7mm;}
-table.flow{font-size:4.86pt;}
-table.flow td{padding:.3mm .95mm; line-height:1.13;}
-table.flow th{font-size:4.6pt; padding:.3mm .95mm;}
+table.flow{font-size:4.62pt;}
+table.flow td{padding:.26mm .88mm; line-height:1.09;}
+table.flow th{font-size:4.45pt; padding:.26mm .88mm;}
+/* REV2: page-1 columns must clear the (now two-line) KEY strip */
+.page:first-of-type table:not(.flow){font-size:5.12pt;}
+.page:first-of-type table:not(.flow) td{padding:.36mm .95mm;}
+.page:first-of-type .note{font-size:5.2pt; line-height:1.2;}
+.page:first-of-type img{max-height:95mm; width:auto; display:block; margin:0 auto;}
+.legendstrip .legend{font-size:4.7pt; line-height:1.25;}
 </style>
 </head><body>
 <div class="page">
@@ -593,6 +599,21 @@ table.flow th{font-size:4.6pt; padding:.3mm .95mm;}
           <tr><td>Capital hull</td><td class="upd">Hnd −4/−5: effectively <b>no Dodge</b>. Capital defence = shields, armour, point-defence.</td></tr>
         </tbody></table>
         <p class="note">Ace (Pilot 16) in an interceptor (Hnd +2): Dodge <b>10</b>, evasive <b>12</b>. The sheet shows your number live on each ship card.</p>
+      </div>
+      <div class="sec crim">
+        <h2><span class="n">STS</span> Status Effects — Quick Reference</h2>
+        <table><tbody>
+          <tr><td style="width:24%"><b>Stunned</b></td><td class="upd">No actions; defences <b>−4</b>. Recover: <b>HT</b> roll (physical) or <b>IQ</b> (mental) at end of each turn. Combat Reflexes +6 vs mental freeze.</td></tr>
+          <tr><td><b>Shock</b></td><td class="upd"><b>−1 per HP lost</b> (cap −4) to DX/IQ skills on your <i>next turn only</i>. Not defences. High Pain Threshold negates.</td></tr>
+          <tr><td><b>Knocked down</b></td><td class="upd">Major wound / Face / Skull hit: <b>HT roll</b> or fall prone &amp; drop what's held (fail by 5+: also stunned). Standing = a Change Posture maneuver.</td></tr>
+          <tr><td><b>Bleeding</b></td><td class="upd">Vitals/Neck wounds: <b>HT each turn or lose 1 HP</b> until tended (First Aid) — lightsaber &amp; blaster burns <b>cauterise</b> (no bleed).</td></tr>
+          <tr><td><b>On Fire</b> <span class="sw">SW</span></td><td class="upd"><b>1d−3 burn per turn</b> (min 1) until out: drop &amp; roll (<b>DX</b>) or smother (Ready action). Sealed armour protects until its DR is breached; fire fields burn 1d/turn.</td></tr>
+          <tr><td><b>Poisoned</b></td><td class="upd"><b>HT roll to resist</b> (at the toxin's listed number); fail = listed damage, often delayed or staged. Antitox injector: +3 HT &amp; neutralises one known toxin. Sealed armour stops contact gas; cloth doesn't.</td></tr>
+          <tr><td><b>Electrified / Stun bolt</b></td><td class="upd">Stun settings &amp; sonic: <b>aff HT−N</b> — fail = stunned (recover as above); damage goes to <b>FP not HP</b>. Electrified surfaces/shock-whips: HT or stunned + 1 FP per contact turn.</td></tr>
+          <tr><td><b>Suffocating</b></td><td class="upd"><b>HT every 15 sec</b>; each fail = 1 FP. At 0 FP: 1 HP/turn until air. Vacuum adds <b>1d−1 burn per 5 sec</b> (unsealed).</td></tr>
+          <tr><td><b>Droids</b></td><td class="upd">No shock, no bleeding, no FP — full effect until destroyed. Droid "stun" = <b>ion stagger</b>: lose 1 turn, defences −4, HT each turn to reboot.</td></tr>
+        </tbody></table>
+        <p class="note" style="font-size:5.2pt">Sheet automation: conditions toggle on the Combat tab and feed their penalties into the Skill Roller automatically.</p>
       </div>
     </div>
 
