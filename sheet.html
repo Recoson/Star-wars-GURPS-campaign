@@ -3561,13 +3561,13 @@ function renderVehicles(){
 
  <div class="sec-head">Your Fleet${(C.vehicles||[]).length?` <span class="dim" style="font-weight:400;font-size:11px">— ${C.vehicles.length} vessel${C.vehicles.length===1?'':'s'}</span>`:''}</div>
  ${(C.vehicles||[]).length?`<div class="fleet-grid">`+(C.vehicles).map((v,i)=>{
-  const hpPct=v.hpMax?Math.round(100*(v.hpNow||0)/v.hpMax):0;
+  const _pTot=(v.parts||[]).length, _pOk=_vIntact(v); const hpPct=_pTot?Math.round(100*_pOk/_pTot):100;
   const shieldCap=parseInt(v.shieldDR)||0;
   const shieldPct=shieldCap?Math.round(100*(v.shieldNow||0)/shieldCap):0;
   const cHP=hpPct<25?'var(--red)':hpPct<60?'var(--amber)':'var(--green)';
   const cSh=shieldPct<25?'var(--red)':shieldPct<60?'var(--amber)':'var(--cyan)';
   const _pdmg=(v.parts||[]).filter(p=>p.status!=='ok');
-  const _pwarn=_pdmg.length?`<div class="dim" style="font-size:10px;margin-top:3px;color:var(--amber)">⚠ ${_pdmg.length} part${_pdmg.length===1?'':'s'} compromised — effective: HP ${vehicleEffectiveStat(v,'hpMax')||'?'} · Sh ${vehicleEffectiveStat(v,'shieldCap')||'?'} · DR ${vehicleEffectiveStat(v,'dr')||'?'} · Move ×${vehicleEffectiveStat(v,'moveMult').toFixed(2)} · Atk ${vehicleEffectiveStat(v,'attackMod')||0}</div>`:'';
+  const _pwarn=_pdmg.length?`<div class="dim" style="font-size:10px;margin-top:3px;color:var(--amber)">⚠ ${_pdmg.length} part${_pdmg.length===1?'':'s'} compromised — effective: Sh ${vehicleEffectiveStat(v,'shieldCap')||'?'} · DR ${vehicleEffectiveStat(v,'dr')||'?'} · Move ×${vehicleEffectiveStat(v,'moveMult').toFixed(2)} · Atk ${vehicleEffectiveStat(v,'attackMod')||0}</div>`:'';
   return `<div class="section" data-size="lg" style="margin-bottom:0">
    <div style="display:flex;align-items:center;gap:8px">
     <input class="cell" value="${esc(v.name)}" onchange="setVehicleField(${i},'name',this.value)" style="flex:1;font-weight:600">
@@ -3576,10 +3576,8 @@ function renderVehicles(){
    </div>
    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;font-size:11px">
     <div style="flex:1;min-width:170px">
-     <div class="dim">Hull HP</div>
-     <div style="display:flex;align-items:center;gap:4px"><button onclick="adjVehicleHP(${i},-10)">−10</button><button onclick="adjVehicleHP(${i},-1)">−</button>
-      <span style="font-family:monospace;font-weight:700;color:${cHP};min-width:80px;text-align:center">${v.hpNow}/${v.hpMax}</span>
-      <button onclick="adjVehicleHP(${i},1)">+</button><button onclick="adjVehicleHP(${i},10)">+10</button></div>
+     <div class="dim">Integrity <span style="opacity:.7">· systems intact · DT ${vehicleDT(v)}</span></div>
+     <div style="display:flex;align-items:center;gap:4px"><span style="font-family:monospace;font-weight:700;color:${cHP};min-width:80px;text-align:center">${_pOk} / ${_pTot} ●</span></div>
      <div style="height:4px;background:var(--bg);border-radius:2px;margin-top:4px;overflow:hidden"><div style="height:100%;width:${hpPct}%;background:${cHP}"></div></div>
     </div>
     <div style="flex:1;min-width:170px">
@@ -3589,6 +3587,17 @@ function renderVehicles(){
       <button onclick="adjVehicleShield(${i},1)">+</button><button onclick="adjVehicleShield(${i},10)">+10</button></div>
      <div style="height:4px;background:var(--bg);border-radius:2px;margin-top:4px;overflow:hidden"><div style="height:100%;width:${shieldPct}%;background:${cSh}"></div></div>
     </div>
+   </div>
+   <div style="margin-top:7px;padding:6px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:5px">
+    <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:11px">
+     <span style="font-weight:700;color:var(--amber)">⚔ Incoming hit</span>
+     <label class="dim">dmg <input id="vhDmg${i}" class="cell" type="number" style="width:54px" placeholder="—"></label>
+     <label class="dim">AD <input id="vhAD${i}" class="cell" type="number" step="0.5" value="1" style="width:42px"></label>
+     <select id="vhPart${i}" class="cell" style="width:140px"><option value="rand">🎲 random system</option>${(v.parts||[]).map((p,j)=>`<option value="${j}">${esc(p.name||p.cat)}</option>`).join('')}</select>
+     <button class="btn-sm" onclick="applyVehicleHit(${i})">Apply</button>
+     <span class="dim" style="font-size:10px" title="Per hit: shields soak → hull DR (÷AD) → vs Damage Threshold: ≥DT cripples the struck system one step, ≥2×DT two steps">shields → DR → DT ${vehicleDT(v)}</span>
+    </div>
+    ${v.lastHit?`<div style="font-size:10.5px;margin-top:4px">${esc(v.lastHit)}</div>`:''}
    </div>
    ${(()=>{const t=vehFuelTanks(v);if(!t.rfMax&&!t.hfMax)return '';
     const rfPct=t.rfMax?Math.round(100*t.rfNow/t.rfMax):0, hfPct=t.hfMax?Math.round(100*t.hfNow/t.hfMax):0;
@@ -3919,6 +3928,109 @@ function syncDroidParts(i){
  const d=C.droids[i];if(!d)return;
  d.parts=synthDroidParts(d.deg,d.fn);touch();renderDroids();
 }
+/* ═══ COMPONENT-HEALTH COMBAT — campaign rule: components ARE the health.
+   Pipeline per hit: shields soak (SP pool) → hull DR (÷ attacker AD) →
+   penetrating damage vs Damage Threshold (DT): ≥DT degrades the struck part
+   one step (● Intact → ◐ Damaged → ✕ Destroyed), ≥2×DT degrades two steps.
+   Below DT = superficial. Ships die by part destruction (Hull breach,
+   Reactor loss, crit table) — not by grinding an HP pool. ═══ */
+function vehicleDT(v){
+ if(v&&+v.dt)return +v.dt;
+ const c=String((v&&v.cat)||'').toLowerCase();
+ if(/speeder|swoop|bike|walker/.test(c))return 8;
+ if(/fighter|intercept|bomber|patrol|scout/.test(c))return 10;
+ if(/shuttle|freighter|transport|gunship|drop/.test(c))return 15;
+ if(/corvette|frigate/.test(c))return 25;
+ if(/cruiser|capital|destroyer|flagship|battle/.test(c))return 40;
+ return 12;
+}
+function _vIntact(v){return (v.parts||[]).filter(p=>p.status==='ok').length}
+function _degrade(p,steps){
+ const order=['ok','dmg','dest'];
+ const cur=Math.max(0,order.indexOf(p.status||'ok'));
+ p.status=order[Math.min(2,cur+steps)];
+ return p.status;
+}
+function _pickPartWeighted(parts,effMap){
+ const pool=[];
+ parts.forEach((p,j)=>{
+  if(p.status==='dest')return;
+  const cover=(effMap[p.cat]||{}).cover||'internal';
+  const w=cover==='surface'?3:cover==='exposed'?2:1;
+  for(let k=0;k<w;k++)pool.push(j);
+ });
+ return pool.length?pool[Math.floor(Math.random()*pool.length)]:-1;
+}
+function applyVehicleHit(i){
+ const v=C.vehicles[i]; if(!v)return;
+ let dmg=Math.max(0,parseInt((document.getElementById('vhDmg'+i)||{}).value)||0);
+ const ad=Math.max(0.1,parseFloat((document.getElementById('vhAD'+i)||{}).value)||1);
+ const sel=(document.getElementById('vhPart'+i)||{}).value;
+ if(!dmg){alert('Enter the damage rolled by the attacker.');return}
+ const log=[];
+ const sp=+v.shieldNow||0;
+ if(sp>0){
+  const soak=Math.min(sp,dmg);
+  v.shieldNow=sp-soak; dmg-=soak;
+  log.push('\u{1F6E1} shields soak '+soak+(v.shieldNow>0?' (SP '+v.shieldNow+' left)':' \u2014 SHIELDS DOWN'));
+ }
+ if(dmg<=0){ v.lastHit=log.join(' \u00b7 '); touch();renderVehicles();return }
+ const drBase=parseInt(v.hullDR)||0;
+ let drMult=1;(v.parts||[]).forEach(p=>{if(p.cat==='Armour'){if(p.status==='dmg')drMult*=0.75;else if(p.status==='dest')drMult=0;}});
+ const effDR=Math.floor((drBase*drMult)/ad);
+ const pen=dmg-effDR;
+ const pre=log.length?log.join(' \u00b7 ')+' \u00b7 ':'';
+ if(pen<=0){ v.lastHit=pre+'armour holds (DR '+effDR+(ad!==1?' after AD '+ad:'')+') \u2014 scorch marks only'; touch();renderVehicles();return }
+ const DT=vehicleDT(v);
+ const steps=pen>=2*DT?2:(pen>=DT?1:0);
+ if(!steps){ v.lastHit=pre+pen+' through armour \u2014 below DT '+DT+': superficial'; touch();renderVehicles();return }
+ if(!v.parts||!v.parts.length)v.parts=synthShipParts(v.cat);
+ const j=(sel==='rand'||sel==null)?_pickPartWeighted(v.parts,SHIP_PART_EFFECT):+sel;
+ if(j<0||!v.parts[j]){ v.lastHit=pre+'every system is already destroyed \u2014 the wreck shudders.'; touch();renderVehicles();return }
+ const part=v.parts[j];
+ const st=_degrade(part,steps);
+ const eff=SHIP_PART_EFFECT[part.cat]||{};
+ let msg='\u{1F4A5} '+pen+' through \u2014 '+(steps===2?'CRITICAL: ':'')+(part.name||part.cat)+' '+(st==='dmg'?'\u25d0 DAMAGED':'\u2715 DESTROYED')+'. '+(st==='dmg'?(eff.dmg||''):(eff.dest||''));
+ if(st==='dest'&&part.cat==='Hull')msg+=' \u2620 HULL BREACH \u2014 vessel lost in 1d minutes.';
+ if(st==='dest'&&part.cat==='Reactor')msg+=' \u2620 Dead in space.';
+ v.lastHit=pre+msg;
+ touch();renderVehicles();
+}
+function droidDT(d){
+ if(d&&+d.dt)return +d.dt;
+ const c=(String((d&&d.deg)||'')+' '+String((d&&d.fn)||'')).toLowerCase();
+ if(/battle|war|assassin|heavy|guard/.test(c))return 12;
+ if(/labor|loader|iv\b/.test(c))return 10;
+ return 8;
+}
+function applyDroidHit(i){
+ const d=C.droids[i]; if(!d)return;
+ let dmg=Math.max(0,parseInt((document.getElementById('drDmg'+i)||{}).value)||0);
+ const ad=Math.max(0.1,parseFloat((document.getElementById('drAD'+i)||{}).value)||1);
+ const sel=(document.getElementById('drPart'+i)||{}).value;
+ if(!dmg){alert('Enter the damage rolled.');return}
+ const effDR=Math.floor((droidEffectiveStat(d,'dr')||0)/ad);
+ const pen=dmg-effDR;
+ if(pen<=0){ d.lastHit='Armour holds (DR '+effDR+(ad!==1?' after AD '+ad:'')+') \u2014 cosmetic damage.'; touch();renderDroids();return }
+ const DT=droidDT(d);
+ const steps=pen>=2*DT?2:(pen>=DT?1:0);
+ if(!steps){ d.lastHit=pen+' through \u2014 below DT '+DT+': dents and sparks.'; touch();renderDroids();return }
+ if(!d.parts||!d.parts.length)d.parts=synthDroidParts(d.deg,d.fn);
+ const W={'Chassis':3,'Armour':3,'Mobility':2,'Manipulators':2,'Weapon':2,'Sensors':2,'Core':1,'Power':1,'Comms':1,'Programming':1};
+ let j;
+ if(sel==='rand'||sel==null){
+  const pool=[];d.parts.forEach((p,k)=>{if(p.status!=='dest'){const w=W[p.cat]||1;for(let x=0;x<w;x++)pool.push(k)}});
+  j=pool.length?pool[Math.floor(Math.random()*pool.length)]:-1;
+ } else j=+sel;
+ if(j<0||!d.parts[j]){ d.lastHit='Already scrap \u2014 the hit rearranges the wreckage.'; touch();renderDroids();return }
+ const part=d.parts[j];
+ const st=_degrade(part,steps);
+ const eff=DROID_PART_EFFECT[part.cat]||{};
+ let msg='\u{1F4A5} '+pen+' through \u2014 '+(steps===2?'CRITICAL: ':'')+(part.name||part.cat)+' '+(st==='dmg'?'\u25d0 DAMAGED':'\u2715 DESTROYED')+'. '+(st==='dmg'?(eff.dmg||''):(eff.dest||''));
+ if(st==='dest'&&(part.cat==='Core'||part.cat==='Power'))msg+=' \u2620 Droid inert.';
+ d.lastHit=msg;
+ touch();renderDroids();
+}
 function renderShipPartsBlock(v,i){
  const parts=v.parts||[];
  const hullDR=parseInt(v.hullDR)||0, shDR=parseInt(v.shieldDR)||0;
@@ -3976,7 +4088,16 @@ function renderDroidPartsBlock(d,i){
    <td><button class="btn-del" onclick="delDroidPart(${i},${j})">✕</button></td></tr>`;
  }).join('');
  return `<details style="margin-top:8px" ${_detOpen['droid'+i]?'open':''} ontoggle="_detOpen['droid'+''+(${i})]=this.open"><summary style="font-size:11px;color:var(--cyan);cursor:pointer;font-weight:600">🛠 Parts &amp; damage (${parts.length})</summary>
-  <div class="dim" style="font-size:10px;margin:4px 0">Set each part's state. Damaged/Destroyed parts apply their effects to derived stats above.</div>
+  <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:11px;margin:5px 0">
+   <span style="font-weight:700;color:var(--amber)">⚔ Incoming hit</span>
+   <label class="dim">dmg <input id="drDmg${i}" class="cell" type="number" style="width:54px" placeholder="—"></label>
+   <label class="dim">AD <input id="drAD${i}" class="cell" type="number" step="0.5" value="1" style="width:42px"></label>
+   <select id="drPart${i}" class="cell" style="width:140px"><option value="rand">🎲 random part</option>${parts.map((p,j)=>`<option value="${j}">${esc(p.name||p.cat)}</option>`).join('')}</select>
+   <button class="btn-sm" onclick="applyDroidHit(${i})">Apply</button>
+   <span class="dim" style="font-size:10px" title="Per hit: droid DR (÷AD) → vs Damage Threshold: ≥DT cripples the struck part one step, ≥2×DT two steps">DR → DT ${droidDT(d)}</span>
+  </div>
+  ${d.lastHit?`<div style="font-size:10.5px;margin:2px 0">${esc(d.lastHit)}</div>`:''}
+  <div class="dim" style="font-size:10px;margin:4px 0">⚔ routes a hit automatically — or set each part's state by hand. Damaged/Destroyed parts apply their effects to derived stats above.</div>
   <table class="g" style="font-size:10.5px"><tr><th style="width:120px">Type</th><th>Part</th><th style="width:100px">State</th><th>Effect when degraded</th><th style="width:28px"></th></tr>${rows||'<tr><td colspan="5" class="dim" style="padding:6px">No parts listed.</td></tr>'}</table>
   <div style="margin-top:6px;display:flex;gap:6px">
    <button class="btn-add" onclick="addDroidPart(${i})">+ Add part</button>

@@ -11457,7 +11457,7 @@ Life endures
 
 <p class="rule"><span class="rule__name">Vehicle Weapons vs Persons.</span> A vehicle cannon’s listed damage (often 6d×2 to 6d×5 of burning or impaling) doesn’t roll out against a person — it instantly kills them on any hit. The GM may roll for visual effect, but no organic survives a direct hit from a vehicle-scale weapon barring extraordinary circumstances (heavy cover absorbing most of the blast, miraculous deflection by Force powers, etc.). Treat as auto-death on hit.</p>
 
-<p class="rule"><span class="rule__name">Starfighter Weapons vs Vehicle.</span> A starfighter laser cannon (~6d×5 burning) versus a vehicle: roll, then check vehicle DR (~40-80) and HP (~100-200). One hit typically deals 100+ damage after DR — destroys the vehicle outright. Same as vehicle-vs-person scaling: don’t roll fine detail past obvious destruction.</p>
+<p class="rule"><span class="rule__name">Starfighter Weapons vs Vehicle.</span> A starfighter laser cannon (~6d×5 burning) versus a ground vehicle: roll, subtract vehicle DR (~40–80); the penetration vastly exceeds the vehicle’s DT — destroying the struck system outright (usually the whole vehicle). Same as vehicle-vs-person scaling: don’t roll fine detail past obvious destruction.</p>
 
 <p class="rule"><span class="rule__name">Capital Weapons vs Starfighter.</span> A turbolaser shot at a starfighter is an instant-kill on any hit. This is why fighters dance around capital ships rather than absorbing fire. The fighter’s job is to evade, not to tank.</p>
 
@@ -11551,7 +11551,7 @@ Life endures
 
 <h2 class="section-head" id="sec-vehiclevsvehicle-combat">Vehicle-vs-Vehicle Combat</h2>
 
-<p class="rule"><span class="rule__name">Standard Resolution.</span> Vehicle combat uses the standard <a href="#book-combat">Doc I</a>-II resolution: attacker rolls Gunnery skill, defender rolls Pilot (Dodge) at the vehicle’s modified Dodge value (typically 3 + Hnd, plus pilot’s reaction). Damage applies to the vehicle’s HP after DR. Critical hits to vehicles roll on a vehicle critical table (see Part VIII).</p>
+<p class="rule"><span class="rule__name">Standard Resolution.</span> Vehicle combat uses the standard <a href="#book-combat">Doc I</a>-II resolution: attacker rolls Gunnery skill, defender rolls Pilot (Dodge) at the vehicle’s modified Dodge value (typically 3 + Hnd, plus pilot’s reaction). Damage resolves against <b>components, not a hit-point pool</b>: shields soak first, hull DR (divided by the weapon’s AD) reduces what remains, and any penetrating damage is compared to the vessel’s <b>Damage Threshold (DT)</b> — see <i>Components Are the Health</i> in Part VIII. Critical hits to vehicles roll on a vehicle critical table (see Part VIII).</p>
 
 <p class="rule"><span class="rule__name">Gunnery vs Piloting.</span> Vehicle Dodge defaults to the pilot’s Pilot skill / 4, rounded down (much lower than personal Dodge). Speedy maneuverable vehicles are harder to hit because they’re moving fast through hexes; slow heavy vehicles must rely on armour. A speeder bike’s effective Dodge is similar to a person’s; a heavy tank’s is much lower (it’s a sitting target — but it has DR 80+).</p>
 
@@ -12664,7 +12664,20 @@ Life endures
 
 <h2 class="section-head" id="sec-ship-damage-perpart">Ship Damage — Per-Part Effects</h2>
 
-<p>Every starship on the sheet now tracks an inventory of <b>parts</b>. The GM (or hit-location roll) marks each part as <b>● Intact</b>, <b>◐ Damaged</b>, or <b>✕ Destroyed</b>. Damaged/Destroyed parts apply the following effects to the vessel's effective stats. The sheet computes these automatically — the table below is the canon for the GM.</p>
+<p>Every starship on the sheet tracks an inventory of <b>parts</b> — and <b>the parts ARE the ship's health</b>. There is no hull hit-point pool to whittle down. Each part is <b>● Intact</b>, <b>◐ Damaged</b>, or <b>✕ Destroyed</b>; damaged/destroyed parts apply the effects below to the vessel's stats. The sheet routes hits and computes effects automatically (the ⚔ Incoming Hit tool on each fleet card) — the tables here are the canon for the GM.</p>
+
+<h3 class="subsection">Components Are the Health — Damage Threshold (DT)</h3>
+<p class="rule"><span class="rule__name">Resolving a hit.</span> ① <b>Shields soak first</b> — subtract from the shield SP pool until it empties. ② <b>Hull DR</b> (divided by the weapon's armour divisor) reduces what's left. ③ Compare the <b>penetrating damage</b> to the vessel's <b>DT</b>: below DT = superficial (scorch marks, no effect); <b>≥ DT</b> = the struck system degrades <b>one step</b> (● → ◐ → ✕); <b>≥ 2×DT</b> = <b>two steps</b> (an intact system is destroyed outright). Roll or pick the struck system: exposed mounts (engines, weapons, sensors) are hit more easily than internal systems; called shots use the Aim penalties on the parts table.</p>
+<table class="tbl tbl--compact"><tbody>
+<tr><th>Vessel class</th><th>DT</th><th>Feel</th></tr>
+<tr><td>Speeders, swoops, walkers</td><td class="c"><b>8</b></td><td>Small-arms fire can wound systems.</td></tr>
+<tr><td>Starfighters, interceptors, bombers, patrol craft</td><td class="c"><b>10</b></td><td>A clean cannon hit cripples something every time.</td></tr>
+<tr><td>Shuttles, light freighters, transports, gunships</td><td class="c"><b>15</b></td><td>3–6 solid hits decide a fight.</td></tr>
+<tr><td>Corvettes, frigates</td><td class="c"><b>25</b></td><td>Needs ship-grade batteries to hurt.</td></tr>
+<tr><td>Cruisers &amp; capitals</td><td class="c"><b>40</b></td><td>Fighter guns only sting exposed mounts; bring torpedoes.</td></tr>
+</tbody></table>
+<p class="rule"><span class="rule__name">How ships die.</span> <b>Hull ✕</b> = hull breach — vessel lost in 1d minutes (evacuate). <b>Reactor ✕</b> = dead in space, life support failing. <b>Sublight ✕</b> = adrift. Or the critical-hit table ends it outright. A ship can be mission-killed with most of its systems intact — board it, salvage it, or finish it.</p>
+<p class="note"><b>Migration note:</b> catalogue HP values are legacy flavour only — they no longer gate destruction. GMs may read old "HP" loosely as tonnage/bulk.</p>
 <table class="tbl tbl--compact"><tbody><tr><th>Part Type</th><th>Damaged (◐)</th><th>Destroyed (✕)</th></tr>
 <tr><td><b>Hull</b></td><td>Hull integrity compromised. <b>−25%</b> max HP.</td><td>Hull breach. Atmosphere bleeding; <b>−50%</b> HP cap; all repair rolls at <b>−4</b>.</td></tr>
 <tr><td><b>Sublight</b></td><td>Sublight engines limp. <b>−25%</b> Move and <b>−1</b> to Piloting evasions.</td><td>Engines dead. Move 0 (drift); cannot maneuver.</td></tr>
@@ -16292,7 +16305,7 @@ Life endures
 
 <h2 class="section-head" id="sec-droid-damage-perpart">Droid Damage — Per-Part Effects</h2>
 
-<p>The droid card on the sheet now tracks the same way. Mark a part Damaged or Destroyed; effects auto-apply.</p>
+<p>The droid card on the sheet tracks the same way — and as with ships, <b>parts are the droid's health</b> when fighting at scale. Personal-scale HP still applies for droids acting as characters, but the quick way to drop a war-droid is through its components: droid DR (÷ AD) reduces the hit, then penetrating damage vs the droid's <b>DT</b> — <b>8</b> (civilian chassis), <b>10</b> (labour), <b>12</b> (battle/war/assassin) — degrades the struck part one step (two steps on 2×DT). <b>Core ✕ or Power ✕ = droid inert.</b> Ion weapons use their AD 5 against droids here, which is why they shred components. Mark parts by hand or use the ⚔ Incoming Hit tool; effects auto-apply.</p>
 <table class="tbl tbl--compact"><tbody><tr><th>Part Type</th><th>Damaged (◐)</th><th>Destroyed (✕)</th></tr>
 <tr><td><b>Chassis</b></td><td>Frame bent. Move <b>−2</b>; DR <b>−25%</b>.</td><td>Chassis collapse. Move 0; droid prone &amp; helpless.</td></tr>
 <tr><td><b>Core</b> (logic)</td><td>Logic core flickering. IQ <b>−2</b>; all skill rolls at <b>−2</b>.</td><td>Core scrap. Droid inert (effectively dead).</td></tr>
