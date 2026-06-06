@@ -21,7 +21,7 @@
   "fright": "",
   "bio": "",
   "attr": {
-    "ST": 30,
+    "ST": 50,
     "DX": 0,
     "IQ": 160,
     "HT": 70
@@ -480,11 +480,30 @@
     "bonded": false,
     "saberPoints": 0,
     "powers": [],
-    "books": {},
+    "books": {
+      "Concordance": false,
+      "Common Force": false
+    },
     "bookTiers": {},
     "tradition": "",
     "activeBook": "",
-    "viewBook": ""
+    "viewBook": "",
+    "training": {
+      "Concordance": {
+        "tier": 1,
+        "hours": 0,
+        "regimen": "Open Hours",
+        "mentor": "",
+        "log": []
+      },
+      "Common Force": {
+        "tier": 1,
+        "hours": 0,
+        "regimen": "Open Hours",
+        "mentor": "",
+        "log": []
+      }
+    }
   },
   "forms": [],
   "techniques": [],
@@ -563,7 +582,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-06T12:56:47.503Z",
+    "savedAt": "2026-06-06T13:04:19.534Z",
     "savedBy": "Zoe"
   }
 }
