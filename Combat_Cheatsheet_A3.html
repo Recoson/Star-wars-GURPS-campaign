@@ -581,7 +581,7 @@ table.flow th{font-size:4.6pt; padding:.3mm .95mm;}
         <p class="note"><b>Capital batteries</b> (turbolasers &amp; kin): <b>−6 vs SM ≤ +5</b> targets — slow tracking. Point-defence is exempt (that's its job).<br>
         <b>Position advantage</b> — win a Pilot Quick Contest for rear/flank: <b>+2 to hit</b>, target Dodge <b>−2</b>.<br>
         <b>Missiles &amp; locks</b> — warheads need a sensor lock (Electronics Op [Sensors], 1 turn). Target dodges the warhead at <b>−2</b>; each countermeasure system forces a lock re-roll or gives +2 Dodge.<br>
-        <b>Point defence</b> — each PD mount rolls Gunnery 1/turn vs an inbound missile (destroyed on success) or strafing fighter (takes a light-laser hit, 6d×2 (4)).</p>
+        <b>Point defence</b> — each PD mount rolls Gunnery 1/turn vs an inbound missile (destroyed on success) or strafing fighter (takes a light-laser hit, 6d×2).</p>
       </div>
       <div class="sec steel">
         <h2><span class="n">DEF</span> Defending — Vehicle Dodge</h2>
@@ -600,12 +600,12 @@ table.flow th{font-size:4.6pt; padding:.3mm .95mm;}
     <div class="col">
       <div class="sec crim">
         <h2><span class="n">DMG</span> Components Are the Health</h2>
-        <p class="note"><b>Per hit:</b> ① <b>shields soak</b> (SP pool) → ② <b>DR of the struck system ÷ weapon AD</b> (exposed mounts — engines, weapons, sensors — take only <b>40% of hull DR</b>) → ③ penetrating damage vs <b>Damage Threshold (DT)</b>:</p>
+        <p class="note"><b>Per hit:</b> ① <b>shields soak</b> (SP pool) → ② <b>DR of the struck system − weapon AP</b> (1:1, no dividing; exposed mounts — engines, weapons, sensors — take only <b>40% of hull DR</b>) → ③ penetrating damage vs <b>Damage Threshold (DT)</b>:</p>
         <table><tbody>
           <tr><td style="width:30%">&lt; DT</td><td class="upd">Superficial — scorch marks, no effect.</td></tr>
           <tr><td><b>≥ DT</b></td><td class="upd">Struck system degrades <b>one step</b>: ● Intact → ◐ Damaged → ✕ Destroyed.</td></tr>
           <tr><td><b>≥ 2 × DT</b></td><td class="upd"><b>Two steps</b> — an intact system is destroyed outright.</td></tr>
-          <tr><td><b>≥ 6 × DT</b></td><td class="upd">vs <b>full hull DR</b>: <b>VAPORISED</b>. No parts roll, nothing to salvage. (What a turbolaser does to a fighter. Never ion.)</td></tr>
+          <tr><td><b>≥ 6 × DT</b></td><td class="upd">vs <b>full hull DR − AP</b>: <b>VAPORISED</b>. No parts roll, nothing to salvage. (What a turbolaser does to a fighter. Never ion.)</td></tr>
         </tbody></table>
         <div class="subhead">Damage Threshold by class</div>
         <table><tbody>
@@ -618,20 +618,20 @@ table.flow th{font-size:4.6pt; padding:.3mm .95mm;}
         <p class="note"><b>How ships die:</b> Hull ✕ = breach, lost in 1d min (evacuate) · Reactor ✕ = dead in space · Sublight ✕ = adrift · or the crit table. Mission-kill ≠ destruction: board it, salvage it, or finish it.</p>
       </div>
       <div class="sec steel">
-        <h2><span class="n">WPN</span> Ship Weapons — Damage (AD)</h2>
+        <h2><span class="n">WPN</span> Ship Weapons — Damage · AP</h2>
         <table><tbody>
-          <tr><td style="width:42%">Light laser cannon</td><td class="c k">6d×2 (4)</td><td class="dim">dogfight, high RoF</td></tr>
-          <tr><td>Laser cannon</td><td class="c k">6d×3 (4)</td><td class="dim">the fighter standard</td></tr>
-          <tr><td>Heavy laser cannon</td><td class="c k">6d×4 (5)</td><td class="dim">bullies freighters</td></tr>
-          <tr><td>Quad laser (turret)</td><td class="c k">6d×3 (4)</td><td class="dim">RoF 4 — freighter's teeth</td></tr>
-          <tr><td>Ion cannon</td><td class="c k">6d×2 (5)</td><td class="dim">anti-shield / anti-system</td></tr>
-          <tr><td>Ion railgun</td><td class="c k">6d×3 (6)</td><td class="dim">shield-stripper</td></tr>
-          <tr><td>Concussion missile</td><td class="c k">6d×4 (5)</td><td class="dim">guided; needs lock</td></tr>
-          <tr><td>Proton torpedo</td><td class="c k">6d×6 (6)</td><td class="dim">the trench-run shot</td></tr>
-          <tr><td>Thermite torpedo</td><td class="c k">6d×4 (8)</td><td class="dim">armour-melter</td></tr>
-          <tr><td>Slug railgun</td><td class="c k">6d×6 (6)</td><td class="dim">sniper hull-killer</td></tr>
-          <tr><td>Point-defence laser</td><td class="c k">6d×2 (4)</td><td class="dim">anti-fighter / anti-missile</td></tr>
-          <tr><td>Turbolaser (light → heavy)</td><td class="c k">6d×10–×20 (5)</td><td class="dim">capital batteries</td></tr>
+          <tr><td style="width:42%">Light laser cannon</td><td class="c k">6d×2</td><td class="dim">dogfight, high RoF</td></tr>
+          <tr><td>Laser cannon</td><td class="c k">6d×3</td><td class="dim">the fighter standard</td></tr>
+          <tr><td>Heavy laser cannon</td><td class="c k">6d×4 · AP 5</td><td class="dim">bullies freighters</td></tr>
+          <tr><td>Quad laser (turret)</td><td class="c k">6d×3 · RoF 4</td><td class="dim">the freighter's teeth</td></tr>
+          <tr><td>Ion cannon</td><td class="c k">6d×2 ion</td><td class="dim">anti-shield / anti-system</td></tr>
+          <tr><td>Ion railgun</td><td class="c k">6d×3 ion · AP 5</td><td class="dim">shield-stripper</td></tr>
+          <tr><td>Concussion missile</td><td class="c k">6d×4 · AP 10</td><td class="dim">guided; needs lock</td></tr>
+          <tr><td>Proton torpedo</td><td class="c k">6d×6 · AP 20</td><td class="dim">the trench-run shot</td></tr>
+          <tr><td>Thermite torpedo</td><td class="c k">6d×4 · AP 80</td><td class="dim">armour-melter</td></tr>
+          <tr><td>Slug railgun</td><td class="c k">6d×6 · AP 20</td><td class="dim">sniper hull-killer</td></tr>
+          <tr><td>Point-defence laser</td><td class="c k">6d×2</td><td class="dim">anti-fighter / anti-missile</td></tr>
+          <tr><td>Turbolaser (light → heavy)</td><td class="c k">6d×10–×20</td><td class="dim">capital batteries</td></tr>
         </tbody></table>
         <p class="note"><b>Expected fight lengths</b> (yardstick): fighter duel 3–4 hits · wing vs freighter 3–6 · torpedo run vs corvette ~6 · squadron vs frigate ~5 turns · capital duel 4–11 volleys · fighter guns vs frigate hull: never — burn the <b>exposed mounts</b> instead.</p>
       </div>
@@ -706,7 +706,7 @@ table.flow th{font-size:4.6pt; padding:.3mm .95mm;}
   </div>
 
   <div class="legendstrip">
-    <span class="lh">KEY</span><span class="legend" style="padding:0; display:inline;"><b>DT</b> Damage Threshold (cripples a system at ≥DT through) · <b>SP</b> Shield Points (ablative pool) · <b>Hnd</b> Handling (maneuver &amp; Dodge modifier) · <b>AD</b> Armour Divisor (divides DR) · <b>DR</b> Damage Resistance · <b>SM</b> Size Modifier (added to attacker's roll) · <b>RoF</b> Rate of Fire · <b>PD</b> Point-Defence · <b>ECM</b> electronic countermeasures / jamming · <b>●</b> Intact · <b>◐</b> Damaged · <b>✕</b> Destroyed · <b>6d×N</b> roll 6 dice, multiply by N · <span class="sw">SW</span> Star Wars rule · <span class="ho">HOUSE</span> campaign house rule.</span>
+    <span class="lh">KEY</span><span class="legend" style="padding:0; display:inline;"><b>DT</b> Damage Threshold (cripples a system at ≥DT through) · <b>SP</b> Shield Points (ablative pool) · <b>Hnd</b> Handling (maneuver &amp; Dodge modifier) · <b>AP</b> Armour Piercing — weapon ignores N points of DR (ship combat is otherwise 1:1; <b>AD</b> ÷5 applies only when ship guns hit personal-scale targets) · <b>DR</b> Damage Resistance · <b>SM</b> Size Modifier (added to attacker's roll) · <b>RoF</b> Rate of Fire · <b>PD</b> Point-Defence · <b>ECM</b> electronic countermeasures / jamming · <b>●</b> Intact · <b>◐</b> Damaged · <b>✕</b> Destroyed · <b>6d×N</b> roll 6 dice, multiply by N · <span class="sw">SW</span> Star Wars rule · <span class="ho">HOUSE</span> campaign house rule.</span>
   </div>
 
   <div class="foot">
