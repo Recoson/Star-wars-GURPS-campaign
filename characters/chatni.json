@@ -21,7 +21,7 @@
   "fright": "",
   "bio": "",
   "attr": {
-    "ST": 60,
+    "ST": 30,
     "DX": 0,
     "IQ": 160,
     "HT": 70
@@ -582,7 +582,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-06T13:04:23.861Z",
+    "savedAt": "2026-06-06T13:04:36.807Z",
     "savedBy": "Zoe"
   }
 }
