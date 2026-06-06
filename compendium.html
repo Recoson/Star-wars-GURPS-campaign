@@ -12016,7 +12016,19 @@ Life endures
 
 <div class="body-3col">
 
-<h2 class="section-head" id="sec-stage-1-catching-the-target">Stage 1 — Catching the Target</h2>
+<h2 class="section-head" id="sec-stage-1-catching-the-target">Stage 0 — Setting the Table (component states)</h3>
+<p class="rule"><span class="rule__name">Boarding runs on the component system.</span> The ship you soften is the ship you storm — every ◐/✕ you inflicted in the space fight pays out aboard:</p>
+<table class="tbl tbl--compact"><tbody>
+<tr><th>Target state</th><th>Effect on the boarding</th></tr>
+<tr><td><b>Shields ✕</b></td><td><b>Required.</b> No breach, tractor lock or airlock clamp through a live shield matrix.</td></tr>
+<tr><td><b>Sublight ✕</b></td><td>Target adrift — skip the Stage 1 pursuit contest entirely; approach is automatic.</td></tr>
+<tr><td><b>Sensors ◐ / ✕</b></td><td>They don't see you coming: boarders gain <b>surprise</b> at the breach (defenders act last, no defences first turn).</td></tr>
+<tr><td><b>Reactor ✕</b></td><td>Dark ship: emergency lighting only (−3 vision penalties), artificial gravity out in 1d sections (DX/Acrobatics per turn), defenders' turrets dead.</td></tr>
+<tr><td><b>Weapon mounts ✕</b></td><td>No point-defence fire on the breaching shuttle during approach.</td></tr>
+<tr><td><b>Neuralyzed crew</b> <span class="tag tag--sw">SW</span></td><td>The pulse (see Doc VII, <i>The Neuralyzer</i>) leaves the crew unconscious — the boarding is a walk-through. Check compartments: droids are immune and still on duty.</td></tr>
+</tbody></table>
+
+<h3 class="subsection">Stage 1 — Catching the Target</h3>
 
 <p class="rule"><span class="rule__name">Maintaining Pursuit.</span> Pilot vs Pilot Quick Contest each turn. The pursuer wants to close range; the target wants to escape. Each turn the loser of the contest takes a position penalty next turn (−2 to whatever they try). When pursuer comes within tractor/grapple range (1-5 km), they may attempt a lock.</p>
 
@@ -12028,11 +12040,11 @@ Life endures
 
 <h2 class="section-head" id="sec-stage-2-breaching-the-hull">Stage 2 — Breaching the Hull</h2>
 
-<p class="rule"><span class="rule__name">Lightsaber Cut.</span> <span class="tag tag--sw">SW</span> A lightsaber can cut through any hull plate given time. Mechanics for slow cut: the saber wielder takes a Concentrate maneuver each turn to maintain the cut. Each turn, the wielder cuts through DR equal to their (Lightsaber skill ÷ 2) hexagonal area at 1m thickness — roughly: 4-6 turns to cut a person-sized hole through fighter-class hull (DR 100-200), 10-20 turns for a heavy fighter, 1-3 minutes for a capital ship hull section. Some Force-users can spend FP to accelerate (<a href="#book-force">Doc IV</a>).</p>
+<p class="rule"><span class="rule__name">Lightsaber Cut.</span> <span class="tag tag--sw">SW</span> A lightsaber can cut through any hull plate given time. Mechanics for slow cut: the saber wielder takes a Concentrate maneuver each turn to maintain the cut. Each turn, the wielder cuts through DR equal to <b>Lightsaber skill ÷ 10</b> (round up) — roughly: 4-6 turns to cut a person-sized hole through fighter-class hull (DR 4-12), ~10 turns for a freighter (DR 10-16), 1-3 minutes for a capital hull section (DR 150-250). Some Force-users can spend FP to accelerate (<a href="#book-force">Doc IV</a>).</p>
 
-<p class="rule"><span class="rule__name">Plasma Cutter.</span> Specialised tool. Cuts through DR 100 in about 1 minute. Brings its own attention (visual signature, heat); the boarding party is exposed during the cut. Common boarding-team equipment.</p>
+<p class="rule"><span class="rule__name">Plasma Cutter. Specialised tool. Cuts through DR 20 of hull in about 1 minute (freighters and below; double time per size class above). Brings its own attention (visual signature, heat); the boarding party is exposed during the cut. Common boarding-team equipment.</p>
 
-<p class="rule"><span class="rule__name">Breach Charge.</span> Explosive entry. Sets in 30 seconds, detonates with significant noise and flash. Cuts a person-sized hole in DR 200+. Loud — alerts the defenders. Fast — boarders can enter immediately. Best for surprise/shock entries.</p>
+<p class="rule"><span class="rule__name">Breach Charge.</span> Explosive entry. Sets in 30 seconds, detonates with significant noise and flash. Cuts a person-sized hole in anything up to capital plating (DR 250). Loud — alerts the defenders. Fast — boarders can enter immediately. Best for surprise/shock entries.</p>
 
 <p class="rule"><span class="rule__name">Docking Ring.</span> Used when both ships consent (or one is disabled). Pneumatic seal extends; airlocks open. Cleanest entry, no hull damage. Doesn’t work against an actively resisting target unless the target’s tractor or airlock systems are damaged into accepting the connection.</p>
 
@@ -12044,7 +12056,9 @@ Life endures
 
 <p class="rule"><span class="rule__name">Cover Density.</span> Bulkheads, equipment racks, doorframes provide cover. DR 8-15 for typical corridor cover; DR 30+ for major bulkheads. Most personal weapons are stopped or significantly reduced by ship interior cover. Cover degrades as fire concentrates on a single spot.</p>
 
-<p class="rule"><span class="rule__name">Movement Penalties.</span> Tight corridors halve movement (Move/2). Larger spaces (cargo bay, bridge) allow normal movement. Multiple combatants in a corridor: each combatant after the first imposes a −1 to skill rolls due to obstruction (friendly fire risk, line of sight blocking).</p>
+<p class="rule"><span class="rule__name">Ship's Resistance. How hard the crew fights back depends on who they are — green crews (haulers, civvies): Tactics 10, surrender when the first section falls; trained crews (military, corporate security): Tactics 12-14, fall back by sections, seal bulkheads; elite crews (Mandalorian, Sith, commandos): Tactics 16+, counter-board, vent compartments, fight for every metre. Roll the boarders' Tactics vs the crew's at each section: losers give ground.
+
+Movement Penalties.</span> Tight corridors halve movement (Move/2). Larger spaces (cargo bay, bridge) allow normal movement. Multiple combatants in a corridor: each combatant after the first imposes a −1 to skill rolls due to obstruction (friendly fire risk, line of sight blocking).</p>
 
 <p class="rule"><span class="rule__name">Gravity &amp; Atmosphere.</span> <span class="tag tag--sw">SW</span> A ship’s artificial gravity may fail under combat damage. If gravity goes, combatants must Acrobatics or DX each turn to maintain position. Atmospheric loss (hull breach without seal) forces vacuum-resistance: sealed armour negates; unprotected combatants suffer per <a href="#book-damage">Doc III</a> Part VIII. Boarding parties typically wear sealed armour for this reason.</p>
 
@@ -12207,7 +12221,7 @@ Life endures
 
 <p class="rule"><span class="rule__name">Personal Anti-Vehicle Weapons.</span> Specialised infantry weapons designed for vehicle damage:</p>
 <ul>
-  <li><strong>Rocket / Missile Launcher.</strong> One-shot disposable or reloadable launcher. Damage 6d×3 to 6d×6 burn or imp, AD 5+. Effective against most personal vehicles.</li>
+  <li><strong>Rocket / Missile Launcher.</strong> One-shot disposable or reloadable launcher. Damage 6d×3 to 6d×6 burn or imp — AD applies at personal scale only; against vehicles and ships the damage resolves 1:1 vs net hull DR, like all cross-scale fire. Effective against most personal vehicles.</li>
   <li><strong>Heavy Disruptor.</strong> Armour-bypassing energy weapon. Damage 6d×2 imp with AD 10 and ×4 wound multiplier (<a href="#book-damage">Doc III</a> Part I). Devastating but rare and illegal in most jurisdictions.</li>
   <li><strong>Plasma Lance.</strong> Heavy plasma weapon. Damage 6d×4 burn with AD 5+. Heavy and slow-firing.</li>
   <li><strong>Magnetic Mine.</strong> Placed mine that attaches to vehicle hull. Damage 6d×10 burn on detonation. Requires placement (Stealth) and timer or trigger.</li>
@@ -12422,7 +12436,7 @@ Life endures
   </thead>
   <tbody>
     <tr><td><strong>1. Catch the Target</strong></td><td>Pilot vs Pilot QC each turn. Tractor beam at 1-5 km range (Electronics Op vs Pilot).</td></tr>
-    <tr><td><strong>2. Breach the Hull</strong></td><td>Lightsaber (slow cut, see ② above), plasma cutter (~1 min DR 100), breach charge (30s, loud), docking ring (cleanest).</td></tr>
+    <tr><td><strong>2. Breach the Hull</strong></td><td>Lightsaber (slow cut, see ② above), plasma cutter (~1 min, freighter hull), breach charge (30s, loud), docking ring (cleanest).</td></tr>
     <tr><td><strong>3. Combat Aboard</strong></td><td>Corridor combat at close range. Cover DR 8-30. Move halved in tight corridors. Defenders +1 in own ship.</td></tr>
     <tr><td><strong>4. Resolution</strong></td><td>Capture (Tactics for surrender), sabotage (Mechanics + Stealth), extraction (time-critical), or destroy.</td></tr>
     <tr><td colspan="2" style="background:#f4f1e8; font-weight:600; font-size:9pt;">— Vacuum &amp; atmosphere mid-fight: sealed armour negates; unsealed combatants suffer per <a href="#book-damage">Doc III</a> Part VIII —</td></tr>
