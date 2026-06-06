@@ -2,9 +2,9 @@
   "name": "Chatni",
   "player": "Zoe",
   "gm": "some loser",
-  "homeworld": "",
+  "homeworld": "Dathomir",
   "concept": "Force-user · Sith alchemist / saber duelist",
-  "species": "Human",
+  "species": "Dathomiri Witch (Nightsister)",
   "tl": 10,
   "sm": 0,
   "appearance": "Handsome",
@@ -577,12 +577,12 @@
   "notes": "Imported from SW Zoe (1).xlsm — 250-pt start, 640 exp, ~910 spent.\n• Force Sword → equipped as the dual-mode Lightsaber (Ghost-fire crystal). Toggle 'Silent / invisible mode' on its Equipment card: silent = foe −3 to Parry at 6d+6; audible = full 8d+8 with sound/light. Lightsaber & Brawling skills carry +20 (Weapon Master + Force deflection) so they read 37 / 30 as on the original.\n• Heavy Cloak (defensive): Block DB 2, DR 1/5 — no catalogue equivalent on this sheet, tracked here.\n• Detect Lies gets +3 vs others via Empathy (Full).\n• Skill specialties (Sith, Pike, lightsaber-crafting, droids, etc.) preserved as notes on each skill.\n• 'Navigation' → Astrogation convention applied; 'Guns (blaster pistols)' → Blasters (Pistol).",
   "trainRate": 200,
   "study": [],
-  "ptTarget": 250,
+  "ptTarget": 1150,
   "languages": "",
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-06T13:04:36.807Z",
+    "savedAt": "2026-06-06T13:13:32.884Z",
     "savedBy": "Zoe"
   }
 }
