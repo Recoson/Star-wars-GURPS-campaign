@@ -40,7 +40,7 @@
       "attr": "IQ",
       "diff": "VH",
       "pts": 12,
-      "spec": "Sith"
+      "spec": "Inscribed"
     },
     {
       "name": "Meditation",
@@ -55,9 +55,9 @@
       "pts": 4
     },
     {
-      "name": "Throwing Art",
+      "name": "Thrown Weapon",
       "attr": "DX",
-      "diff": "H",
+      "diff": "E",
       "pts": 56,
       "spec": "Pike"
     },
@@ -479,15 +479,29 @@
     "primary": "IQ",
     "bonded": false,
     "saberPoints": 0,
-    "powers": [],
+    "powers": [
+      {
+        "name": "Force Denial",
+        "skill": "IQ",
+        "fp": "3",
+        "tier": 1,
+        "pts": 5,
+        "book": "Concordance"
+      }
+    ],
     "books": {
-      "Concordance": false,
-      "Common Force": false
+      "Concordance": true,
+      "Common Force": true,
+      "Inscribed Voice": true,
+      "Living Path": true
     },
-    "bookTiers": {},
+    "bookTiers": {
+      "Concordance": 4,
+      "Inscribed Voice": 4
+    },
     "tradition": "",
-    "activeBook": "",
-    "viewBook": "",
+    "activeBook": "Concordance",
+    "viewBook": "Inscribed Voice",
     "training": {
       "Concordance": {
         "tier": 1,
@@ -497,6 +511,20 @@
         "log": []
       },
       "Common Force": {
+        "tier": 1,
+        "hours": 0,
+        "regimen": "Open Hours",
+        "mentor": "",
+        "log": []
+      },
+      "Inscribed Voice": {
+        "tier": 1,
+        "hours": 0,
+        "regimen": "Open Hours",
+        "mentor": "",
+        "log": []
+      },
+      "Living Path": {
         "tier": 1,
         "hours": 0,
         "regimen": "Open Hours",
@@ -582,7 +610,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-06T13:13:36.421Z",
+    "savedAt": "2026-06-06T13:25:49.571Z",
     "savedBy": "Zoe"
   }
 }
