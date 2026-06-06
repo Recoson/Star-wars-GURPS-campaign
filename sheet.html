@@ -4049,7 +4049,8 @@ const SHIP_WEAPONS=[
  {name:'Plasma railgun',dmg:'6dx4',ap:10,kind:'laser'},
  {name:'Point-defence laser',dmg:'6dx2',ap:0,kind:'pd'},
  {name:'Turbolaser (light)',dmg:'6dx10',ap:0,kind:'capital'},
- {name:'Turbolaser (heavy)',dmg:'6dx20',ap:0,kind:'capital'}
+ {name:'Turbolaser (heavy)',dmg:'6dx20',ap:0,kind:'capital'},
+ {name:'Neuralyzer array',dmg:'',ap:0,kind:'neural'}
 ];
 const TGT_CLASSES=[['Speeder / walker',2],['Starfighter',4],['Gunship / shuttle',5],['Freighter',6],['Corvette',8],['Frigate',9],['Cruiser / capital',10]];
 function charSkillByNames(names){
@@ -4074,6 +4075,21 @@ function fireShipWeapon(i){
  const track=(W.kind==='capital'&&sm<=5)?-6:0;
  const rofB=W.rof?(typeof rofBonus==='function'?rofBonus(W.rof):1):0;
  const eff=g.lvl+sm+(isNaN(rng)?-4:rng)+track+(evasive?-2:0)+rofB;
+ if(W.kind==='neural'){
+  const r2=rollDice(3,0);
+  const held=r2.total<=eff;
+  v._neurC=held?Math.min(3,(+v._neurC||0)+1):0;
+  let m2='\u{1F9E0} Neuralyzer \u2014 lock roll 3d6 '+r2.total+' vs '+eff+': ';
+  if(!held) m2+='LOCK BROKEN \u2014 charge resets (0/3).';
+  else if(v._neurC<3) m2+='beam holding \u2014 charge '+v._neurC+'/3. Keep training it (no other actions for the gunner).';
+  else {
+   m2+='<b>FIRES (3/3).</b> Bypasses shields, no hull damage. Every LIVING crew member in the volume rolls <b>HT\u22124</b>: fail = unconscious 1d\u00d710 min; success = mentally stunned (IQ each turn). Droids immune. SM\u2264+6: whole crew \u00b7 SM+8/9: one section \u00b7 SM+10+: one compartment. Capacitor: 1 hour recharge.';
+   v._neurC=0;
+  }
+  v.lastFire=m2;
+  if(typeof _rollLog!=='undefined'){(_rollCount++,_rollLog).unshift({label:'Neuralyzer lock',target:eff,dice:r2.rolls,sum:r2.total,outcome:held?(v._neurC===0?'FIRED':'HOLD '+v._neurC+'/3'):'broken',cls:held?'ok':'miss',margin:eff-r2.total});if(_rollLog.length>14)_rollLog.pop();if(typeof _renderRollPanel==='function')_renderRollPanel();}
+  touch();renderVehicles();return;
+ }
  const r=rollDice(3,0);
  const critMiss=r.total>=18||(r.total===17&&eff<16);
  const hit=r.total<=eff&&!critMiss;
