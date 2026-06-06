@@ -3559,6 +3559,32 @@ function renderVehicles(){
  el.innerHTML=`
  <div class="tab-intro">Your fleet, a full <b>ship builder</b> (pick parts → derived stats), and a catalogue of ${catalog.length} vessels across ${shipCats.length} categories. Custom builds save into your fleet with computed cost, build & fit time.</div>
 
+ <details style="margin:4px 0 10px"><summary style="font-size:12px;color:var(--cyan);cursor:pointer;font-weight:600">📖 Ship combat — what to roll</summary>
+  <div class="char-grid" style="margin-top:6px">
+   <div class="section">
+    <h3>⚔ Attacking</h3>
+    <div style="font-size:11px;line-height:1.6">Roll 3d6 ≤ <b>Gunnery</b> + target SM − range − situational.<br>
+    Target SM: speeder <b>+2</b> · fighter <b>+4</b> · gunship/shuttle <b>+5</b> · freighter <b>+6</b> · corvette <b>+8</b> · frigate <b>+9</b> · cruiser <b>+10</b>.<br>
+    Capital batteries: <b>−6</b> vs SM ≤ +5 targets (point-defence exempt).<br>
+    Rear/flank position (win Pilot Quick Contest): <b>+2</b> to hit, target Dodge <b>−2</b>.<br>
+    Missiles need a sensor lock (Electronics Op [Sensors], 1 turn) — target dodges at <b>−2</b>; countermeasures contest the lock.</div>
+   </div>
+   <div class="section">
+    <h3>🛡 Defending</h3>
+    <div style="font-size:11px;line-height:1.6">Roll 3d6 ≤ <b>Dodge = 3 + (Pilot ÷ 3) + Hnd</b> vs each attack (shown live on your ship card).<br>
+    <b>Evasive action:</b> +2 Dodge, −2 your attacks until next turn.<br>
+    <b>Barrel roll:</b> Pilot −1; +2 Dodge vs one attack.<br>
+    Then: <b>shields soak</b> (SP pool) → <b>DR</b> of the struck system (exposed mounts only 40% hull DR) ÷ attacker's AD.</div>
+   </div>
+   <div class="section">
+    <h3>💥 Damage — components are the health</h3>
+    <div style="font-size:11px;line-height:1.6">Penetrating damage vs <b>DT</b>: &lt;DT superficial · <b>≥DT</b> system ◐ · <b>≥2×DT</b> system ✕ · <b>≥6×DT vs full hull DR = vaporised</b>.<br>
+    DT: speeder <b>8</b> · fighter <b>10</b> · freighter/gunship <b>15</b> · corvette <b>25</b> · capital <b>40</b>.<br>
+    Ship dies: <b>Hull ✕</b> (breach, 1d min) · <b>Reactor ✕</b> (dead in space) · <b>Sublight ✕</b> (adrift).<br>
+    <b>Ion:</b> ×2 vs shields, never Hull/Armour, never vaporises — disables for boarding.<br>
+    Use the <b>⚔ Incoming hit</b> tool on your ship card — it runs this whole pipeline.</div>
+   </div>
+  </div></details>
  <div class="sec-head">Your Fleet${(C.vehicles||[]).length?` <span class="dim" style="font-weight:400;font-size:11px">— ${C.vehicles.length} vessel${C.vehicles.length===1?'':'s'}</span>`:''}</div>
  ${(C.vehicles||[]).length?`<div class="fleet-grid">`+(C.vehicles).map((v,i)=>{
   const _pTot=(v.parts||[]).length, _pOk=_vIntact(v); const hpPct=_pTot?Math.round(100*_pOk/_pTot):100;
@@ -3588,6 +3614,14 @@ function renderVehicles(){
      <div style="height:4px;background:var(--bg);border-radius:2px;margin-top:4px;overflow:hidden"><div style="height:100%;width:${shieldPct}%;background:${cSh}"></div></div>
     </div>
    </div>
+   ${(()=>{const D=vehicleDodge(v);const sm=vehicleSM(v);
+     const core=D.dodge!=null
+      ?`Dodge <b style="color:var(--green);font-size:12px">${D.dodge}</b> <span class="dim">= 3 + Piloting${D.pilot.spec?' ('+esc(D.pilot.spec)+')':''} ${D.pilot.lvl}÷3 ${D.hnd>=0?'+':'−'}${Math.abs(D.hnd)} Hnd</span> · Evasive <b style="color:var(--green)">${D.dodge+2}</b> <span class="dim">(your attacks −2)</span>`
+      :`Dodge = <b>3 + Pilot÷3 ${D.hnd>=0?'+':'−'}${Math.abs(D.hnd)} Hnd</b> <span class="dim">— add a Piloting skill to auto-compute</span>`;
+     return `<div style="margin-top:7px;padding:5px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:5px;font-size:11px">
+    <span style="font-weight:700;color:var(--cyan)" title="Roll 3d6 ≤ Dodge against each attack you can see coming. Guided warheads: −2. Capital hulls effectively cannot dodge.">🛡 Defence</span> ${core}
+    <span class="dim">· vs missiles −2 · foes hit you at SM +${sm}${sm<=5?' but capital batteries −6 vs you':''}</span>
+   </div>`})()}
    <div style="margin-top:7px;padding:6px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:5px">
     <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:11px">
      <span style="font-weight:700;color:var(--amber)">⚔ Incoming hit</span>
@@ -3626,6 +3660,8 @@ function renderVehicles(){
    <table class="g" style="margin-top:4px;font-size:10.5px">
     <tr><td class="label" style="width:78px">Hull DR</td><td><input class="cell" value="${esc(v.hullDR||'')}" onchange="setVehicleField(${i},'hullDR',this.value)"></td>
         <td class="label" style="width:78px">Shield DR</td><td><input class="cell" value="${esc(v.shieldDR||'')}" onchange="setVehicleField(${i},'shieldDR',this.value)"></td></tr>
+    <tr><td class="label" title="Handling: maneuver & Dodge modifier. Blank = class default.">Hnd</td><td><input class="cell" value="${v.hnd==null?'':esc(''+v.hnd)}" placeholder="${vehicleHnd(v)}" onchange="setVehicleField(${i},'hnd',this.value)"></td>
+        <td class="label" title="Damage Threshold override. Blank = class default.">DT</td><td><input class="cell" value="${v.dt==null?'':esc(''+v.dt)}" placeholder="${vehicleDT(v)}" onchange="setVehicleField(${i},'dt',this.value)"></td></tr>
     <tr><td class="label">Crew + Pax</td><td><input class="cell" value="${esc(v.crew||'')}" onchange="setVehicleField(${i},'crew',this.value)"></td>
         <td class="label">Fuel (RF/HF)</td><td><input class="cell" value="${esc(v.fuel||'')}" onchange="setVehicleField(${i},'fuel',this.value)"></td></tr>
     <tr><td class="label">Weapons</td><td colspan="3"><input class="cell" value="${esc(v.weapons||'')}" onchange="setVehicleField(${i},'weapons',this.value)" style="width:100%"></td></tr>
@@ -3946,6 +3982,44 @@ function vehicleDT(v){
  return 12;
 }
 function _vIntact(v){return (v.parts||[]).filter(p=>p.status==='ok').length}
+function vehicleHnd(v){
+ if(v&&v.hnd!=null&&v.hnd!==''&&!isNaN(+v.hnd))return +v.hnd;
+ const c=String((v&&v.cat)||'').toLowerCase();
+ if(/intercept|swoop/.test(c))return 2;
+ if(/light fighter|bike|speeder/.test(c))return 1;
+ if(/heavy fighter|patrol|scout|bomber/.test(c))return 0;
+ if(/gunship|shuttle|drop|walker/.test(c))return -1;
+ if(/freighter|transport|hauler/.test(c))return -2;
+ if(/corvette/.test(c))return -3;
+ if(/frigate/.test(c))return -4;
+ if(/cruiser|capital|destroyer|flagship|battle/.test(c))return -5;
+ return 0;
+}
+function vehicleSM(v){
+ const c=String((v&&v.cat)||'').toLowerCase();
+ if(/speeder|swoop|bike|walker/.test(c))return 2;
+ if(/fighter|intercept|bomber|patrol|scout/.test(c))return 4;
+ if(/gunship|shuttle|drop/.test(c))return 5;
+ if(/freighter|transport|hauler/.test(c))return 6;
+ if(/corvette/.test(c))return 8;
+ if(/frigate/.test(c))return 9;
+ if(/cruiser|capital|destroyer|flagship|battle/.test(c))return 10;
+ return 4;
+}
+function charBestPilot(){
+ let best=null;
+ (C.skills||[]).forEach(sk=>{
+  if(sk.name!=='Piloting')return;
+  const lvl=skillLevel(sk);
+  if(typeof lvl!=='number')return;
+  if(!best||lvl>best.lvl)best={lvl:lvl,spec:sk.spec||''};
+ });
+ return best;
+}
+function vehicleDodge(v){
+ const pi=charBestPilot(); const hnd=vehicleHnd(v);
+ return pi?{dodge:Math.max(0,3+Math.floor(pi.lvl/3)+hnd),pilot:pi,hnd:hnd}:{dodge:null,pilot:null,hnd:hnd};
+}
 function _degrade(p,steps){
  const order=['ok','dmg','dest'];
  const cur=Math.max(0,order.indexOf(p.status||'ok'));
