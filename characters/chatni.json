@@ -543,6 +543,14 @@
         "tier": 2,
         "pts": 10,
         "book": "Inscribed Voice"
+      },
+      {
+        "name": "Corporeal Phase",
+        "skill": "Will",
+        "fp": "6",
+        "tier": 3,
+        "pts": 20,
+        "book": "Inscribed Voice"
       }
     ],
     "books": {
@@ -713,7 +721,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-07T01:19:09.977Z",
+    "savedAt": "2026-06-07T01:20:16.581Z",
     "savedBy": "Zoe"
   },
   "xpSkillTrained": 1
