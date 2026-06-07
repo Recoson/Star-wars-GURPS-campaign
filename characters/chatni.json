@@ -773,7 +773,7 @@
     },
     "tradition": "",
     "activeBook": "Concordance",
-    "viewBook": "Common Force",
+    "viewBook": "Concordance",
     "training": {
       "Concordance": {
         "tier": 1,
@@ -1020,7 +1020,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-07T06:36:04.820Z",
+    "savedAt": "2026-06-07T12:38:00.251Z",
     "savedBy": "Zoe"
   },
   "xpSkillTrained": 1,
