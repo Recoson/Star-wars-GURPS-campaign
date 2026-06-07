@@ -351,7 +351,7 @@
       "attr": "IQ",
       "diff": "H",
       "pts": 1,
-      "spec": "Krath / war-droids"
+      "spec": "Krath / war-droids, the Jedi "
     },
     {
       "name": "Navigation",
@@ -1020,7 +1020,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-07T06:34:36.534Z",
+    "savedAt": "2026-06-07T06:36:04.820Z",
     "savedBy": "Zoe"
   },
   "xpSkillTrained": 1,
