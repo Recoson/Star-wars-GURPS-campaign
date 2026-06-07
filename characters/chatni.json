@@ -533,8 +533,34 @@
       }
     }
   },
-  "forms": [],
-  "techniques": [],
+  "forms": [
+    {
+      "name": "Form III: Soresu",
+      "tier": 1,
+      "active": false
+    },
+    {
+      "name": "Form II: Makashi",
+      "tier": 2,
+      "active": false
+    },
+    {
+      "name": "Form VI: Niman",
+      "tier": 3,
+      "active": false
+    },
+    {
+      "name": "Form IV: Ataru",
+      "tier": 1,
+      "active": false
+    }
+  ],
+  "techniques": [
+    {
+      "name": "Saber Throw",
+      "active": false
+    }
+  ],
   "stances": [],
   "vehicles": [],
   "droids": [],
@@ -610,7 +636,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-06T13:26:16.755Z",
+    "savedAt": "2026-06-07T01:15:37.980Z",
     "savedBy": "Zoe"
   },
   "xpSkillTrained": 1
