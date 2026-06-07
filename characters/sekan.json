@@ -1,0 +1,301 @@
+{
+  "name": "Sekan Nightfall",
+  "player": "Anthony",
+  "gm": "James",
+  "homeworld": "Mandalore",
+  "concept": "Mandalorian — Protector of the clans, Tylo’s shadow, professional damage sponge",
+  "species": "Human",
+  "tl": 10,
+  "sm": 0,
+  "appearance": "Average",
+  "hand": "Right",
+  "statusLevel": 0,
+  "wealthLevel": "Average",
+  "ptTarget": 693,
+  "attr": {
+    "ST": 100,
+    "DX": 180,
+    "IQ": 40,
+    "HT": 40
+  },
+  "sec": {
+    "HP": 40,
+    "Will": 0,
+    "Per": 0,
+    "FP": 0,
+    "Speed": 0,
+    "Move": 0
+  },
+  "skills": [
+    {
+      "name": "Blasters",
+      "attr": "DX",
+      "diff": "E",
+      "pts": 28,
+      "spec": "Pistol"
+    },
+    {
+      "name": "Blasters",
+      "attr": "DX",
+      "diff": "E",
+      "pts": 44,
+      "spec": "Rifle"
+    },
+    {
+      "name": "Blasters",
+      "attr": "DX",
+      "diff": "E",
+      "pts": 4,
+      "spec": ""
+    },
+    {
+      "name": "Fast-Draw",
+      "attr": "DX",
+      "diff": "E",
+      "pts": 8
+    },
+    {
+      "name": "Knife",
+      "attr": "DX",
+      "diff": "E",
+      "pts": 16
+    },
+    {
+      "name": "Brawling",
+      "attr": "DX",
+      "diff": "E",
+      "pts": 4
+    },
+    {
+      "name": "Shield",
+      "attr": "DX",
+      "diff": "E",
+      "pts": 8
+    },
+    {
+      "name": "Throwing",
+      "attr": "DX",
+      "diff": "A",
+      "pts": 4
+    },
+    {
+      "name": "Soldier",
+      "attr": "IQ",
+      "diff": "A",
+      "pts": 20
+    },
+    {
+      "name": "Armoury",
+      "attr": "IQ",
+      "diff": "A",
+      "pts": 4
+    },
+    {
+      "name": "Smith",
+      "attr": "IQ",
+      "diff": "A",
+      "pts": 8
+    },
+    {
+      "name": "Spacer",
+      "attr": "IQ",
+      "diff": "E",
+      "pts": 4
+    },
+    {
+      "name": "Piloting",
+      "attr": "DX",
+      "diff": "A",
+      "pts": 4
+    },
+    {
+      "name": "Intelligence Analysis",
+      "attr": "IQ",
+      "diff": "H",
+      "pts": 2
+    },
+    {
+      "name": "Computer Hacking (Slicing)",
+      "attr": "IQ",
+      "diff": "H",
+      "pts": 2
+    },
+    {
+      "name": "Carousing",
+      "attr": "HT",
+      "diff": "E",
+      "pts": 2
+    },
+    {
+      "name": "Diplomacy",
+      "attr": "IQ",
+      "diff": "H",
+      "pts": 12
+    },
+    {
+      "name": "Tracking",
+      "attr": "Per",
+      "diff": "A",
+      "pts": 16
+    },
+    {
+      "name": "Driving",
+      "attr": "DX",
+      "diff": "A",
+      "pts": 4
+    },
+    {
+      "name": "Shortsword",
+      "attr": "DX",
+      "diff": "A",
+      "pts": 12
+    },
+    {
+      "name": "Gunner",
+      "attr": "DX",
+      "diff": "E",
+      "pts": 12,
+      "spec": "Beams"
+    },
+    {
+      "name": "Submersible Piloting",
+      "attr": "DX",
+      "diff": "A",
+      "pts": 2
+    },
+    {
+      "name": "Two-Handed Sword",
+      "attr": "DX",
+      "diff": "A",
+      "pts": 28
+    },
+    {
+      "name": "Bolas",
+      "attr": "DX",
+      "diff": "A",
+      "pts": 4
+    }
+  ],
+  "traits": [
+    {
+      "name": "Combat Reflexes",
+      "type": "Advantage",
+      "levels": 1
+    },
+    {
+      "name": "High Pain Threshold",
+      "type": "Advantage",
+      "levels": 1
+    },
+    {
+      "name": "Very Fit",
+      "type": "Advantage",
+      "levels": 1
+    },
+    {
+      "name": "Gunslinger",
+      "type": "Advantage",
+      "levels": 1
+    },
+    {
+      "name": "Ambidexterity",
+      "type": "Advantage",
+      "levels": 1
+    },
+    {
+      "name": "Code of Honor (high)",
+      "type": "Disadvantage",
+      "levels": 1
+    },
+    {
+      "name": "Callous",
+      "type": "Disadvantage",
+      "levels": 1
+    },
+    {
+      "name": "Sense of Duty (entire race)",
+      "type": "Disadvantage",
+      "levels": 1
+    },
+    {
+      "name": "Disciplines of Faith 2",
+      "type": "Disadvantage",
+      "levels": 1
+    },
+    {
+      "name": "Mundane Background",
+      "type": "Disadvantage",
+      "levels": 1
+    },
+    {
+      "name": "Social Stigma (minority group)",
+      "type": "Disadvantage",
+      "levels": 1
+    }
+  ],
+  "weapons": [
+    {
+      "name": "Vibrosword"
+    },
+    {
+      "name": "Combat knife"
+    },
+    {
+      "name": "Blaster carbine"
+    },
+    {
+      "name": "Heavy blaster pistol"
+    },
+    {
+      "name": "Repeating blaster (emplaced)"
+    }
+  ],
+  "armour": [
+    {
+      "name": "Neo-Crusader armour"
+    },
+    {
+      "name": "Beskar plate (single piece)",
+      "cover": [
+        "torso"
+      ],
+      "notes": "over the heart"
+    },
+    {
+      "name": "Beskar plate (single piece)",
+      "cover": [
+        "head"
+      ],
+      "notes": "helm crown"
+    }
+  ],
+  "shields": [],
+  "explosives": [
+    {
+      "name": "Thermal detonator",
+      "qty": 3
+    }
+  ],
+  "gear": [
+    {
+      "name": "Standard med pack",
+      "qty": 1
+    },
+    {
+      "name": "Binders / Restraints",
+      "qty": 1
+    },
+    {
+      "name": "Power Cell (spare)",
+      "qty": 1
+    }
+  ],
+  "inventory": [],
+  "cyber": [],
+  "credits": 0,
+  "notes": "Imported from Sekan_Nightfall.or export 2026-05-23. Fixes: 2H Sword → Two-Handed Sword; Neo-Crusader armour (base) → Neo-Crusader armour; Blasters specs assigned 44→Rifle (carbine), 28→Pistol; 4-pt Blasters row left spec-blank — Anthony to assign; duplicate Code of Honor removed (points assumed counted once); Gunner → spec Beams (emplaced repeater). Beskar single pieces set to cover torso (vitals) and head (skull) zones. Vibrosword has no Broadsword skill behind it — Anthony: take Broadsword, or swap the blade to a Heavy vibrosword (Two-Handed Sword 12pts is ready) or shortsword-class vibroblade.",
+  "_meta": {
+    "savedAt": "2026-06-07T12:00:56.000Z",
+    "savedBy": "James (initial import via Claude)"
+  }
+}
