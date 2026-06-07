@@ -551,6 +551,14 @@
         "tier": 3,
         "pts": 20,
         "book": "Inscribed Voice"
+      },
+      {
+        "name": "Force Sense (Grey)",
+        "skill": "IQ",
+        "fp": "2",
+        "tier": 1,
+        "pts": 5,
+        "book": "Concordance"
       }
     ],
     "books": {
@@ -566,7 +574,7 @@
     },
     "tradition": "",
     "activeBook": "Concordance",
-    "viewBook": "Inscribed Voice",
+    "viewBook": "Concordance",
     "training": {
       "Concordance": {
         "tier": 1,
@@ -721,7 +729,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-07T01:20:16.581Z",
+    "savedAt": "2026-06-07T01:22:45.940Z",
     "savedBy": "Zoe"
   },
   "xpSkillTrained": 1
