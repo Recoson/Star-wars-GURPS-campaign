@@ -680,7 +680,7 @@ function blankChar(){
   skills:[],traits:[],cyber:[],
   weapons:[],armour:[],shields:[],
   explosives:[],gear:[],inventory:[],
-  force:{primary:'IQ',bonded:false,saberPoints:0,powers:[],books:{},bookTiers:{},tradition:'',activeBook:'',viewBook:''},
+  force:{primary:'IQ',bonded:false,saberPoints:0,powers:[],books:{},bookTiers:{},tradition:'',activeBook:'',viewBook:'',holocrons:[],holoRes:{frag:0,frame:0,kyber:0}},
   forms:[],techniques:[],stances:[],vehicles:[],droids:[],customDB:{weapons:[],armour:[],shields:[],explosives:[],gear:[]},
   conditions:{},
   credits:0,creditLog:[],
@@ -3103,6 +3103,92 @@ function forceBookChecklist(book){
  return html;
 }
 
+/* ═══ HOLOCRON INVENTORY — Inscribed Voice only ═══ */
+const HOLO_TYPES={
+ small:{label:'Small holocron',faces:3},
+ large:{label:'Large holocron',faces:7},
+ soulbind:{label:'Soul Bind holocron',faces:0},
+ shell:{label:'Shell (empty lattice)',faces:0}
+};
+function _holos(){C.force.holocrons=C.force.holocrons||[];return C.force.holocrons}
+function _holoRes(){C.force.holoRes=C.force.holoRes||{frag:0,frame:0,kyber:0};return C.force.holoRes}
+function addHolocron(type){
+ const t=HOLO_TYPES[type]||HOLO_TYPES.small;
+ const h={type:type,name:'',working:'',atNexus:false,nexusLoc:'',mistLink:'',notes:'',
+  faces:Array.from({length:t.faces},()=>({w:'',used:false})),
+  tethers:type==='soulbind'?['','','','']:[]};
+ _holos().push(h);touch();renderForce();
+}
+function delHolocron(i){if(!confirm('Remove this holocron?'))return;_holos().splice(i,1);touch();renderForce()}
+function setHolo(i,f,v){const h=_holos()[i];if(!h)return;h[f]=v;touch();if(f!=='name'&&f!=='working'&&f!=='nexusLoc'&&f!=='mistLink'&&f!=='notes')renderForce()}
+function setHoloFace(i,j,f,v){const h=_holos()[i];if(!h||!h.faces[j])return;h.faces[j][f]=v;touch();if(f==='used')renderForce()}
+function setHoloTether(i,j,v){const h=_holos()[i];if(!h)return;h.tethers[j]=v;touch()}
+function adjHoloRes(k,d){const r=_holoRes();r[k]=Math.max(0,(+r[k]||0)+d);touch();renderForce()}
+function holocronSection(){
+ const hs=_holos(),r=_holoRes();
+ const soulbinds=hs.filter(h=>h.type==='soulbind').length;
+ const mistAnchors=hs.filter(h=>(h.type==='shell'||h.type==='large')&&(h.mistLink||'').trim());
+ const cards=hs.map((h,i)=>{
+  const t=HOLO_TYPES[h.type]||HOLO_TYPES.small;
+  let body='';
+  if(h.type==='small'){
+   const used=h.faces.filter(f=>f.used).length;
+   body=`<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:11px">
+    <label class="ci" style="flex:1;min-width:150px">Bound working (one type, all faces)<input class="cell" value="${esc(h.working||'')}" placeholder="e.g. Witchsight" onchange="setHolo(${i},'working',this.value)" style="width:100%"></label>
+    <span class="dim">Faces:</span>${h.faces.map((f,j)=>`<label title="Face ${j+1}: ${f.used?'consumed — re-inscribe (1 hr)':'inscribed & ready'}" style="cursor:pointer;font-size:14px">${f.used?'◌':'●'}<input type="checkbox" style="display:none" ${f.used?'checked':''} onchange="setHoloFace(${i},${j},'used',this.checked)"></label>`).join('')}
+    <span class="dim" style="font-size:10px">${3-used}/3 ready</span></div>`;
+  }else if(h.type==='large'){
+   body=`<table class="g" style="font-size:10.5px;margin-top:3px"><tr><th style="width:24px">#</th><th>Face — bound working</th><th style="width:54px">State</th></tr>
+    ${h.faces.map((f,j)=>`<tr><td class="ctr dim">${j+1}</td><td><input class="cell" value="${esc(f.w||'')}" placeholder="—" onchange="setHoloFace(${i},${j},'w',this.value)" style="width:100%"></td>
+     <td class="ctr"><label style="cursor:pointer" title="${f.used?'consumed — re-inscribe (1 hr)':'ready'}">${f.used?'◌':'●'}<input type="checkbox" style="display:none" ${f.used?'checked':''} onchange="setHoloFace(${i},${j},'used',this.checked)"></label></td></tr>`).join('')}</table>
+   <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:11px;margin-top:4px">
+    <label class="ci" style="display:inline-flex;flex-direction:row;align-items:center;gap:4px"><input type="checkbox" ${h.atNexus?'checked':''} onchange="setHolo(${i},'atNexus',this.checked)"> Left at a nexus</label>
+    ${h.atNexus?`<label class="ci" style="flex:1;min-width:140px">Where<input class="cell" value="${esc(h.nexusLoc||'')}" placeholder="which nexus / site" onchange="setHolo(${i},'nexusLoc',this.value)" style="width:100%"></label>`:''}
+    <label class="ci" style="flex:1;min-width:150px">Mist-Fold link (anchors indefinitely)<input class="cell" value="${esc(h.mistLink||'')}" placeholder="linked to…" onchange="setHolo(${i},'mistLink',this.value)" style="width:100%"></label></div>`;
+  }else if(h.type==='soulbind'){
+   body=`<div class="dim" style="font-size:10px;margin:2px 0">4 tether-slots · faces sealed · max 2 Soul Binds per practitioner${soulbinds>2?' — <b style=\"color:var(--red)\">over limit!</b>':''}</div>
+    <table class="g" style="font-size:10.5px"><tr><th style="width:24px">#</th><th>Tethered soul</th></tr>
+    ${h.tethers.map((tt,j)=>`<tr><td class="ctr dim">${j+1}</td><td><input class="cell" value="${esc(tt||'')}" placeholder="— empty slot —" onchange="setHoloTether(${i},${j},this.value)" style="width:100%"></td></tr>`).join('')}</table>`;
+  }else{
+   body=`<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:11px">
+    <label class="ci" style="flex:1;min-width:170px">Mist-Fold link (blank = unlinked shell)<input class="cell" value="${esc(h.mistLink||'')}" placeholder="linked to…" onchange="setHolo(${i},'mistLink',this.value)" style="width:100%"></label>
+    <span class="dim" style="font-size:10px">Inscribing a working ends shell status.</span></div>`;
+  }
+  return `<div style="border:1px solid var(--border);border-radius:6px;padding:7px 9px;margin-top:6px;background:var(--bg2)">
+   <div style="display:flex;align-items:center;gap:7px">
+    <span style="font-size:13px">${h.type==='soulbind'?'🕯':h.type==='shell'?'⬡':h.type==='large'?'🔷':'🔹'}</span>
+    <input class="cell" value="${esc(h.name||'')}" placeholder="${t.label}" onchange="setHolo(${i},'name',this.value)" style="flex:1;font-weight:600">
+    <span class="dim" style="font-size:10px">${t.label}</span>
+    <button class="btn-del" onclick="delHolocron(${i})">✕</button>
+   </div>${body}
+   <input class="cell" value="${esc(h.notes||'')}" placeholder="notes…" onchange="setHolo(${i},'notes',this.value)" style="width:100%;margin-top:4px;font-size:10.5px;opacity:.85">
+  </div>`;
+ }).join('');
+ const res=`<div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;font-size:11px;margin:6px 0">
+  ${[['frag','Fragments'],['frame','Frames'],['kyber','Kyber crystals']].map(([k,lbl])=>`<span><span class="dim">${lbl}</span>
+   <button onclick="adjHoloRes('${k}',-1)" style="padding:0 6px">−</button><b style="font-family:var(--mono);min-width:20px;display:inline-block;text-align:center">${r[k]||0}</b><button onclick="adjHoloRes('${k}',1)" style="padding:0 6px">+</button></span>`).join('')}
+  <span class="dim" style="font-size:10px">· Mist-Fold anchors active: <b style="color:var(--cyan)">${mistAnchors.length}</b>${mistAnchors.length?' — '+mistAnchors.map(h=>esc((h.name||HOLO_TYPES[h.type].label)+' → '+h.mistLink)).join(' · '):''}</span>
+ </div>`;
+ return `<div class="sec-head" style="margin-top:18px">🔮 Holocrons — the Currency of the Craft
+   <span style="float:right;color:var(--text2);font-weight:400;font-size:11px">${hs.length} lattice${hs.length===1?'':'s'}</span></div>
+ ${res}
+ <div style="display:flex;gap:6px;flex-wrap:wrap">
+  <button class="btn-add" onclick="addHolocron('small')">+ Small (3 faces)</button>
+  <button class="btn-add" onclick="addHolocron('large')">+ Large (7 faces)</button>
+  <button class="btn-add" onclick="addHolocron('soulbind')">+ Soul Bind (4 tethers)</button>
+  <button class="btn-add" onclick="addHolocron('shell')">+ Shell (Mist-Fold anchor)</button>
+ </div>
+ ${cards||'<div class="dim" style="font-size:11px;padding:6px 2px">No holocrons yet — forge one below.</div>'}
+ <details style="margin-top:8px"><summary style="font-size:11px;color:var(--cyan);cursor:pointer;font-weight:600">📜 Forging, inscription &amp; drawing rules</summary>
+  <div class="dim" style="font-size:10.5px;line-height:1.55;padding:4px 2px;white-space:normal">
+  <b>Forging (RITUAL):</b> Small = <b>10 fragments + 1 frame</b>, 7-day ritual · Large = <b>50 fragments (or a complete kit) + 1 kyber crystal + 5 frames</b>, 30-day ritual at a prepared site. Roll <b>Ritual Magic</b> at the end: failure damages the matrix — fragments safe, re-attempt after a week at −2.<br>
+  <b>Inscription:</b> 1 hr per face, uninterrupted meditation. Small holocrons hold <b>one working type across all faces</b>; wiping a small to re-bind = 24-hr reset. Large faces may all differ; wipe one face = 1 hr.<br>
+  <b>Use:</b> a bolstered activation <b>consumes the face</b> (◌) until re-inscribed. Base versions never need a face.<br>
+  <b>Drawing by others:</b> anyone may channel a face working through the lattice, <b>paying the FP cost themselves</b> — if the creator attuned them (1 min joint meditation), no roll; otherwise Quick Contest: <b>their Force attribute vs the crafter's Ritual Magic</b>. Lose = sealed, −2 FP. Crit fail = the face discharges at them. Tethers answer only their binder.<br>
+  <b>Soul Bind:</b> small variant, faces sealed for <b>4 tether-slots</b>; max 2 per practitioner, slots not pooled.<br>
+  <b>Shells:</b> empty smalls; anchor <b>Mist-Fold</b> links (large holocrons anchor indefinitely). Inscribing a shell breaks its link.
+  </div></details>`;
+}
 function renderForce(){
  const el=document.getElementById('tab-force');
  const bookNames=[...new Set(FORCE_POWERS.map(p=>p.book))];
@@ -3158,7 +3244,8 @@ function renderForce(){
   <span class="dim" style="font-weight:400;font-size:11px;margin-left:8px">— tick a power to mark it known</span>
   <span style="float:right;color:var(--text2);font-weight:400;font-size:11px">${esc(aBook)} pts: <b style="color:var(--amber)">${bookPts(aBook)}</b></span></div>
  ${bookLevelSelector(aBook)}
- ${forceBookChecklist(aBook)}`:`<div class="dim" style="padding:10px 2px">Tick a book under <b>Active Books</b> above and its powers — grouped by tier — will appear here to select.</div>`}
+ ${forceBookChecklist(aBook)}
+ ${aBook==='Inscribed Voice'?holocronSection():''}`:`<div class="dim" style="padding:10px 2px">Tick a book under <b>Active Books</b> above and its powers — grouped by tier — will appear here to select.</div>`}
  <div class="dim" style="font-size:11px;margin-top:10px">Lightsaber Forms &amp; form-neutral Techniques are managed on the <b style="color:var(--cyan)">Stances &amp; Forms</b> tab — learn them, set their tier, and activate them there. Active modifiers flow into your sheet automatically.</div>${forceTrainingSection()}${customForcePowersSection()}`;
 }
 function addForcePower(book){C.force.powers=C.force.powers||[];C.force.powers.push({name:'',tier:1,pts:5,book:book||C.force.viewBook||C.force.activeBook||''});touch();renderForce()}
