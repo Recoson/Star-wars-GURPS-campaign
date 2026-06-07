@@ -3087,7 +3087,7 @@ function forceBookChecklist(book){
     <span>TIER ${ROMAN[t]||t}${esc(rank)}</span>
     <span style="flex:1;height:1px;background:var(--border)"></span>
     <span class="dim" style="font-weight:400;font-size:10px">${list.length} power${list.length===1?'':'s'} · ${TIER_PTS[t]||''} pts each</span></div>`;
-  html+='<table class="g"><tr><th style="width:30px"></th><th>Power</th><th style="width:44px">Pg</th><th style="width:44px">Attr</th><th style="width:32px">FP</th><th style="width:32px">Pts</th></tr>';
+  html+='<table class="g"><tr><th style="width:30px"></th><th>Power</th><th style="width:44px">Pg</th><th style="width:44px" title="Learning Affinity — NOT the roll. You always roll your Force attribute (Primary). Study time: ¼ hours if Affinity matches your Primary, ½ otherwise.">Affinity</th><th style="width:32px">FP</th><th style="width:32px">Pts</th></tr>';
   html+=list.map(fp=>{
    const isKnown=known.has(fp.name);
    let lock=null;
@@ -3119,6 +3119,7 @@ function renderForce(){
  <div class="char-grid">
   <div class="section">
    <h3>Force Primary</h3>
+   <div class="dim" style="font-size:10px;line-height:1.35;margin:2px 0 6px">All powers <b>roll this attribute</b>. A power's listed <b>Affinity</b> is its learning speed only: ¼ study hours if it matches your Primary, ½ otherwise.</div>
    <div class="stat-row"><span class="lbl">Attribute</span>
     <select class="cell" onchange="C.force.primary=this.value;touch();renderForce()" style="width:80px">
      ${['ST','DX','IQ','HT','Will','Per'].map(a=>`<option${a===C.force.primary?' selected':''}>${a}</option>`).join('')}
