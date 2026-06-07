@@ -476,7 +476,7 @@
   "gear": [],
   "inventory": [],
   "force": {
-    "primary": "IQ",
+    "primary": "Will",
     "bonded": false,
     "saberPoints": 0,
     "powers": [
@@ -493,7 +493,8 @@
       "Concordance": true,
       "Common Force": true,
       "Inscribed Voice": true,
-      "Living Path": true
+      "Living Path": true,
+      "Bonded Blade": true
     },
     "bookTiers": {
       "Concordance": 4,
@@ -525,6 +526,13 @@
         "log": []
       },
       "Living Path": {
+        "tier": 1,
+        "hours": 0,
+        "regimen": "Open Hours",
+        "mentor": "",
+        "log": []
+      },
+      "Bonded Blade": {
         "tier": 1,
         "hours": 0,
         "regimen": "Open Hours",
@@ -569,7 +577,12 @@
       "active": false
     }
   ],
-  "stances": [],
+  "stances": [
+    {
+      "name": "Czerka Security Lockdown",
+      "active": false
+    }
+  ],
   "vehicles": [],
   "droids": [],
   "customDB": {
@@ -644,7 +657,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-07T01:16:38.322Z",
+    "savedAt": "2026-06-07T01:18:02.826Z",
     "savedBy": "Zoe"
   },
   "xpSkillTrained": 1
