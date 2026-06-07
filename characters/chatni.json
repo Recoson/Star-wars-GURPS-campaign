@@ -487,6 +487,62 @@
         "tier": 1,
         "pts": 5,
         "book": "Concordance"
+      },
+      {
+        "name": "Phantom Stride",
+        "skill": "Will",
+        "fp": "2",
+        "tier": 1,
+        "pts": 5,
+        "book": "Inscribed Voice"
+      },
+      {
+        "name": "Spirit Mend",
+        "skill": "Will",
+        "fp": "2",
+        "tier": 1,
+        "pts": 5,
+        "book": "Inscribed Voice"
+      },
+      {
+        "name": "Spirit Sight",
+        "skill": "Will",
+        "fp": "2",
+        "tier": 1,
+        "pts": 5,
+        "book": "Inscribed Voice"
+      },
+      {
+        "name": "Hex of Agony",
+        "skill": "Will",
+        "fp": "1",
+        "tier": 2,
+        "pts": 10,
+        "book": "Inscribed Voice"
+      },
+      {
+        "name": "Spirit Sever",
+        "skill": "Will",
+        "fp": "3",
+        "tier": 2,
+        "pts": 10,
+        "book": "Inscribed Voice"
+      },
+      {
+        "name": "Weighing of Hearts",
+        "skill": "Will",
+        "fp": "4",
+        "tier": 2,
+        "pts": 10,
+        "book": "Inscribed Voice"
+      },
+      {
+        "name": "Witch Smoke",
+        "skill": "Will",
+        "fp": "1",
+        "tier": 2,
+        "pts": 10,
+        "book": "Inscribed Voice"
       }
     ],
     "books": {
@@ -657,7 +713,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-07T01:18:02.826Z",
+    "savedAt": "2026-06-07T01:19:09.977Z",
     "savedBy": "Zoe"
   },
   "xpSkillTrained": 1
