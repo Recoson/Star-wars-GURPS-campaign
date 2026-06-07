@@ -591,6 +591,14 @@
         "tier": 2,
         "pts": 10,
         "book": "Concordance"
+      },
+      {
+        "name": "Force Void",
+        "skill": "IQ",
+        "fp": "9",
+        "tier": 4,
+        "pts": 35,
+        "book": "Concordance"
       }
     ],
     "books": {
@@ -761,7 +769,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-07T01:25:44.357Z",
+    "savedAt": "2026-06-07T01:28:57.625Z",
     "savedBy": "Zoe"
   },
   "xpSkillTrained": 1
