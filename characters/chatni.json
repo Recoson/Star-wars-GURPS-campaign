@@ -352,6 +352,13 @@
       "diff": "H",
       "pts": 1,
       "spec": "Krath / war-droids"
+    },
+    {
+      "name": "Navigation",
+      "pts": 1,
+      "attr": "IQ",
+      "diff": "A",
+      "spec": "Land"
     }
   ],
   "traits": [
@@ -1013,7 +1020,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-07T02:36:27.525Z",
+    "savedAt": "2026-06-07T04:06:34.384Z",
     "savedBy": "Zoe"
   },
   "xpSkillTrained": 1,
