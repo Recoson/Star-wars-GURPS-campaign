@@ -559,6 +559,30 @@
         "tier": 1,
         "pts": 5,
         "book": "Concordance"
+      },
+      {
+        "name": "Force Veil",
+        "skill": "IQ",
+        "fp": "2",
+        "tier": 2,
+        "pts": 10,
+        "book": "Concordance"
+      },
+      {
+        "name": "Force Anchor",
+        "skill": "IQ",
+        "fp": "8",
+        "tier": 3,
+        "pts": 20,
+        "book": "Concordance"
+      },
+      {
+        "name": "Unmaking",
+        "skill": "IQ",
+        "fp": "7",
+        "tier": 3,
+        "pts": 20,
+        "book": "Concordance"
       }
     ],
     "books": {
@@ -729,7 +753,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-07T01:22:45.940Z",
+    "savedAt": "2026-06-07T01:24:09.764Z",
     "savedBy": "Zoe"
   },
   "xpSkillTrained": 1
