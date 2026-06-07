@@ -766,7 +766,7 @@
     },
     "tradition": "",
     "activeBook": "Concordance",
-    "viewBook": "Living Path",
+    "viewBook": "Bonded Blade",
     "training": {
       "Concordance": {
         "tier": 1,
@@ -921,7 +921,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-07T01:33:16.171Z",
+    "savedAt": "2026-06-07T01:34:17.166Z",
     "savedBy": "Zoe"
   },
   "xpSkillTrained": 1
