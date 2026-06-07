@@ -481,14 +481,6 @@
     "saberPoints": 0,
     "powers": [
       {
-        "name": "Force Denial",
-        "skill": "IQ",
-        "fp": "3",
-        "tier": 1,
-        "pts": 5,
-        "book": "Concordance"
-      },
-      {
         "name": "Phantom Stride",
         "skill": "Will",
         "fp": "2",
@@ -582,6 +574,22 @@
         "fp": "7",
         "tier": 3,
         "pts": 20,
+        "book": "Concordance"
+      },
+      {
+        "name": "Force Equilibrium",
+        "skill": "IQ",
+        "fp": "4",
+        "tier": 1,
+        "pts": 5,
+        "book": "Concordance"
+      },
+      {
+        "name": "Force Rebuke",
+        "skill": "IQ",
+        "fp": "6",
+        "tier": 2,
+        "pts": 10,
         "book": "Concordance"
       }
     ],
@@ -753,7 +761,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-07T01:24:09.764Z",
+    "savedAt": "2026-06-07T01:25:44.357Z",
     "savedBy": "Zoe"
   },
   "xpSkillTrained": 1
