@@ -663,9 +663,103 @@ const SPACES=[
  {id:'loot',ico:'\u25C9',name:'Loot & Gear'},
  {id:'plan',ico:'\u2630',name:'Planner'},
  {id:'cast',ico:'\u263B',name:'Cast'},
- {id:'chron',ico:'\u270E',name:'Chronicle'}
+ {id:'chron',ico:'\u270E',name:'Chronicle'},
+ {id:'bridge',ico:'\u2708',name:'The Bridge'}
 ];
 function route(id){SPACES.forEach(s=>{const el=$('sp-'+s.id);if(el)el.classList.toggle('on',s.id===id);});document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.sp===id));if(id==='cast'&&typeof renderCastKept==='function')renderCastKept();window.scrollTo({top:0,behavior:'smooth'});}
+
+/* ═══ THE BRIDGE — fleet battle screen (components-are-the-health engine) ═══ */
+const BR_CAT={ // class: [DR,SPmax,DT,Hnd,SM]
+ 'Interceptor':[6,50,10,2,4],'Light Fighter':[7,45,10,1,4],'Heavy Fighter':[10,60,10,0,4],
+ 'Gunship':[14,80,15,-1,5],'Shuttle':[11,60,15,-1,5],'Light Freighter':[13,70,15,-2,6],
+ 'Heavy Freighter':[24,110,15,-2,6],'Corvette':[80,440,25,-3,8],'Frigate':[160,980,40,-4,9],'Cruiser':[216,1040,40,-5,10]};
+const BR_WPN=[['Light laser','6dx2',0,'l'],['Laser cannon','6dx3',0,'l'],['Heavy laser','6dx4',5,'l'],
+ ['Ion cannon','6dx2',0,'i'],['Ion railgun','6dx3',5,'i'],['Concussion msl','6dx4',10,'m'],
+ ['Proton torpedo','6dx6',20,'m'],['Thermite torp','6dx4',80,'m'],['Slug railgun','6dx6',20,'l'],
+ ['Point-defence','6dx2',0,'l'],['Turbolaser lt','6dx10',0,'c'],['Turbolaser hv','6dx20',0,'c']];
+const BR_PARTS=[['Hull',3],['Armour',3],['Sublight',2],['Weapon',2],['Sensors',2],['Shields',1],['Reactor',1],['Hyperdrive',1],['Life Support',1]];
+function brStore(){STORE.bridge=STORE.bridge||{ships:[],turn:1};return STORE.bridge}
+function brRoll(n){let t=0;for(let i=0;i<n;i++)t+=1+Math.floor(Math.random()*6);return t}
+function brParse(d){const m=d.match(/(\d+)dx(\d+)/);return brRoll(+m[1])*+m[2]}
+function brAdd(cls,side){const b=brStore();const c=BR_CAT[cls];
+ b.ships.push({id:uid(),name:cls,cls,side:side||'enemy',sp:c[1],dr:c[0],dt:c[2],hnd:c[3],sm:c[4],
+  gun:13,pilot:13,wpn:1,parts:BR_PARTS.map(x=>({c:x[0],w:x[1],st:0})),msg:'',ko:false});
+ saveStore();renderBridge()}
+function brDel(id){const b=brStore();b.ships=b.ships.filter(x=>x.id!==id);saveStore();renderBridge()}
+function brSet(id,f,v){const x=brStore().ships.find(s=>s.id===id);if(!x)return;x[f]=(f==='name'||f==='side')?v:+v;saveStore();if(f!=='name')renderBridge()}
+function brPip(id,j){const x=brStore().ships.find(s=>s.id===id);if(!x)return;x.parts[j].st=(x.parts[j].st+1)%3;saveStore();renderBridge()}
+function brDodge(x){return Math.max(0,3+Math.floor(x.pilot/3)+x.hnd)}
+function brDead(x){return x.parts.some(p=>(p.c==='Hull'||p.c==='Reactor'||p.c==='Sublight')&&p.st===2)}
+function brFire(aid){
+ const b=brStore();const a=b.ships.find(s=>s.id===aid);if(!a)return;
+ const tid=($('brT'+aid)||{}).value;const t=b.ships.find(s=>s.id===tid);
+ if(!t){a.msg='Pick a target.';renderBridge();return}
+ const W=BR_WPN[a.wpn];const track=(W[3]==='c'&&t.sm<=5)?-6:0;
+ const eff=a.gun+t.sm-4+track;
+ const atk=brRoll(3);const hit=atk<=eff&&atk<18;
+ const dg=brDodge(t)-(W[3]==='m'?-0:0);const dodged=hit&&brRoll(3)<=(W[3]==='m'?Math.max(0,dg-2):dg);
+ if(!hit){a.msg=W[0]+' → '+t.name+': MISS ('+atk+' vs '+eff+')';saveStore();renderBridge();return}
+ if(dodged){a.msg=W[0]+' → '+t.name+': dodged ('+brDodge(t)+')';saveStore();renderBridge();return}
+ let dmg=brParse(W[1]);const ion=W[3]==='i';let log=W[0]+' → '+t.name+': '+dmg+' dmg';
+ if(t.sp>0){const soak=Math.min(t.sp,ion?dmg*2:dmg);t.sp-=soak;dmg-=ion?Math.ceil(soak/2):soak;
+  log+=' · shields soak '+soak+(t.sp<=0?' — DOWN':' ('+t.sp+')');}
+ if(dmg>0){
+  let drm=1;t.parts.forEach(q=>{if(q.c==='Armour')drm=q.st===1?0.75:(q.st===2?0:1)});
+  if(!ion&&dmg-Math.max(0,Math.floor(t.dr*drm)-W[2])>=6*t.dt){t.parts.forEach(q=>q.st=2);log+=' · ☠ VAPORISED';}
+  else{
+   const pool=[];t.parts.forEach((q,j)=>{if(q.st<2&&!(ion&&(q.c==='Hull'||q.c==='Armour')))for(let k=0;k<q.w;k++)pool.push(j)});
+   if(pool.length){const j=pool[Math.floor(Math.random()*pool.length)];const part=t.parts[j];
+    const cov=(part.c==='Sublight'||part.c==='Weapon'||part.c==='Sensors')?0.4:1;
+    const dr=Math.max(0,Math.floor(t.dr*drm*cov)-W[2]);const pen=dmg-dr;
+    if(pen<t.dt)log+=' · '+(pen<=0?'armour holds':'superficial ('+pen+')');
+    else{const steps=pen>=2*t.dt?2:1;part.st=Math.min(2,part.st+steps);
+     log+=' · '+part.c+' '+(part.st===2?'✕ DESTROYED':'◐ damaged');
+     if(part.st===2&&part.c==='Hull')log+=' — BREACH, 1d min';
+     if(part.st===2&&part.c==='Reactor')log+=' — dead in space';}}
+  }}
+ a.msg=log;saveStore();renderBridge();
+}
+function brPrize(x){const base={'Interceptor':90000,'Light Fighter':80000,'Heavy Fighter':150000,'Gunship':900000,'Shuttle':400000,'Light Freighter':450000,'Heavy Freighter':800000,'Corvette':40000000,'Frigate':70000000,'Cruiser':120000000}[x.cls]||100000;
+ const ok=x.parts.filter(p=>p.st===0).length;return Math.round(base*ok/x.parts.length)}
+function brStrip(x){
+ const b=brStore();const pips=x.parts.map((p,j)=>'<span title="'+p.c+'" style="cursor:pointer;font-size:13px" onclick="brPip(\''+x.id+'\','+j+')">'+(p.st===0?'●':p.st===1?'◐':'✕')+'</span>').join(' ');
+ const opp=b.ships.filter(s=>s.id!==x.id).map(s=>'<option value="'+s.id+'">'+esc(s.name)+'</option>').join('');
+ const wsel=BR_WPN.map((w,k)=>'<option value="'+k+'"'+(k===x.wpn?' selected':'')+'>'+w[0]+(w[2]?' AP'+w[2]:'')+'</option>').join('');
+ const dead=brDead(x);
+ const board=dead?'<div style="margin-top:3px;padding:3px 6px;background:rgba(140,32,38,.15);border-radius:4px;font-size:11px">\u{1FA93} <b>BOARDABLE</b> — adrift. Prize ≈ <b>'+brPrize(x).toLocaleString()+' cr</b> × condition · crew resists per Tactics ladder (green 10 / trained 12-14 / elite 16+). Part VI.</div>':'';
+ return '<div style="border:1px solid '+(x.side==='pc'?'#2c4a63':'#5e1418')+';border-left-width:4px;border-radius:6px;padding:6px 8px;margin:6px 0;background:rgba(0,0,0,.12)'+(dead?';opacity:.85':'')+'">'
+ +'<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">'
+ +'<input value="'+esc(x.name)+'" onchange="brSet(\''+x.id+'\',\'name\',this.value)" style="font-weight:700;width:130px;background:transparent;border:none;color:inherit;border-bottom:1px dashed #555">'
+ +'<select onchange="brSet(\''+x.id+'\',\'side\',this.value)"><option value="enemy"'+(x.side==='enemy'?' selected':'')+'>enemy</option><option value="pc"'+(x.side==='pc'?' selected':'')+'>party</option><option value="ally"'+(x.side==='ally'?' selected':'')+'>ally</option></select>'
+ +'<span style="font-size:10px;opacity:.7">'+x.cls+' · DR '+x.dr+' · DT '+x.dt+' · Dodge '+brDodge(x)+' · SM+'+x.sm+'</span>'
+ +'<button onclick="brDel(\''+x.id+'\')" style="margin-left:auto">✕</button></div>'
+ +'<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:3px;font-size:11px">'
+ +'<span>SP <button onclick="brSet(\''+x.id+'\',\'sp\','+Math.max(0,x.sp-10)+')">−</button> <b>'+x.sp+'</b> <button onclick="brSet(\''+x.id+'\',\'sp\','+(x.sp+10)+')">+</button></span>'
+ +'<span>'+pips+'</span>'
+ +'<span>Gun <input type="number" value="'+x.gun+'" onchange="brSet(\''+x.id+'\',\'gun\',this.value)" style="width:38px"> Pilot <input type="number" value="'+x.pilot+'" onchange="brSet(\''+x.id+'\',\'pilot\',this.value)" style="width:38px"></span>'
+ +'</div>'
+ +'<div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:3px;font-size:11px">'
+ +'<select onchange="brSet(\''+x.id+'\',\'wpn\',this.value)">'+wsel+'</select> at <select id="brT'+x.id+'">'+opp+'</select>'
+ +'<button onclick="brFire(\''+x.id+'\')" style="font-weight:700">\u{1F52B} Fire</button>'
+ +(x.msg?'<span style="opacity:.9">'+esc(x.msg)+'</span>':'')
+ +'</div>'+board+'</div>';
+}
+function renderBridge(){const el=$('brList');if(!el)return;const b=brStore();
+ $('brTurn').textContent=b.turn;
+ el.innerHTML=b.ships.map(brStrip).join('')||'<div style="opacity:.6;padding:10px">No vessels on scope. Add ships above. Pipeline per shot: to-hit (Gun + SM − 4 range − tracking) → Dodge → shields → DR−AP (exposed 40%) → DT.</div>'}
+Object.assign(window,{brAdd,brDel,brSet,brPip,brFire,brStore,renderBridge});
+function buildBridge(sec){
+ sec.innerHTML='<div class="card"><h2 style="margin:4px 0">✈ The Bridge — fleet engagement</h2>'
+ +'<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0">'
+ +'<select id="brCls">'+Object.keys(BR_CAT).map(c=>'<option>'+c+'</option>').join('')+'</select>'
+ +'<button onclick="brAdd($(\'brCls\').value,\'enemy\')">+ enemy</button>'
+ +'<button onclick="brAdd($(\'brCls\').value,\'pc\')">+ party</button>'
+ +'<span style="margin-left:auto;font-size:12px">Turn <b id="brTurn">1</b> <button onclick="brStore().turn++;saveStore();renderBridge()">next ▶</button>'
+ +' <button onclick="if(confirm(\'Clear the scope?\')){brStore().ships=[];brStore().turn=1;saveStore();renderBridge()}">reset</button></span></div>'
+ +'<div id="brList"></div></div>';
+ renderBridge();
+}
+
 function init(){
  const main=$('main');main.innerHTML='';const nav=$('nav');nav.innerHTML='';
  SPACES.forEach(s=>{const b=document.createElement('button');b.innerHTML='<span class="ico">'+s.ico+'</span>'+s.name;b.dataset.sp=s.id;b.onclick=()=>route(s.id);nav.appendChild(b);const sec=document.createElement('section');sec.className='space';sec.id='sp-'+s.id;main.appendChild(sec);});
@@ -675,6 +769,7 @@ function init(){
  buildPlanner($('sp-plan'));
  buildCast($('sp-cast'));
  buildChronicle($('sp-chron'));
+ buildBridge($('sp-bridge'));
  route('forge');doForge();
  const sd=$('saveDot');if(sd)sd.textContent='Pass 1 · Forge live';
 }
