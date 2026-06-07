@@ -738,6 +738,103 @@ const SKEY='kotor_console_v4';
 function loadStore(){try{return JSON.parse(localStorage.getItem(SKEY))||{kept:[]};}catch(e){return{kept:[]};}}
 function saveStore(){try{localStorage.setItem(SKEY,JSON.stringify(STORE));}catch(e){}}
 let STORE=loadStore();
+/* ═══ CAMPAIGN CHRONICLE SEED (from Chatni's logs / Galactic Record, c.3943–3940 BBY) ═══ */
+(function seedChronicle(){
+ if(STORE.seedChronicleV1)return;
+ STORE.threads=STORE.threads||[];STORE.records=STORE.records||[];STORE.factions=STORE.factions||[];STORE.cast=STORE.cast||[];
+ const hasT=t=>STORE.threads.some(x=>(x.title||'')===t);
+ const hasR=t=>STORE.records.some(x=>(x.title||'')===t);
+ const hasF=n=>STORE.factions.some(x=>(x.name||'')===n);
+ const hasC=n=>STORE.cast.some(x=>(x.name||'')===n);
+ const T=(title,cat,status,faction,situation,payoff)=>{if(!hasT(title))STORE.threads.push({id:uid(),title,scale:'M',status,situation,category:cat,askedBy:'',faction,beats:[],who:'',where:'',payoff:payoff||'',notes:'',open:false})};
+ const R=(title,date,summary)=>{if(!hasR(title))STORE.records.push({id:uid(),kind:'crew',ord:Date.now()+STORE.records.length,title,date,summary,full:'',tags:'chronicle, session'})};
+ const F=(name,standing,notes)=>{if(!hasF(name))STORE.factions.push({id:uid(),name,standing,relationship:'none',notes})};
+ const C=(name,species,role,status,notes)=>{if(!hasC(name))STORE.cast.push({id:uid(),name,side:'npc',species,role,status,notes})};
+
+ /* ── MAIN QUESTS ── */
+ T('The Genoharadan Remnant','Main Quest','active','Genoharadan','Kabaal ambush killed 5 of 6 (Kovacs, the Prince, the scientist, Polard — shot by the Hunter himself, "for the Republic"). The Hunter proved synthetic; GOTO claims he is dead and is liquidating his assets, but Hunter-clones have been sighted on Alderaan. The Black Codex went down with the station. Still at large: Geneticist Vein (force-cloning research), Baroness Elo (Banking Guild), Admiral Raan (informed, not core). Thousands of grown shapeshifters remain off-planet; priority list: GOTO > Jedi > Cardina > Kadaar > Mandalorians > Open Palm > Organa > Republic > Bankers > Czerka.','Dismantle the network; recover or destroy the Black Codex.');
+ T('The Foundry & Revan\u2019s Record','Main Quest','active','','Rakatan tablet memorised at the Kabaal; Czerka actively researching Rakatan technology and force arrays (Kashyyyk array activated). Meetra wants the Foundry found before deciding what to do with it; Mical consulted, agrees with Chatni\u2019s caution.','Locate the Foundry before Czerka or worse does.');
+ T('The Star Forge Return Protocol','Main Quest','active','Czerka Corporation','Decoded Czerka intercepts: 14 years of probe tracking, some via HK-47, and a return-call protocol to the Star Forge dated ~2 years out (clock is running).','Be there when the call goes out — or stop it.');
+ T('The Outer Rim Darkness','Main Quest','active','','DeLuca\u2019s father is somewhere in deep space — DeLuca mirrors Visas\u2019s bond-pattern to her master Nihilus, the planet-killer. Dark-side entities lure force-users to the rims. The Delma force beast sensed Chatni and vanished; Tylo fought and pushed it back. An unknown colossal ship obliterated the Czerka Hoth station.','Identify the power moving in the unknown regions.');
+ T('The Matriarch\u2019s Mark','Main Quest','active','Dathomir Nightsisters','Chatni bears the matriarchal candidate tattoos; Mother Githzerion fell to her in the psychic battle. Six candidates dead, a new rival emerged 1\u20132 years ago. Iktotchi fire-sect prophecy: if she unites the nightsisters she pushes the galaxy into darkness. Mical\u2019s options: become Nightmother / find a new well and kill Dathomir\u2019s / re-bond but separate. A light-side well on Tython would accept her — at a price.','Chatni chooses her fate before judgement finds her.');
+ T('Bel Savas — the Buried Vault','Main Quest','active','','Rakatan vault under the artificial ice-world: escaped Gormak slaves, hundreds of thousands in stasis, and at the bottom Soah the Infernal One, last Rakatan emperor, imprisoned by his own kind for experimenting on his people.','Decide the fate of Soah and the sleeping Gormak.');
+ T('The Jedi in Stasis','Main Quest','active','Restored Jedi Order','Rakatan archive on Kashyyyk (password: Satele Shan) yielded a holo of hundreds of supposedly-dead Jedi held in stasis on a named world, plus intel on the Chiss/Open Palm systems.','Mount the recovery before someone else reads the same archive.');
+ T('The New Order & Summit Politics','Main Quest','active','Restored Jedi Order','Iktotchi sanctioned the crew\u2019s new order (Tylo titled). Meetra\u2019s leadership hardens — mass mediation bonds at Csilla, pregnancy straining her control. Cardina (now ruling Alderaan) is building counter-alliances and told Chatni she must eventually choose a side.','Keep the order from becoming either Meetra\u2019s hammer or Cardina\u2019s pawn.');
+
+ /* ── SIDE OBJECTIVES ── */
+ T('Kressa\u2019s payment — 8M + the planet','Side Objective','active','Galactic Republic','Chancellor Cressa owes 8M cr + a planet for the Genoharadan job; held in escrow over Tylo\u2019s 60% demand. Unresolved and salty.','Settle the split; collect.');
+ T('Crinto mercenary group — owed mission','Side Objective','active','','Saved from the rakghoul zone on Tatooine; they owe the crew one mission, plus the 5k they grudged.','Call in the favour at the right moment.');
+ T('Kultak\u2019s debt','Side Objective','active','Mandalorian Clans','The Mandalorian archivist owes the crew; already useful once in the Czerka archives on Kashyyyk.','');
+ T('Baron Venlath\u2019s translocator','Side Objective','active','Galactic Republic','Touch-read at Csilla: \u201cBetter keep your end of the bargain.\u201d The Baron is connected to someone.','Find out what bargain — and with whom.');
+ T('Luxa, Second Hand of the Exchange','Side Objective','active','The Exchange','Exchange declared the Chiss\u2019 first official enemy after the summit. Luxa fought the Hunter and lived (mind briefly machine-dead). His payment for the Alra rescue was suspiciously cheap; motives unclear, flirtation constant.','Stay ahead of whatever he\u2019s setting up.');
+ T('Mon Gazza\u2019s crusade','Side Objective','active','Galactic Republic','Spared twice, the senator now runs his own anti-corruption movement; was drugged and re-questioned at Csilla by Detective Vesh\u2019ra\u2019sabosen about Chatni\u2019s timeline.','Protect the investment; he is being used to date her movements.');
+ T('The 45 million credits','Side Objective','active','','The laundered fortune from the deep expedition sits in the hold. Heavy, traceable, useful.','Launder or deploy it.');
+ T('Holocron fragment hunt','Side Objective','active','','Small holocron = 10 fragments + frame (7-day forging); large = 50 + kyber + 5 frames (30 days). Fragments are spice-payload rare; finding one is an event.','Stock the forge.');
+ T('Chiss attention','Side Objective','active','Chiss Ascendancy','Agent Nerudo: \u201cI would appreciate if you\u2019d stop tracking me across the galaxy.\u201d Detective Vesh\u2019ra\u2019sabosen is building a timeline of Chatni\u2019s involvement. The Ascendancy is polite, thorough, and watching.','Decide whether the Chiss are problem or partner.');
+ T('Alra\u2019s exile clock','Side Objective','active','Mandalorian Clans','Exiled six months to ride with the crew; the clock runs. Best girl.','Renew, return, or recruit permanently.');
+ T('Jera and the bowl\u2019s harvest','Side Objective','active','Sith Remnant','Jera tricked Chatni into the blood-bowl and harvested its power; she also matches the description of the Sith the Genoharadan courted to hunt Chatni.','The reckoning is owed.');
+
+ /* ── JOURNAL — THE CREW\u2019S TRAIL ── */
+ R('Ch. I — Alderaan: The Iktotchi in the Dark','c. 3943 BBY','Chatni (as \u201cNerry\u201d, in Cardina Thul\u2019s service) is found by Tylo Dara, Iktotchi ex-Jedi hunting his premonitions, with Sekan Nightfall in tow. Casino bait, the train raid, the cleared house: captive Iktotchi freed, working partnership forged in mutual irritation.');
+ R('Ch. II — The Deep Expedition','c. 3943 BBY','Six months for House Thul with DeLuca: the ship graveyard, the laundered trillions (45M kept), warp-fuel fever dreams, submarine training, three drowned bases, the deal with Sith Lady Jera, lightsaber metals yoinked, the Jedi temple opened by DeLuca \u2014 whose amplified meditation lit up hundreds of force-sensitives for the Silent Hand. Chatni nearly died to a ship cannon; weeks in kolto. Ship renamed Dara Dara.');
+ R('Ch. III — Dxun','c. 3942 BBY','Mandalorian camp: Sekan\u2019s duels, Canderous met, Freedon Nadd\u2019s tomb located via spirit sight, Alra won for six months, a bone-door left aboard Chatni\u2019s parked ship.');
+ R('Ch. IV — Malachor V','c. 3942 BBY','Suits from Nar Shaddaa, then the dead world: the Sith academy, Tylo touched the saber and met Kreia \u2014 grey now \u2014 and the planet died behind them.');
+ R('Ch. V — Ilum','c. 3942 BBY','Meetra\u2019s gathering: Brianna, Mira, Jera, Master Voll. The blood-bowl deception, Voll force-severed via Chatni\u2019s gas trap and Jera\u2019s rip, the crystal excavated, missions assigned.');
+ R('Ch. VI — Makeb','c. 3942 BBY','The long detour: Satele Shan and Kao Cen Darach recruited, lightsaber finished en route, lakes, bruises, stances learned.');
+ R('Ch. VII — The Leviathan Strike','c. 3942 BBY','The rescue: doors and a 10 kg bomb, Meetra-funded. Perfect insertion, the prisoner extracted (artifact in hand), 26,000 dead in the detonation. Chatni felt every one of them.');
+ R('Ch. VIII — The Matriarch\u2019s Mark','c. 3942 BBY','Meditating on the deaths, Chatni was attacked in-mind by the old mothers; she killed Mother Githzerion, woke tattooed as a matriarchal candidate, and gained Spirit Sever.');
+ R('Ch. IX — Dxun & Tatooine','c. 3941 BBY','Canderous yields to Torren Wren. Tatooine ship recovery: rakghoul quarantine breached for the Crinto mercs, Alra nearly lost, Luxa\u2019s costly help bought, ships delivered.');
+ R('Ch. X — Kashyyyk','c. 3941 BBY','Battle meditation proven on Mandalorian hunts. Tylo\u2019s teleport accident: the Rakatan archive, Revan\u2019s alliance, password \u201cSatele Shan\u201d, the stasis-Jedi holo, Chiss intel. Chatni won 400k betting on duels.');
+ R('Ch. XI — The Citadel','c. 3941 BBY','The summit: GOTO named her, named the Genoharadan, and exploded on exit. Kressa\u2019s hunt commissioned. Cardina crowned and given the Jedi. Luxa promoted. Tylo\u2019s shared war-premonition with General Kladar.');
+ R('Ch. XII — The Genoharadan Hunt','c. 3941 BBY','Kashyyyk archives (Kultak), Herdessa (GOTO\u2019s ledger, Mon Gazza\u2019s tower), the Hoth station raid and the unknown ship that erased it, Valia\u2019s kidnapping with Atton (Vessa\u2019s skin-grafts), her mind broken: 14 members, 5 bodies, the Kabaal. The ambush: five dead, the Hunter synthetic, the Codex lost with the station.');
+ R('Ch. XIII — Manaan','c. 3941 BBY','Atton\u2019s holiday: the ring, the best food ever, underwater enlightenment, a held hand, and a terrible lightsaber lesson.');
+ R('Ch. XIV — Iktotch','c. 3941 BBY','Tylo honoured and contracted; the new order sanctioned. The fire-sect\u2019s history of Dathomir and the prophecy: unite the nightsisters and the galaxy darkens.');
+ R('Ch. XV — Alderaan, Again','c. 3941 BBY','Queen Cardina\u2019s rebuilt capital; the Jedi enclave (Mira teaching, Bao-Dur\u2019s shields, younglings); the 45M lifted aboard; tattoo meditation: six candidates dead, one new.');
+ R('Ch. XVI — Tython','c. 3941 BBY','Candy mended; Mical\u2019s counsel on the three fates; the light-side well found; the master-apprentice bond with Tylo ended cleanly.');
+ R('Ch. XVII — Csilla','c. 3941 BBY','The Chiss summit and the shapeshifter crisis: 35 infiltrated, the priority list, Meetra\u2019s mass mediation and revealed pregnancy, the lobby battles, Chatni\u2019s knee, Nerudo\u2019s interrogation, Hunter vs Luxa, the Exchange declared enemy. The Delma beast sensed.');
+ R('Ch. XVIII — Ord Cestus','c. 3941 BBY','(Per the Galactic Record \u2014 see record for detail.)');
+ R('Ch. XIX — Tython, Again','c. 3940 BBY','(Per the Galactic Record \u2014 see record for detail.)');
+ R('Ch. XX — Bel Savas: The Buried Vault','c. 3940 BBY','The artificial ice-world\u2019s Rakatan vault: escaped Gormak, hundreds of thousands in stasis, and Soah the Infernal One imprisoned at the bottom.');
+
+ /* ── FACTIONS (members listed for pinpointing; cast notes carry faction tags) ── */
+ F('Crew of the Dara Dara','allied','PCs & companions: Chatni, Tylo Dara, Sekan Nightfall, DeLuca, Alra Wren, Canderous Ordo, T3-M4, (Satele Shan riding along).');
+ F('Restored Jedi Order','friendly-wary','Meetra Surik (leader, pregnant), Atton Rand, Brianna, Mira, Mical, Bao-Dur, Kao Cen Darach, Visas Marr. Based via Cardina\u2019s grant; politics hardening.');
+ F('Mandalorian Clans','allied','Mandalore Torren Wren; Canderous (with crew), Kultak (owes debt), Drax (chieftain), Brunos (bonded tracker), Sekan (protector). Relocated to Kashyyyk.');
+ F('Galactic Republic','transactional','Chancellor Cressa (owes 8M + planet), Senator Mon Gazza (asset), Baron Venlath (suspicious translocator), Senator Skassa, Admiral Kaath, Mallow Wok.');
+ F('Houses of Alderaan','allied','Queen Cardina Thul \u2014 patron, friend, and rival pole to Meetra. Hosts the Jedi enclave.');
+ F('Chiss Ascendancy','wary','Agent Nerudo, Detective Vesh\u2019ra\u2019sabosen. Watching Chatni; true neutrals warning the galaxy about the Open Palm.');
+ F('The Exchange','volatile','GOTO (calculating, anti-Genoharadan), Luxa (Second Hand). Now the Chiss\u2019 first official enemy.');
+ F('The Genoharadan','enemy','Shadow cabal, 14 members / 5 bodies. Dead: Polard, Kovacs, the Prince, the scientist. At large: the Hunter (synthetic, \u201cdead\u201d, clones sighted), Geneticist Vein, Baroness Elo; Admiral Raan informed.');
+ F('The Silent Hand','enemy','Force-sensitive hunters; got their start from the Genoharadan. Free zones: Ilum, Nar Shaddaa, Makeb.');
+ F('The Open Palm','hostile-unknown','Militarising 4 years; embedded with the Chiss; watched by them.');
+ F('Czerka Corporation','enemy','Director Polard (dead, was Chatni\u2019s handler), Jana Lorso. Researching Rakatan tech & force arrays; Star Forge protocol in their data.');
+ F('Black Cell','enemy','Chatni\u2019s former owners. Outranked by the Genoharadan; GOTO can kill them.');
+ F('Dathomir Nightsisters','blood','Mother Githzerion (dead), the Rival Candidate (new, unknown). The prophecy hangs over Chatni.');
+ F('Iktotchi Sects','allied','General Kladar (war premonition), fire/wind/storm speakers. Sanctioned the new order.');
+ F('Sith Remnant','enemy','Jera (bowl-thief, artifact-hunter), Lord Ratek, the shadow of Nihilus in the outer dark.');
+
+ /* ── KEY CAST (faction + last seen in notes for search-pinpointing) ── */
+ C('Meetra Surik','Human','Jedi leader \u00b7 the Exile','alive','[Restored Jedi Order] Last seen: Csilla/Tython \u2014 pregnant, bonds-heavy, hardening. Watch her decisions.');
+ C('Tylo Dara','Iktotchi','ex-Jedi master \u00b7 crew','alive','[Crew] Premonitions; titled by Iktotch; 60% planet dispute with Chatni unresolved.');
+ C('Atton Rand','Human','Jedi \u00b7 scoundrel','alive','[Restored Jedi Order] Last seen: Manaan/Iktotch \u2014 ring given, hand held. Targets near Chatni get hunted.');
+ C('Cardina Thul','Human','Queen of Alderaan','alive','[Houses of Alderaan] Last seen: Csilla \u2014 building counter-alliances; wants Chatni to choose a side.');
+ C('Luxa','Zeltron','Second Hand of the Exchange','alive','[Exchange] Last seen: Csilla \u2014 fought the Hunter, survived mind-dead, winked in cuffs.');
+ C('GOTO','Droid','Exchange overmind','alive','[Exchange] Claims the Hunter is dead; liquidating his assets; holds the Black Cell\u2019s leash.');
+ C('The Hunter','Synthetic','Genoharadan enforcer','unknown','[Genoharadan] \u201cKilled\u201d by GOTO after Csilla; clones sighted on Alderaan; head taken at the Kabaal showed sparks, no blood.');
+ C('Geneticist Vein','Arkanian','Genoharadan \u2014 force-cloning research','alive','[Genoharadan] At large. The 5-bodies/14-members trick is his work.');
+ C('Baroness Elo','Human','Genoharadan \u2014 Banking Guild','alive','[Genoharadan] At large; whispered with Magister Hoola at Csilla.');
+ C('Jera','Sith','Sith Lady \u00b7 bowl-thief','alive','[Sith Remnant] Holds the harvested nightsister power; matches the Genoharadan\u2019s hired Sith description.');
+ C('Torren Wren','Mandalorian','Mandalore','alive','[Mandalorian Clans] Last seen: Kashyyyk \u2014 \u201cwill probably reach out.\u201d');
+ C('Nerudo','Chiss','CEDF interrogator','alive','[Chiss Ascendancy] \u201cStop tracking me across the galaxy.\u201d He knows more than he says.');
+ C('Detective Vesh\u2019ra\u2019sabosen','Chiss','investigator','alive','[Chiss Ascendancy] Building a timeline of Chatni\u2019s Genoharadan involvement via Mon Gazza.');
+ C('Chancellor Cressa','Human','Supreme Chancellor','alive','[Republic] Owes 8M + a planet, held over the crew\u2019s split dispute.');
+ C('Senator Mon Gazza','Human','senator \u00b7 reluctant asset','alive','[Republic] Spared twice; running his own movement; drugged at Csilla for intel on Chatni.');
+ C('Soah the Infernal One','Rakata','last Rakatan emperor','imprisoned','[—] Bel Savas vault, bottom level. Imprisoned by his own kind. Do not open casually.');
+ C('Mical','Human','Jedi chronicler \u00b7 the Disciple','alive','[Restored Jedi Order] Tython. Gave Chatni her three fates; agrees with her about Meetra.');
+ C('The Rival Candidate','Dathomiri','matriarchal candidate','unknown','[Dathomir] Emerged 1\u20132 years ago. Six others are dead. Chatni makes seven minus six.');
+ STORE.seedChronicleV1=true;
+ saveStore();
+})();
 function keepCurrent(){if(!lastForge){toast('Forge something first');return;}const b=lastForge.block;
  STORE.kept.unshift({id:'k'+Date.now().toString(36)+Math.floor(Math.random()*1e4).toString(36),name:lastForge.name,species:lastForge.species,arch:b.archetype,tier:b.tier,cp:b.cp,force:b.force,block:b});
  saveStore();renderKept();toast('Kept '+lastForge.name);}
