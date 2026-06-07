@@ -977,7 +977,7 @@
     "cyber": []
   },
   "conditions": {},
-  "credits": 50,
+  "credits": 1700000,
   "creditLog": [],
   "combat": {
     "hp": null,
@@ -1013,7 +1013,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-07T02:02:19.596Z",
+    "savedAt": "2026-06-07T02:18:33.169Z",
     "savedBy": "Zoe"
   },
   "xpSkillTrained": 1,
