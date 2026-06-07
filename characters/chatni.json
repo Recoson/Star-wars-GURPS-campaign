@@ -331,7 +331,7 @@
       "name": "Teaching",
       "attr": "IQ",
       "diff": "A",
-      "pts": 1
+      "pts": 4
     },
     {
       "name": "Gambling",
@@ -1020,7 +1020,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-07T04:06:34.384Z",
+    "savedAt": "2026-06-07T06:34:36.534Z",
     "savedBy": "Zoe"
   },
   "xpSkillTrained": 1,
