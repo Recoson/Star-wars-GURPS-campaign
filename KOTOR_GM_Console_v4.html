@@ -373,6 +373,13 @@ select{cursor:pointer;}
 .cc-rel-row{display:flex;align-items:center;gap:8px;margin:2px 0 6px}
 .cc-rl{font-size:10px;color:var(--dim);font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
 .cc-rel-row select{flex:1;min-width:0}
+
+/* REVpolish */
+@media (prefers-reduced-motion: no-preference){
+ .cast-card,.fac-card,.rec-card{transition:box-shadow .15s,transform .1s}
+ .cast-card:hover,.fac-card:hover,.rec-card:hover{box-shadow:0 2px 9px rgba(0,0,0,.2)}
+ button{transition:filter .12s}
+}
 </style>
 </head>
 <body>

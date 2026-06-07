@@ -552,6 +552,19 @@ input[type=checkbox]{accent-color:var(--cyan)}
  #printSheet .ps-foot b{font-family:var(--mono)}
  #printSheet .ps-pagebreak{break-before:page}
 }
+
+/* ── REVpolish: motion (respects prefers-reduced-motion) ── */
+@media (prefers-reduced-motion: no-preference){
+ #tabContent>*{animation:tabIn .18s ease-out}
+ @keyframes tabIn{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+ #saveIndicator{transition:color .3s}
+ button{transition:filter .12s, transform .08s}
+ button:active{transform:scale(.96)}
+ .section{transition:box-shadow .15s}
+ .section:hover{box-shadow:0 1px 8px rgba(0,0,0,.18)}
+ details>*:not(summary){animation:tabIn .15s ease-out}
+}
+html{scroll-behavior:smooth}
 </style>
 </head>
 <body>
@@ -1204,12 +1217,11 @@ function skillLevel(sk){
  // higher levels must come from invested points (see forceSkillCap above).
  const fcap=forceSkillCap(sk);
  if(fcap&&fcap.capped) aval=fcap.cap;
- // GURPS 4e point-to-level
- let bonus;
- if(diff==='E'){bonus=pts>=1?(pts===1?0:pts>=2&&pts<4?1:pts<8?2:2+Math.floor((pts-4)/4)):0}
- else if(diff==='A'){bonus=pts>=1?(pts===1?-1:pts>=2&&pts<4?0:pts<8?1:1+Math.floor((pts-4)/4)):0}
- else if(diff==='H'){bonus=pts>=1?(pts===1?-2:pts>=2&&pts<4?-1:pts<8?0:Math.floor((pts-4)/4)):0}
- else{/*VH*/bonus=pts>=1?(pts===1?-3:pts>=2&&pts<4?-2:pts<8?-1:-1+Math.floor((pts-4)/4)):0}
+ // GURPS 4e point-to-level — closed form: relative level = base(diff) + steps(pts)
+ // steps: 1pt→0 · 2pt→+1 · 4pt→+2 · then +1 per 4pts. base: E 0 · A −1 · H −2 · VH −3.
+ const DIFF_BASE={E:0,A:-1,H:-2,VH:-3};
+ const steps=pts<=0?null:(pts===1?0:(pts<4?1:(pts<8?2:2+Math.floor((pts-8)/4)+1)));
+ const bonus=steps==null?0:(DIFF_BASE[diff]!==undefined?DIFF_BASE[diff]:-1)+steps;
  return aval+bonus+(+sk.bonus||0);
 }
 

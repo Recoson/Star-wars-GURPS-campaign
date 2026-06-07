@@ -35,6 +35,13 @@
 .slot-legend .lt{font-weight:700;margin-right:.5em;text-transform:uppercase;letter-spacing:.06em;}
 .slot-legend .li{display:inline-block;margin:0 1em .25em 0;white-space:nowrap;}
 .slot-legend .li span:last-child{color:#555;}
+
+/* REVpolish: smooth reading */
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: no-preference){
+ .power,.callout{transition:box-shadow .15s,border-color .15s}
+ .power:hover{box-shadow:0 2px 10px rgba(0,0,0,.12)}
+}
 </style>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@500;600;700&display=swap');
@@ -9250,6 +9257,7 @@ Life endures
 <p><b>Soul Bind Holocron. <span class="pill moss">NECRO</span></b> &nbsp; A specific small holocron set aside to hold up to <b>4 mindless soul-tethers</b> (see <i>Soul Bind</i>, Tier III). Tethered souls power <i>Bound Voice</i>, contribute to <i>Echo Shriek</i>, anchor <i>Holocron Sentry</i> and <i>The Borrowed Face</i>, and may be drawn upon by <i>Mother’s Calling</i>. Soul-tethers do not occupy face slots — the Soul Bind holocron’s faces are repurposed for the tether function. A second Soul Bind holocron may be prepared at any time, but no single practitioner may carry more than two; tether-slots are not pooled across holocrons (each holds its own 4).</p>
 
 <p><b>Shell Holocrons — Anchors and Links. <span class="pill house">RULE</span></b> &nbsp; A small holocron with <b>no working imbued on any face</b> is a <b>shell</b> — an empty lattice. Shells are not wasted: they are the anchors of the <i>Mist-Fold</i> portal working (Tier IV), and they serve as the inert link-points a Mist-Fold ritual binds together. A shell holds a <b>portal-link</b> the way the Soul Bind holocron holds a tether — it is a slot for a connection rather than a charge of power. A shell may be inscribed with a working at any time (a 24-hour reset is not needed to fill an <i>empty</i> face, only to wipe an existing one), at which point it ceases to be a shell and can no longer anchor a portal-link until cleared again. Carrying several shells is how she keeps multiple Mist-Fold destinations prepared.</p>
+<p class="rule"><span class="pill teal">RULE</span> <b>Portal charge &amp; the font of power.</b> A Mist-Fold transit drains its anchors: <b>small holocrons used in a portal must be re-linked and recharged after the fold</b> (full preparation — 1 hour of Ritual Magic per link) before they will carry another. The exception is a <b>large holocron set up at a font of Force power</b> (a nexus): it feeds on the place, holds its link indefinitely, and any small holocron folded to it needs no recharge afterward. She may fold <b>to</b> the large holocron itself as a destination. Links may be re-arranged — break a small holocron's link and bind it to the large one (or to a different small) with the same full preparation; a lattice holds one link at a time. The fold window remains 3 seconds, whatever the anchor.</p>
 </div>
 
 <h2 class="section">The Ritual Ladder</h2>
