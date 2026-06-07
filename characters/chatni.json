@@ -559,6 +559,14 @@
     {
       "name": "Saber Throw",
       "active": false
+    },
+    {
+      "name": "Trakata",
+      "active": false
+    },
+    {
+      "name": "Bolt Deflection",
+      "active": false
     }
   ],
   "stances": [],
@@ -636,7 +644,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-07T01:15:37.980Z",
+    "savedAt": "2026-06-07T01:16:38.322Z",
     "savedBy": "Zoe"
   },
   "xpSkillTrained": 1
