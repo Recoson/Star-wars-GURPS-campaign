@@ -847,7 +847,99 @@
       "active": false
     }
   ],
-  "vehicles": [],
+  "vehicles": [
+    {
+      "name": "X-70B Phantom-class prototype",
+      "cat": "Light Freighter",
+      "hullDR": "62",
+      "shieldDR": "85",
+      "shieldNow": 85,
+      "hpMax": 1080,
+      "hpNow": 1080,
+      "weapons": "2× quad laser turrets; sensor-stealth profile",
+      "crew": "2",
+      "fuel": "30/6",
+      "cost": "1,200,000",
+      "lc": "Res",
+      "notes": "Imperial recon prototype. Cloak + passive sensors — vanishes from scopes. (SWTOR Imperial Agent ship.)",
+      "parts": [
+        {
+          "cat": "Hull",
+          "name": "Hull plating",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Sublight",
+          "name": "Sublight engines",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Reactor",
+          "name": "Power plant",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Shields",
+          "name": "Shield generator",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Sensors",
+          "name": "Sensor array",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Targeting",
+          "name": "Targeting computer",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Life Support",
+          "name": "Life-support system",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Astrogation",
+          "name": "Navicomputer",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Hyperdrive",
+          "name": "Hyperdrive motivator",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Crew",
+          "name": "Crew quarters",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Cargo",
+          "name": "Cargo hold",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Weapon",
+          "name": "Defensive turret",
+          "status": "ok",
+          "hpPct": 100
+        }
+      ],
+      "rfNow": 30,
+      "hfNow": 6
+    }
+  ],
   "droids": [],
   "customDB": {
     "weapons": [
@@ -921,8 +1013,15 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-07T01:41:57.446Z",
+    "savedAt": "2026-06-07T01:56:03.993Z",
     "savedBy": "Zoe"
   },
-  "xpSkillTrained": 1
+  "xpSkillTrained": 1,
+  "builder": {
+    "ship": {
+      "parts": {},
+      "name": "My Custom Vessel",
+      "role": ""
+    }
+  }
 }
