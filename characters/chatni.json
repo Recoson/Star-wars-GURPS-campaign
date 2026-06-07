@@ -695,6 +695,62 @@
         "tier": 2,
         "pts": 10,
         "book": "Common Force"
+      },
+      {
+        "name": "Force Speed",
+        "skill": "DX",
+        "fp": "1",
+        "tier": 2,
+        "pts": 10,
+        "book": "Common Force"
+      },
+      {
+        "name": "Force Step",
+        "skill": "DX",
+        "fp": "1",
+        "tier": 2,
+        "pts": 10,
+        "book": "Common Force"
+      },
+      {
+        "name": "Force Wave",
+        "skill": "ST",
+        "fp": "5",
+        "tier": 3,
+        "pts": 20,
+        "book": "Common Force"
+      },
+      {
+        "name": "Battle Meditation",
+        "skill": "Will",
+        "fp": "20",
+        "tier": 4,
+        "pts": 35,
+        "book": "Common Force"
+      },
+      {
+        "name": "Force Guidance",
+        "skill": "IQ",
+        "fp": "1",
+        "tier": 1,
+        "pts": 5,
+        "book": "Living Path"
+      },
+      {
+        "name": "Force Soothing",
+        "skill": "IQ",
+        "fp": "1",
+        "tier": 1,
+        "pts": 5,
+        "book": "Living Path"
+      },
+      {
+        "name": "Revitalize",
+        "skill": "IQ",
+        "fp": "10",
+        "tier": 3,
+        "pts": 20,
+        "book": "Living Path"
       }
     ],
     "books": {
@@ -710,7 +766,7 @@
     },
     "tradition": "",
     "activeBook": "Concordance",
-    "viewBook": "Common Force",
+    "viewBook": "Living Path",
     "training": {
       "Concordance": {
         "tier": 1,
@@ -865,7 +921,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-07T01:32:05.008Z",
+    "savedAt": "2026-06-07T01:33:16.171Z",
     "savedBy": "Zoe"
   },
   "xpSkillTrained": 1
