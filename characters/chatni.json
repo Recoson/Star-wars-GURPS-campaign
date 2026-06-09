@@ -362,7 +362,7 @@
     },
     {
       "name": "Tutaminis (Energy Absorption)",
-      "pts": 4,
+      "pts": 1,
       "attr": "Force",
       "diff": "VH",
       "spec": ""
@@ -1035,7 +1035,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-09T09:40:58.547Z",
+    "savedAt": "2026-06-09T09:42:52.658Z",
     "savedBy": "Zoe"
   },
   "xpSkillTrained": 1,
