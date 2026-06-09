@@ -359,6 +359,13 @@
       "attr": "IQ",
       "diff": "A",
       "spec": "Land"
+    },
+    {
+      "name": "Tutaminis (Energy Absorption)",
+      "pts": 4,
+      "attr": "Force",
+      "diff": "VH",
+      "spec": ""
     }
   ],
   "traits": [
@@ -1028,7 +1035,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-09T09:39:07.459Z",
+    "savedAt": "2026-06-09T09:40:58.547Z",
     "savedBy": "Zoe"
   },
   "xpSkillTrained": 1,
