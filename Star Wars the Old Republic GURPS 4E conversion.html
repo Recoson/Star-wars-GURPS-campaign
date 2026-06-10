@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Force &amp; the Fight — The Complete Compendium</title>
+<title>Star Wars the Old Republic GURPS 4E conversion</title>
 <style>@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@500;600;700&display=swap');
 /* ===== The Path (scoped to .path-doc) ===== */
 .path-doc {
@@ -1789,6 +1789,28 @@ html { scroll-behavior: smooth; }
 
 .statgrid .stat-sum{grid-column:1/-1;font-style:italic;font-size:8.4pt;line-height:1.32;color:inherit;opacity:.9;margin:0 0 1.8mm;padding-bottom:1.5mm;border-bottom:1px solid rgba(128,120,100,.35);}
 </style>
+
+<style id="contrast-patch">
+/* ── readability patch (2026-06-10): fixes invisible / low-contrast text ── */
+/* 1 · Unchained Path (.dark-section): elements that inherited the light theme's
+       near-black ink onto the obsidian background */
+.dark-section p, .dark-section li, .dark-section em,
+.dark-section .lbl, .dark-section .rule { color:#e8c8c4; }
+.dark-section b, .dark-section strong, .dark-section h3, .dark-section h4 { color:#f0d8d4; }
+/* 2 · paper-striped .tbl tables inside the dark book: odd rows were invisible
+       (transparent over obsidian), even rows were light — unify as dark tables */
+.dark-section table { background:#1f0e0e; border-color:#6a3030; }
+.dark-section td { color:#e8c8c4; border-color:#5a2424; }
+.dark-section td b, .dark-section td strong { color:#f0d8d4; }
+.dark-section tbody tr:nth-child(even) { background:rgba(196,24,24,.10); }
+.dark-section th { background:#2a0d0d; color:#e83232; border-color:#5a2424; }
+/* 3 · sidebar TOC numbers: per-book accent vars were too dark on the near-black nav */
+.sidenav .toc__n { color:color-mix(in srgb, var(--acc,#7a1818) 50%, #d8cfc0 50%); }
+/* 4 · action-cost badges: pale --sc palette on paper — darken every variant */
+.slot-badge { color:color-mix(in srgb, var(--sc,#3fae5a) 60%, #14100c 40%) !important; }
+/* 5 · gold TOC dingbats in the Force codex */
+.book--force .toc-entry .num { color:#8a6f33; }
+</style>
 </head>
 <body>
 <button class="sidenav-toggle" aria-label="Open navigation">☰ Navigate</button>
@@ -1830,7 +1852,7 @@ html { scroll-behavior: smooth; }
   </details>
   <details class="sidenav__book" style="--acc:#5a4a6a">
     <summary><span class="sidenav__booknum">Document VII</span> Equipment Compendium</summary>
-    <ul class="sidenav__parts"><li><a href="#sec-equipment-overview"><b>7.0 Overview</b></a></li><li><a href="#sec-how-to-navigatethis-compendium"><span class="toc__n">7.1</span> How to Navigate This Compendium</a></li><li><a href="#sec-jargon-index"><span class="toc__n">8.2</span> Jargon Index</a></li><li><a href="#sec-the-scalingsystem-2"><span class="toc__n">7.3</span> The Scaling System</a></li><li><a href="#sec-melee-weapons"><span class="toc__n">7.4</span> Melee Weapons</a></li><li><a href="#sec-slugthrowers-kinetic-ranged"><span class="toc__n">7.5</span> Slugthrowers &amp; Kinetic Ranged</a></li><li><a href="#sec-blaster-weapons"><span class="toc__n">7.6</span> Blaster Weapons</a></li><li><a href="#sec-heavy-exotic-specialist-ranged"><span class="toc__n">7.7</span> Heavy, Exotic &amp; Specialist Ranged</a></li><li><a href="#sec-grenades-explosives"><span class="toc__n">7.8</span> Grenades &amp; Explosives</a></li><li><a href="#sec-weapon-materials"><span class="toc__n">7.9</span> Weapon Materials</a></li><li><a href="#sec-armour"><span class="toc__n">7.10</span> Armour</a></li><li><a href="#sec-armour-materials"><span class="toc__n">7.11</span> Armour Materials</a></li><li><a href="#sec-how-to-crack-armour"><span class="toc__n">7.12</span> How to Crack Heavy Armour</a></li><li><a href="#sec-adventuring-utility-gear"><span class="toc__n">7.13</span> Adventuring &amp; Utility Gear</a></li><li><a href="#sec-cyberneticsimplants-surgery"><span class="toc__n">7.14</span> Cybernetics, Implants &amp; Surgery</a></li><li><a href="#sec-materials-itemvsitem-rules"><span class="toc__n">7.15</span> Materials &amp; Item-vs-Item Rules</a></li><li><a href="#sec-modifications-gear-templates"><span class="toc__n">7.16</span> Modifications &amp; Gear Templates</a></li><li><a href="#sec-detailed-itemdescriptions-2"><span class="toc__n">7.17</span> Detailed Item Descriptions</a></li><li><a href="#sec-melee-weapons-in-detail"><span class="toc__n">7.18</span> Melee Weapons — in Detail</a></li><li><a href="#sec-slugthrowers-kinetics-in-detail"><span class="toc__n">7.19</span> Slugthrowers &amp; Kinetics — in Detail</a></li><li><a href="#sec-blasters-in-detail"><span class="toc__n">7.20</span> Blasters — in Detail</a></li><li><a href="#sec-heavy-exoticranged-in-detail-2"><span class="toc__n">7.21</span> Heavy &amp; Exotic Ranged — in Detail</a></li><li><a href="#sec-grenades-explosives-in-detail"><span class="toc__n">7.22</span> Grenades &amp; Explosives — in Detail</a></li><li><a href="#sec-armour-in-detail"><span class="toc__n">7.23</span> Armour — in Detail</a></li><li><a href="#sec-adventuring-gear-in-detail"><span class="toc__n">7.24</span> Adventuring Gear — in Detail</a></li><li><a href="#sec-cybernetics-in-detail"><span class="toc__n">7.25</span> Cybernetics — in Detail</a></li><li><a href="#sec-materials-ores-modifications-in-detail"><span class="toc__n">7.26</span> Materials, Ores &amp; Modifications — in Detail</a></li><li><a href="#sec-end-of-thecompendium"><span class="toc__n">7.27</span> End of the Compendium</a></li><li><a href="#sec-the-compendiumplaybook-2"><span class="toc__n">7.28</span> The Compendium Playbook</a></li><li><a href="#sec-weapon-attachments-mods"><span class="toc__n">7.29</span> Weapon Attachments &amp; Modifications</a></li><li><a href="#sec-armour-dd-tiers"><span class="toc__n">7.30</span> Tier-Balanced Armour DD &amp; Unique Properties</a></li><li><a href="#sec-armour-brands"><span class="toc__n">7.31</span> Armour Brands &amp; Manufacturer Roster</a></li></ul>
+    <ul class="sidenav__parts"><li><a href="#sec-equipment-overview"><b>7.0 Overview</b></a></li><li><a href="#sec-how-to-navigatethis-compendium"><span class="toc__n">7.1</span> How to Navigate This Compendium</a></li><li><a href="#sec-jargon-index"><span class="toc__n">7.2</span> Jargon Index</a></li><li><a href="#sec-the-scalingsystem-2"><span class="toc__n">7.3</span> The Scaling System</a></li><li><a href="#sec-melee-weapons"><span class="toc__n">7.4</span> Melee Weapons</a></li><li><a href="#sec-slugthrowers-kinetic-ranged"><span class="toc__n">7.5</span> Slugthrowers &amp; Kinetic Ranged</a></li><li><a href="#sec-blaster-weapons"><span class="toc__n">7.6</span> Blaster Weapons</a></li><li><a href="#sec-heavy-exotic-specialist-ranged"><span class="toc__n">7.7</span> Heavy, Exotic &amp; Specialist Ranged</a></li><li><a href="#sec-grenades-explosives"><span class="toc__n">7.8</span> Grenades &amp; Explosives</a></li><li><a href="#sec-weapon-materials"><span class="toc__n">7.9</span> Weapon Materials</a></li><li><a href="#sec-armour"><span class="toc__n">7.10</span> Armour</a></li><li><a href="#sec-armour-materials"><span class="toc__n">7.11</span> Armour Materials</a></li><li><a href="#sec-how-to-crack-armour"><span class="toc__n">7.12</span> How to Crack Heavy Armour</a></li><li><a href="#sec-adventuring-utility-gear"><span class="toc__n">7.13</span> Adventuring &amp; Utility Gear</a></li><li><a href="#sec-cyberneticsimplants-surgery"><span class="toc__n">7.14</span> Cybernetics, Implants &amp; Surgery</a></li><li><a href="#sec-materials-itemvsitem-rules"><span class="toc__n">7.15</span> Materials &amp; Item-vs-Item Rules</a></li><li><a href="#sec-modifications-gear-templates"><span class="toc__n">7.16</span> Modifications &amp; Gear Templates</a></li><li><a href="#sec-detailed-itemdescriptions-2"><span class="toc__n">7.17</span> Detailed Item Descriptions</a></li><li><a href="#sec-melee-weapons-in-detail"><span class="toc__n">7.18</span> Melee Weapons — in Detail</a></li><li><a href="#sec-slugthrowers-kinetics-in-detail"><span class="toc__n">7.19</span> Slugthrowers &amp; Kinetics — in Detail</a></li><li><a href="#sec-blasters-in-detail"><span class="toc__n">7.20</span> Blasters — in Detail</a></li><li><a href="#sec-heavy-exoticranged-in-detail-2"><span class="toc__n">7.21</span> Heavy &amp; Exotic Ranged — in Detail</a></li><li><a href="#sec-grenades-explosives-in-detail"><span class="toc__n">7.22</span> Grenades &amp; Explosives — in Detail</a></li><li><a href="#sec-armour-in-detail"><span class="toc__n">7.23</span> Armour — in Detail</a></li><li><a href="#sec-adventuring-gear-in-detail"><span class="toc__n">7.24</span> Adventuring Gear — in Detail</a></li><li><a href="#sec-cybernetics-in-detail"><span class="toc__n">7.25</span> Cybernetics — in Detail</a></li><li><a href="#sec-materials-ores-modifications-in-detail"><span class="toc__n">7.26</span> Materials, Ores &amp; Modifications — in Detail</a></li><li><a href="#sec-end-of-thecompendium"><span class="toc__n">7.27</span> End of the Compendium</a></li><li><a href="#sec-the-compendiumplaybook-2"><span class="toc__n">7.28</span> The Compendium Playbook</a></li><li><a href="#sec-weapon-attachments-mods"><span class="toc__n">7.29</span> Weapon &amp; Armour Components — Slots &amp; Attachments</a></li><li><a href="#sec-armour-dd-tiers"><span class="toc__n">7.30</span> Tier-Balanced Armour DD &amp; Unique Properties</a></li><li><a href="#sec-armour-brands"><span class="toc__n">7.31</span> Armour Brands &amp; Manufacturer Roster</a></li></ul>
   </details>
   <details class="sidenav__book" style="--acc:#6a5a2a">
     <summary><span class="sidenav__booknum">Document VII · B</span> Trade, Goods &amp; the Galactic Economy</summary>
@@ -1838,7 +1860,7 @@ html { scroll-behavior: smooth; }
   </details>
   <details class="sidenav__book" style="--acc:#7a1818">
     <summary><span class="sidenav__booknum">Document VIII</span> Droids &amp; Artificial Beings</summary>
-    <ul class="sidenav__parts"><li><a href="#sec-droids-overview"><b>8.0 Overview</b></a></li><li><a href="#sec-navigating-thedroid-book-2"><span class="toc__n">8.1</span> Navigating the Droid Book</a></li><li><a href="#sec-jargon-index"><span class="toc__n">8.2</span> Jargon Index</a></li><li><a href="#sec-what-adroid-is-2"><span class="toc__n">8.3</span> What a Droid Is</a></li><li><a href="#sec-droids-incombat-2"><span class="toc__n">8.4</span> Droids in Combat</a></li><li><a href="#sec-firstdegreedroids-2"><span class="toc__n">8.5</span> First-Degree Droids</a></li><li><a href="#sec-seconddegreedroids-2"><span class="toc__n">8.6</span> Second-Degree Droids</a></li><li><a href="#sec-thirddegreedroids-2"><span class="toc__n">8.7</span> Third-Degree Droids</a></li><li><a href="#sec-fourthdegreedroids-2"><span class="toc__n">8.8</span> Fourth-Degree Droids</a></li><li><a href="#sec-fifthdegreedroids-2"><span class="toc__n">8.9</span> Fifth-Degree Droids</a></li><li><a href="#sec-building-owning-droids"><span class="toc__n">8.10</span> Building &amp; Owning Droids</a></li><li><a href="#sec-droid-upgrades-modification"><span class="toc__n">8.11</span> Droid Upgrades &amp; Modification</a></li><li><a href="#sec-the-gurpsdroid-2"><span class="toc__n">8.12</span> The GURPS Droid</a></li><li><a href="#sec-the-statblocks-2"><span class="toc__n">8.13</span> The Stat Blocks</a></li><li><a href="#sec-firstdegreestat-blocks-2"><span class="toc__n">8.14</span> First-Degree Stat Blocks</a></li><li><a href="#sec-seconddegreestat-blocks-2"><span class="toc__n">8.15</span> Second-Degree Stat Blocks</a></li><li><a href="#sec-thirddegreestat-blocks-2"><span class="toc__n">8.16</span> Third-Degree Stat Blocks</a></li><li><a href="#sec-fourthdegreestat-blocks-2"><span class="toc__n">8.17</span> Fourth-Degree Stat Blocks</a></li><li><a href="#sec-fifthdegreestat-blocks-2"><span class="toc__n">8.18</span> Fifth-Degree Stat Blocks</a></li><li><a href="#sec-the-droidcodex-2"><span class="toc__n">8.19</span> The Droid Codex</a></li><li><a href="#sec-support-droids-in-detail"><span class="toc__n">8.20</span> Support Droids — in Detail</a></li><li><a href="#sec-combat-labourdroids-in-detail-2"><span class="toc__n">8.21</span> Combat &amp; Labour Droids — in Detail</a></li><li><a href="#sec-systems-upgrades-in-detail"><span class="toc__n">8.22</span> Systems &amp; Upgrades — in Detail</a></li><li><a href="#sec-end-of-thedroid-book"><span class="toc__n">8.23</span> End of the Droid Book</a></li><li><a href="#sec-the-droidquickreference-2"><span class="toc__n">8.24</span> The Droid Quick-Reference</a></li><li><a href="#sec-droid-construction"><span class="toc__n">8.25</span> Droid Construction</a></li><li><a href="#sec-droid-damage-perpart"><span class="toc__n">8.26</span> Droid Damage — Per-Part Effects</a></li></ul>
+    <ul class="sidenav__parts"><li><a href="#sec-droids-overview"><b>8.0 Overview</b></a></li><li><a href="#sec-navigating-thedroid-book-2"><span class="toc__n">8.1</span> Navigating the Droid Book</a></li><li><a href="#sec-jargon-index-droid"><span class="toc__n">8.2</span> Jargon Index</a></li><li><a href="#sec-what-adroid-is-2"><span class="toc__n">8.3</span> What a Droid Is</a></li><li><a href="#sec-droids-incombat-2"><span class="toc__n">8.4</span> Droids in Combat</a></li><li><a href="#sec-firstdegreedroids-2"><span class="toc__n">8.5</span> First-Degree Droids</a></li><li><a href="#sec-seconddegreedroids-2"><span class="toc__n">8.6</span> Second-Degree Droids</a></li><li><a href="#sec-thirddegreedroids-2"><span class="toc__n">8.7</span> Third-Degree Droids</a></li><li><a href="#sec-fourthdegreedroids-2"><span class="toc__n">8.8</span> Fourth-Degree Droids</a></li><li><a href="#sec-fifthdegreedroids-2"><span class="toc__n">8.9</span> Fifth-Degree Droids</a></li><li><a href="#sec-building-owning-droids"><span class="toc__n">8.10</span> Building &amp; Owning Droids</a></li><li><a href="#sec-droid-upgrades-modification"><span class="toc__n">8.11</span> Droid Upgrades &amp; Modification</a></li><li><a href="#sec-the-gurpsdroid-2"><span class="toc__n">8.12</span> The GURPS Droid</a></li><li><a href="#sec-the-statblocks-2"><span class="toc__n">8.13</span> The Stat Blocks</a></li><li><a href="#sec-firstdegreestat-blocks-2"><span class="toc__n">8.14</span> First-Degree Stat Blocks</a></li><li><a href="#sec-seconddegreestat-blocks-2"><span class="toc__n">8.15</span> Second-Degree Stat Blocks</a></li><li><a href="#sec-thirddegreestat-blocks-2"><span class="toc__n">8.16</span> Third-Degree Stat Blocks</a></li><li><a href="#sec-fourthdegreestat-blocks-2"><span class="toc__n">8.17</span> Fourth-Degree Stat Blocks</a></li><li><a href="#sec-fifthdegreestat-blocks-2"><span class="toc__n">8.18</span> Fifth-Degree Stat Blocks</a></li><li><a href="#sec-the-droidcodex-2"><span class="toc__n">8.19</span> The Droid Codex</a></li><li><a href="#sec-support-droids-in-detail"><span class="toc__n">8.20</span> Support Droids — in Detail</a></li><li><a href="#sec-combat-labourdroids-in-detail-2"><span class="toc__n">8.21</span> Combat &amp; Labour Droids — in Detail</a></li><li><a href="#sec-systems-upgrades-in-detail"><span class="toc__n">8.22</span> Systems &amp; Upgrades — in Detail</a></li><li><a href="#sec-end-of-thedroid-book"><span class="toc__n">8.23</span> End of the Droid Book</a></li><li><a href="#sec-the-droidquickreference-2"><span class="toc__n">8.24</span> The Droid Quick-Reference</a></li><li><a href="#sec-droid-construction"><span class="toc__n">8.25</span> Droid Construction</a></li><li><a href="#sec-droid-damage-perpart"><span class="toc__n">8.26</span> Droid Damage — Per-Part Effects</a></li></ul>
   </details>
   <details class="sidenav__book" style="--acc:#3a5a3a">
     <summary><span class="sidenav__booknum">Document IX</span> Skills</summary>
@@ -1855,8 +1877,8 @@ html { scroll-behavior: smooth; }
   </details>
 </nav>
 <section class="master-cover">
-  <div class="master-cover__series">The Force &amp; the Fight</div>
-  <h1 class="master-cover__title">The Complete<br>Compendium</h1>
+  <div class="master-cover__series">Star Wars the Old Republic</div>
+  <h1 class="master-cover__title">GURPS 4E<br>Conversion</h1>
   <div class="master-cover__rule"></div>
   <div class="master-cover__sub">A consolidated GURPS 4e companion for the Old Republic era — every rule of combat, gear, machine, and world in one volume. Ten documents, one reference.</div>
   <div class="master-cover__meta">Combat · Ranged · Damage · The Living Force · Vehicles · Equipment · Droids · Skills · Force Training · The Galaxy</div>
@@ -1934,7 +1956,7 @@ html { scroll-behavior: smooth; }
   </div>
   <div class="toc__book" style="--acc:#1d6e7a">
     <a class="toc__booklink" href="#book-training" style="--acc:#1d6e7a"><span class="toc__booknum">Document V</span><br>Force Training</a>
-    <ul class="toc__parts" style="--acc:#1d6e7a"><li><a href="#sec-training-rate"><span class="toc__n">5.1</span> The Study-Hour</a></li><li><a href="#sec-training-what"><span class="toc__n">5.2</span> What You Are Training</a></li><li><a href="#sec-training-tiers"><span class="toc__n">5.3</span> Climbing the Tiers</a></li><li><a href="#sec-training-regimens"><span class="toc__n">5.4</span> Training Regimens</a></li><li><a href="#sec-training-mentors"><span class="toc__n">5.5</span> Mentors &amp; Apprenticeship</a></li><li><a href="#sec-training-playbook"><span class="toc__n">5.6</span> The Training Playbook</a></li><li><a href="#sec-training-regimens-worked"><span class="toc__n"></span> 5.7 — Worked Regimens</a></li><li><a href="#sec-training-masters"><span class="toc__n"></span> 5.8 — Mentors of the Era</a></li><li><a href="#sec-training-holocrons"><span class="toc__n"></span> 5.9 — Holocrons</a></li><li><a href="#sec-training-trials"><span class="toc__n"></span> 5.10 — The Trials</a></li><li><a href="#sec-training-sites"><span class="toc__n"></span> 5.11 — Sanctums &amp; Sites</a></li></ul>
+    <ul class="toc__parts" style="--acc:#1d6e7a"><li><a href="#sec-training-rate"><span class="toc__n">5.1</span> The Study-Hour</a></li><li><a href="#sec-training-what"><span class="toc__n">5.2</span> What You Are Training</a></li><li><a href="#sec-training-tiers"><span class="toc__n">5.3</span> Climbing the Tiers</a></li><li><a href="#sec-training-regimens"><span class="toc__n">5.4</span> Training Regimens</a></li><li><a href="#sec-training-mentors"><span class="toc__n">5.5</span> Mentors &amp; Apprenticeship</a></li><li><a href="#sec-training-playbook"><span class="toc__n">5.6</span> The Training Playbook</a></li><li><a href="#sec-training-regimens-worked"><span class="toc__n">5.7</span> Worked Regimens</a></li><li><a href="#sec-training-masters"><span class="toc__n">5.8</span> Mentors of the Era</a></li><li><a href="#sec-training-holocrons"><span class="toc__n">5.9</span> Holocrons</a></li><li><a href="#sec-training-trials"><span class="toc__n">5.10</span> The Trials</a></li><li><a href="#sec-training-sites"><span class="toc__n">5.11</span> Sanctums &amp; Sites</a></li></ul>
   </div>
   <div class="toc__book" style="--acc:#3a5a3a">
     <a class="toc__booklink" href="#book-vehicles" style="--acc:#3a5a3a"><span class="toc__booknum">Document VI</span><br>Vehicles &amp; Starship Combat</a>
@@ -1942,7 +1964,7 @@ html { scroll-behavior: smooth; }
   </div>
   <div class="toc__book" style="--acc:#5a4a6a">
     <a class="toc__booklink" href="#book-equipment" style="--acc:#5a4a6a"><span class="toc__booknum">Document VII</span><br>Equipment Compendium</a>
-    <ul class="toc__parts" style="--acc:#5a4a6a"><li><a href="#sec-equipment-overview"><span class="toc__n">7.0</span> Overview</a></li><li><a href="#sec-how-to-navigatethis-compendium"><span class="toc__n">7.1</span> How to Navigate This Compendium</a></li><li><a href="#sec-jargon-index"><span class="toc__n">7.2</span> Jargon Index</a></li><li><a href="#sec-the-scalingsystem-2"><span class="toc__n">7.3</span> The Scaling System</a></li><li><a href="#sec-melee-weapons"><span class="toc__n">7.4</span> Melee Weapons</a></li><li><a href="#sec-slugthrowers-kinetic-ranged"><span class="toc__n">7.5</span> Slugthrowers &amp; Kinetic Ranged</a></li><li><a href="#sec-blaster-weapons"><span class="toc__n">7.6</span> Blaster Weapons</a></li><li><a href="#sec-heavy-exotic-specialist-ranged"><span class="toc__n">7.7</span> Heavy, Exotic &amp; Specialist Ranged</a></li><li><a href="#sec-grenades-explosives"><span class="toc__n">7.8</span> Grenades &amp; Explosives</a></li><li><a href="#sec-weapon-materials"><span class="toc__n">7.9</span> Weapon Materials</a></li><li><a href="#sec-armour"><span class="toc__n">7.10</span> Armour</a></li><li><a href="#sec-armour-materials"><span class="toc__n">7.11</span> Armour Materials</a></li><li><a href="#sec-how-to-crack-armour"><span class="toc__n">7.12</span> How to Crack Heavy Armour</a></li><li><a href="#sec-adventuring-utility-gear"><span class="toc__n">7.13</span> Adventuring &amp; Utility Gear</a></li><li><a href="#sec-cyberneticsimplants-surgery"><span class="toc__n">7.14</span> Cybernetics, Implants &amp; Surgery</a></li><li><a href="#sec-materials-itemvsitem-rules"><span class="toc__n">7.15</span> Materials &amp; Item-vs-Item Rules</a></li><li><a href="#sec-modifications-gear-templates"><span class="toc__n">7.16</span> Modifications &amp; Gear Templates</a></li><li><a href="#sec-detailed-itemdescriptions-2"><span class="toc__n">7.17</span> Detailed Item Descriptions</a></li><li><a href="#sec-melee-weapons-in-detail"><span class="toc__n">7.18</span> Melee Weapons — in Detail</a></li><li><a href="#sec-slugthrowers-kinetics-in-detail"><span class="toc__n">7.19</span> Slugthrowers &amp; Kinetics — in Detail</a></li><li><a href="#sec-blasters-in-detail"><span class="toc__n">7.20</span> Blasters — in Detail</a></li><li><a href="#sec-heavy-exoticranged-in-detail-2"><span class="toc__n">7.21</span> Heavy &amp; Exotic Ranged — in Detail</a></li><li><a href="#sec-grenades-explosives-in-detail"><span class="toc__n">7.22</span> Grenades &amp; Explosives — in Detail</a></li><li><a href="#sec-armour-in-detail"><span class="toc__n">7.23</span> Armour — in Detail</a></li><li><a href="#sec-adventuring-gear-in-detail"><span class="toc__n">7.24</span> Adventuring Gear — in Detail</a></li><li><a href="#sec-cybernetics-in-detail"><span class="toc__n">7.25</span> Cybernetics — in Detail</a></li><li><a href="#sec-materials-ores-modifications-in-detail"><span class="toc__n">7.26</span> Materials, Ores &amp; Modifications — in Detail</a></li><li><a href="#sec-end-of-thecompendium"><span class="toc__n">7.27</span> End of the Compendium</a></li><li><a href="#sec-the-compendiumplaybook-2"><span class="toc__n">7.28</span> The Compendium Playbook</a></li><li><a href="#sec-weapon-attachments-mods"><span class="toc__n">7.29</span> Weapon Attachments &amp; Modifications</a></li><li><a href="#sec-armour-dd-tiers"><span class="toc__n">7.30</span> Tier-Balanced Armour DD &amp; Unique Properties</a></li><li><a href="#sec-armour-brands"><span class="toc__n">7.31</span> Armour Brands &amp; Manufacturer Roster</a></li></ul>
+    <ul class="toc__parts" style="--acc:#5a4a6a"><li><a href="#sec-equipment-overview"><span class="toc__n">7.0</span> Overview</a></li><li><a href="#sec-how-to-navigatethis-compendium"><span class="toc__n">7.1</span> How to Navigate This Compendium</a></li><li><a href="#sec-jargon-index"><span class="toc__n">7.2</span> Jargon Index</a></li><li><a href="#sec-the-scalingsystem-2"><span class="toc__n">7.3</span> The Scaling System</a></li><li><a href="#sec-melee-weapons"><span class="toc__n">7.4</span> Melee Weapons</a></li><li><a href="#sec-slugthrowers-kinetic-ranged"><span class="toc__n">7.5</span> Slugthrowers &amp; Kinetic Ranged</a></li><li><a href="#sec-blaster-weapons"><span class="toc__n">7.6</span> Blaster Weapons</a></li><li><a href="#sec-heavy-exotic-specialist-ranged"><span class="toc__n">7.7</span> Heavy, Exotic &amp; Specialist Ranged</a></li><li><a href="#sec-grenades-explosives"><span class="toc__n">7.8</span> Grenades &amp; Explosives</a></li><li><a href="#sec-weapon-materials"><span class="toc__n">7.9</span> Weapon Materials</a></li><li><a href="#sec-armour"><span class="toc__n">7.10</span> Armour</a></li><li><a href="#sec-armour-materials"><span class="toc__n">7.11</span> Armour Materials</a></li><li><a href="#sec-how-to-crack-armour"><span class="toc__n">7.12</span> How to Crack Heavy Armour</a></li><li><a href="#sec-adventuring-utility-gear"><span class="toc__n">7.13</span> Adventuring &amp; Utility Gear</a></li><li><a href="#sec-cyberneticsimplants-surgery"><span class="toc__n">7.14</span> Cybernetics, Implants &amp; Surgery</a></li><li><a href="#sec-materials-itemvsitem-rules"><span class="toc__n">7.15</span> Materials &amp; Item-vs-Item Rules</a></li><li><a href="#sec-modifications-gear-templates"><span class="toc__n">7.16</span> Modifications &amp; Gear Templates</a></li><li><a href="#sec-detailed-itemdescriptions-2"><span class="toc__n">7.17</span> Detailed Item Descriptions</a></li><li><a href="#sec-melee-weapons-in-detail"><span class="toc__n">7.18</span> Melee Weapons — in Detail</a></li><li><a href="#sec-slugthrowers-kinetics-in-detail"><span class="toc__n">7.19</span> Slugthrowers &amp; Kinetics — in Detail</a></li><li><a href="#sec-blasters-in-detail"><span class="toc__n">7.20</span> Blasters — in Detail</a></li><li><a href="#sec-heavy-exoticranged-in-detail-2"><span class="toc__n">7.21</span> Heavy &amp; Exotic Ranged — in Detail</a></li><li><a href="#sec-grenades-explosives-in-detail"><span class="toc__n">7.22</span> Grenades &amp; Explosives — in Detail</a></li><li><a href="#sec-armour-in-detail"><span class="toc__n">7.23</span> Armour — in Detail</a></li><li><a href="#sec-adventuring-gear-in-detail"><span class="toc__n">7.24</span> Adventuring Gear — in Detail</a></li><li><a href="#sec-cybernetics-in-detail"><span class="toc__n">7.25</span> Cybernetics — in Detail</a></li><li><a href="#sec-materials-ores-modifications-in-detail"><span class="toc__n">7.26</span> Materials, Ores &amp; Modifications — in Detail</a></li><li><a href="#sec-end-of-thecompendium"><span class="toc__n">7.27</span> End of the Compendium</a></li><li><a href="#sec-the-compendiumplaybook-2"><span class="toc__n">7.28</span> The Compendium Playbook</a></li><li><a href="#sec-weapon-attachments-mods"><span class="toc__n">7.29</span> Weapon &amp; Armour Components — Slots &amp; Attachments</a></li><li><a href="#sec-armour-dd-tiers"><span class="toc__n">7.30</span> Tier-Balanced Armour DD &amp; Unique Properties</a></li><li><a href="#sec-armour-brands"><span class="toc__n">7.31</span> Armour Brands &amp; Manufacturer Roster</a></li></ul>
   </div>
   <div class="toc__book" style="--acc:#6a5a2a">
     <a class="toc__booklink" href="#book-economy" style="--acc:#6a5a2a"><span class="toc__booknum">Document VII · B</span><br>Trade, Goods &amp; the Galactic Economy</a>
@@ -1950,7 +1972,7 @@ html { scroll-behavior: smooth; }
   </div>
   <div class="toc__book" style="--acc:#7a1818">
     <a class="toc__booklink" href="#book-droids" style="--acc:#7a1818"><span class="toc__booknum">Document VIII</span><br>Droids &amp; Artificial Beings</a>
-    <ul class="toc__parts" style="--acc:#7a1818"><li><a href="#sec-droids-overview"><span class="toc__n">8.0</span> Overview</a></li><li><a href="#sec-navigating-thedroid-book-2"><span class="toc__n">8.1</span> Navigating the Droid Book</a></li><li><a href="#sec-jargon-index"><span class="toc__n">8.2</span> Jargon Index</a></li><li><a href="#sec-what-adroid-is-2"><span class="toc__n">8.3</span> What a Droid Is</a></li><li><a href="#sec-droids-incombat-2"><span class="toc__n">8.4</span> Droids in Combat</a></li><li><a href="#sec-firstdegreedroids-2"><span class="toc__n">8.5</span> First-Degree Droids</a></li><li><a href="#sec-seconddegreedroids-2"><span class="toc__n">8.6</span> Second-Degree Droids</a></li><li><a href="#sec-thirddegreedroids-2"><span class="toc__n">8.7</span> Third-Degree Droids</a></li><li><a href="#sec-fourthdegreedroids-2"><span class="toc__n">8.8</span> Fourth-Degree Droids</a></li><li><a href="#sec-fifthdegreedroids-2"><span class="toc__n">8.9</span> Fifth-Degree Droids</a></li><li><a href="#sec-building-owning-droids"><span class="toc__n">8.10</span> Building &amp; Owning Droids</a></li><li><a href="#sec-droid-upgrades-modification"><span class="toc__n">8.11</span> Droid Upgrades &amp; Modification</a></li><li><a href="#sec-the-gurpsdroid-2"><span class="toc__n">8.12</span> The GURPS Droid</a></li><li><a href="#sec-the-statblocks-2"><span class="toc__n">8.13</span> The Stat Blocks</a></li><li><a href="#sec-firstdegreestat-blocks-2"><span class="toc__n">8.14</span> First-Degree Stat Blocks</a></li><li><a href="#sec-seconddegreestat-blocks-2"><span class="toc__n">8.15</span> Second-Degree Stat Blocks</a></li><li><a href="#sec-thirddegreestat-blocks-2"><span class="toc__n">8.16</span> Third-Degree Stat Blocks</a></li><li><a href="#sec-fourthdegreestat-blocks-2"><span class="toc__n">8.17</span> Fourth-Degree Stat Blocks</a></li><li><a href="#sec-fifthdegreestat-blocks-2"><span class="toc__n">8.18</span> Fifth-Degree Stat Blocks</a></li><li><a href="#sec-the-droidcodex-2"><span class="toc__n">8.19</span> The Droid Codex</a></li><li><a href="#sec-support-droids-in-detail"><span class="toc__n">8.20</span> Support Droids — in Detail</a></li><li><a href="#sec-combat-labourdroids-in-detail-2"><span class="toc__n">8.21</span> Combat &amp; Labour Droids — in Detail</a></li><li><a href="#sec-systems-upgrades-in-detail"><span class="toc__n">8.22</span> Systems &amp; Upgrades — in Detail</a></li><li><a href="#sec-end-of-thedroid-book"><span class="toc__n">8.23</span> End of the Droid Book</a></li><li><a href="#sec-the-droidquickreference-2"><span class="toc__n">8.24</span> The Droid Quick-Reference</a></li><li><a href="#sec-droid-construction"><span class="toc__n">8.25</span> Droid Construction</a></li><li><a href="#sec-droid-damage-perpart"><span class="toc__n">8.26</span> Droid Damage — Per-Part Effects</a></li></ul>
+    <ul class="toc__parts" style="--acc:#7a1818"><li><a href="#sec-droids-overview"><span class="toc__n">8.0</span> Overview</a></li><li><a href="#sec-navigating-thedroid-book-2"><span class="toc__n">8.1</span> Navigating the Droid Book</a></li><li><a href="#sec-jargon-index-droid"><span class="toc__n">8.2</span> Jargon Index</a></li><li><a href="#sec-what-adroid-is-2"><span class="toc__n">8.3</span> What a Droid Is</a></li><li><a href="#sec-droids-incombat-2"><span class="toc__n">8.4</span> Droids in Combat</a></li><li><a href="#sec-firstdegreedroids-2"><span class="toc__n">8.5</span> First-Degree Droids</a></li><li><a href="#sec-seconddegreedroids-2"><span class="toc__n">8.6</span> Second-Degree Droids</a></li><li><a href="#sec-thirddegreedroids-2"><span class="toc__n">8.7</span> Third-Degree Droids</a></li><li><a href="#sec-fourthdegreedroids-2"><span class="toc__n">8.8</span> Fourth-Degree Droids</a></li><li><a href="#sec-fifthdegreedroids-2"><span class="toc__n">8.9</span> Fifth-Degree Droids</a></li><li><a href="#sec-building-owning-droids"><span class="toc__n">8.10</span> Building &amp; Owning Droids</a></li><li><a href="#sec-droid-upgrades-modification"><span class="toc__n">8.11</span> Droid Upgrades &amp; Modification</a></li><li><a href="#sec-the-gurpsdroid-2"><span class="toc__n">8.12</span> The GURPS Droid</a></li><li><a href="#sec-the-statblocks-2"><span class="toc__n">8.13</span> The Stat Blocks</a></li><li><a href="#sec-firstdegreestat-blocks-2"><span class="toc__n">8.14</span> First-Degree Stat Blocks</a></li><li><a href="#sec-seconddegreestat-blocks-2"><span class="toc__n">8.15</span> Second-Degree Stat Blocks</a></li><li><a href="#sec-thirddegreestat-blocks-2"><span class="toc__n">8.16</span> Third-Degree Stat Blocks</a></li><li><a href="#sec-fourthdegreestat-blocks-2"><span class="toc__n">8.17</span> Fourth-Degree Stat Blocks</a></li><li><a href="#sec-fifthdegreestat-blocks-2"><span class="toc__n">8.18</span> Fifth-Degree Stat Blocks</a></li><li><a href="#sec-the-droidcodex-2"><span class="toc__n">8.19</span> The Droid Codex</a></li><li><a href="#sec-support-droids-in-detail"><span class="toc__n">8.20</span> Support Droids — in Detail</a></li><li><a href="#sec-combat-labourdroids-in-detail-2"><span class="toc__n">8.21</span> Combat &amp; Labour Droids — in Detail</a></li><li><a href="#sec-systems-upgrades-in-detail"><span class="toc__n">8.22</span> Systems &amp; Upgrades — in Detail</a></li><li><a href="#sec-end-of-thedroid-book"><span class="toc__n">8.23</span> End of the Droid Book</a></li><li><a href="#sec-the-droidquickreference-2"><span class="toc__n">8.24</span> The Droid Quick-Reference</a></li><li><a href="#sec-droid-construction"><span class="toc__n">8.25</span> Droid Construction</a></li><li><a href="#sec-droid-damage-perpart"><span class="toc__n">8.26</span> Droid Damage — Per-Part Effects</a></li></ul>
   </div>
   <div class="toc__book" style="--acc:#3a5a3a">
     <a class="toc__booklink" href="#book-makers" style="--acc:#3a5a3a"><span class="toc__booknum">Document IX</span><br>Skills</a>
@@ -4022,12 +4044,14 @@ html { scroll-behavior: smooth; }
 <p>In v15 of the character sheet, every melee weapon now displays its <b>Swing</b> and <b>Thrust</b> modes as separate lines with their own damage, armour divisor, and damage type — matching the canonical melee tables in Documents I and Part X. The sheet's <code>wpnDamage()</code> resolver was updated to support per-mode <code>fixed</code>, <code>mod</code>, <code>ad</code>, and <code>dtype</code> overrides, and to evaluate "thr+1d"-style shorthand expressions against the wielder's current ST.</p>
 <table class="tbl tbl--compact"><tbody><tr><th style="width:24%">Weapon</th><th>Swing (Sw)</th><th>Thrust (Th)</th></tr>
 <tr><td><b>Standard lightsaber</b></td><td>8d+8 (5) burn</td><td>4d+4 (10) imp+burn</td></tr>
-<tr><td><b>Shoto / short saber</b></td><td>6d+6 (5) burn</td><td>3d+3 (10) imp+burn</td></tr>
-<tr><td><b>Saberstaff (curved hilt)</b></td><td>8d+8 (5) burn</td><td>4d+4 (10) imp+burn</td></tr>
-<tr><td><b>Double-bladed lightsaber</b></td><td>8d+8 (5) burn (both ends)</td><td>4d+4 (10) imp+burn</td></tr>
-<tr><td><b>Great lightsaber</b></td><td>9d+9 (5) burn</td><td>4d+6 (10) imp+burn</td></tr>
-<tr><td><b>Lightfoil</b></td><td>7d+7 (5) burn</td><td>3d+5 (10) imp+burn</td></tr>
-<tr><td><b>Lightwhip</b></td><td>5d+5 (5) burn</td><td>— (flexible, no thrust)</td></tr>
+ <tr><td colspan="3" style="background:#f4f1e8;font-weight:600;font-size:9pt">— Hilt configurations of the standard saber (grip slot, one per saber — Doc IX components) —</td></tr>
+<tr><td><b>w/ Shoto hilt</b> (shoto / short saber)</td><td>6d+6 (5) burn</td><td>3d+3 (10) imp+burn</td></tr>
+<tr><td><b>w/ Curved hilt</b> (Makashi duelling saber)</td><td>8d+8 (5) burn</td><td>4d+4 (10) imp+burn</td></tr>
+<tr><td><b>w/ Dual-grip hilt</b> (saberstaff / double-blade)</td><td>8d+8 (5) burn (both ends)</td><td>4d+4 (10) imp+burn</td></tr>
+<tr><td><b>w/ Extended hilt</b> (great lightsaber)</td><td>9d+9 (5) burn</td><td>4d+6 (10) imp+burn</td></tr>
+<tr><td><b>w/ Duelling foil hilt</b> (lightfoil)</td><td>7d+7 (5) burn</td><td>3d+5 (10) imp+burn</td></tr>
+<tr><td colspan="3" style="background:#f4f1e8;font-weight:600;font-size:9pt">— Distinct light-blade weapons (not configurations) —</td></tr>
+ <tr><td><b>Lightwhip</b></td><td>5d+5 (5) burn</td><td>— (flexible, no thrust)</td></tr>
 <tr><td><b>Training saber</b></td><td>sw cr (stun only)</td><td>—</td></tr>
 <tr><td colspan="3" style="background:#f4f1e8;font-weight:600;font-size:9pt">— Vibroblades (sw cut / th imp, AD 2 both) —</td></tr>
 <tr><td><b>Vibroblade</b></td><td>sw+1 (2) cut</td><td>thr+1 (2) imp</td></tr>
@@ -8383,7 +8407,7 @@ Life endures
     <div class="statgrid"><div class="stat-sum">Break the target's concentration for 1 turn.</div><span class="stat-k">Affinity</span><span class="stat-v">IQ</span><span class="stat-k">Action</span><span class="stat-v">Attack</span><span class="stat-k">Range</span><span class="stat-v">6 hexes, line-of-sight</span><span class="stat-k">Defence</span><span class="stat-v">Resisted by Will (or Force skill if higher); never dodged</span><span class="stat-k fp">FP</span><span class="stat-v fp">3 (−2 per +3 FP to −6; +4 FP = 2 turns &amp; auto-drop)</span><span class="stat-k">Reaction</span><span class="stat-v">No</span></div>
   </div>
   <div class="power-body">
-    <p class="effect"><b>Effect.</b> Break the target's concentration for 1 turn. Any Concentrate action they were performing fails without FP refund. Their maintained powers make an immediate Will roll or drop.    <b>Scalable:</b> +3 FP per −2 to their resistance (6 FP = Will−2, 9 FP = Will−4, max Will−6 at 12 FP.. Alternatively, +4 FP beyond base = 2-turn disruption and maintained powers drop automatically without a roll. Both scale options stack: 16 FP total = 2 turns, auto-drop, at Will−6.</p>
+    <p class="effect"><b>Effect.</b> Break the target's concentration for 1 turn. Any Concentrate action they were performing fails without FP refund. Their maintained powers make an immediate Will roll or drop.    <b>Scalable:</b> +3 FP per −2 to their resistance (6 FP = Will−2, 9 FP = Will−4, max Will−6 at 12 FP). Alternatively, +4 FP beyond base = 2-turn disruption and maintained powers drop automatically without a roll. Both scale options stack: 16 FP total = 2 turns, auto-drop, at Will−6.</p>
 
     <p class="flavor">Your gaze sharpens to a needle point. Something crosses between you and lands behind their eyes — a crack in whatever quiet they were holding. More FP, deeper the crack.</p>
     <p class="warn">Against Will 35+, the −6 scaling is your minimum for meaningful effect — budget 9 FP at least. At 16 FP, this is your hardest disruption: 2-turn auto-drop at Will−6. Does not damage, does not last beyond the disruption window.</p>
@@ -8818,10 +8842,10 @@ Life endures
 <div class="power">
   <div class="power-stats">
     <h4 class="power-name">Scent of Life</h4>
-    <div class="statgrid"><div class="stat-sum">Roll Will. Sense the size and rough location of every living thing within 20 hexes.</div><span class="stat-k">Affinity</span><span class="stat-v">Will</span><span class="stat-k">Action</span><span class="stat-v">Concentrate (1 turn)</span><span class="stat-k">Range</span><span class="stat-v">20-hex radius</span><span class="stat-k">Defence</span><span class="stat-v">None — passive sense</span><span class="stat-k fp">FP</span><span class="stat-v fp">1</span><span class="stat-k">Reaction</span><span class="stat-v">No</span></div>
+    <div class="statgrid"><div class="stat-sum">Roll your Force attribute. Sense the size and rough location of every living thing within 20 hexes.</div><span class="stat-k">Affinity</span><span class="stat-v">Will</span><span class="stat-k">Action</span><span class="stat-v">Concentrate (1 turn)</span><span class="stat-k">Range</span><span class="stat-v">20-hex radius</span><span class="stat-k">Defence</span><span class="stat-v">None — passive sense</span><span class="stat-k fp">FP</span><span class="stat-v fp">1</span><span class="stat-k">Reaction</span><span class="stat-v">No</span></div>
   </div>
   <div class="power-body">
-    <p class="effect"><b>Effect.</b> Roll Will. Sense the size and rough location of every living thing within 20 hexes.</p>
+    <p class="effect"><b>Effect.</b> Roll your Force attribute. Sense the size and rough location of every living thing within 20 hexes.</p>
     <p class="soma"><b>BODY.</b> A slow inhalation through a parted mouth, eyes half-closed; no hands, but the turn of breathing-in is needed to taste the room.</p>
     <p class="flavor">Some glow full, and your hunger turns toward them.</p>
     <p class="warn">Living things only — droids, synthetics, and the Force-dead do not register. Gives size and rough position, not identity, health, or intent.</p>
@@ -8899,10 +8923,10 @@ Life endures
 <div class="power">
   <div class="power-stats">
     <h4 class="power-name">Hollow Step</h4>
-    <div class="statgrid"><div class="stat-sum">Roll Will (reaction). Until your next turn gain +3 to defenses vs Force powers and pass once through a Force barrier.</div><span class="stat-k">Affinity</span><span class="stat-v">Will</span><span class="stat-k">Action</span><span class="stat-v">Reaction</span><span class="stat-k">Range</span><span class="stat-v">Self</span><span class="stat-k">Defence</span><span class="stat-v">— (+3 to defences vs Force powers this turn; pass once through a Force barrier)</span><span class="stat-k fp">FP</span><span class="stat-v fp">4</span><span class="stat-k">Reaction</span><span class="stat-v">Yes — declared as the attack comes</span></div>
+    <div class="statgrid"><div class="stat-sum">Roll your Force attribute (reaction). Until your next turn gain +3 to defenses vs Force powers and pass once through a Force barrier.</div><span class="stat-k">Affinity</span><span class="stat-v">Will</span><span class="stat-k">Action</span><span class="stat-v">Reaction</span><span class="stat-k">Range</span><span class="stat-v">Self</span><span class="stat-k">Defence</span><span class="stat-v">— (+3 to defences vs Force powers this turn; pass once through a Force barrier)</span><span class="stat-k fp">FP</span><span class="stat-v fp">4</span><span class="stat-k">Reaction</span><span class="stat-v">Yes — declared as the attack comes</span></div>
   </div>
   <div class="power-body">
-    <p class="effect"><b>Effect.</b> Roll Will (reaction). Until your next turn gain <b>+3 to defenses vs Force powers</b> and pass once through a Force barrier.</p>
+    <p class="effect"><b>Effect.</b> Roll your Force attribute (reaction). Until your next turn gain <b>+3 to defenses vs Force powers</b> and pass once through a Force barrier.</p>
     <p class="soma"><b>BODY.</b> A single backward step into your own shadow; no hands — a reflexive un-being, declared as the attack comes.</p>
     <p class="flavor">For an instant you are a hole the Force pours around.</p>
     <p class="warn">The +3 applies only against Force powers — not blasters, blades, or other physical attacks. The barrier pass is a single one-way slip for you alone, not an opening for anyone else. Declared as the attack comes, like any defence.</p>
@@ -8980,10 +9004,10 @@ Life endures
 </div><div class="power">
   <div class="power-stats">
     <h4 class="power-name">Consume the Spark</h4>
-    <div class="statgrid"><div class="stat-sum">Roll Will (reaction to a death within 10 hexes).</div><span class="stat-k">Affinity</span><span class="stat-v">Will</span><span class="stat-k">Action</span><span class="stat-v">Reaction — when a being dies within range</span><span class="stat-k">Range</span><span class="stat-v">10 hexes</span><span class="stat-k">Defence</span><span class="stat-v">None — feeds you (2d FP and a bonus to your next Force roll)</span><span class="stat-k fp">FP</span><span class="stat-v fp">8</span><span class="stat-k">Reaction</span><span class="stat-v">Yes</span></div>
+    <div class="statgrid"><div class="stat-sum">Roll your Force attribute (reaction to a death within 10 hexes).</div><span class="stat-k">Affinity</span><span class="stat-v">Will</span><span class="stat-k">Action</span><span class="stat-v">Reaction — when a being dies within range</span><span class="stat-k">Range</span><span class="stat-v">10 hexes</span><span class="stat-k">Defence</span><span class="stat-v">None — feeds you (2d FP and a bonus to your next Force roll)</span><span class="stat-k fp">FP</span><span class="stat-v fp">8</span><span class="stat-k">Reaction</span><span class="stat-v">Yes</span></div>
   </div>
   <div class="power-body">
-    <p class="effect"><b>Effect.</b> Roll Will (reaction to a death within 10 hexes). Devour the escaping Force: gain <b>2d FP</b> and <b>+1 to your next Force roll</b>.</p>
+    <p class="effect"><b>Effect.</b> Roll your Force attribute (reaction to a death within 10 hexes). Devour the escaping Force: gain <b>2d FP</b> and <b>+1 to your next Force roll</b>.</p>
     <p class="soma"><b>BODY.</b> A sharp inhalation turned toward the dying, mouth slightly open; no hands, only the timed breath as the spark flees.</p>
     <p class="flavor">Their last breath is warm, and brief.</p>
     <p class="warn">Deeply addictive — the warmth of a stolen death is the hardest hunger to leave behind.</p>
@@ -9004,10 +9028,10 @@ Life endures
 <div class="power">
   <div class="power-stats">
     <h4 class="power-name">Feed the Wound</h4>
-    <div class="statgrid"><div class="stat-sum">Roll Will immediately after you wound a living target in melee.</div><span class="stat-k">Affinity</span><span class="stat-v">Will</span><span class="stat-k">Action</span><span class="stat-v">Quick (free) — right after you wound a target in melee</span><span class="stat-k">Range</span><span class="stat-v">Self</span><span class="stat-k">Defence</span><span class="stat-v">None — converts up to 2d of your own fresh melee injury into FP</span><span class="stat-k fp">FP</span><span class="stat-v fp">6</span><span class="stat-k">Reaction</span><span class="stat-v">No</span></div>
+    <div class="statgrid"><div class="stat-sum">Roll your Force attribute immediately after you wound a living target in melee.</div><span class="stat-k">Affinity</span><span class="stat-v">Will</span><span class="stat-k">Action</span><span class="stat-v">Quick (free) — right after you wound a target in melee</span><span class="stat-k">Range</span><span class="stat-v">Self</span><span class="stat-k">Defence</span><span class="stat-v">None — converts up to 2d of your own fresh melee injury into FP</span><span class="stat-k fp">FP</span><span class="stat-v fp">6</span><span class="stat-k">Reaction</span><span class="stat-v">No</span></div>
   </div>
   <div class="power-body">
-    <p class="effect"><b>Effect.</b> Roll Will immediately after you wound a living target in melee. Convert up to <b>2d of that injury into FP</b> for yourself.</p>
+    <p class="effect"><b>Effect.</b> Roll your Force attribute immediately after you wound a living target in melee. Convert up to <b>2d of that injury into FP</b> for yourself.</p>
     <p class="soma"><b>BODY.</b> A breath drawn through the teeth as your blow lands — no extra hand, it rides the strike you already made.</p>
     <p class="flavor">The blade takes the body; you take what spills out.</p>
     <p class="warn">Only your own freshly-dealt melee injury feeds you; a companion's kill is no meal.</p>
@@ -9163,10 +9187,10 @@ Life endures
 </div><div class="power">
   <div class="power-stats">
     <h4 class="power-name">The Endless Mouth</h4>
-    <div class="statgrid"><div class="stat-sum">Roll Will. A consuming void opens, widening 1 hex/minute; everything living inside takes 1d injury/minute (HT halves)…</div><span class="stat-k">Affinity</span><span class="stat-v">Will</span><span class="stat-k">Action</span><span class="stat-v">Ritual (minutes), or instinctive at a death-rich site</span><span class="stat-k">Range</span><span class="stat-v">Region — a void widening one hex per minute</span><span class="stat-k">Defence</span><span class="stat-v">Resisted by HT (halves); 1d injury/min to all living inside</span><span class="stat-k fp">FP</span><span class="stat-v fp">variable</span><span class="stat-k">Reaction</span><span class="stat-v">No</span></div>
+    <div class="statgrid"><div class="stat-sum">Roll your Force attribute. A consuming void opens, widening 1 hex/minute; everything living inside takes 1d injury/minute (HT halves)…</div><span class="stat-k">Affinity</span><span class="stat-v">Will</span><span class="stat-k">Action</span><span class="stat-v">Ritual (minutes), or instinctive at a death-rich site</span><span class="stat-k">Range</span><span class="stat-v">Region — a void widening one hex per minute</span><span class="stat-k">Defence</span><span class="stat-v">Resisted by HT (halves); 1d injury/min to all living inside</span><span class="stat-k fp">FP</span><span class="stat-v fp">variable</span><span class="stat-k">Reaction</span><span class="stat-v">No</span></div>
   </div>
   <div class="power-body">
-    <p class="effect"><b>Effect.</b> Roll Will. A consuming void opens, widening <b>1 hex/minute</b>; everything living inside takes <b>1d injury/minute</b> (HT halves) and feeds you. A lesser Feast of Worlds.</p>
+    <p class="effect"><b>Effect.</b> Roll your Force attribute. A consuming void opens, widening <b>1 hex/minute</b>; everything living inside takes <b>1d injury/minute</b> (HT halves) and feeds you. A lesser Feast of Worlds.</p>
     <p class="soma"><b>BODY.</b> A whispered un-name and the jaw left hanging open; at a death-rich site it can open near-instinctively, without the full ritual.</p>
     <p class="flavor">A door left open, and what comes through is appetite.</p>
     <p class="warn">Once open it feeds on all life within — friend, and self, if they linger; closing it is far harder than opening it.</p>
@@ -10711,6 +10735,7 @@ Life endures
     <div class="tagline">The Determination Form · Form of the Sarlacc</div>
   </div>
   <div class="form-flaw-perm"><b>Permanent Flaw —</b> −3 to hit in 1v1 duels. No Targeted Attacks.</div>
+  <p class="note"><b>Example —</b> Tylo (Shii-Cho, Sword Master) is swarmed by five battle-droids. His multiple-attack penalty is cut by 4 per extra target, so cutting at three of them costs far less than usual, and he is at +2 Parry for facing 2+. Drag him into a one-on-one duel and the −3 dueling flaw bites — the form was never built for a single foe.</p>
   <div class="form-tiers">
     <div class="form-tier">
       <div class="tier-label"><span class="num">I</span><span class="name">Initiate</span></div>
@@ -10757,6 +10782,7 @@ Life endures
     <div class="tagline">The Contention Form · Form of the Ysalamiri</div>
   </div>
   <div class="form-flaw-perm"><b>Permanent Flaw —</b> −3 Parry vs blasters. −2 to all defenses vs flank and rear attacks.</div>
+  <p class="note"><b>Example —</b> A Makashi Knight opens a saber duel with a Feint at +3, wins the Quick Contest, and lands the follow-up before the defender can bring their blade across. Put her in front of a blaster line instead and the −3 Parry vs blasters is exactly why Makashi duelists fear a gunfight.</p>
   <div class="form-tiers">
     <div class="form-tier">
       <div class="tier-label"><span class="num">I</span><span class="name">Initiate</span></div>
@@ -10804,6 +10830,7 @@ Life endures
     <div class="tagline">The Resilience Form · Form of the Mynock</div>
   </div>
   <div class="form-flaw-perm"><b>Permanent Flaw —</b> No All-Out Move &amp; Attack. −2 damage on all hits.</div>
+  <p class="note"><b>Example —</b> A Soresu Initiate under fire Parries three blaster bolts in one turn before any cumulative penalty, Stepping while in All-Out Defense to stay in cover. The −2-damage flaw never matters while she is weathering the storm — but it also means she cannot All-Out Move & Attack to close when she finally wants to strike.</p>
   <div class="form-tiers">
     <div class="form-tier">
       <div class="tier-label"><span class="num">I</span><span class="name">Initiate</span></div>
@@ -10851,6 +10878,7 @@ Life endures
     <div class="tagline">The Aggression Form · Form of the Hawk-Bat</div>
   </div>
   <div class="form-flaw-perm"><b>Permanent Flaw —</b> Costs 1 FP per turn while in active combat. Stunned for 1 turn if FP reaches 0.</div>
+  <p class="note"><b>Example —</b> An Ataru Knight spends the Step that rides his Attack as a Force Leap, crossing eight hexes to reach a sniper and striking +1 damage for having moved. It costs the leap's FP plus the form's standing 1 FP per turn — let his pool hit zero mid-fight and he is Stunned for a turn.</p>
   <div class="form-tiers">
     <div class="form-tier">
       <div class="tier-label"><span class="num">I</span><span class="name">Initiate</span></div>
@@ -10898,6 +10926,7 @@ Life endures
     <div class="tagline">The Perseverance Form · Form of the Krayt Dragon (classical variant)</div>
   </div>
   <div class="form-flaw-perm"><b>Permanent Flaw —</b> −2 to Dodge. If forced to Dodge, suffer −2 to all skills next turn.</div>
+  <p class="note"><b>Example —</b> A Shien Sword Master deflects two blaster bolts and, with Returned Volley, throws both back in one action — split across two shooters at +4 each, no multiple-attack penalty. Force her to Dodge a melee blow rather than Parry it, though, and she is at −2 to all skills next turn.</p>
   <div class="form-tiers">
     <div class="form-tier">
       <div class="tier-label"><span class="num">I</span><span class="name">Initiate</span></div>
@@ -10944,14 +10973,15 @@ Life endures
     <h3>Djem So</h3>
     <div class="tagline">The Perseverance Form · Form of the Krayt Dragon (martial variant)</div>
   </div>
-  <div class="form-flaw-perm"><b>Permanent Flaw —</b> −1 to hit any foe faster than you (higher Basic Speed). Telegraphed power: −1 to your active defenses on any turn you make a Djem So counterattack.</div>
+  <div class="form-flaw-perm"><b>Permanent Flaw —</b> −2 to hit any foe faster than you (higher Basic Speed). Every Djem So counterattack costs <b>1 FP</b> and stacks a cumulative <b>−2 to all your active defenses</b> until the start of your next turn — counter twice and your guard is at −4, three times −6, and so on. A counter is raw telegraphed power: it is always a plain strike and may <i>never</i> be a Deceptive Attack, Rapid Strike, All-Out Attack, or Targeted Attack.</div>
+  <p class="note"><b>Example —</b> the counter: Tylo (Sword Master) Parries a Mandalorian's vibroblade and answers at full skill for weapon damage +5 (the +2 core buff and the +3 counter stack on one swing). It costs 1 FP and drops his active defenses −2 until his next turn. A second Mandalorian strikes; he Parries at that −2 and counters again, now −4 and down a second FP. He can answer the whole line — but each reply leaves him more open and emptier, so a Djem So master spends his counters rather than spraying them. No counter may ever be a Deceptive Attack or Rapid Strike.</p>
   <p class="note" style="margin:.4rem 0 .2rem"><b>The martial answer to Shien.</b> Where Shien turns blaster fire back on the shooter, Djem So was built later for the duel — block, parry, and answer at once. It uses the opponent's own aggression against them: every defence is the windup for an overwhelming counter-blow. The power form of the strong and the immovable.</p>
   <div class="form-tiers">
     <div class="form-tier">
       <div class="tier-label"><span class="num">I</span><span class="name">Initiate</span></div>
       <div class="tier-content">
-        <p><b>Core Buff.</b> +1 damage on all saber hits (raw power behind the blow). After a successful Parry <i>or</i> Block, take an immediate free counterattack at −2 to hit, +1 damage.</p>
-        <p class="visual">You do not give ground. You take theirs.</p>
+        <p><b>Core Buff.</b> +1 damage on all saber hits (raw power behind the blow). After any successful Parry <i>or</i> Block you may make an immediate counterattack against that attacker — there is <b>no limit</b> on how many times per turn, but each costs 1 FP and stacks the defensive penalty above. The counterattack is made at −2 to hit, +1 damage.</p>
+        <p class="visual">You do not give ground. You take theirs — and pay for every inch.</p>
       </div>
     </div>
     <div class="form-tier">
@@ -10965,14 +10995,14 @@ Life endures
     <div class="form-tier">
       <div class="tier-label"><span class="num">III</span><span class="name">Sword Master</span></div>
       <div class="tier-content">
-        <p><b>Core Buff.</b> +2 damage on hits. Counterattack at full skill (+0), +2 damage.</p>
+        <p><b>Core Buff.</b> +2 damage on hits. Counterattack at full skill (+0), +3 damage.</p>
         <p class="visual">Every block is a question. Every counter is the answer.</p>
       </div>
     </div>
     <div class="form-tier">
       <div class="tier-label"><span class="num">IV</span><span class="name">Grandmaster</span></div>
       <div class="tier-content">
-        <p><b>Core Buff.</b> +2 damage on hits. Counterattack at +0, +3 damage.</p>
+        <p><b>Core Buff.</b> +2 damage on hits. Counterattack at +0, +4 damage.</p>
         <p><b>Technique —</b> <span class="slot-badge" style="--sc:#b06a3a">REACTIVE</span>Power Hurl (Saber Throw): once per turn, hurl the lit blade as a thrown attack at full Lightsaber skill (Strength-based throwing range); it returns to your hand at end of turn. The telegraph penalty applies on the throw turn.</p>
         <p class="visual">The Krayt does not always wait for you to come to it.</p>
       </div>
@@ -10980,7 +11010,7 @@ Life endures
     <div class="form-tier">
       <div class="tier-label"><span class="num">V</span><span class="name">Battle Master</span></div>
       <div class="tier-content">
-        <p><b>Core Buff.</b> +3 damage on hits. Counterattack at +0, +4 damage; any defence succeeding by 3+ grants the counterattack at +2.</p>
+        <p><b>Core Buff.</b> +3 damage on hits. Counterattack at +0, +5 damage; a counter answering a defence you won by 3+ is made at +2 to hit.</p>
         <p><b>Technique —</b> <span class="slot-badge" style="--sc:#7a5ab0">PASSIVE</span>Unstoppable: when a counterattack wounds a foe, they roll ST or are driven back 1 m and suffer −1 to their next attack.</p>
         <p class="visual">They break themselves on you, again and again, until there is nothing left to break.</p>
       </div>
@@ -10995,6 +11025,7 @@ Life endures
     <div class="tagline">The Moderation Form · The Diplomat's Form</div>
   </div>
   <div class="form-flaw-perm"><b>Permanent Flaw —</b> Diminishing Returns: the 1st Force Power Follow-up in a turn costs its normal price; the 2nd costs +1 FP, the 3rd +2 FP, the 4th +3 FP (maximum +4 extra). <b>This surcharge is added <i>after</i> any tier discount and is never reduced or waived</b> — no discount, at any tier, can lower a Follow-up to zero. Resets at the start of each new turn.</div>
+  <p class="note"><b>Example —</b> A Niman Knight lands a saber hit and immediately rides a Force Push as a Follow-up for its own base FP (−1 at this tier), no extra action. A second Follow-up the same turn still works, but Diminishing Returns adds +1 FP on top of it, and a third would add +2 — the hybrid never comes for free.</p>
   <div class="form-tiers">
     <div class="form-tier">
       <div class="tier-label"><span class="num">I</span><span class="name">Initiate</span></div>
@@ -11042,6 +11073,7 @@ Life endures
     <div class="tagline">The Ferocity Form · The Vicious Path</div>
   </div>
   <div class="form-flaw-perm"><b>Permanent Flaw —</b> Will roll required each turn or lose 2 FP and −1 to mental defense (cumulative). Juyo and Vaapad share Tier 1 — practitioners commit to a path at Tier 2.</div>
+  <p class="note"><b>Example —</b> A Juyo Initiate makes a Rapid Strike at only −2 instead of −6, both blows carrying Armour Divisor 2 so they cut through a trooper's plate. At the top of every turn, though, he rolls Will or loses 2 FP and takes a cumulative −1 to mental defense — the frenzy always asks to be paid.</p>
   <div class="form-tiers">
     <div class="form-tier">
       <div class="tier-label"><span class="num">I</span><span class="name">Initiate</span></div>
@@ -11082,6 +11114,7 @@ Life endures
     <div class="tagline">The Way of the Vornskr · Channelling the Dark</div>
   </div>
   <div class="form-flaw-perm"><b>Permanent Flaw —</b> Will roll required each turn or lose 2 FP and −1 to mental defense (cumulative). Vaapad and Juyo share Tier 1 — paths diverge at Tier 2.</div>
+  <p class="note"><b>Example —</b> Facing a Sith hurling dark lightning, a Vaapad Sword Master uses Current Mirror — a Quick Contest of Will that halves the power's effect and grants +2 to his next strike. He still owes the form's per-turn Will roll: Vaapad rides the current, it never silences it.</p>
   <div class="form-tiers">
     <div class="form-tier">
       <div class="tier-label"><span class="num">I</span><span class="name">Initiate</span></div>
@@ -11130,6 +11163,7 @@ Life endures
   </div>
   <div class="advanced-banner"><b>Advanced Form —</b> requires Grandmaster proficiency in any single-blade Form before training may begin. Built on the dual-wield, not the single blade.</div>
   <div class="form-flaw-perm"><b>Permanent Flaw —</b> Requires two working, lit sabers in hand. Confers nothing if a blade is lost, sheathed, or thrown, and forbids the use of a shield, a free hand, or a two-handed grip. A character reduced to one blade fights at that blade's base skill with none of this Form's benefits. This cost is live at every tier — even a Battle Master is one disarm away from an ordinary swordsman.</div>
+  <p class="note"><b>Example —</b> A Jar'Kai Sword Master makes a Twin Strike — both blades at full skill on one foe, who must defend against the second blade at −3 — and keeps a spare off-blade Parry in reserve for a second attacker. Disarm one saber and she drops to that blade's bare skill with none of the form's gifts.</p>
   <div class="form-tiers">
     <div class="form-tier">
       <div class="tier-label"><span class="num">I</span><span class="name">Initiate</span></div>
@@ -11177,6 +11211,7 @@ Life endures
   </div>
   <div class="advanced-banner"><b>Advanced Form —</b> requires Grandmaster proficiency in any single-blade Form before training may begin. Built on the double-bladed saber, not the single blade.</div>
   <div class="form-flaw-perm"><b>Permanent Flaw —</b> Clinch: a foe in your 1-hex zone costs you the spin's second attack roll against them — the weapon is too long to bring to bear that close. On a critical miss the staff strikes the wielder for normal damage. Mastery eases the clinch but never closes it: the second strike always dies that close, at every tier including Battle Master.</div>
+  <p class="note"><b>Example —</b> A Saberstaff Initiate’s single Attack maneuver yields two strikes at full skill against adjacent foes, while the constant spin grants +1 Parry and immunity to flanking. Let a foe close to within 1 hex and the staff is too long to bring round — that foe costs you the second strike, at every tier, forever.</p>
   <div class="form-tiers">
     <div class="form-tier">
       <div class="tier-label"><span class="num">I</span><span class="name">Initiate</span></div>
@@ -11985,7 +12020,10 @@ Life endures
 
 <h3 class="section-head" id="sec-jump-cost">Hyperfuel per Jump — Route × Drive <span class="tag tag--sw">SW</span></h3>
 <p class="rule"><span class="rule__name">The Formula.</span> HF spent on a jump = the ship’s <strong>Avg Jump HF</strong> (above) × the <strong>route-length</strong> factor × the <strong>hyperdrive-class</strong> factor. A light freighter (Avg Jump 1.2 HF, Class&nbsp;1 drive) making a long haul spends 1.2 × 2 × 1 ≈ <strong>2.4 HF</strong>; that same ship on a galaxy-crossing run burns 1.2 × 4 ≈ <strong>5 HF</strong> — nearly half its 12-HF tank in one jump. Round to the nearest half-unit.</p>
-<div class="tbl-scroll"><table class="tbl"><thead><tr><th>Modifier</th><th>Factor</th><th>Example / Note</th></tr></thead><tbody><tr><td colspan="3" style="background:#f4f1e8;font-weight:600;font-size:9pt;">— Route Length × (applied to the ship’s Avg Jump HF) —</td></tr><tr><td><strong>Short hop</strong></td><td>×0.5</td><td>In-system or one sector over.</td></tr><tr><td><strong>Standard jump</strong></td><td>×1</td><td>Cross-sector on a major lane — the listed Avg Jump.</td></tr><tr><td><strong>Long haul</strong></td><td>×2</td><td>Region to region (Core to Mid Rim).</td></tr><tr><td><strong>Galaxy-crossing</strong></td><td>×4</td><td>Rim to rim, end of a major lane to the other.</td></tr><tr><td colspan="3" style="background:#f4f1e8;font-weight:600;font-size:9pt;">— Hyperdrive Class × (faster drives guzzle) —</td></tr><tr><td><strong>Class 0.5–0.75 (racing / military)</strong></td><td>×1.5</td><td>Speed costs fuel.</td></tr><tr><td><strong>Class 1–2 (standard)</strong></td><td>×1</td><td>Baseline efficiency.</td></tr><tr><td><strong>Class 3–4 (cargo / old)</strong></td><td>×0.7</td><td>Sips fuel; slow.</td></tr></tbody></table></div>
+<div class="tbl-scroll"><table class="tbl"><thead><tr><th>Modifier</th><th>Factor</th><th>Example / Note</th></tr></thead><tbody><tr><td colspan="3" style="background:#f4f1e8;font-weight:600;font-size:9pt;">— Route Length × (applied to the ship’s Avg Jump HF) —</td></tr><tr><td><strong>Short hop</strong></td><td>×0.5</td><td>In-system or one sector over.</td></tr><tr><td><strong>Standard jump</strong></td><td>×1</td><td>Cross-sector on a major lane — the listed Avg Jump.</td></tr><tr><td><strong>Long haul</strong></td><td>×2</td><td>Region to region (Core to Mid Rim).</td></tr><tr><td><strong>Galaxy-crossing</strong></td><td>×4</td><td>Rim to rim, end of a major lane to the other.</td></tr><tr><td colspan="3" style="background:#f4f1e8;font-weight:600;font-size:9pt;">— Hyperdrive Class × (faster drives guzzle) —</td></tr><tr><td><strong>Class 0.5–0.75 (racing / military)</strong></td><td>×1.5</td><td>Speed costs fuel.</td></tr><tr><td><strong>Class 1–2 (standard)</strong></td><td>×1</td><td>Baseline efficiency.</td></tr><tr><td><strong>Class 3–4 (cargo / old)</strong></td><td>×0.7</td><td>Sips fuel; slow.</td></tr></tbody></table>
+<p style="margin:14px 0 4px"><b>Transit Times — The Holomap Standard</b> <span class="tag tag--sw">SW</span></p>
+<p>The Galactic Holochart computes journey times with this rule, and table play uses the same math. A jump covers each <b>grid-region of the holomap at a base 16 hours</b> for a Class&nbsp;1.0 drive; the <b>hard regions</b> — the Deep Core, the Outer Rim, and Wild Space — take <b>24 hours</b> per region (mass-shadows, thin charts, no beacons). Multiply by hyperdrive class (Class&nbsp;2 doubles it, Class&nbsp;0.5 halves it), then by the lane factor: <b>×0.75 on a major hyperlane</b>, <b>×1.0 on a minor lane</b>, <b>×1.25 plotting through open space</b>. The holomap's route-length classes for the fuel formula above map to the same chart: a <b>short hop</b> is ≤1.2 grid-squares, a <b>standard jump</b> ≤4, a <b>long haul</b> ≤9, and anything beyond is <b>galaxy-crossing</b>. Plot any course on the Holochart and it reports the transit time, the HF burn, the reactor fuel for the cruise, and the full fuel bill — all reconciled with this section.</p>
+</div>
 
 <h3 class="section-head" id="sec-ground-vehicle-fuel">Land, Air &amp; Repulsor Vehicles <span class="tag tag--sw">SW</span></h3>
 <p class="rule"><span class="rule__name">Why Ground Travel Is Cheap.</span> Most speeders and repulsorcraft run on <strong>rechargeable energy cells</strong> — a few credits to top up at any power post — which is why a planet-side journey is trivial next to a starship’s fuel bill. Heavy and military repulsorcraft draw on the same <strong>reactor cells (RF)</strong> as ships; primitive and backwater rigs still burn <strong>combustion fuel</strong> by the litre. No vehicle on this table uses hyperfuel — HF is for crossing the void, nothing else.</p>
@@ -13333,13 +13371,30 @@ Crew Surrender.</span> Often the cleanest outcome. Once boarders have secured th
 
 <h2 class="section-head" id="sec-lightsabers-variants-sw">Lightsabers &amp; Variants <span class="tag tag--sw">SW</span></h2>
 
+<p>A lightsaber is a <b>platform</b>, not a fixed weapon: one hilt, a handful of component slots — crystal, grip, emitter &amp; lens, power cell. The blades the galaxy calls “variants” are <b>hilt configurations</b>: one grip-slot component each, fitted to the same standard weapon (Class&nbsp;2 install). Build the saber once; configure it forever.</p>
+
 <div class="tbl-scroll"><table class="tbl">
   <thead>
-    <tr><th>Lightsaber Type</th><th>Damage(AD)</th><th>Reach</th><th>Parry</th><th>Wt</th><th>Cost</th><th>Notes</th></tr>
-  </thead>
-  <tbody><tr><td><strong>Double-bladed lightsaber</strong></td><td>Sw 8d+8(5) burn<br>Th 4d+4(10) imp+burn<br><span style="font-size:8pt;">(both ends)</span></td><td>1,2</td><td>0F</td><td>1</td><td>build*</td><td>Saberstaff. Double weapon. Two crystals. Sith Assassins, Jedi Shadows.</td></tr><tr><td><strong>Great lightsaber</strong></td><td>Sw 9d+9(5) burn<br>Th 4d+6(10) imp+burn</td><td>1,2</td><td>0F</td><td>1.5</td><td>build*</td><td>Oversized blade. Two-handed. Heavy-assault Sith.</td></tr><tr><td><strong>Lightfoil</strong></td><td>Sw 7d+7(5) burn<br>Th 3d+5(10) imp+burn</td><td>1</td><td>0F</td><td>0.4</td><td>14,000</td><td>Elegant Tapani dueling saber. May count as Small weapon. One-handed only.</td></tr><tr><td><strong>Lightwhip</strong></td><td>Sw 5d+5(5) burn<br><span style="font-size:8pt;">(no thrust — flexible)</span></td><td>1-4*</td><td>−2F</td><td>0.6</td><td>build*</td><td>Flexible plasma lash. Hard to parry, hard to use. Rare Sith weapon.</td></tr><tr><td><strong>Saberstaff (curved hilt)</strong></td><td>Sw 8d+8(5) burn<br>Th 4d+4(10) imp+burn</td><td>1,2</td><td>+1F</td><td>0.5</td><td>build*</td><td>Makashi dueling hilt. +1 Parry. Count Dooku-style.</td></tr><tr><td><strong>Shoto / short saber</strong></td><td>Sw 6d+6(5) burn<br>Th 3d+3(10) imp+burn</td><td>1</td><td>0F</td><td>0.4</td><td>build*</td><td>Off-hand companion blade (Jar’Kai). Easier in tight spaces.</td></tr><tr><td><strong>Standard lightsaber</strong></td><td>Sw 8d+8(5) burn<br>Th 4d+4(10) imp+burn</td><td>1,2</td><td>0F</td><td>0.5</td><td>build*</td><td>Cuts nearly all DR; cauterises (<a href="#book-damage">Doc III</a>). Can Deflect blaster bolts (<a href="#book-ranged">Doc II</a>).</td></tr>
-  </tbody>
-</table></div>
+    <tr><th>Base weapon</th><th>Damage(AD)</th><th>Reach</th><th>Parry</th><th>Wt</th><th>Cost</th><th>Notes</th></tr>
+  </thead><tbody>
+  <tr><td><b>Standard lightsaber</b></td><td>Sw 8d+8(5) burn<br>Th 4d+4(10) imp+burn</td><td>1,2</td><td>0F</td><td>0.5</td><td>build*</td><td>Cuts nearly all DR; cauterises (<a href="#book-damage">Doc III</a>). Can Deflect blaster bolts (<a href="#book-coregame">Doc II</a>). Accepts every component below.</td></tr>
+  <tr><td><b>Lightwhip</b></td><td>Sw 5d+5(5) burn (no thrust — flexible)</td><td>1-4*</td><td>−2F</td><td>0.6</td><td>build*</td><td>Flexible plasma lash — a genuinely different weapon, <b>not</b> a hilt configuration. Hard to parry, hard to use. Rare Sith weapon.</td></tr>
+  <tr><td><b>Training saber</b></td><td>sw cr (stun only)</td><td>1</td><td>0</td><td>1</td><td>1,200</td><td>Practice tool. Equivalently: fit a <b>Training emitter</b> (Class&nbsp;1 swap) to any saber.</td></tr>
+</tbody></table></div>
+
+<p style="margin:14px 0 4px"><b>Hilt Configurations — slot: grip (one per saber, Class&nbsp;2 install)</b></p>
+<div class="tbl-scroll"><table class="tbl">
+  <thead>
+    <tr><th>Configuration</th><th>Becomes</th><th>Damage(AD)</th><th>Reach</th><th>Parry</th><th>Prereq</th><th>Cost</th><th>Notes</th></tr>
+  </thead><tbody>
+  <tr><td><b>Shoto hilt (compact)</b></td><td>Shoto / short saber</td><td>Sw 6d+6(5) burn<br>Th 3d+3(10) imp+burn</td><td>1</td><td>0F</td><td>—</td><td>2,400</td><td>Off-hand companion blade (Jar’Kai): +1 to dual-wield off-hand use. Easily concealed; easier in tight spaces.</td></tr>
+  <tr><td><b>Curved hilt</b></td><td>Duelling saber</td><td>Sw 8d+8(5) burn<br>Th 4d+4(10) imp+burn</td><td>1,2</td><td>+1F</td><td>—</td><td>1,600</td><td>Makashi duelling grip: +1 Parry; −1 to retain (slips on Disarm).</td></tr>
+  <tr><td><b>Duelling foil hilt</b></td><td>Lightfoil</td><td>Sw 7d+7(5) burn<br>Th 3d+5(10) imp+burn</td><td>1</td><td>+1F</td><td>—</td><td>4,600</td><td>Elegant Tapani salon blade: −1 damage die, +1 Parry, −2 min ST. May count as a Small weapon. One-handed only.</td></tr>
+  <tr><td><b>Dual-grip hilt (saberstaff)</b></td><td>Saberstaff / double-bladed saber</td><td>Sw 8d+8(5) burn<br>Th 4d+4(10) imp+burn (both ends)</td><td>1,2</td><td>0F</td><td><b>Saberstaff form training</b> (<a href="#book-training">Doc VI</a>)</td><td>4,200</td><td>Double weapon, two crystals: 2 attacks per turn at −2 each. Sith Assassins, Jedi Shadows.</td></tr>
+  <tr><td><b>Extended hilt (great saber)</b></td><td>Great lightsaber</td><td>Sw 9d+9(5) burn<br>Th 4d+6(10) imp+burn</td><td>1,2,3</td><td>0F</td><td><b>ST 11+</b></td><td>5,200</td><td>Oversized two-handed blade: +1 damage die and <b>+1 hex reach</b> — in exchange for +2 min ST and an unwieldy hilt in confined spaces. Heavy-assault Sith.</td></tr>
+</tbody></table></div>
+<p class="tbl-note">One grip component per saber — fitting a new configuration replaces the old. Effects shown are the resulting blade; the character sheet computes them automatically when the component is socketed. Thrust profiles follow the saber convention: <b>thrust dice = half the swing dice</b> (8d→4d+4 · 9d→4d+6 · 7d→3d+5 · 6d→3d+3).</p>
+
 <p class="tbl-note">* Lightsabers are built, not bought: components (~2,000-6,000 cr) plus a focusing crystal, assembled by the wielder (<a href="#book-force">Doc IV</a>). F = fencing parry (retreat bonus). Each saber lists two attacks — <strong>Sw</strong> (swing, burning, AD 5) and <strong>Th</strong> (thrust, impaling+burning, AD 10, half dice but ×2 wound); see Part I &amp; Part X. <strong>No ★ master line:</strong> unlike other melee weapons, a lightsaber requires <em>Trained by a Master</em> simply to wield proficiently at all (without it, see the untrained-lightsaber danger rules, <a href="#book-combat">Doc I</a>) — so the damage shown already assumes a trained wielder. There is no ”untrained baseline” version of a lightsaber.</p>
 
 <div class="body-3col">
@@ -13352,11 +13407,43 @@ Crew Surrender.</span> Often the cleanest outcome. Once boarders have secured th
 
 <p class="rule"><span class="rule__name">The Focusing Crystal.</span> A lightsaber’s crystal sets blade colour and tunes performance. The primary crystal determines colour; some hilts hold secondary tuning crystals. Crystals are found, won, or grown — never simply bought. Detailed crystal-attunement and Force-bonding mechanics live in <a href="#book-force">Doc IV</a>; the gear-level effects are here.</p>
 
-<p class="rule"><span class="rule__name">Combat Crystals.</span> <strong>Firkrann</strong> (+ion/energy disruption, bonus vs droids/electronics) · <strong>Phond</strong> (+1 per die damage) · <strong>Rubat</strong> (+1 weapon skill) · <strong>Jenruax</strong> (+1 Parry) · <strong>Opila</strong> (crits read one row worse for victim) · <strong>Sigil</strong> (balanced +1 attack/+1 damage, rare) · <strong>Damind/Eralam</strong> (+follow-up shock) · <strong>Sapith</strong> (+attack speed, extra Rapid-Strike).</p>
+<p class="rule"><span class="rule__name">Combat Crystals.</span> <strong>Firkrann</strong> (+ion/energy disruption, bonus vs droids/electronics) · <strong>Phond</strong> (+1 per die damage) · <strong>Rubat</strong> (+1 weapon skill) · <strong>Jenruax</strong> (+1 Parry) · <strong>Opila</strong> (crits read one row worse for victim) · <strong>Sigil</strong> (balanced +1 attack/+1 damage, rare) · <strong>Damind</strong> (+follow-up shock) · <strong>Eralam</strong> (cracked-and-refused: +1 dmg/+1 skill) · <strong>Nextor</strong> (unstable: crits easier) · <strong>Sapith</strong> (+attack speed, extra Rapid-Strike).</p>
 
 <p class="rule"><span class="rule__name">Aligned Crystals.</span> <span class="tag tag--sw">SW</span> <strong>Solari</strong> — pure light-side, only a strongly light-aligned wielder benefits; inert/harmful to dark-siders. <strong>Sith synth-crystals</strong> (“bleeding” crystals) — dark-side-forged red crystals, power at the cost of stability, usable only by dark-siders. These carry a corruption cost (<a href="#book-force">Doc IV</a>).</p>
 
 <p class="rule"><span class="rule__name">Natural vs Synthetic.</span> Natural crystals (Adegan, Ilum kyber) are Jedi-traditional and stable. Synthetic crystals are forged in furnaces (Sith method) and can be pushed to higher output. The colour and ”personality” of a blade reflect its crystal and its maker.</p>
+
+<p class="rule"><span class="rule__name">Crystals as components.</span> Every lightsaber carries exactly <b>one</b> primary focusing crystal in its <b>crystal slot</b>. Swapping a crystal is a Class&nbsp;2 install (workshop, hours, an Armoury or saber-construction roll — Doc&nbsp;IV for attunement). Crystals are never stocked: <i>found, won, or grown</i>. Tier marks rarity and how tightly the galaxy controls it, not a shop shelf.</p>
+<p style="margin:14px 0 4px"><b>Focusing Crystal Catalogue — slot: crystal (one per saber)</b></p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th style="width:17%">Component</th><th>Tier</th><th>Effects</th><th>Wt&nbsp;(kg)</th><th>Cost</th><th>Prereq</th><th>Notes</th></tr>
+<tr><td><b>Crystal focus (saber)</b></td><td><b style="color:#507c50">Civilian</b></td><td>+1 dmg</td><td>—</td><td>1,800</td><td>—</td><td>+1 dmg OR +1 Parry — pick at activation.</td></tr>
+<tr><td><b>Bondar crystal</b></td><td><b style="color:#50767c">Police</b></td><td>—</td><td>—</td><td>4,800</td><td>—</td><td>Concussive corona: on any critical hit the victim also checks HT−2 or is stunned.</td></tr>
+<tr><td><b>Damind crystal</b></td><td><b style="color:#50767c">Police</b></td><td>—</td><td>—</td><td>5,000</td><td>—</td><td>Searing follow-up: targets struck suffer −1 shock penalty extra next turn.</td></tr>
+<tr><td><b>Firkrann crystal</b></td><td><b style="color:#50767c">Police</b></td><td>—</td><td>—</td><td>5,200</td><td>—</td><td>Ion-charged lattice: +2 damage vs droids, electronics and energy shields.</td></tr>
+<tr><td><b>Ilum kyber (standard)</b></td><td><b style="color:#50767c">Police</b></td><td>—</td><td>—</td><td>found</td><td>—</td><td>The Jedi baseline. Stable, attuned, no modifiers — the blade the catalogue assumes.</td></tr>
+<tr><td><b>Jenruax crystal</b></td><td><b style="color:#50767c">Police</b></td><td>+1 Parry</td><td>—</td><td>5,400</td><td>—</td><td>+1 Parry — the blade moves to guard almost before you ask.</td></tr>
+<tr><td><b>Phond crystal</b></td><td><b style="color:#50767c">Police</b></td><td>+1 dmg per die</td><td>—</td><td>6,200</td><td>—</td><td>+1 damage per die (an 8d blade gains +8). Hot, hungry edge.</td></tr>
+<tr><td><b>Rubat crystal</b></td><td><b style="color:#50767c">Police</b></td><td>+1 skill</td><td>—</td><td>5,600</td><td>—</td><td>+1 weapon skill — the blade feels lighter, more present in the hand.</td></tr>
+<tr><td><b>Dueling crystal</b></td><td><b style="color:#876b58">Military</b></td><td>-1 dmg · +1 Parry</td><td>—</td><td>5,400</td><td>—</td><td>+1 Parry vs sabers; -1 dmg vs droids/objects.</td></tr>
+<tr><td><b>Eralam crystal</b></td><td><b style="color:#876b58">Military</b></td><td>+1 dmg · +1 skill</td><td>—</td><td>8,800</td><td>—</td><td>Cracked then re-fused; +1 dmg and +1 skill. Sought by duellists.</td></tr>
+<tr><td><b>Nextor crystal</b></td><td><b style="color:#876b58">Military</b></td><td>-1 Parry</td><td>—</td><td>9,200</td><td>—</td><td>Unstable matrix: critical success threshold improves by 1 (a 5 always crits); −1 Parry.</td></tr>
+<tr><td><b>Opila crystal</b></td><td><b style="color:#876b58">Military</b></td><td>+1 dmg</td><td>—</td><td>8,400</td><td>—</td><td>+1 dmg; your criticals read one row worse for the victim on the crit table.</td></tr>
+<tr><td><b>Sapith crystal</b></td><td><b style="color:#876b58">Military</b></td><td>—</td><td>—</td><td>11,000</td><td>—</td><td>Fluid arcs: one Rapid Strike per turn at −3/−3 instead of −6/−6.</td></tr>
+<tr><td><b>Sigil crystal</b></td><td><b style="color:#876b58">Military</b></td><td>+1 dmg · +1 skill</td><td>—</td><td>13,500</td><td>—</td><td>Perfectly balanced: +1 skill, +1 dmg. Rare and prized.</td></tr>
+<tr><td><b>Vented saber crystal</b></td><td><b style="color:#876b58">Military</b></td><td>+1 dmg · -1 Parry</td><td>—</td><td>6,600</td><td>—</td><td>+1 dmg; -1 Parry (unbalanced corona).</td></tr>
+<tr><td><b>Hurrikaine crystal</b></td><td><b style="color:#935f91">Exotic</b></td><td>—</td><td>—</td><td>18,000</td><td>—</td><td>Phase-shifted blade: ignores energy-dispersing weave (no ½-energy AD vs this saber).</td></tr>
+<tr><td><b>Krayt dragon pearl</b></td><td><b style="color:#935f91">Exotic</b></td><td>+1 dmg · +1 skill · +1 Parry</td><td>—</td><td>24,000</td><td>—</td><td>Not a crystal at all — a pearl ground in a dragon’s gullet. +1 dmg/skill/Parry.</td></tr>
+<tr><td><b>Sith corrupted crystal</b></td><td><b style="color:#935f91">Exotic</b></td><td>+2 dmg</td><td>—</td><td>25,000</td><td>—</td><td>+2 dmg; -2 to Light-side Force rolls while wielded. Corrupts.</td></tr>
+<tr><td><b>Solari crystal</b></td><td><b style="color:#935f91">Exotic</b></td><td>+2 dmg · +1 skill</td><td>—</td><td>found</td><td>Strongly light-aligned wielder</td><td>Pure light: +2 dmg, +1 skill for a light-side champion; inert for the unaligned, −2 skill in a darkened hand.</td></tr>
+<tr><td><b>Synth crystal</b></td><td><b style="color:#935f91">Exotic</b></td><td>+1 dmg</td><td>—</td><td>17,000</td><td>—</td><td>+1d dmg; non-attuned (any Force user can wield). Sith use these.</td></tr>
+<tr><td><b>Ultima Pearl</b></td><td><b style="color:#935f91">Exotic</b></td><td>+2 dmg · +1 skill</td><td>—</td><td>30,000</td><td>—</td><td>A flawless krayt pearl. +1 skill, +2 dmg. Hutts have started wars over one.</td></tr>
+<tr><td><b>Upari crystal</b></td><td><b style="color:#935f91">Exotic</b></td><td>+2 dmg</td><td>—</td><td>16,000</td><td>—</td><td>+2 dmg. One of the most powerful natural focusing gems known.</td></tr>
+<tr><td><b>Ghost-fire crystal</b></td><td><b style="color:#8a6d1f">Unique</b></td><td>Mode: Unseen blade</td><td>—</td><td>found</td><td>Adaptive &amp; unique — it chooses wielders who are strange in the Force (GM)</td><td>Pale spectral flame. Adapts to its bearer: counts as matched affinity for the wielder’s Force attribute. Toggle Unseen blade below. <i>[Unseen blade: Blade and sound vanish utterly — invisible, silent. −2 damage dice; defenders Parry at −3 against what they cannot see or hear.]</i></td></tr>
+<tr><td><b>Heart of the Guardian</b></td><td><b style="color:#8a6d1f">Unique</b></td><td>+2 dmg · +1 Parry</td><td>—</td><td>found</td><td>Unique — one exists (GM)</td><td>Bronze-gold blade of legend: +2 dmg, +1 Parry. It remembers every hand that held it.</td></tr>
+<tr><td><b>Mantle of the Force</b></td><td><b style="color:#8a6d1f">Unique</b></td><td>+1 skill</td><td>—</td><td>found</td><td>Unique — one exists (GM)</td><td>Cyan-white clarity: +1 skill, and Force powers channelled through the blade cost −1 FP (min 1).</td></tr>
+</tbody></table></div>
+<p class="rule"><span class="rule__name">Unique crystals.</span> <b style="color:#8a6d1f">Unique</b>-tier stones are singular artefacts: no price, no replica, and they tend to choose their wielders. The <b>Ghost-fire crystal</b> is adaptive — it counts as matched affinity for whichever Force attribute its bearer leads with, and it favours those who are <i>strange in the Force</i>. Its <b>Unseen blade</b> mode drops the blade to 6d+6 (Th 3d+3) but renders it utterly invisible and totally silent; defenders parry it at −3.</p>
 
 </div>
 
@@ -13480,6 +13567,69 @@ Crew Surrender.</span> Often the cleanest outcome. Once boarders have secured th
 <p class="rule"><span class="rule__name">Thermal Detonators.</span> <span class="tag tag--sw">SW</span> 6d×3 at centre will gut a room. So feared that brandishing one is itself a threat. Mandalorians carry them as standard; most others treat them as last resort. Tightly controlled — possession alone is a serious charge.</p>
 <p class="rule"><span class="rule__name">Non-Lethal Options.</span> Flash-bang, stun, gas-sleep, adhesive, and glop grenades capture rather than kill — essential for arrests, extractions, and anyone who needs the target alive. Sealed armour (Part VII) defeats gas; nerve-reinforcement implants (Part IX) resist concussive stun.</p>
 </div>
+
+
+<h2 class="section-head" id="sec-faction-arsenals-sw">Faction Arsenals &amp; Cultural Weapons <span class="tag tag--sw">SW</span></h2>
+
+<p>Every power signs its work. The Republic arms a hundred thousand garrisons with the same dependable pattern; the Selkath enforce Ahto City's peace with sound; the Hutts arm whoever is cheapest and loudest; the Chiss bring charric masers nobody else can copy; the Echani duel; Czerka sells to all of the above. These arsenals appear on the sheet under their own faction categories. All standard component slots, archetype fits and Bulk rules apply.</p>
+
+<p style="margin:12px 0 4px"><b>The Republic</b> — pattern-issue, rugged, everywhere</p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th>Weapon</th><th>Damage(AD)</th><th>Acc</th><th>Range ½D/Max</th><th>RoF</th><th>Shots</th><th>ST</th><th>Bulk</th><th>Cost</th><th>LC</th><th>Notes</th></tr>
+<tr><td><b>Republic service blaster</b></td><td>3d(1) burn</td><td>2</td><td>120/1,200</td><td>3</td><td>40</td><td>8</td><td>−2</td><td>2,800</td><td>Lic</td><td>Standard-issue sidearm. Boring, dependable, everywhere.</td></tr>
+<tr><td><b>Republic service rifle</b></td><td>5d(1) burn</td><td>5</td><td>450/2,300</td><td>3</td><td>50</td><td>9†</td><td>−5</td><td>5,600</td><td>Mil</td><td>The trooper's long-arm; rugged, unglamorous, wins wars.</td></tr>
+<tr><td><b>Republic heavy repeater</b></td><td>5d+2(1) burn</td><td>4</td><td>300/1,800</td><td>8</td><td>120</td><td>11†</td><td>−6</td><td>14,500</td><td>Mil</td><td>Squad support; sustained-fire doctrine. Bipod standard.</td></tr>
+<tr><td><b>Republic marksman rifle</b></td><td>5d+5(1) burn</td><td>6</td><td>700/3,000</td><td>1</td><td>20</td><td>10†</td><td>−5</td><td>16,800</td><td>Mil</td><td>Designated-marksman variant; match optics rail.</td></tr>
+<tr><td><b>Republic riot baton</b></td><td>sw+1(1) cr</td><td colspan="6">Melee — reach 1, Parry 0, ST 7, 1 kg</td><td>850</td><td>Lic</td><td>Stun contact: struck targets check HT−2 or are stunned.</td></tr>
+</tbody></table></div>
+
+<p style="margin:12px 0 4px"><b>Manaan &amp; the Selkath</b> — sound, water and cortosis courtesy</p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th>Weapon</th><th>Damage(AD)</th><th>Acc</th><th>Range ½D/Max</th><th>RoF</th><th>Shots</th><th>ST</th><th>Bulk</th><th>Cost</th><th>LC</th><th>Notes</th></tr>
+<tr><td><b>Selkath patrol sonic pistol</b></td><td>2d(0.5) son</td><td>2</td><td>30/450</td><td>3</td><td>40</td><td>—</td><td>−2</td><td>5,200</td><td>Lic</td><td>Ahto enforcement standard; stun-bias tuning (nonlethal at no penalty). Sonic: doubled physical DR applies; bends around saber Deflect.</td></tr>
+<tr><td><b>Selkath deep-current rifle</b></td><td>3d+2(0.5) son</td><td>4</td><td>120/900</td><td>2</td><td>30</td><td>9</td><td>−4</td><td>11,800</td><td>Res</td><td>Long sonic projector; works unimpaired underwater.</td></tr>
+<tr><td><b>Manaan harpoon caster</b></td><td>2d+2(2) imp</td><td>2</td><td>60/300</td><td>1</td><td>5(3s)</td><td>9</td><td>−4</td><td>3,400</td><td>Lic</td><td>Magnetic-rail harpoon — kinetic, ignores energy shields; line for retrieval.</td></tr>
+<tr><td><b>Selkath honour-blade (fira)</b></td><td>sw+1(2) cut / thr+1(2) imp</td><td colspan="6">Melee — reach 1, Parry 0, ST 9, 3 kg</td><td>180,000</td><td>Res</td><td>Ceremonial-grade fira, cortosis-laced — resists lightsabers. Ahto court heirloom.</td></tr>
+</tbody></table></div>
+
+<p style="margin:12px 0 4px"><b>The Hutt Cartel</b> — loud, cheap, and pointed at you</p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th>Weapon</th><th>Damage(AD)</th><th>Acc</th><th>Range ½D/Max</th><th>RoF</th><th>Shots</th><th>ST</th><th>Bulk</th><th>Cost</th><th>LC</th><th>Notes</th></tr>
+<tr><td><b>Hutt enforcer scattergun</b></td><td>3d+1(0.5) pi (cone)</td><td>2</td><td>25/180</td><td>1×9</td><td>6(3s)</td><td>10</td><td>−4</td><td>4,800</td><td>Res</td><td>Loud on purpose. Cone spread; kinetic — defeats shields.</td></tr>
+<tr><td><b>Nikto raider carbine</b></td><td>4d(1) burn</td><td>3</td><td>250/1,500</td><td>4</td><td>40</td><td>9</td><td>−4</td><td>4,200</td><td>Lic</td><td>Cheap, worn, everywhere in Hutt space; malfunctions on 16+.</td></tr>
+<tr><td><b>Hutt palace disruptor</b></td><td>4d×2(10) cor ×4wnd</td><td>2</td><td>30/250</td><td>1</td><td>8</td><td>—</td><td>−3</td><td>19,000</td><td>Illegal</td><td>A statement piece: atomises flesh and manners alike.</td></tr>
+<tr><td><b>Gamorrean war axe</b></td><td>sw+3(1) cut</td><td colspan="6">Melee — reach 1,2*, Parry 0U, ST 12, 7 kg</td><td>900</td><td>—</td><td>Two-handed brute iron; Ready after a swing unless ST 14+.</td></tr>
+<tr><td><b>Vibro-ax (enforcer)</b></td><td>sw+3(2) cut</td><td colspan="6">Melee — reach 1,2*, Parry 0U, ST 11, 6 kg</td><td>4,600</td><td>Lic</td><td>The Cartel's door-opener.</td></tr>
+</tbody></table></div>
+
+<p style="margin:12px 0 4px"><b>The Chiss Ascendancy</b> — charric masers (mixed burn + kinetic punch; full line under Blasters, now grouped as a faction)</p>
+<p class="tbl-note">Charric pistol, carbine, rifle and heavy repeater appear in the sheet under <b>Chiss Ascendancy (charric)</b>. Charric bolts deliver burning <i>and</i> concussive kinetic transfer — see the charric entries and the Chiss commando armour in the armour tables.</p>
+
+<p style="margin:12px 0 4px"><b>The Echani</b> — the duel as language</p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th>Weapon</th><th>Damage(AD)</th><th colspan="6">Profile</th><th>Cost</th><th>LC</th><th>Notes</th></tr>
+<tr><td><b>Echani vibroblade</b></td><td>sw+2(2) cut / thr+1(2) imp</td><td colspan="6">Melee — reach 1, Parry +1F, ST 8, 1 kg</td><td>6,800</td><td>Lic</td><td>Precision-balanced duelling vibro: +1 fencing Parry.</td></tr>
+<tr><td><b>Echani double vibroblade</b></td><td>sw+3(2) cut</td><td colspan="6">Melee — reach 1, Parry 0, ST 10, 2.5 kg</td><td>12,400</td><td>Res</td><td>Twin-bladed staff-vibro: with Two-Handed style, 2 attacks per turn at −2 each.</td></tr>
+</tbody></table></div>
+
+<p style="margin:12px 0 4px"><b>Czerka Corporation</b> — sold to all sides, twice</p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th>Weapon</th><th>Damage(AD)</th><th>Acc</th><th>Range ½D/Max</th><th>RoF</th><th>Shots</th><th>ST</th><th>Bulk</th><th>Cost</th><th>LC</th><th>Notes</th></tr>
+<tr><td><b>Czerka security carbine</b></td><td>4d(1) burn</td><td>4</td><td>280/1,600</td><td>3</td><td>40</td><td>9</td><td>−4</td><td>5,200</td><td>Lic</td><td>Corporate ubiquity; serials filed off half the galaxy's crime scenes.</td></tr>
+<tr><td><b>Czerka "Peacemaker" stun pistol</b></td><td>2d(1) fat (stun)</td><td>2</td><td>40/300</td><td>3</td><td>30</td><td>—</td><td>−2</td><td>2,100</td><td>—</td><td>Nonlethal: damage as fatigue; a target at 0 FP is out.</td></tr>
+</tbody></table></div>
+
+<p style="margin:12px 0 4px"><b>Mandalorian arms &amp; faction armour additions</b></p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th>Item</th><th>Profile</th><th>Wt</th><th>Cost</th><th>LC</th><th>Notes</th></tr>
+<tr><td><b>Wrist rocket (Mandalorian)</b></td><td>4d×2(2) cr ex · Acc 2 · 100/1,000 · RoF 1 · 2(4s) · Bulk −1</td><td>1.5</td><td>12,000</td><td>Mil</td><td>Armour-mounted mini-missile; Heavy Impact (knockdown check regardless of damage).</td></tr>
+<tr><td><b>Republic marine assault armour</b></td><td>DR 16/14 (E/K)</td><td>18</td><td>38,000</td><td>Mil</td><td>Boarding-action rig: sealed, mag-boots, +2 vs knockdown.</td></tr>
+<tr><td><b>Kolto-weave diving suit</b></td><td>DR 6/6</td><td>8</td><td>21,000</td><td>Lic</td><td>Selkath aquatic suit: sealed underwater; kolto micro-reservoir — +2 to HT recovery rolls, heals 2 HP once per day.</td></tr>
+<tr><td><b>Hutt enforcer plate</b></td><td>DR 12/12</td><td>16</td><td>9,800</td><td>Lic</td><td>Gaudy gilded plate; −1 Stealth (it gleams), +1 Intimidation in Hutt space.</td></tr>
+<tr><td><b>Gamorrean heavy harness</b></td><td>DR 6/10</td><td>12</td><td>2,400</td><td>—</td><td>Crude iron and boar-leather. Smells exactly as expected.</td></tr>
+<tr><td><b>Echani light battle armour</b></td><td>DR 10/8</td><td>5</td><td>26,000</td><td>Lic</td><td>Half-weight Echani lattice, no DX penalty; fragile — half normal item HP.</td></tr>
+</tbody></table></div>
+<p class="tbl-note">Lightwhip (Sw 5d+5(5) burn, reach 1-4*, Parry −2F) is restored to the sheet's saber catalogue as its own weapon — see Lightsabers &amp; Variants, Part II.</p>
 
 <h2 class="section-head" id="sec-areaofeffect-explosion-falloff-hex-by-he">Area-of-Effect &amp; Explosion Falloff — Hex by Hex</h2>
 
@@ -13893,7 +14043,7 @@ Crew Surrender.</span> Often the cleanest outcome. Once boarders have secured th
   <div class="part-opener__sub">Weapon &amp; armour accessories · manufacture templates · material treatments · stacking</div>
 </section>
 
-<p class="part-intro"><span class="part-intro__drop">N</span>o two operatives carry identical gear. Accessories bolt on for off-the-shelf improvement; material treatments add cortosis or beskar; manufacture templates capture the unique craft of the galaxy’s cultures. Templated items are Rare by nature — found, earned, or commissioned, never stocked.</p>
+<p class="part-intro"><span class="part-intro__drop">N</span>o two operatives carry identical gear. Accessories bolt on for off-the-shelf improvement; material treatments add cortosis or beskar; manufacture templates capture the unique craft of the galaxy’s cultures. Templated items are Rare by nature — found, earned, or commissioned, never stocked. For the full <b>slot-based component catalogue</b> — kyber crystals, hilt configurations, optics, barrels, packs, armour plating and the rest — see <a href="#sec-weapon-attachments-mods">Weapon &amp; Armour Components</a>; the simple accessories below remain valid as loose, slotless add-ons.</p>
 
 <div class="tbl-scroll"><table class="tbl">
   <thead>
@@ -14675,18 +14825,301 @@ Crew Surrender.</span> Often the cleanest outcome. Once boarders have secured th
   </tbody>
 </table></div>
 
-<h2 class="section-head" id="sec-weapon-attachments-mods">Weapon Attachments &amp; Modifications</h2>
+<h2 class="section-head" id="sec-weapon-attachments-mods">Weapon &amp; Armour Components — Slots, Attachments &amp; Modifications</h2>
 
-<p>The Equipment tab carries a full attachment catalogue of <b>91 presets</b> divided into <b>four legality tiers</b>. Roughly half are pure upgrades; half are trade-offs (a buff in exchange for a real drawback). Pick one from the dropdown on any weapon's Modifications panel and the sheet auto-fills its stat deltas, weight, cost, and effect text — you can also write your own.</p>
+<p>Every weapon and suit of armour is a <b>platform</b> with <b>component slots</b>. The catalogue below carries <b>120 weapon components</b> and <b>16 armour components</b> across <b>five tiers</b>. Roughly half are pure upgrades; half are trade-offs — a buff in exchange for a real drawback. On the character sheet, each item's <b>🔧 Modifications</b> panel shows a dropdown per slot: pick a component and its stat deltas, weight, cost and effect text apply automatically. Custom attachments can still be written freehand alongside them.</p>
+
 <table class="tbl tbl--compact"><tbody><tr><th>Tier</th><th>Description</th><th>Examples</th></tr>
-<tr><td><b style="color:#7ec27e">Civilian</b></td><td>Commodity, legal almost anywhere. Mostly small bonuses or pure-trade modules.</td><td>Reflex sight, foregrip, bipod, carry strap, ergonomic grip, serrated edge, padded retention grip.</td></tr>
-<tr><td><b style="color:#7eb9c2">Police</b></td><td>Licensed civilian or law-enforcement grade. Moderate bonuses, occasional drawbacks.</td><td>Telescopic scope, suppressor (silencer), heavy match barrel, folding stock, shock grip, dueling crystal.</td></tr>
-<tr><td><b style="color:#c29a7e">Military</b></td><td>Restricted; lethal trade-offs in favour of capability.</td><td>Sniper scope, thermal optic, smart-link HUD, overcharged power cell, dual-phase saber emitter, beskar core, anti-armour spike.</td></tr>
-<tr><td><b style="color:#c27ec0">Exotic / Black-market</b></td><td>Rare, expensive, often Force- or exotic-tech-based. The biggest swings — and the biggest costs.</td><td>Force-attuned sight, inertial compensator, mass driver coil, cortosis weave, phrik laminate, synth/Sith crystals, auto-targeter.</td></tr>
+<tr><td><b style="color:#507c50">Civilian</b></td><td>Commodity, legal almost anywhere. Mostly small bonuses or pure-trade modules.</td><td>Reflex sight, foregrip, bipod, carry strap, ergonomic grip, serrated edge, low-light visor.</td></tr>
+<tr><td><b style="color:#50767c">Police</b></td><td>Licensed civilian or law-enforcement grade. Moderate bonuses, occasional drawbacks.</td><td>Telescopic scope, suppressor, heavy match barrel, folding stock, Rubat crystal, shoto hilt.</td></tr>
+<tr><td><b style="color:#876b58">Military</b></td><td>Restricted; lethal trade-offs in favour of capability.</td><td>Sniper scope, thermal optic, smart-link HUD, high-output pack, dual-phase emitter, extended hilt, beskar core.</td></tr>
+<tr><td><b style="color:#935f91">Exotic / Black-market</b></td><td>Rare, expensive, often Force- or exotic-tech-based. The biggest swings — and the biggest costs.</td><td>Force-attuned sight, inertial compensator, cortosis weave, Solari crystal, krayt dragon pearl, stealth field skin.</td></tr>
+<tr><td><b style="color:#8a6d1f">Unique</b></td><td>Singular artefacts. No price, no replica; they are found — or they find you.</td><td>Heart of the Guardian, Mantle of the Force, Ghost-fire crystal.</td></tr>
 </tbody></table>
-<div><p class="rule"><span class="rule__name">Slot system.</span> Each preset lists a <b>slot</b> (sight, barrel, power, under, stock, grip, pommel, edge, core, haft, frame, strap, aesthetic). A sensible weapon won't carry two scopes — slots are advisory in the v15 sheet (no hard exclusion), but GMs may rule that mounting two of the same slot is impossible. Force-attuned items only confer their bonuses to a wielder with Force Sensitivity 1+.</p><p class="rule"><span class="rule__name">Stat fields available.</span> Attachments may modify any combination of: <b>Dmg±, Acc±, Parry±, Reach±, ST±, Rcl±, RoF±, Shots±, Wt±, Cost±</b>. The melee-vs-ranged compatibility field gates which weapons each attachment is offered for (a foregrip won't show up on a lightsaber; a vibroedge won't show up on a blaster). For full custom: every numeric field is editable on the card.</p><p class="rule"><span class="rule__name">Drawbacks are intentional.</span> "Overcharged cell" lets you pump <b>+2 damage per shot</b> — but burns out on a 17–18 to-hit roll. "Suppressor" gives you <b>+3 to Stealth (Hearing)</b> — but you lose <b>1 damage</b>. "Cortosis weave" can short out a lightsaber once per scene — but costs you <b>1 reach</b>. Roughly half of all presets carry a real cost; the GM should not waive them when the player buys the upside.</p></div>
+
+<div><p class="rule"><span class="rule__name">The slot rule.</span> Each component lists a <b>slot</b> (crystal, grip, core, power, sight, barrel, under, stock, frame, edge, pommel, haft, plating, underlay, systems, visor…). A weapon or armour piece carries <b>one component per slot</b> — fitting a new one replaces the old. This is enforced on the sheet: the slot dropdowns swap, never stack. Compatibility gates what is offered (a foregrip won't show on a lightsaber; a kyber crystal won't show on a blaster).</p> 
+
+<p class="rule"><span class="rule__name">Factory standards.</span> Components <b>make up</b> the weapon — every integral slot ships with a <b>factory-standard part</b> at zero modifier (Iron sights, a standard barrel, a standard hilt, an Ilum kyber, factory plating…). The catalogue stat-lines <i>are</i> the standard build; components below are departures from it. The sheet shows each slot's standard by name when nothing else is socketed, and selecting the standard again restores stock. Optional accessory slots (under-barrel, strap, aesthetic) default to <i>none fitted</i>. Where a slot isn't listed for a weapon or armour family at all, it isn't modifiable on that platform.</p>
+
+<p class="rule"><span class="rule__name">Prerequisites.</span> Components state their prerequisites and the sheet flags them (<span style="color:#b58a2a">⚠</span> requirement, <span style="color:#a04545">⚠</span> unmet). A <b>dual-grip saberstaff hilt requires saberstaff form training</b> (<a href="#book-training">Doc VI</a>); an <b>extended hilt requires ST 11+</b>; the <b>Solari crystal answers only a strongly light-aligned hand</b>. Prerequisites are GM-adjudicated — the sheet warns, the table rules.</p>
+
+<p class="rule"><span class="rule__name">Install classes.</span> <b>Class 1</b> — field swap: a Ready manoeuvre to minutes, no roll (training emitter, carry strap, power pack). <b>Class 2</b> — workshop: hours and an Armoury roll (crystals, hilt configurations, barrels, armour plating). <b>Class 3</b> — specialist: days, Armoury−2 or a professional (frame internals, servo-assist, stealth field skin). Unless noted, components here are Class 2.</p>
+
+<p class="rule"><span class="rule__name">Stacking with templates &amp; treatments.</span> Slot components stack freely with <b>one manufacture template</b> and with <b>material treatments</b> per their own rules (see Material Treatments and Manufacture Templates, this Part). Slot components stack with each other only across <i>different</i> slots.</p>
+
+<p class="rule"><span class="rule__name">Stat fields.</span> Components may modify any combination of: <b>Dmg±, damage dice±, dmg-per-die±, Skill±, Acc±, Parry±, Reach±, ST±, Rcl±, RoF±, Shots±, Wt±, Bulk±, DR±, Cost</b> — and some carry a <b>toggleable mode</b> (the Ghost-fire crystal's Unseen blade; a dual-phase emitter's reach shift). Every numeric field stays hand-editable on the sheet for full custom work.</p>
+
+<p class="rule"><span class="rule__name">Drawbacks are intentional.</span> "Overcharged cell" pumps <b>+2 damage per shot</b> — but burns out on a 17–18. "Suppressor" gives <b>+3 Stealth (Hearing)</b> — but costs <b>1 damage</b>. "High-output pack" adds <b>+1 RoF</b> — and 1.2&nbsp;kg and a point of Bulk. Roughly half the catalogue carries a real cost; the GM should not waive it when the player buys the upside.</p></div>
+
+<p style="margin:16px 0 4px"><b>Bulk &amp; Weight — quick reference</b> <span style="cursor:help" title="The same rules the sheet's ⓘ hover shows.">ⓘ</span></p>
+<table class="tbl tbl--compact"><tbody>
+<tr><th style="width:14%">Stat</th><th>What it does</th></tr>
+<tr><td><b>Bulk</b></td><td>How unwieldy a ranged weapon is. Apply Bulk as a penalty to <b>Move-and-Attack</b>, to firing from awkward positions, and to <b>Holdout / concealment</b>. Components can worsen or improve it; melee weapons use ST and Reach instead.</td></tr>
+<tr><td><b>Weight</b></td><td>Every kilogram counts toward <b>encumbrance</b> (<a href="#book-coregame">Doc II</a>): exceed your Basic Lift bands and Move and Dodge drop. Component weight deltas are added automatically on the sheet.</td></tr>
+</tbody></table>
+<table class="tbl tbl--compact"><tbody>
+<tr><th>Weapon class</th><th>Bulk</th></tr>
+<tr><td>Hold-out pistol (&lt;1 kg)</td><td>−1</td></tr>
+<tr><td>Pistol (1–3 kg)</td><td>−2</td></tr>
+<tr><td>Heavy pistol (&gt;3 kg)</td><td>−3</td></tr>
+<tr><td>Rifle, carbine, shotgun, crossbow</td><td>−4 (−5 if ≥6 kg)</td></tr>
+<tr><td>Launcher, projector</td><td>−5 (−6 if ≥9 kg)</td></tr>
+<tr><td>Emplaced / gunner weapons</td><td>−6 (−8 if ≥15 kg)</td></tr>
+</tbody></table>
+<p class="tbl-note">Catalogue weapons print their exact Bulk where listed (the slugthrower &amp; kinetic tables); where a table omits the column, derive it from the band above — the sheet ships every ranged weapon pre-filled by this rule.</p>
+
+<p style="margin:18px 0 2px"><b>Lightsaber components</b> — the <b>focusing crystal catalogue</b> lives with the saber rules (<i>Lightsaber Crystals</i>, Part II), and <b>hilt configurations</b> (shoto, curved, duelling foil, saberstaff, extended/great) with <i>Lightsabers &amp; Variants</i>. Saber emitters, lenses and cells appear under Melee components below. Lightsabers carry <b>crystal, grip, emitter &amp; lens, power-cell and pommel</b> slots only — a blade of coherent plasma has no edge, haft or frame to treat.</p>
+
+<p style="margin:14px 0 4px"><b>Optics &amp; Sights — slot: sight</b></p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th style="width:17%">Component</th><th>Tier</th><th>Effects</th><th>Wt&nbsp;(kg)</th><th>Cost</th><th>Prereq</th><th>Notes</th></tr>
+<tr><td><b>Holographic sight</b></td><td><b style="color:#507c50">Civilian</b></td><td>+1 Acc</td><td>+0.4</td><td>1,100</td><td>—</td><td>+1 Acc; -1 to Stealth (Vision) when active in dark.</td></tr>
+<tr><td><b>Iron sights (factory)</b></td><td><b style="color:#507c50">Civilian</b></td><td>—</td><td>—</td><td>found</td><td>—</td><td>Default open sights. No bonus or penalty.</td></tr>
+<tr><td><b>Iron tritium night-sights</b></td><td><b style="color:#507c50">Civilian</b></td><td>+1 Acc</td><td>+0.1</td><td>420</td><td>—</td><td>+1 Acc in poor light. No daylight benefit.</td></tr>
+<tr><td><b>Reflex / red-dot sight</b></td><td><b style="color:#507c50">Civilian</b></td><td>+1 Acc</td><td>+0.3</td><td>660</td><td>—</td><td>+1 Acc to snap shots within 50m.</td></tr>
+<tr><td><b>Telescopic scope (2-4x)</b></td><td><b style="color:#50767c">Police</b></td><td>+2 Acc</td><td>+0.6</td><td>2,000</td><td>—</td><td>+2 Acc beyond ½D; -2 to snap-shots inside 10m.</td></tr>
+<tr><td><b>Comlink targeter</b></td><td><b style="color:#876b58">Military</b></td><td>+1 Acc</td><td>+0.6</td><td>3,600</td><td>—</td><td>+1 Acc; squadmates with linked HUD get +1 to hit same target.</td></tr>
+<tr><td><b>Smart-link HUD</b></td><td><b style="color:#876b58">Military</b></td><td>+2 Acc</td><td>+0.5</td><td>4,500</td><td>—</td><td>+2 Acc when linked to user’s helmet HUD. Useless without HUD; jams on EM pulse.</td></tr>
+<tr><td><b>Sniper scope (4-12x)</b></td><td><b style="color:#876b58">Military</b></td><td>+3 Acc · +1 Rcl</td><td>+1</td><td>5,400</td><td>—</td><td>+3 Acc; +1 Rcl (heavy on muzzle); useless in melee range.</td></tr>
+<tr><td><b>Thermal optic</b></td><td><b style="color:#876b58">Military</b></td><td>+1 Acc</td><td>+0.7</td><td>6,600</td><td>—</td><td>+1 Acc; ignores darkness up to total. Doesn’t help vs reflective armour.</td></tr>
+<tr><td><b>Auto-targeter</b></td><td><b style="color:#935f91">Exotic</b></td><td>+1 Acc</td><td>+0.5</td><td>13,000</td><td>—</td><td>+1 Acc; “Aim” manoeuvre is free; jams 1d turns on a fumble.</td></tr>
+<tr><td><b>Force-attuned sight</b></td><td><b style="color:#935f91">Exotic</b></td><td>+2 Acc</td><td>+0.4</td><td>14,000</td><td>—</td><td>+2 Acc — but costs 1 FP per shot. Force users only.</td></tr>
+</tbody></table></div>
+<p style="margin:14px 0 4px"><b>Barrels &amp; Muzzle Devices — slot: barrel</b></p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th style="width:17%">Component</th><th>Tier</th><th>Effects</th><th>Wt&nbsp;(kg)</th><th>Cost</th><th>Prereq</th><th>Notes</th></tr>
+<tr><td><b>Long barrel</b></td><td><b style="color:#507c50">Civilian</b></td><td>+1 Acc · -1 Rcl · Bulk -1</td><td>+0.6</td><td>1,100</td><td>—</td><td>Range ½D ×1.25; Bulk −1 (longer).</td></tr>
+<tr><td><b>Short / carbine barrel</b></td><td><b style="color:#507c50">Civilian</b></td><td>-1 Acc</td><td>-0.4</td><td>840</td><td>—</td><td>+1 Holdout; range ½D ×0.8. Cheap concealment trade.</td></tr>
+<tr><td><b>Sound compensator</b></td><td><b style="color:#507c50">Civilian</b></td><td>-1 Rcl</td><td>+0.3</td><td>780</td><td>—</td><td>-1 Rcl; louder report, -2 to Stealth (Hearing).</td></tr>
+<tr><td><b>Vented barrel shroud</b></td><td><b style="color:#507c50">Civilian</b></td><td>—</td><td>+0.4</td><td>570</td><td>—</td><td>Run hot longer; no penalty for sustained automatic fire. No combat bonus.</td></tr>
+<tr><td><b>Flash hider</b></td><td><b style="color:#50767c">Police</b></td><td>—</td><td>+0.2</td><td>450</td><td>—</td><td>No muzzle flash; foes can’t use flash to locate you in dim light.</td></tr>
+<tr><td><b>Heavy match barrel</b></td><td><b style="color:#50767c">Police</b></td><td>+1 Acc · -1 Rcl</td><td>+1</td><td>2,300</td><td>—</td><td>-1 Rcl; +1 Wt. Quality barrel.</td></tr>
+<tr><td><b>Suppressor / silencer</b></td><td><b style="color:#50767c">Police</b></td><td>-1 dmg</td><td>+0.5</td><td>1,800</td><td>—</td><td>+3 to Stealth Hearing rolls. -1 damage. Heats fast — 1 burst before glow.</td></tr>
+<tr><td><b>Discharge focuser</b></td><td><b style="color:#876b58">Military</b></td><td>+1 dmg</td><td>+0.5</td><td>3,300</td><td>—</td><td>+1 die to damage on first shot of an encounter; refocus = 5 sec.</td></tr>
+</tbody></table></div>
+<p style="margin:14px 0 4px"><b>Power Cells, Packs &amp; Magazines — slot: power</b></p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th style="width:17%">Component</th><th>Tier</th><th>Effects</th><th>Wt&nbsp;(kg)</th><th>Cost</th><th>Prereq</th><th>Notes</th></tr>
+<tr><td><b>Compressed gas mag</b></td><td><b style="color:#507c50">Civilian</b></td><td>+10 shots · scales by frame †</td><td>+0.2</td><td>290</td><td>—</td><td>Compressed feed sized to the frame; safer than overcharging.</td></tr>
+<tr><td><b>Extended power cell</b></td><td><b style="color:#507c50">Civilian</b></td><td>+10 shots · scales by frame †</td><td>+0.5</td><td>420</td><td>—</td><td>Bigger cell, sized to the frame (max +10 shots).</td></tr>
+<tr><td><b>Slugthrower magazine extender</b></td><td><b style="color:#507c50">Civilian</b></td><td>+10 shots · scales by frame †</td><td>+0.5</td><td>210</td><td>—</td><td>Extended box magazine sized to the frame. Sticks out.</td></tr>
+<tr><td><b>Stable / safe cell</b></td><td><b style="color:#507c50">Civilian</b></td><td>-1 RoF</td><td>+0.4</td><td>540</td><td>—</td><td>-1 RoF; no critical-fail burnout. Civilian / training pack.</td></tr>
+<tr><td><b>Standard power cell</b></td><td><b style="color:#507c50">Civilian</b></td><td>—</td><td>—</td><td>found</td><td>—</td><td>Baseline cell. No effect.</td></tr>
+<tr><td><b>Stun setting / module</b></td><td><b style="color:#507c50">Civilian</b></td><td>—</td><td>+0.2</td><td>780</td><td>—</td><td>Toggle to stun setting: damage becomes fatigue / HT-1 to stay conscious. -1 dmg to vehicles.</td></tr>
+<tr><td><b>Tracer rounds</b></td><td><b style="color:#507c50">Civilian</b></td><td>—</td><td>+0.1</td><td>210</td><td>—</td><td>+1 to follow-up shots after first hit; you glow too (-2 Stealth).</td></tr>
+<tr><td><b>Anti-personnel splatter rounds</b></td><td><b style="color:#50767c">Police</b></td><td>+1 dmg</td><td>+0.2</td><td>420</td><td>—</td><td>+1 dmg vs unarmored; halve dmg vs DR 4+.</td></tr>
+<tr><td><b>High-capacity drum</b></td><td><b style="color:#50767c">Police</b></td><td>+30 shots · +1 Rcl · scales by frame †</td><td>+1.5</td><td>960</td><td>—</td><td>Huge mag sized to the frame; +1 Rcl from weight imbalance.</td></tr>
+<tr><td><b>Stabilised power cell</b></td><td><b style="color:#50767c">Police</b></td><td>—</td><td>+0.1</td><td>3,200</td><td>—</td><td>Never falters: ignore environmental flame-out (rain, vacuum-adjacent, ion wash).</td></tr>
+<tr><td><b>Armour-piercing rounds</b></td><td><b style="color:#876b58">Military</b></td><td>—</td><td>+0.2</td><td>780</td><td>—</td><td>Divide target DR by 2; -1 dmg.</td></tr>
+<tr><td><b>Conductive cell (overheat)</b></td><td><b style="color:#876b58">Military</b></td><td>+2 RoF</td><td>+0.4</td><td>4,200</td><td>—</td><td>+2 RoF; on crit-fail, weapon overheats and is hot to touch for 1d turns.</td></tr>
+<tr><td><b>Diatium overcharge cell</b></td><td><b style="color:#876b58">Military</b></td><td>+1 dmg</td><td>+0.1</td><td>6,800</td><td>—</td><td>+1 dmg; on any critical miss the cell shorts — blade gutters out, 1 Ready to reignite.</td></tr>
+<tr><td><b>Disruptor cell (ionising)</b></td><td><b style="color:#876b58">Military</b></td><td>+1 dmg</td><td>+0.6</td><td>11,000</td><td>—</td><td>Bypasses energy DR; 1d FP damage to wielder if used 3+ turns in a row.</td></tr>
+<tr><td><b>High-output pack</b></td><td><b style="color:#876b58">Military</b></td><td>+1 RoF · Bulk -1 · scales by frame †</td><td>+1.2</td><td>4,400</td><td>—</td><td>+1 RoF; weight scales with the frame and Bulk worsens by 1. Runs hot — a malfunction roll of 17–18 vents the pack.</td></tr>
+<tr><td><b>Overcharged cell</b></td><td><b style="color:#876b58">Military</b></td><td>+2 dmg · -15 shots · scales by frame †</td><td>+0.3</td><td>2,700</td><td>—</td><td>Hotter shots, fewer of them; burns out on a to-hit roll of 17-18.</td></tr>
+<tr><td><b>Backpack power feed</b></td><td><b style="color:#935f91">Exotic</b></td><td>+2 RoF · +200 shots · Bulk -2 · scales by frame †</td><td>+6</td><td>12,500</td><td>ST 11+</td><td>Cable-fed backpack cell; output scales with the frame. +6 kg, Bulk −2, and the cable can be cut (DR 4, 2 HP).</td></tr>
+</tbody></table></div>
+<p style="margin:14px 0 4px"><b>Under-barrel Modules — slot: under</b></p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th style="width:17%">Component</th><th>Tier</th><th>Effects</th><th>Wt&nbsp;(kg)</th><th>Cost</th><th>Prereq</th><th>Notes</th></tr>
+<tr><td><b>Bayonet (folding)</b></td><td><b style="color:#507c50">Civilian</b></td><td>-1 Acc</td><td>+0.4</td><td>240</td><td>—</td><td>Fix for thr+1d imp melee attack at reach C,1. -1 Acc while fixed.</td></tr>
+<tr><td><b>Bipod</b></td><td><b style="color:#507c50">Civilian</b></td><td>-1 Rcl</td><td>+0.6</td><td>330</td><td>—</td><td>-1 Rcl when deployed prone or against cover. 2 sec to set up.</td></tr>
+<tr><td><b>Foregrip</b></td><td><b style="color:#507c50">Civilian</b></td><td>-1 Rcl</td><td>+0.3</td><td>290</td><td>—</td><td>-1 Rcl in standing or close. Slight weight penalty.</td></tr>
+<tr><td><b>Tactical flashlight</b></td><td><b style="color:#507c50">Civilian</b></td><td>—</td><td>+0.2</td><td>120</td><td>—</td><td>Illuminate 30m. -2 to user’s Stealth (Vision). Foes see you.</td></tr>
+<tr><td><b>Visible laser pointer</b></td><td><b style="color:#507c50">Civilian</b></td><td>+1 Acc</td><td>+0.1</td><td>140</td><td>—</td><td>+1 Acc up to 30m. -1 Stealth (foe sees beam).</td></tr>
+<tr><td><b>Underbarrel shotgun</b></td><td><b style="color:#50767c">Police</b></td><td>—</td><td>+1.5</td><td>2,700</td><td>—</td><td>2-shot 12g; backup short-range close-quarters attack.</td></tr>
+<tr><td><b>Wrist-comlink integrator</b></td><td><b style="color:#50767c">Police</b></td><td>—</td><td>+0.2</td><td>960</td><td>—</td><td>Pings positions to squad each shot. Squad +1 to Tactics rolls.</td></tr>
+<tr><td><b>IR laser designator</b></td><td><b style="color:#876b58">Military</b></td><td>+1 Acc</td><td>+0.3</td><td>1,800</td><td>—</td><td>+1 Acc when you can see your dot; visible to nightvision.</td></tr>
+<tr><td><b>Underbarrel grenade launcher</b></td><td><b style="color:#876b58">Military</b></td><td>—</td><td>+2</td><td>3,600</td><td>—</td><td>Single-shot 40mm grenade attack as separate weapon. +2 Wt.</td></tr>
+</tbody></table></div>
+<p style="margin:14px 0 4px"><b>Stocks &amp; Bracing — slot: stock</b></p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th style="width:17%">Component</th><th>Tier</th><th>Effects</th><th>Wt&nbsp;(kg)</th><th>Cost</th><th>Prereq</th><th>Notes</th></tr>
+<tr><td><b>Heavy recoil stock</b></td><td><b style="color:#507c50">Civilian</b></td><td>-1 Rcl</td><td>+0.8</td><td>780</td><td>—</td><td>-1 Rcl; +1 Wt; bulkier draw.</td></tr>
+<tr><td><b>Pistol grip mod (no stock)</b></td><td><b style="color:#507c50">Civilian</b></td><td>+2 Rcl</td><td>-0.4</td><td>330</td><td>—</td><td>+1 Holdout; +2 Rcl. Concealment trade.</td></tr>
+<tr><td><b>Folding stock</b></td><td><b style="color:#50767c">Police</b></td><td>—</td><td>+0.3</td><td>660</td><td>—</td><td>Folded: +1 Holdout, -1 Acc. Extended: no change.</td></tr>
+<tr><td><b>Padded shoulder bracer</b></td><td><b style="color:#876b58">Military</b></td><td>-2 Rcl</td><td>+0.6</td><td>1,400</td><td>—</td><td>-2 Rcl; awkward in crowds; -1 Fast-Draw.</td></tr>
+</tbody></table></div>
+<p style="margin:14px 0 4px"><b>Frame &amp; Internal Systems — slot: frame</b></p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th style="width:17%">Component</th><th>Tier</th><th>Effects</th><th>Wt&nbsp;(kg)</th><th>Cost</th><th>Prereq</th><th>Notes</th></tr>
+<tr><td><b>Drilled balance</b></td><td><b style="color:#507c50">Civilian</b></td><td>+1 Acc</td><td>—</td><td>780</td><td>—</td><td>+1 to Throwing this weapon. No melee bonus.</td></tr>
+<tr><td><b>Hollow handle (kit)</b></td><td><b style="color:#507c50">Civilian</b></td><td>—</td><td>—</td><td>420</td><td>—</td><td>Stash a small item (lockpicks, datachip). -1 to retain.</td></tr>
+<tr><td><b>Reinforced binding</b></td><td><b style="color:#507c50">Civilian</b></td><td>—</td><td>+0.3</td><td>540</td><td>—</td><td>Can’t break on parry (head/shaft); +1 Wt.</td></tr>
+<tr><td><b>Anti-grav weighting</b></td><td><b style="color:#876b58">Military</b></td><td>—</td><td>-1</td><td>3,600</td><td>—</td><td>-1 Wt effective; fails in repulsor-jamming fields (loses benefit).</td></tr>
+<tr><td><b>Concussion compensator</b></td><td><b style="color:#876b58">Military</b></td><td>-1 RoF · -2 Rcl</td><td>+0.7</td><td>4,800</td><td>—</td><td>-2 Rcl; -1 RoF (slower cycling).</td></tr>
+<tr><td><b>Inertial compensator</b></td><td><b style="color:#935f91">Exotic</b></td><td>-3 Rcl</td><td>+1.2</td><td>16,000</td><td>—</td><td>-3 Rcl; costs 1 FP / 5 shots when active. Repulsor-coil tech.</td></tr>
+<tr><td><b>Mass driver coil</b></td><td><b style="color:#935f91">Exotic</b></td><td>+3 dmg · -2 RoF</td><td>+3</td><td>20,000</td><td>—</td><td>+3 dmg, -2 RoF, +3 Wt. Slow, lethal.</td></tr>
+<tr><td><b>Targeting droid brain (mini)</b></td><td><b style="color:#935f91">Exotic</b></td><td>+1 Acc</td><td>+1</td><td>17,000</td><td>—</td><td>Smart-fire +1 Acc; if hit by ion, weapon dead for 1d turns.</td></tr>
+<tr><td><b>HK-series targeting core</b></td><td><b style="color:#8a6d1f">Unique</b></td><td>+1 skill · +1 Acc</td><td>+0.4</td><td>found</td><td>Unique — salvaged assassin-droid cognition (GM)</td><td>+1 Acc, +1 skill against organic targets ("meatbags"). The core occasionally offers unsolicited advice on maximising lethality.</td></tr>
+</tbody></table></div>
+<p style="margin:16px 0 4px"><b>† Archetype fit — the frame decides the magnitude</b></p>
+<p>A heavy pistol's extended cell is not a carbine's. Components marked <i>scales by frame †</i> resize their effect to the weapon class they are fitted to; the sheet applies the fitted values automatically and tags the install. Extended cells are <b>capped at +10 shots</b> on any frame. Frames follow the Bulk bands: hold-out (&lt;1 kg pistol) · pistol (1–3 kg) · heavy pistol (&gt;3 kg) · long-arm (rifle/carbine/shotgun/crossbow) · launcher · gunner.</p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th style="width:16%">Component</th><th>Hold-out</th><th>Pistol</th><th>Heavy pistol</th><th>Long-arm</th><th>Launcher</th><th>Gunner</th></tr>
+<tr><td><b>Extended power cell</b></td><td>+4 shots · +0.1 kg</td><td>+6 shots · +0.3 kg</td><td>+8 shots · +0.4 kg</td><td>+10 shots · +0.5 kg</td><td>+6 shots · +0.8 kg</td><td>+10 shots · +1.5 kg</td></tr>
+<tr><td><b>Overcharged cell</b></td><td>-5 shots · +1 dmg</td><td>-8 shots · +1 dmg</td><td>-10 shots · +2 dmg</td><td>-15 shots · +2 dmg</td><td>-10 shots · +2 dmg</td><td>-20 shots · +3 dmg</td></tr>
+<tr><td><b>High-capacity drum</b></td><td>+8 shots · +0.5 kg · Bulk -1</td><td>+15 shots · +0.8 kg · Bulk -1</td><td>+20 shots · +1 kg · Bulk -1</td><td>+30 shots · +1.5 kg</td><td>+15 shots · +2 kg</td><td>+40 shots · +3 kg</td></tr>
+<tr><td><b>Compressed gas mag</b></td><td>+4 shots</td><td>+6 shots</td><td>+8 shots</td><td>+10 shots</td><td>+8 shots</td><td>+10 shots</td></tr>
+<tr><td><b>Slugthrower magazine extender</b></td><td>+5 shots · +0.2 kg</td><td>+8 shots · +0.3 kg</td><td>+10 shots · +0.4 kg</td><td>+10 shots · +0.5 kg</td><td>+8 shots · +0.5 kg</td><td>+10 shots · +0.8 kg</td></tr>
+<tr><td><b>High-output pack</b></td><td>+0.6 kg</td><td>+0.8 kg</td><td>+1 kg</td><td>+1.2 kg</td><td>+2 kg</td><td>+3 kg</td></tr>
+<tr><td><b>Backpack power feed</b></td><td>+100 shots · +1 RoF</td><td>+120 shots · +1 RoF</td><td>+150 shots · +1 RoF</td><td>+200 shots · +2 RoF</td><td>+200 shots · +2 RoF</td><td>+300 shots · +2 RoF</td></tr>
+</tbody></table></div>
+
+<p style="margin:14px 0 4px"><b>Edges &amp; Blade Treatments — slot: edge</b></p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th style="width:17%">Component</th><th>Tier</th><th>Effects</th><th>Wt&nbsp;(kg)</th><th>Cost</th><th>Prereq</th><th>Notes</th></tr>
+<tr><td><b>Serrated edge</b></td><td><b style="color:#507c50">Civilian</b></td><td>+1 dmg</td><td>+0.1</td><td>360</td><td>—</td><td>+1 dmg to unarmored targets; no effect vs DR 2+.</td></tr>
+<tr><td><b>Poison-channel groove</b></td><td><b style="color:#50767c">Police</b></td><td>—</td><td>+0.1</td><td>1,000</td><td>—</td><td>Channel holds 1 dose poison; HT to resist. Illegal in most systems.</td></tr>
+<tr><td><b>Vibroedge module</b></td><td><b style="color:#50767c">Police</b></td><td>+1 dmg</td><td>+0.4</td><td>1,400</td><td>—</td><td>+1 die cutting damage; needs power cell; 8hr runtime.</td></tr>
+<tr><td><b>Anti-armour spike</b></td><td><b style="color:#876b58">Military</b></td><td>—</td><td>+0.3</td><td>780</td><td>—</td><td>Reduce target DR by 1 vs imp damage; -1 to cutting dmg.</td></tr>
+<tr><td><b>Crysteel inlay</b></td><td><b style="color:#876b58">Military</b></td><td>+1 dmg</td><td>—</td><td>5,400</td><td>—</td><td>+1 dmg; brittle vs ST 16+ targets (breaks on a critical fumble).</td></tr>
+<tr><td><b>Heat-blade element</b></td><td><b style="color:#876b58">Military</b></td><td>+1 dmg</td><td>+0.3</td><td>6,300</td><td>—</td><td>+1d burn damage; can’t sheathe for 30 sec after use; -1 Stealth (glow).</td></tr>
+<tr><td><b>Beskar core</b></td><td><b style="color:#935f91">Exotic</b></td><td>+1 dmg · +1 Parry · min ST +1</td><td>+0.8</td><td>29,000</td><td>—</td><td>+ST 1 to wield; unbreakable; +1 dmg. Mandalorian iron.</td></tr>
+<tr><td><b>Cortosis weave</b></td><td><b style="color:#935f91">Exotic</b></td><td>+1 Parry</td><td>+0.5</td><td>14,000</td><td>—</td><td>Blocks lightsabers (once per scene shorts the saber for 1d turns). -1 reach.</td></tr>
+<tr><td><b>Echani fluid edge</b></td><td><b style="color:#935f91">Exotic</b></td><td>+1 Parry</td><td>—</td><td>13,000</td><td>—</td><td>+1 Parry; user must know Acrobatics 12+ to gain the bonus.</td></tr>
+<tr><td><b>Monomolecular edge</b></td><td><b style="color:#935f91">Exotic</b></td><td>+2 dmg</td><td>—</td><td>9,600</td><td>—</td><td>+2 dmg, halves cutting DR; fragile — breaks on a 17-18 attack roll.</td></tr>
+<tr><td><b>Phrik laminate</b></td><td><b style="color:#935f91">Exotic</b></td><td>+2 Parry</td><td>+0.4</td><td>19,000</td><td>—</td><td>+2 Parry; unbreakable; +5000cr cost effective.</td></tr>
+<tr><td><b>Taung war-edge</b></td><td><b style="color:#8a6d1f">Unique</b></td><td>+2 dmg</td><td>—</td><td>found</td><td>Unique — ancestral Mandalorian relic (GM)</td><td>+2 dmg; an edge ground by the Taung before Mandalore the First. Counts as unrefined beskar for parrying sabers, once per scene.</td></tr>
+</tbody></table></div>
+<p style="margin:14px 0 4px"><b>Grips &amp; Hilts — slot: grip</b></p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th style="width:17%">Component</th><th>Tier</th><th>Effects</th><th>Wt&nbsp;(kg)</th><th>Cost</th><th>Prereq</th><th>Notes</th></tr>
+<tr><td><b>Ergonomic grip</b></td><td><b style="color:#507c50">Civilian</b></td><td>—</td><td>+0.1</td><td>420</td><td>—</td><td>+1 to Fast-Draw with this weapon. No combat bonus.</td></tr>
+<tr><td><b>Off-hand grip</b></td><td><b style="color:#507c50">Civilian</b></td><td>+1 Parry</td><td>+0.3</td><td>330</td><td>—</td><td>+1 Parry; needs both hands.</td></tr>
+<tr><td><b>Padded retention grip</b></td><td><b style="color:#507c50">Civilian</b></td><td>—</td><td>+0.1</td><td>120</td><td>—</td><td>+2 to ST rolls to retain weapon if grabbed.</td></tr>
+<tr><td><b>Curved hilt (saber)</b></td><td><b style="color:#50767c">Police</b></td><td>+1 Parry</td><td>—</td><td>1,600</td><td>—</td><td>+1 Parry; -1 to retain (slips on Disarm).</td></tr>
+<tr><td><b>Duelling foil hilt (lightfoil)</b></td><td><b style="color:#50767c">Police</b></td><td>-1 damage dice · +1 Parry · -1 reach · min ST -2</td><td>-0.1</td><td>4,600</td><td>—</td><td>A noble’s elegant blade (8d→7d): −1 damage die, +1 Parry, −2 min ST. Favoured in Tapani salons.</td></tr>
+<tr><td><b>Shock grip (stun)</b></td><td><b style="color:#50767c">Police</b></td><td>—</td><td>+0.3</td><td>1,700</td><td>—</td><td>On a critical hit, target rolls HT vs stun. On a fumble, shocks you (1d FP).</td></tr>
+<tr><td><b>Shoto hilt (compact)</b></td><td><b style="color:#50767c">Police</b></td><td>-2 damage dice · -1 reach</td><td>-0.1</td><td>2,400</td><td>—</td><td>Short blade (8d→6d): −2 damage dice, easily concealed, +1 to dual-wield off-hand use.</td></tr>
+<tr><td><b>Dual-grip hilt (saberstaff)</b></td><td><b style="color:#876b58">Military</b></td><td>—</td><td>+0.5</td><td>4,200</td><td>Saberstaff form training (Doc VI)</td><td>Two-bladed double saber: 2 attacks per turn at -2 each; requires Two-Handed style.</td></tr>
+<tr><td><b>Extended hilt (great saber)</b></td><td><b style="color:#876b58">Military</b></td><td>+1 damage dice · +1 reach · min ST +2</td><td>+1</td><td>5,200</td><td>ST 11+</td><td>Two-handed greatsaber (8d→9d): +1 damage die, +1 hex reach; +2 min ST, ungainly in confined spaces.</td></tr>
+<tr><td><b>Grip-mag retention</b></td><td><b style="color:#876b58">Military</b></td><td>—</td><td>+0.4</td><td>780</td><td>—</td><td>+3 to retain; on disarm fail, weapon stuck to user — bound action to release.</td></tr>
+<tr><td><b>Power-assist grip</b></td><td><b style="color:#876b58">Military</b></td><td>+1 dmg · min ST -1</td><td>+0.6</td><td>4,200</td><td>—</td><td>Counts as ST+2 for swing damage; -1 ST required to wield. Cell-powered.</td></tr>
+<tr><td><b>Force-attuned hilt</b></td><td><b style="color:#935f91">Exotic</b></td><td>+1 Parry</td><td>—</td><td>8,700</td><td>—</td><td>+1 Parry to Force-Sensitive wielder. No effect for non-Force users.</td></tr>
+<tr><td><b>Hilt of Exar Kun</b></td><td><b style="color:#8a6d1f">Unique</b></td><td>—</td><td>+0.5</td><td>found</td><td>Unique — one exists (GM)</td><td>The first dual-blade, forged by the Dark Lord himself. Functions as a Dual-grip saberstaff hilt — and the hilt remembers the form: its wielder needs no saberstaff training. It whispers, faintly.</td></tr>
+</tbody></table></div>
+<p style="margin:14px 0 4px"><b>Pommels — slot: pommel</b></p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th style="width:17%">Component</th><th>Tier</th><th>Effects</th><th>Wt&nbsp;(kg)</th><th>Cost</th><th>Prereq</th><th>Notes</th></tr>
+<tr><td><b>Counterweighted pommel</b></td><td><b style="color:#507c50">Civilian</b></td><td>+1 Parry</td><td>+0.3</td><td>240</td><td>—</td><td>+1 Parry in 2-handed grip; off-balance for 1H use (-1 Acc to throw).</td></tr>
+<tr><td><b>Spiked pommel</b></td><td><b style="color:#507c50">Civilian</b></td><td>—</td><td>+0.2</td><td>150</td><td>—</td><td>Adds thr+1 cr backstrike attack at -2.</td></tr>
+<tr><td><b>Stunner pommel</b></td><td><b style="color:#50767c">Police</b></td><td>—</td><td>+0.3</td><td>1,100</td><td>—</td><td>1/scene: stun pulse on butt-strike (HT vs stun for 1d sec).</td></tr>
+<tr><td><b>Cortosis pommel cap</b></td><td><b style="color:#935f91">Exotic</b></td><td>+1 Parry</td><td>+0.3</td><td>5,700</td><td>—</td><td>Reduces lightsaber damage by 1d on a successful Parry.</td></tr>
+</tbody></table></div>
+<p style="margin:14px 0 4px"><b>Hafts — slot: haft</b></p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th style="width:17%">Component</th><th>Tier</th><th>Effects</th><th>Wt&nbsp;(kg)</th><th>Cost</th><th>Prereq</th><th>Notes</th></tr>
+<tr><td><b>Reach extender (haft)</b></td><td><b style="color:#507c50">Civilian</b></td><td>-1 Parry · +1 reach</td><td>+0.4</td><td>290</td><td>—</td><td>+1 reach; -1 Parry inside reach C.</td></tr>
+</tbody></table></div>
+<p style="margin:14px 0 4px"><b>Saber Internals — Emitters &amp; Lenses — slot: core</b></p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th style="width:17%">Component</th><th>Tier</th><th>Effects</th><th>Wt&nbsp;(kg)</th><th>Cost</th><th>Prereq</th><th>Notes</th></tr>
+<tr><td><b>Training emitter</b></td><td><b style="color:#507c50">Civilian</b></td><td>—</td><td>—</td><td>900</td><td>—</td><td>Blade delivers stun-only crushing contact — bruises and lessons, never wounds. Swap freely (Class 1 install).</td></tr>
+<tr><td><b>Dual-phase emitter (saber)</b></td><td><b style="color:#876b58">Military</b></td><td>—</td><td>+0.2</td><td>10,000</td><td>—</td><td>Toggle reach C/1/2 as a Ready manoeuvre. Costs 1 FP on switch.</td></tr>
+<tr><td><b>Precision focusing lens</b></td><td><b style="color:#876b58">Military</b></td><td>-1 dmg · +1 skill</td><td>—</td><td>7,200</td><td>—</td><td>Tighter beam: +1 skill, −1 dmg. A surgeon’s blade, not a butcher’s.</td></tr>
+</tbody></table></div>
+<p style="margin:14px 0 4px"><b>Straps &amp; Carry — slot: strap</b></p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th style="width:17%">Component</th><th>Tier</th><th>Effects</th><th>Wt&nbsp;(kg)</th><th>Cost</th><th>Prereq</th><th>Notes</th></tr>
+<tr><td><b>Carry strap (slung)</b></td><td><b style="color:#507c50">Civilian</b></td><td>—</td><td>+0.2</td><td>60</td><td>—</td><td>+1 to retain; no combat bonus.</td></tr>
+<tr><td><b>Concealing wrap (sheath)</b></td><td><b style="color:#50767c">Police</b></td><td>—</td><td>+0.2</td><td>290</td><td>—</td><td>+1 Holdout; -2 to Fast-Draw.</td></tr>
+</tbody></table></div>
+<p style="margin:14px 0 4px"><b>Aesthetic &amp; Presentation — slot: aesthetic</b></p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th style="width:17%">Component</th><th>Tier</th><th>Effects</th><th>Wt&nbsp;(kg)</th><th>Cost</th><th>Prereq</th><th>Notes</th></tr>
+<tr><td><b>Etched filigree</b></td><td><b style="color:#507c50">Civilian</b></td><td>—</td><td>—</td><td>2,400</td><td>—</td><td>+1 Status display; multiplies sticker cost. No combat bonus.</td></tr>
+<tr><td><b>House crest</b></td><td><b style="color:#507c50">Civilian</b></td><td>—</td><td>—</td><td>1,200</td><td>—</td><td>+1 reaction with allied House; -1 with rivals.</td></tr>
+<tr><td><b>Mando-style paint</b></td><td><b style="color:#507c50">Civilian</b></td><td>—</td><td>—</td><td>450</td><td>—</td><td>+1 reaction with Mandalorians (factional). -1 with Republic patrols.</td></tr>
+<tr><td><b>Trophy notches</b></td><td><b style="color:#507c50">Civilian</b></td><td>—</td><td>—</td><td>found</td><td>—</td><td>+1 to Intimidation (visible kills).</td></tr>
+<tr><td><b>Worn / battered look</b></td><td><b style="color:#507c50">Civilian</b></td><td>—</td><td>—</td><td>found</td><td>—</td><td>-1 to Merchant resale; +1 to Streetwise reactions.</td></tr>
+</tbody></table></div>
+
+<p><b>Mandalorian doctrine.</b> To a Mandalorian, armour is a weapons platform: mainline rigs accept <b>wrist mounts</b> (rocket racks, flamers, blades, grapples) and <b>back mounts</b> (jetpacks, rocket packs) on top of the standard four slots. Heavy and advanced suits spend that mass budget internally instead — no external hardpoints, but a second <b>internal systems</b> bay for stims, battle-nets, servos and life support. Every component has real weight, and it all counts toward encumbrance.</p>
+<p class="rule"><span class="rule__name">Armour slot capacity.</span> What a suit can socket depends on what it <i>is</i> — <b>a strong standard buys few sockets</b>. Beskar IS the plating; robes have nothing to bolt plate onto; a powered rig takes the full kit. The sheet only offers the slots a family accepts.</p>
+<table class="tbl tbl--compact"><tbody>
+<tr><th>Armour family</th><th>Slots accepted</th><th>Why</th></tr>
+<tr><td>Battle, Powered, Faction suits</td><td>plating · underlay · systems · visor <b>(4)</b></td><td>Modular military rigs — built to be rebuilt.</td></tr>
+<tr><td><b>Mandalorian mainline</b> (Neo-Crusader &amp; kin)</td><td>plating · underlay · systems · visor · <b>wrist · back</b> <i>(6)</i></td><td>Armour as a weapons platform — wrist and back hardpoints are the culture.</td></tr>
+<tr><td><b>Mandalorian heavy / advanced</b> (Heavy Neo-Crusader, refined beskar full suit)</td><td>plating/underlay · systems · <b>internal aux</b> · visor <i>(4–5)</i></td><td>The mass budget is spent: no external mounts, but a second internal systems bay.</td></tr>
+<tr><td>Beskar plate (single piece)</td><td>underlay · visor · wrist · back <i>(4)</i></td><td>Light plate — the mounts bolt straight to the beskar.</td></tr>
+<tr><td>Civilian (vests, jumpsuits, flight suits)</td><td>underlay · systems · visor <b>(3)</b></td><td>Light shells take liners and gadgets, not plate.</td></tr>
+<tr><td>Reflec &amp; Weave (mesh, fiber, reflec)</td><td>underlay · systems · visor <b>(3)</b></td><td>The coating/weave is the protection — re-plating ruins it.</td></tr>
+<tr><td>Robes &amp; clothing (Jedi robes, zeyd-cloth)</td><td>underlay · systems <b>(2)</b></td><td>Fabric. Nothing to bolt onto; everything to hide within.</td></tr>
+<tr><td>Mandalorian iron plate (unrefined)</td><td>underlay · visor <b>(2)</b></td><td>Very strong standard, few sockets: the plate <i>is</i> the armour and tolerates no drilling.</td></tr>
+<tr><td>Matrix armour (exotic lattice)</td><td>underlay · systems <b>(2)</b></td><td>A sealed crystalline weave — strong, and stubborn about it.</td></tr>
+</tbody></table>
+<p style="margin:18px 0 2px"><b>Armour components.</b> Armour carries four slots — <b>plating</b>, <b>underlay</b>, <b>systems</b>, <b>visor/helm</b> — one component each, same install-class and stacking rules as weapons. DR effects split by type where noted (E = energy, K = kinetic; <a href="#sec-tool-2-split-dr-by-damage-type">Split DR</a>).</p>
+
+<p style="margin:14px 0 4px"><b>Armour — Plating — slot: plating</b></p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th style="width:17%">Component</th><th>Tier</th><th>Effects</th><th>Wt&nbsp;(kg)</th><th>Cost</th><th>Prereq</th><th>Notes</th></tr>
+<tr><td><b>Duraplast lamination</b></td><td><b style="color:#507c50">Civilian</b></td><td>+1 DR(E) · +1 DR(K)</td><td>+1.5</td><td>1,600</td><td>—</td><td>+1/+1 DR. Cheap, universal, slightly stiff.</td></tr>
+<tr><td><b>Ablative overlay</b></td><td><b style="color:#50767c">Police</b></td><td>+2 DR(E)</td><td>+2</td><td>2,800</td><td>—</td><td>+2 energy DR; each hit that burns through chips it — after 3 such hits the overlay is spent.</td></tr>
+<tr><td><b>Energy-dispersing mesh</b></td><td><b style="color:#876b58">Military</b></td><td>—</td><td>+1</td><td>7,600</td><td>—</td><td>Halves blaster AD against this armour (½-energy rule, Doc IX) if it doesn’t already.</td></tr>
+<tr><td><b>Reactive kinetic plate</b></td><td><b style="color:#876b58">Military</b></td><td>+3 DR(K)</td><td>+3</td><td>5,400</td><td>—</td><td>+3 kinetic DR; bulky — −1 Dodge while fitted.</td></tr>
+<tr><td><b>Unrefined beskar trim</b></td><td><b style="color:#876b58">Military</b></td><td>+2 DR(E) · +2 DR(K)</td><td>+4</td><td>9,000</td><td>—</td><td>+2/+2 DR. Mandalorian iron, unrefined grade — heavy and proud.</td></tr>
+<tr><td><b>Cortosis-weave overlay</b></td><td><b style="color:#935f91">Exotic</b></td><td>—</td><td>+2</td><td>38,000</td><td>—</td><td>Anti-saber lattice: once per scene a lightsaber striking this armour shorts out for 1d turns (Doc IX cortosis rules). Not a purchase — found or commissioned.</td></tr>
+<tr><td><b>Crystalline carbonite plate</b></td><td><b style="color:#935f91">Exotic</b></td><td>+4 DR(E) · +1 DR(K)</td><td>+4</td><td>29,000</td><td>—</td><td>+4 energy / +1 kinetic DR; shimmer-sheen — −1 to Stealth (Vision).</td></tr>
+<tr><td><b>Phrik lattice plate</b></td><td><b style="color:#935f91">Exotic</b></td><td>+2 DR(E) · +2 DR(K)</td><td>+3</td><td>46,000</td><td>—</td><td>+2/+2 DR and the plated locations resist lightsabers (treat saber AD as 1 vs this plating).</td></tr>
+<tr><td><b>Ordo ancestral plate</b></td><td><b style="color:#8a6d1f">Unique</b></td><td>+3 DR(E) · +3 DR(K)</td><td>+3</td><td>found</td><td>Unique — Clan Ordo heirloom (GM)</td><td>+3/+3 DR. Beskar plates carried through four generations of Ordo crusaders. Clan Ordo will notice you wearing it.</td></tr>
+</tbody></table></div>
+<p style="margin:14px 0 4px"><b>Armour — Underlay — slot: underlay</b></p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th style="width:17%">Component</th><th>Tier</th><th>Effects</th><th>Wt&nbsp;(kg)</th><th>Cost</th><th>Prereq</th><th>Notes</th></tr>
+<tr><td><b>Padded concussion liner</b></td><td><b style="color:#507c50">Civilian</b></td><td>—</td><td>+1</td><td>900</td><td>—</td><td>+2 to HT checks vs knockdown and stun from blunt trauma.</td></tr>
+<tr><td><b>Flex-weave joints</b></td><td><b style="color:#50767c">Police</b></td><td>—</td><td>-1</td><td>3,000</td><td>—</td><td>−1 kg and removes up to −1 of armour DX penalty (min 0).</td></tr>
+<tr><td><b>Thermal regulation suit</b></td><td><b style="color:#50767c">Police</b></td><td>—</td><td>+1</td><td>2,400</td><td>—</td><td>Climate comfort −30°C to +50°C; +2 vs heat/cold environment checks.</td></tr>
+<tr><td><b>Ablative stealth coat</b></td><td><b style="color:#876b58">Military</b></td><td>—</td><td>+0.5</td><td>9,600</td><td>—</td><td>+2 Stealth; sensor returns read one size class smaller. Burns off after 3 energy hits.</td></tr>
+<tr><td><b>Bio-stabiliser weave</b></td><td><b style="color:#876b58">Military</b></td><td>—</td><td>+1</td><td>8,400</td><td>—</td><td>+2 to all HT rolls vs wounds, poison and stun while worn; auto-tourniquets a crippled limb.</td></tr>
+<tr><td><b>Reactive gel layer</b></td><td><b style="color:#876b58">Military</b></td><td>+2 DR(K)</td><td>+2</td><td>7,200</td><td>—</td><td>+2 kinetic DR; halves knockback distance.</td></tr>
+<tr><td><b>Vacuum-seal underlay</b></td><td><b style="color:#876b58">Military</b></td><td>—</td><td>+2</td><td>6,200</td><td>Sealed helmet/visor fitted</td><td>10 minutes hard-vacuum survival; requires a sealed helmet system.</td></tr>
+<tr><td><b>Force-insulating liner</b></td><td><b style="color:#935f91">Exotic</b></td><td>—</td><td>+1</td><td>32,000</td><td>—</td><td>Ysalamir-derived weave: +2 to resist hostile Force powers targeting the wearer; the wearer's own Force rolls suffer −1 (the silence cuts both ways).</td></tr>
+</tbody></table></div>
+<p style="margin:14px 0 4px"><b>Armour — Systems — slot: systems</b></p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th style="width:17%">Component</th><th>Tier</th><th>Effects</th><th>Wt&nbsp;(kg)</th><th>Cost</th><th>Prereq</th><th>Notes</th></tr>
+<tr><td><b>Antitox autosystem</b></td><td><b style="color:#50767c">Police</b></td><td>—</td><td>+1</td><td>5,800</td><td>—</td><td>Auto-administers antidotes: +4 HT vs poison/disease; 3 charges per fight.</td></tr>
+<tr><td><b>Medisystem injector</b></td><td><b style="color:#50767c">Police</b></td><td>—</td><td>+1</td><td>5,200</td><td>—</td><td>Auto-injects: 2 stim doses; as a free action once per fight, heal 2 HP or shrug one stun.</td></tr>
+<tr><td><b>Jetpack mount &amp; unit</b></td><td><b style="color:#876b58">Military</b></td><td>—</td><td>+9</td><td>18,000</td><td>Battle or powered rig</td><td>Flight Move 12 in 20-second bursts (10 bursts per fuel cell); Piloting (Jetpack) to manoeuvre under fire. Mandalorian classic.</td></tr>
+<tr><td><b>Personal shield socket</b></td><td><b style="color:#876b58">Military</b></td><td>—</td><td>+0.5</td><td>4,800</td><td>—</td><td>Hardpoint for a personal energy shield (shield bought separately, Doc IX).</td></tr>
+<tr><td><b>Servo-assist frame</b></td><td><b style="color:#876b58">Military</b></td><td>—</td><td>+5</td><td>14,000</td><td>Powered or heavy rig</td><td>+2 ST for lifting/carry (not damage); armour counts 6 kg lighter for encumbrance.</td></tr>
+<tr><td><b>Slicer interface suite</b></td><td><b style="color:#876b58">Military</b></td><td>—</td><td>+1.5</td><td>11,000</td><td>—</td><td>+2 to Computer Hacking / Electronics (Security) made through the suit's probes; stores 3 spikes.</td></tr>
+<tr><td><b>Wrist weapon mount</b></td><td><b style="color:#876b58">Military</b></td><td>—</td><td>+1</td><td>6,800</td><td>—</td><td>Integrates a hold-out weapon, dart launcher or flame jet (weapon bought separately); Fast-Draw automatic.</td></tr>
+<tr><td><b>Cloaking mantle</b></td><td><b style="color:#935f91">Exotic</b></td><td>—</td><td>+2</td><td>54,000</td><td>Power source (battle/powered rig)</td><td>Active camouflage: +5 Stealth while moving slowly, invisible to droids at &gt;10 m. Drops for the scene if you attack; ion shorts it.</td></tr>
+<tr><td><b>Repulsor stabilisers</b></td><td><b style="color:#935f91">Exotic</b></td><td>—</td><td>+3</td><td>21,000</td><td>—</td><td>Micro-repulsors: ignore knockdown from damage, fall safely up to 20 m, +1 to Acrobatics.</td></tr>
+<tr><td><b>Stealth field skin</b></td><td><b style="color:#935f91">Exotic</b></td><td>—</td><td>+1.5</td><td>21,000</td><td>—</td><td>+3 Stealth while moving slowly; shorts out for the scene if you attack or are hit by ion.</td></tr>
+<tr><td><b>Shadow-weave of the Covenant</b></td><td><b style="color:#8a6d1f">Unique</b></td><td>—</td><td>+0.5</td><td>found</td><td>Unique — Jedi Covenant relic (GM)</td><td>+4 Stealth while stationary or moving slowly; the wearer reads as a faint blur to Force senses (−2 to Sense rolls against them).</td></tr>
+
+<tr><td colspan="7" style="background:rgba(212,160,78,.08)"><b>Mandalorian hardpoints — wrist mounts</b> (mainline rigs &amp; light beskar plate)</td></tr>
+<tr><td><b>Wrist rocket rack</b></td><td>Military</td><td>—</td><td>+2</td><td>9,500</td><td>—</td><td>Mounts the Wrist rocket (Mandalorian) weapon (bought separately); fire as a Ready-free attack once per turn.</td></tr>
+<tr><td><b>Wrist flamer</b></td><td>Military</td><td>—</td><td>+2.5</td><td>7,200</td><td>—</td><td>1-metre cone, 2d burn, 6 charges; ignores Deflect (too close, too wide).</td></tr>
+<tr><td><b>Retractable wrist blade</b></td><td>Police</td><td>—</td><td>+1</td><td>3,400</td><td>—</td><td>Concealed vibroblade (thr+1(2) imp, Knife skill); Fast-Draw automatic; +4 Holdout.</td></tr>
+<tr><td><b>Grapple &amp; line spool</b></td><td>Police</td><td>—</td><td>+2</td><td>2,800</td><td>—</td><td>20 m micro-line, 200 kg rated; swing/ascend at Move 4; doubles as a snare (DX roll to entangle).</td></tr>
+<tr><td><b>Wrist shield projector</b></td><td>Exotic</td><td>—</td><td>+1.5</td><td>16,000</td><td>—</td><td>Snap-shield: once per turn block one ranged attack with a Block roll at skill 12; 10 charges per fight.</td></tr>
+<tr><td colspan="7" style="background:rgba(212,160,78,.08)"><b>Mandalorian hardpoints — back mounts</b></td></tr>
+<tr><td><b>Jetpack mount &amp; unit</b></td><td>Military</td><td>—</td><td>+9</td><td>18,000</td><td>Battle or powered rig</td><td>Now a <b>back-mount</b> component. Flight as listed; the unit's 9 kg counts toward encumbrance.</td></tr>
+<tr><td><b>Rocket pack (assault)</b></td><td>Military</td><td>—</td><td>+18</td><td>26,000</td><td>ST 11+</td><td>Flight Move 12 in 30-second burns, 6 burns; a burn-assisted charge adds +2 to slam damage.</td></tr>
+<tr><td><b>Grav-chute</b></td><td>Police</td><td>—</td><td>+6</td><td>4,200</td><td>—</td><td>Fall any distance safely; controlled descent at Move 6; repulsor cushion recharges daily.</td></tr>
+<tr><td><b>Supply rack &amp; harness</b></td><td>Civilian</td><td>—</td><td>+4</td><td>900</td><td>—</td><td>Rigid stowage: 8 kg of carried gear does not count toward encumbrance.</td></tr>
+<tr><td colspan="7" style="background:rgba(212,160,78,.08)"><b>Internal systems (aux)</b> — heavy &amp; advanced rigs only</td></tr>
+<tr><td><b>Combat stim injector</b></td><td>Military</td><td>—</td><td>+1</td><td>8,400</td><td>—</td><td>Twice per fight as a free action: ignore shock and Stunning for 3 turns; HT roll after each use or −1 FP.</td></tr>
+<tr><td><b>Encrypted battle-net core</b></td><td>Military</td><td>—</td><td>+1</td><td>6,200</td><td>—</td><td>Squad uplink: allies share Tactics bonuses; +2 coordinated attacks; unjammable short of ion.</td></tr>
+<tr><td><b>Life-support extender</b></td><td>Military</td><td>—</td><td>+3</td><td>5,800</td><td>—</td><td>Sealed 24 h: vacuum, gas, underwater; auto-antitox on a failed HT vs poison (once/day).</td></tr>
+<tr><td><b>Servo-assist musculature</b></td><td>Exotic</td><td>—</td><td>+6</td><td>32,000</td><td>—</td><td>+2 ST for lifting, climbing, grappling (not damage); halve armour weight for encumbrance.</td></tr>
+<tr><td><b>Auto-repair nanoforge</b></td><td>Exotic</td><td>—</td><td>+4</td><td>28,000</td><td>—</td><td>Restores 1 lost DR per minute out of combat; rebuilds destroyed sections overnight.</td></tr></tbody></table></div>
+<p style="margin:14px 0 4px"><b>Armour — Visor &amp; Helm — slot: visor</b></p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th style="width:17%">Component</th><th>Tier</th><th>Effects</th><th>Wt&nbsp;(kg)</th><th>Cost</th><th>Prereq</th><th>Notes</th></tr>
+<tr><td><b>Low-light visor</b></td><td><b style="color:#507c50">Civilian</b></td><td>—</td><td>+0.3</td><td>1,400</td><td>—</td><td>Negates darkness penalties up to −3 (not total dark).</td></tr>
+<tr><td><b>Sealed breather helm</b></td><td><b style="color:#50767c">Police</b></td><td>—</td><td>+0.8</td><td>2,600</td><td>—</td><td>Filters toxins/gas (+3 HT vs inhaled); 30 min internal air.</td></tr>
+<tr><td><b>Multiband sensor crown</b></td><td><b style="color:#876b58">Military</b></td><td>—</td><td>+0.7</td><td>9,800</td><td>—</td><td>Thermal, ultrasonic, EM bands: negate all darkness/smoke penalties, −4 vs Stealth-field users, detect powered devices at 20 m.</td></tr>
+<tr><td><b>Multispectrum HUD</b></td><td><b style="color:#876b58">Military</b></td><td>+1 Acc</td><td>+0.5</td><td>6,400</td><td>—</td><td>+1 Acc with linked ranged weapons; thermal + ultrasonic overlay (−3 vs Stealth fields).</td></tr>
+<tr><td><b>Tactical battle computer</b></td><td><b style="color:#876b58">Military</b></td><td>+1 Acc</td><td>+0.6</td><td>14,000</td><td>—</td><td>+1 Acc (linked weapons) and +2 to Tactics; paints targets for allies (+1 to their first ranged attack on a painted mark).</td></tr>
+<tr><td><b>Force-sight visor</b></td><td><b style="color:#935f91">Exotic</b></td><td>—</td><td>+0.4</td><td>26,000</td><td>—</td><td>Miraluka-glass lens: see Force auras through walls (5 m), +3 vs visual illusions and Force-cloaks. Overwhelming on a nexus.</td></tr>
+</tbody></table></div>
 
 
+<p class="rule"><span class="rule__name">Beyond the catalogue.</span> Unique and Legendary artefacts of the era — named weapons, masks, armour and relics, each existing exactly once and each carrying a true cost — are not listed here. They live in the GM's sealed <b>Vault</b> on the character sheet's Equipment tab, and they are found, never bought.</p>
 <h2 class="section-head" id="sec-armour-dd-tiers">Tier-Balanced Armour DD &amp; Unique Properties</h2>
 
 <p style="font-style:italic;color:#666">An expansion of Doc XII Part I−II. The Phase 4 work had DD restricted mostly to cutting-only and to a handful of master-crafted suits. The sheet's <a href="#book-makers">Equipment</a> values now broaden DD to apply <b>by tier</b> rather than by single damage type, and introduce a structured <code>special</code> field for unique-armour mechanics. The compendium tables for armour are unchanged in their DR/cost values — only the DD column is widened and a new "Special" column is implied. <span class="tag tag--house">HOUSE</span></p>
@@ -14751,17 +15184,17 @@ Crew Surrender.</span> Often the cleanest outcome. Once boarders have secured th
 <table class="tbl tbl--compact"><tbody><tr><th style="width:18%">Brand / Faction</th><th style="width:8%">Colour</th><th>Doctrine &amp; range</th></tr>
 <tr><td><b style="color:#5b8cc4">Republic Army / Navy / SpecForce</b></td><td>Republic blue</td><td>Mass-issue military line. Mk I → Vanguard → Heavy → SpecForce. New: Pathfinder Corps light armour, Marine boarding hardsuit, Senate Guard ceremonial, Medical Corps suit, Engineer Corps hardsuit, Navy officer's dress. Doctrine: standardisation, parts interchangeability, no exotic materials.</td></tr>
 <tr><td><b style="color:#c44e4e">Sith Empire / Krath / Dread Masters</b></td><td>Sith red</td><td>Sith trooper Mk I → Mk III "Dread", Sith assault, Sith Lord battle armour, Marauder war-harness, Sith Shadow (Inquisitorius), Dread Master regalia. Krath cult militia / battle / sorcerer war-plate. Doctrine: hierarchy of power, force-attuned plating, intimidation as armour grade.</td></tr>
-<tr><td><b style="color:#c2a560">Mandalorian clans</b></td><td>Mando gold</td><td>Iron plate (unrefined) → Neo-Crusader light/base/heavy/advanced → Cassus Fett pattern → Crusader → Protector → Beskar'gam. Doctrine: clan-forged, every smith trained in beskar work, the suit IS the warrior.</td></tr>
-<tr><td><b style="color:#7fc97e">Jedi Order</b></td><td>Jedi green</td><td>Travel-cloth → combat robes → Zeyd-cloth armourweave → Shadow armourweave → Battlemaster armourweave. Doctrine: armour that does not announce itself; humility as design principle.</td></tr>
-<tr><td><b style="color:#c47e4e">Czerka Corporation</b></td><td>Czerka orange</td><td>Czerka security-line, frontier marshal's plate, phrik combat suit (license). Doctrine: arms dealer to anyone with credits; rugged, mass-produced, no ideology.</td></tr>
-<tr><td><b style="color:#7ec0c4">Aratech</b></td><td>Aratech teal</td><td>AR-77 / AR-220 / AR-440 powered series, Stalker recon, reinforced suit, sealed environment, hazard armour, prototype hardsuit, phrik line (joint). Doctrine: high-tech materials, prototype-tier R&amp;D, premium powered platforms.</td></tr>
-<tr><td><b style="color:#a0c47e">Verpine Hive (Roche)</b></td><td>Verpine green</td><td>Matrix armour, fibre/zal-alloy, masterwork hardsuit, dispersion hardsuit, matrix-weave command, disruptor-shielded, exoskeletal frame. Doctrine: insectoid masterwork — molecular-level tolerances no human can match.</td></tr>
-<tr><td><b style="color:#c4a4c0">Echani Sciences / Sun Guard</b></td><td>Echani silver-violet</td><td>Fibre suit, battle armour, ceremonial, Master's duelweave, Sun-Guard war-plate. Doctrine: armour for duelists — light, fast, parry-augmenting.</td></tr>
-<tr><td><b style="color:#c4c47e">Cinnagar Weaveworks</b></td><td>Cinnagar yellow</td><td>The fibre/mesh/weave/war-weave family. Doctrine: anti-blaster weaves at industrial scale; the Old Republic's answer to massed blaster fire.</td></tr>
+<tr><td><b style="color:#837041">Mandalorian clans</b></td><td>Mando gold</td><td>Iron plate (unrefined) → Neo-Crusader light/base/heavy/advanced → Cassus Fett pattern → Crusader → Protector → Beskar'gam. Doctrine: clan-forged, every smith trained in beskar work, the suit IS the warrior.</td></tr>
+<tr><td><b style="color:#4e7c4e">Jedi Order</b></td><td>Jedi green</td><td>Travel-cloth → combat robes → Zeyd-cloth armourweave → Shadow armourweave → Battlemaster armourweave. Doctrine: armour that does not announce itself; humility as design principle.</td></tr>
+<tr><td><b style="color:#9c643e">Czerka Corporation</b></td><td>Czerka orange</td><td>Czerka security-line, frontier marshal's plate, phrik combat suit (license). Doctrine: arms dealer to anyone with credits; rugged, mass-produced, no ideology.</td></tr>
+<tr><td><b style="color:#4e7779">Aratech</b></td><td>Aratech teal</td><td>AR-77 / AR-220 / AR-440 powered series, Stalker recon, reinforced suit, sealed environment, hazard armour, prototype hardsuit, phrik line (joint). Doctrine: high-tech materials, prototype-tier R&amp;D, premium powered platforms.</td></tr>
+<tr><td><b style="color:#63794e">Verpine Hive (Roche)</b></td><td>Verpine green</td><td>Matrix armour, fibre/zal-alloy, masterwork hardsuit, dispersion hardsuit, matrix-weave command, disruptor-shielded, exoskeletal frame. Doctrine: insectoid masterwork — molecular-level tolerances no human can match.</td></tr>
+<tr><td><b style="color:#816c7e">Echani Sciences / Sun Guard</b></td><td>Echani silver-violet</td><td>Fibre suit, battle armour, ceremonial, Master's duelweave, Sun-Guard war-plate. Doctrine: armour for duelists — light, fast, parry-augmenting.</td></tr>
+<tr><td><b style="color:#717149">Cinnagar Weaveworks</b></td><td>Cinnagar yellow</td><td>The fibre/mesh/weave/war-weave family. Doctrine: anti-blaster weaves at industrial scale; the Old Republic's answer to massed blaster fire.</td></tr>
 <tr><td><b style="color:#9a7ec4">Underworld brands</b></td><td>Underworld violet</td><td>Bothan Spynet covert suits, GenoHaradan blade/master suits, Calo Nord signature kit, Davik Kang's Dallorian-alloy suit, Exchange enforcer kit. Doctrine: stealth, signature aesthetics, mostly assassin / fixer / smuggler trade.</td></tr>
-<tr><td><b style="color:#7ea4c4">Corporate arms (BlasTech, Merr-Sonn, SoroSuub, Kuat, Tendrando, Adascorp, Sienar, Salus)</b></td><td>Corporate blue-grey</td><td>BlasTech sentinel/tactical/riot lines, Merr-Sonn Battlemaster/Defender/Shock-Trooper/Bounty/LP-9 Blast Vest, Adascorp Reflec Mk I/III, Sienar Agrinium, SoroSuub Spacer, Kuat Systems flight kit, Tendrando concealable, Salus Corp exec. Doctrine: capital-class arms makers; no ideology, just product line.</td></tr>
-<tr><td><b style="color:#c47ec4">Rakata Star Forge</b></td><td>Rakata violet</td><td>Star Forge-pattern relics — self-regenerating, ancient, irreplaceable.</td></tr>
-<tr><td><b style="color:#aaa">Civilian / Off-brand / Independent / Tapani / Tarisian / Eriadu / Thyrsus / Frontier</b></td><td>Grey</td><td>Off-the-rack civilian wear, frontier hunter craft, independent modular smiths, Tapani dueling outfitters, Tarisian Arena Champions guild, Eriadu Authority tactical-line, Thyrsus Sun-Guard. Doctrine: variable — local tradition or local need.</td></tr>
+<tr><td><b style="color:#587289">Corporate arms (BlasTech, Merr-Sonn, SoroSuub, Kuat, Tendrando, Adascorp, Sienar, Salus)</b></td><td>Corporate blue-grey</td><td>BlasTech sentinel/tactical/riot lines, Merr-Sonn Battlemaster/Defender/Shock-Trooper/Bounty/LP-9 Blast Vest, Adascorp Reflec Mk I/III, Sienar Agrinium, SoroSuub Spacer, Kuat Systems flight kit, Tendrando concealable, Salus Corp exec. Doctrine: capital-class arms makers; no ideology, just product line.</td></tr>
+<tr><td><b style="color:#945f94">Rakata Star Forge</b></td><td>Rakata violet</td><td>Star Forge-pattern relics — self-regenerating, ancient, irreplaceable.</td></tr>
+<tr><td><b style="color:#707070">Civilian / Off-brand / Independent / Tapani / Tarisian / Eriadu / Thyrsus / Frontier</b></td><td>Grey</td><td>Off-the-rack civilian wear, frontier hunter craft, independent modular smiths, Tapani dueling outfitters, Tarisian Arena Champions guild, Eriadu Authority tactical-line, Thyrsus Sun-Guard. Doctrine: variable — local tradition or local need.</td></tr>
 </tbody></table>
 
 <h3>New Republic Issue Category (sheet v32)</h3>
@@ -17958,6 +18391,33 @@ Crew Surrender.</span> Often the cleanest outcome. Once boarders have secured th
   <tr><td>Teräs Käsi, Echani striking</td><td>Karate (+ techniques)</td><td>Named styles as techniques.</td></tr>
   <tr><td>Grapples, throws, holds; K’tara</td><td>Wrestling / Judo</td><td>See grappling rules.</td></tr>
 </tbody></table>
+<p style="margin:14px 0 4px"><b>Skill Defaults — rolling a weapon you haven't trained</b></p>
+<p>Standard GURPS defaulting applies: if you lack a weapon's governing skill, roll the best alternative below. Guns specialties default to one another at <b>−2</b>; Beam Weapons specialties and cross-family swaps (blaster ↔ slugthrower of the same form) default at <b>−4</b>; any firearm falls back to <b>DX−4</b> and any melee weapon to <b>DX−5</b>. Worked example: a <i>standard blaster pistol</i> rolls <b>Blasters (Pistol)</b>, or <b>Blasters (Rifle) −4</b>, or <b>Slugthrowers (Pistol) −4</b>, or <b>DX−4</b>. The character sheet computes these live — hover the <span style="color:#5ec4d4;font-weight:700">ⓘ</span> beside any weapon.</p>
+<div class="tbl-scroll"><table class="tbl tbl--compact"><tbody>
+<tr><th>Governing skill</th><th>Defaults (best applies)</th></tr>
+<tr><td>Blasters (Pistol)</td><td>Blasters (Rifle) −4 · Slugthrowers (Pistol) −4 · DX−4</td></tr>
+<tr><td>Blasters (Rifle)</td><td>Blasters (Pistol) −4 · Slugthrowers (Rifle) −4 · DX−4</td></tr>
+<tr><td>Slugthrowers (Pistol)</td><td>Slugthrowers (Rifle) −2 · Blasters (Pistol) −4 · DX−4</td></tr>
+<tr><td>Slugthrowers (Rifle)</td><td>Slugthrowers (Shotgun) −2 · Slugthrowers (Pistol) −2 · Blasters (Rifle) −4 · DX−4</td></tr>
+<tr><td>Slugthrowers (Shotgun)</td><td>Slugthrowers (Rifle) −2 · DX−4</td></tr>
+<tr><td>Gunner (Beams)</td><td>DX−4 (crewed weapons don't borrow small-arms training)</td></tr>
+<tr><td>Heavy Weapons (Rockets / Missiles)</td><td>Heavy Weapons (Grenade Launcher) −4 · DX−4</td></tr>
+<tr><td>Heavy Weapons (Grenade Launcher)</td><td>Heavy Weapons (Rockets / Missiles) −4 · DX−4</td></tr>
+<tr><td>Ion Pistol / Ion Rifle / Ion Gunner</td><td>DX−4 only — ion arc handling is its own discipline; <b>no Blasters default</b></td></tr>
+<tr><td>Crossbow · Thrown Weapon</td><td>DX−4</td></tr>
+<tr><td>Knife</td><td>Shortsword −3 · DX−4</td></tr>
+<tr><td>Shortsword</td><td>Broadsword −2 · Knife −4 · DX−5</td></tr>
+<tr><td>Broadsword (incl. vibroblades)</td><td>Shortsword −2 · Two-Handed Sword −4 · DX−5</td></tr>
+<tr><td>Two-Handed Sword</td><td>Broadsword −4 · DX−5</td></tr>
+<tr><td>Saber (incl. fira)</td><td>Shortsword −4 · Broadsword −4 · DX−5</td></tr>
+<tr><td>Two-Handed Axe / Mace</td><td>Polearm −4 · DX−5</td></tr>
+<tr><td>Spear</td><td>Staff −2 · Polearm −4 · DX−5</td></tr>
+<tr><td>Staff</td><td>Spear −2 · Polearm −4 · DX−5</td></tr>
+<tr><td>Polearm</td><td>Spear −4 · Staff −4 · DX−5</td></tr>
+<tr><td>Brawling</td><td>DX (everyone can throw a punch)</td></tr>
+<tr><td><b>Lightsaber</b></td><td><b>No default.</b> The blade requires Trained by a Master (Doc I); untrained ignition is how museums acquire severed hands.</td></tr>
+</tbody></table></div>
+
 </div>
 
 <!-- ============ PART X — PILOTING, DRIVING & SPACER SKILLS ============ -->
