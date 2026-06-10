@@ -202,6 +202,13 @@ html{scroll-behavior:smooth}
 </style>
 </head>
 <body>
+<a class="hub-link" href="index.html" title="KOTOR Campaign Database — back to the hub">&#8962; Database</a>
+<style>
+.hub-link{position:fixed;top:10px;right:12px;z-index:9990;font:600 12px/1 -apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.4px;color:#d4a843;background:rgba(13,17,23,.78);border:1px solid rgba(212,168,67,.45);border-radius:999px;padding:5px 12px 6px;text-decoration:none;opacity:.78;transition:opacity .15s,box-shadow .15s}
+.hub-link:hover{opacity:1;box-shadow:0 0 14px rgba(212,168,67,.3)}
+@media print{.hub-link{display:none}}
+</style>
+
 <div class="wrap">
 
   <header class="hero">
@@ -1417,10 +1424,10 @@ html{scroll-behavior:smooth}
   </div>
 
   <div style="margin:0 0 20px;text-align:center;">
-    <a href="Galaxy_Map_KOTOR_Era.html" target="_blank" style="font-family:var(--display,'Cinzel',serif);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#070a12;background:linear-gradient(90deg,#c9a23f,#e7c66b);text-decoration:none;border-radius:5px;padding:11px 20px;display:inline-block;">⤢ Open the Holochart Full-Screen</a>
+    <a href="galaxy-map.html" target="_blank" style="font-family:var(--display,'Cinzel',serif);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#070a12;background:linear-gradient(90deg,#c9a23f,#e7c66b);text-decoration:none;border-radius:5px;padding:11px 20px;display:inline-block;">⤢ Open the Holochart Full-Screen</a>
   </div>
   <div style="position:relative;width:100%;height:78vh;min-height:540px;border:1px solid rgba(201,162,63,.4);border-radius:10px;overflow:hidden;box-shadow:0 0 40px rgba(40,54,96,.35);background:#04060c;">
-    <iframe src="Galaxy_Map_KOTOR_Era.html" title="The Holochart — Interactive Galaxy Map" style="position:absolute;inset:0;width:100%;height:100%;border:0;" loading="lazy"></iframe>
+    <iframe src="galaxy-map.html" title="The Holochart — Interactive Galaxy Map" style="position:absolute;inset:0;width:100%;height:100%;border:0;" loading="lazy"></iframe>
   </div>
   <p style="font-family:'EB Garamond',Georgia,serif;font-style:italic;color:#8d8268;font-size:14px;text-align:center;margin-top:12px;">If the chart does not load above (some viewers block embedded files), use the full-screen button — both open the same Holochart.</p>
 

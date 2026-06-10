@@ -53,7 +53,7 @@ html{scroll-behavior:smooth}
   size: A4;
   margin: 18mm 16mm 20mm 16mm;
   @top-right {
-    content: "The Force & the Fight  ·  The Complete Compendium";
+    content: "Star Wars the Old Republic  ·  GURPS 4E Conversion";
     font-family: 'Cormorant Garamond', serif;
     font-style: italic;
     font-size: 9pt;
@@ -1813,6 +1813,23 @@ html { scroll-behavior: smooth; }
 </style>
 </head>
 <body>
+<a class="hub-link" href="index.html" title="KOTOR Campaign Database — back to the hub">&#8962; Database</a>
+<style>
+.hub-link{position:fixed;top:10px;right:12px;z-index:230;font:600 12px/1 -apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.4px;color:#d4a843;background:rgba(13,17,23,.78);border:1px solid rgba(212,168,67,.45);border-radius:999px;padding:5px 12px 6px;text-decoration:none;opacity:.78;transition:opacity .15s,box-shadow .15s}
+.hub-link:hover{opacity:1;box-shadow:0 0 14px rgba(212,168,67,.3)}
+@media print{.hub-link{display:none}}
+.master-cover__rule{transform-origin:center}
+@media screen and (prefers-reduced-motion: no-preference){
+.master-cover__series{animation:coverFade 1s .15s ease-out backwards}
+.master-cover__title{animation:coverFade 1.1s .35s ease-out backwards}
+.master-cover__rule{animation:ruleGrow 1.1s .65s ease-out backwards}
+.master-cover__sub{animation:coverFade 1s .85s ease-out backwards}
+.master-cover__meta{animation:coverFade 1s 1.05s ease-out backwards}
+@keyframes coverFade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes ruleGrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+}
+</style>
+
 <button class="sidenav-toggle" aria-label="Open navigation">☰ Navigate</button>
 <div class="sidenav-backdrop"></div>
 <nav class="sidenav" aria-label="Compendium navigation">
@@ -1880,8 +1897,8 @@ html { scroll-behavior: smooth; }
   <div class="master-cover__series">Star Wars the Old Republic</div>
   <h1 class="master-cover__title">GURPS 4E<br>Conversion</h1>
   <div class="master-cover__rule"></div>
-  <div class="master-cover__sub">A consolidated GURPS 4e companion for the Old Republic era — every rule of combat, gear, machine, and world in one volume. Ten documents, one reference.</div>
-  <div class="master-cover__meta">Combat · Ranged · Damage · The Living Force · Vehicles · Equipment · Droids · Skills · Force Training · The Galaxy</div>
+  <div class="master-cover__sub">A consolidated GURPS 4e companion for the Old Republic era — every rule of combat, gear, machine, and world in one volume. Twelve documents, one reference.</div>
+  <div class="master-cover__meta">Combat · Ranged · Damage · The Living Force · Vehicles · Equipment · Droids · Skills · Force Training · Trade · The Galaxy · Factions</div>
 </section>
 
 
