@@ -4516,15 +4516,47 @@ function renderVehicles(){
     <span style="font-weight:700;color:var(--cyan)" title="Roll 3d6 ≤ Dodge against each attack you can see coming. Guided warheads: −2. Capital hulls effectively cannot dodge.">🛡 Defence</span> ${core}
     <span class="dim">· vs missiles −2 · foes hit you at SM +${sm}${sm<=5?' but capital batteries −6 vs you':''}</span>
    </div>`})()}
+   <details style="margin-top:7px" title="Player guidance — the whole exchange, in order">
+    <summary style="font-size:11px;color:#d4a843;cursor:pointer;font-weight:600">📖 How a ship round works</summary>
+    <ol style="margin:5px 0 3px 18px;padding:0;font-size:11px;line-height:1.55">
+     <li><b>Pilot</b> — fly steady, or <b>evasive</b> (+2 your Dodge, −2 your own gunnery). Dogfight maneuvers: compendium <i>Vehicles Playbook ③</i>.</li>
+     <li><b>Gunner</b> — pick a mount below, set target class &amp; range band; tick <b>Aim</b> if you spent a turn aiming (+Acc). Roll 3d6 ≤ Gunner + SM + band + Aim − evasive. Capital guns −6 vs fighter-size; RoF 5+ adds a bonus. Ion weapons use <b>Ion Gunner</b> (or Gunner at −2).</li>
+     <li><b>Defender</b> — Dodge = 3 + Pilot÷3 + Hnd on 3d6; guided warheads: Dodge at −2.</li>
+     <li><b>A hit lands</b> — feed the damage to the target’s <b>⚔ Incoming hit</b>: shields soak first (ion ×2 vs shields), then hull DR (weapon AP ignores that much), then vs <b>DT</b>: ≥DT cripples ◐ · ≥2×DT destroys ✕ · ≥6×DT vaporises the ship.</li>
+     <li><b>End of turn</b> — ⟳ shield regen · 🔧 damage control · resolve fires. Full canon: compendium <i>Part VIII — Components Are the Health</i>.</li>
+    </ol>
+   </details>
+   ${(()=>{const ms=shipMounts(v);
+     const rows=ms.map((mt,m)=>{
+      const W=mt.w?SHIP_WEAPONS.find(x=>x.name===mt.w):null;
+      const opts='<option value=""'+(mt.w?'':' selected')+'>— pick —</option>'+SHIP_WEAPONS.map(x=>'<option value="'+esc(x.name)+'"'+(mt.w===x.name?' selected':'')+'>'+esc(x.name)+'</option>').join('');
+      const ammo=(mt.shots!=null)?('<input class="cell" type="number" style="width:40px" value="'+(mt.shotsNow==null?'':mt.shotsNow)+'" onchange="setMountField('+i+','+m+',\'shotsNow\',this.value)"><span class="dim">/'+mt.shots+'</span>'):'<span class="dim">—</span>';
+      return '<tr>'
+       +'<td><input class="cell" style="width:110px" value="'+esc(mt.label||'')+'" onchange="setMountField('+i+','+m+',\'label\',this.value)">'+(mt.n>1?' <span class="dim" style="font-size:10px">×'+mt.n+'</span>':'')+'</td>'
+       +'<td><select class="cell" style="width:150px" onchange="setMountField('+i+','+m+',\'w\',this.value)">'+opts+'</select></td>'
+       +'<td class="num">'+(W?W.dmg.replace('x','×'):'—')+'</td>'
+       +'<td class="num">'+(W&&W.ap?W.ap:'—')+'</td>'
+       +'<td class="num">'+(W&&W.acc?W.acc:'—')+'</td>'
+       +'<td class="num">'+(W&&W.rof?W.rof:'—')+'</td>'
+       +'<td class="dim" style="font-size:10px">'+(W?W.band:'')+'</td>'
+       +'<td style="white-space:nowrap">'+ammo+'</td>'
+       +'<td><button class="btn-sm" '+(W?'':'disabled ')+'onclick="fireShipWeapon('+i+','+m+')" title="Fire this mount with the console settings below">🔫</button></td>'
+       +'<td><button class="btn-del" onclick="delMount('+i+','+m+')">✕</button></td></tr>';
+     }).join('');
+     return '<div style="margin-top:7px"><table class="g" style="font-size:10.5px"><tr><th>Mount</th><th>Weapon</th><th title="Damage dice">Dmg</th><th title="Armour Piercing: ignores this much hull DR (1:1 at ship scale)">AP</th><th title="Aim a turn to add Acc to one shot (fire-control computer)">Acc</th><th title="Rate of fire — RoF 5+ gives a to-hit bonus">RoF</th><th title="Band where this weapon works best">Best band</th><th title="Remaining warheads (launchers only)">Ammo</th><th></th><th></th></tr>'
+      +(rows||'<tr><td colspan="10" class="dim" style="padding:6px">No mounts — add one, or they auto-fill from the catalogue armament line.</td></tr>')
+      +'</table><button class="btn-add" style="margin-top:4px" onclick="addMount('+i+')">+ mount</button></div>';
+   })()}
    <div style="margin-top:7px;padding:6px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:5px">
     <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:11px">
      <span style="font-weight:700;color:var(--cyan)">🔫 Fire</span>
-     <select id="vfWpn${i}" class="cell" style="width:150px">${SHIP_WEAPONS.map((w,k)=>`<option value="${k}">${esc(w.name)} · ${w.dmg}${w.ap?' AP'+w.ap:''}${w.kind==='ion'?' ion':''}</option>`).join('')}</select>
+     <select id="vfWpn${i}" class="cell" style="width:170px">${(()=>{const ms=shipMounts(v);let o='';if(ms.length){o+='<optgroup label="Mounted">'+ms.map((mt,k)=>mt.w?('<option value="m:'+k+'">'+esc(mt.label)+' · '+esc(mt.w)+'</option>'):'').join('')+'</optgroup>'}o+='<optgroup label="Full catalogue">'+SHIP_WEAPONS.map((w,k)=>'<option value="c:'+k+'">'+esc(w.name)+' · '+w.dmg+(w.ap?' AP'+w.ap:'')+(w.kind==='ion'?' ion':'')+'</option>').join('')+'</optgroup>';return o})()}</select>
      <label class="dim">at <select id="vfTgt${i}" class="cell" style="width:120px">${TGT_CLASSES.map(t=>`<option value="${t[1]}"${t[1]===4?' selected':''}>${t[0]} (SM+${t[1]})</option>`).join('')}</select></label>
-     <label class="dim">range <input id="vfRng${i}" class="cell" type="number" value="-4" style="width:46px" title="Range modifier (Speed/Range table: −4 typical dogfight, −8 long)"></label>
-     <label class="dim" style="display:inline-flex;align-items:center;gap:3px" title="You are flying evasively: −2 to your own attacks"><input type="checkbox" id="vfEv${i}">evasive</label>
+     <label class="dim">band <select id="vfBand${i}" class="cell" style="width:130px" title="Range band — compendium: Range &amp; Engagement Bands">${RANGE_BANDS.map(b=>`<option value="${b[1]}"${b[1]===-4?' selected':''}>${b[0]} (${b[1]||'±0'})</option>`).join('')}</select></label>
+     <label class="dim" style="display:inline-flex;align-items:center;gap:3px" title="You spent last turn aiming: add the weapon's Acc (fire-control) to this shot"><input type="checkbox" id="vfAim${i}">Aim</label>
+     <label class="dim" style="display:inline-flex;align-items:center;gap:3px" title="You are flying evasively: −2 to your own attacks (+2 to your Dodge)"><input type="checkbox" id="vfEv${i}">evasive</label>
      <button class="btn-sm" onclick="fireShipWeapon(${i})">Roll</button>
-     <span class="dim" style="font-size:10px">Gunner + SM + range${''} − tracking − evasive</span>
+     <span class="dim" style="font-size:10px">3d6 ≤ Gunner + SM + band + Aim − evasive</span>
     </div>
     ${v.lastFire?`<div style="font-size:10.5px;margin-top:4px">${v.lastFire}</div>`:''}
    </div>
@@ -4934,23 +4966,72 @@ function charBestPilot(){
  return best;
 }
 const SHIP_WEAPONS=[
- {name:'Light laser cannon',dmg:'6dx2',ap:0,kind:'laser'},
- {name:'Laser cannon',dmg:'6dx3',ap:0,kind:'laser'},
- {name:'Heavy laser cannon',dmg:'6dx4',ap:5,kind:'laser'},
- {name:'Quad laser cannon',dmg:'6dx3',ap:0,kind:'laser',rof:4},
- {name:'Ion cannon',dmg:'6dx2',ap:0,kind:'ion'},
- {name:'Ion railgun',dmg:'6dx3',ap:5,kind:'ion'},
- {name:'Concussion missile',dmg:'6dx4',ap:10,kind:'missile'},
- {name:'Proton torpedo',dmg:'6dx6',ap:20,kind:'missile'},
- {name:'Thermite torpedo',dmg:'6dx4',ap:80,kind:'missile'},
- {name:'Slug railgun',dmg:'6dx6',ap:20,kind:'laser'},
- {name:'Plasma railgun',dmg:'6dx4',ap:10,kind:'laser'},
- {name:'Point-defence laser',dmg:'6dx2',ap:0,kind:'pd'},
- {name:'Turbolaser (light)',dmg:'6dx10',ap:0,kind:'capital'},
- {name:'Turbolaser (heavy)',dmg:'6dx20',ap:0,kind:'capital'},
- {name:'Neuralyzer array',dmg:'',ap:0,kind:'neural'}
+ {name:'Light laser cannon',dmg:'6dx2',ap:0,kind:'laser',acc:6,band:'Knife/Close'},
+ {name:'Laser cannon',dmg:'6dx3',ap:0,kind:'laser',acc:6,band:'Close'},
+ {name:'Heavy laser cannon',dmg:'6dx4',ap:5,kind:'laser',acc:7,band:'Close/Med'},
+ {name:'Quad laser cannon',dmg:'6dx3',ap:0,kind:'laser',rof:4,acc:5,band:'Knife/Close'},
+ {name:'Rapid-fire burst laser',dmg:'6dx2',ap:0,kind:'laser',rof:13,acc:5,band:'Knife'},
+ {name:'Ion cannon',dmg:'6dx2',ap:0,kind:'ion',acc:6,band:'Close'},
+ {name:'Concussion missile',dmg:'6dx4',ap:10,kind:'missile',acc:5,band:'Close/Med',guided:1},
+ {name:'Proton torpedo',dmg:'6dx6',ap:20,kind:'missile',acc:6,band:'Med/Long',guided:1},
+ {name:'Cluster missile',dmg:'3dx3',ap:0,kind:'missile',rof:4,acc:4,band:'Close/Med',guided:1},
+ {name:'Ion missile',dmg:'6dx2',ap:0,kind:'ion',acc:5,band:'Close/Med',guided:1,warhead:1},
+ {name:'EMP missile',dmg:'',ap:0,kind:'emp',acc:5,band:'Close/Med',guided:1,fx:'Area systems-kill — shields, drones, mines and unshielded systems in the burst go dark (no hull damage). Droids in the volume roll HT or shut down; shielded military systems resist on HT+2.'},
+ {name:'Seismic charge / mine',dmg:'6dx6',ap:10,kind:'missile',acc:3,band:'Knife'},
+ {name:'Thermite torpedo',dmg:'6dx4',ap:80,kind:'missile',acc:6,band:'Med',guided:1},
+ {name:'Sabotage probe',dmg:'',ap:0,kind:'probe',acc:4,band:'Knife',fx:'Latches on — cumulative −1 per turn to the target&#39;s Gunnery and Sensor rolls (max −4) until pried off (Mechanics or EVA crew, 2 turns).'},
+ {name:'Slug railgun',dmg:'6dx6',ap:20,kind:'rail',acc:8,band:'Long'},
+ {name:'Ion railgun',dmg:'6dx3',ap:5,kind:'ion',acc:8,band:'Long'},
+ {name:'Plasma railgun',dmg:'6dx4',ap:10,kind:'rail',acc:7,band:'Med/Long'},
+ {name:'Point-defence laser',dmg:'6dx2',ap:0,kind:'pd',acc:4,band:'Knife'},
+ {name:'Turbolaser (light)',dmg:'6dx10',ap:0,kind:'capital',acc:8,band:'Med/Long'},
+ {name:'Turbolaser (heavy)',dmg:'6dx20',ap:0,kind:'capital',acc:9,band:'Long/Extreme'},
+ {name:'Neuralyzer array',dmg:'',ap:0,kind:'neural',acc:0,band:'Close'}
 ];
 const TGT_CLASSES=[['Speeder / walker',2],['Starfighter',4],['Gunship / shuttle',5],['Freighter',6],['Corvette',8],['Frigate',9],['Cruiser / capital',10]];
+const RANGE_BANDS=[['Knife-fight \u22641 km',0],['Close 1\u20135 km',-4],['Medium 5\u201315 km',-6],['Long 15\u201350 km',-8],['Extreme 50+ km',-12]];
+function shipMounts(v){
+ if(!v.mounts){ v.mounts=parseMountString(v.weapons||''); }
+ return v.mounts;
+}
+function parseMountString(s){
+ const out=[]; if(!s||typeof s!=='string')return out;
+ const AL={'light blaster cannon':'Light laser cannon','light laser cannon':'Light laser cannon','medium blaster cannon':'Laser cannon','blaster cannon':'Laser cannon','laser cannon':'Laser cannon','medium laser cannon':'Laser cannon','heavy blaster cannon':'Heavy laser cannon','heavy laser cannon':'Heavy laser cannon','quad laser cannon':'Quad laser cannon','quad laser':'Quad laser cannon','light turret':'Light laser cannon','turret':'Light laser cannon','ion cannon':'Ion cannon','concussion missile':'Concussion missile','missile rack':'Concussion missile','missile':'Concussion missile','proton torpedo':'Proton torpedo','cluster missile':'Cluster missile','ion missile':'Ion missile','emp missile':'EMP missile','seismic charge':'Seismic charge / mine','seismic mine':'Seismic charge / mine','thermite torpedo':'Thermite torpedo','slug railgun':'Slug railgun','ion railgun':'Ion railgun','plasma railgun':'Plasma railgun','point-defence laser':'Point-defence laser','point defence laser':'Point-defence laser','turbolaser':'Turbolaser (light)','heavy turbolaser':'Turbolaser (heavy)','neuralyzer array':'Neuralyzer array','burst laser':'Rapid-fire burst laser'};
+ s.split(/[;,]/).forEach(seg=>{
+  let t=seg.trim(); if(!t||t==='\u2014'||t==='-')return;
+  let n=1; const m=t.match(/^(\d+)\s*[\u00d7x]?\s*/); if(m&&m[1]){n=+m[1]; t=t.slice(m[0].length).trim();}
+  const low=t.toLowerCase().replace(/\s+/g,' ');
+  const sing=low.replace(/e?s$/,'');
+  let w=AL[low]||AL[sing]||null;
+  if(!w){ const hit=SHIP_WEAPONS.find(x=>x.name.toLowerCase()===low||x.name.toLowerCase()===sing); if(hit)w=hit.name; }
+  if(!w){ const key=Object.keys(AL).find(k=>low.indexOf(k)>=0||sing.indexOf(k)>=0); if(key)w=AL[key]; }
+  const W=w?SHIP_WEAPONS.find(x=>x.name===w):null;
+  const launcher=!!(W&&(W.kind==='missile'||W.kind==='emp'||(W.kind==='ion'&&W.warhead)));
+  const rack=/rack/i.test(t);
+  const shots=launcher?(rack?n*4:n):null;
+  out.push({label:t.charAt(0).toUpperCase()+t.slice(1),w:w,n:launcher?(rack?n:1):n,shots:shots,shotsNow:shots});
+ });
+ return out;
+}
+function addMount(i){const v=C.vehicles[i];if(!v)return;shipMounts(v).push({label:'New mount',w:SHIP_WEAPONS[1].name,n:1,shots:null,shotsNow:null});touch();renderVehicles();}
+function delMount(i,m){const v=C.vehicles[i];if(!v)return;shipMounts(v).splice(m,1);touch();renderVehicles();}
+function setMountField(i,m,f,val){
+ const v=C.vehicles[i];if(!v)return;const mt=shipMounts(v)[m];if(!mt)return;
+ if(f==='n'){mt.n=Math.max(1,parseInt(val)||1);}
+ else if(f==='shotsNow'){mt.shotsNow=val===''?null:Math.max(0,parseInt(val)||0);}
+ else if(f==='shots'){mt.shots=val===''?null:Math.max(0,parseInt(val)||0);if(mt.shotsNow==null||mt.shotsNow>mt.shots)mt.shotsNow=mt.shots;}
+ else if(f==='w'){mt.w=val||null;const W=SHIP_WEAPONS.find(x=>x.name===val);const launcher=!!(W&&(W.kind==='missile'||W.kind==='emp'||(W.kind==='ion'&&W.warhead)));if(launcher&&mt.shots==null){mt.shots=4;mt.shotsNow=4}if(!launcher){mt.shots=null;mt.shotsNow=null}}
+ else mt[f]=val;
+ touch();renderVehicles();
+}
+function gunnerSkillFor(W){
+ const ion=W&&W.kind==='ion';
+ const g1=charSkillByNames(ion?['Ion Gunner']:['Gunner']);
+ if(g1)return g1;
+ const g2=charSkillByNames(ion?['Gunner']:['Ion Gunner']);
+ if(g2)return {lvl:g2.lvl-2,name:g2.name+' (default \u22122)',spec:g2.spec};
+ return null;
+}
 function charSkillByNames(names){
  let best=null;
  (C.skills||[]).forEach(sk=>{
@@ -4961,18 +5042,29 @@ function charSkillByNames(names){
  });
  return best;
 }
-function fireShipWeapon(i){
+function fireShipWeapon(i,mIdx){
  const v=C.vehicles[i]; if(!v)return;
- const wIdx=+((document.getElementById('vfWpn'+i)||{}).value||0);
+ const mounts=shipMounts(v);
+ let W=null, mount=null;
+ if(mIdx!=null){ mount=mounts[mIdx]; if(!mount)return; W=SHIP_WEAPONS.find(x=>x.name===mount.w); if(!W){alert('Pick a weapon type for this mount first.');return} }
+ else{
+  const sel=((document.getElementById('vfWpn'+i)||{}).value||'');
+  if(sel.charAt(0)==='m'){ mount=mounts[+sel.slice(2)]; W=mount?SHIP_WEAPONS.find(x=>x.name===mount.w):null; }
+  else W=SHIP_WEAPONS[+sel.slice(2)||0];
+  if(!W){alert('Pick a weapon.');return}
+ }
+ if(mount&&mount.shots!=null&&(+mount.shotsNow||0)<=0){ v.lastFire='\u26a0 '+esc(mount.label)+' \u2014 no ammunition left. Re-arm in port ('+(W.name)+').'; touch();renderVehicles(); return; }
  const sm=+((document.getElementById('vfTgt'+i)||{}).value||4);
- const rng=parseInt((document.getElementById('vfRng'+i)||{}).value);
+ const band=+((document.getElementById('vfBand'+i)||{}).value||-4);
+ const aim=!!((document.getElementById('vfAim'+i)||{}).checked);
  const evasive=!!((document.getElementById('vfEv'+i)||{}).checked);
- const W=SHIP_WEAPONS[wIdx]; if(!W)return;
- const g=charSkillByNames(['Gunner','Ion Gunner']);
- if(!g){alert('Add a Gunner skill to fire ship weapons.');return}
+ const g=gunnerSkillFor(W);
+ if(!g){alert('Add a Gunner (or Ion Gunner) skill to fire ship weapons.');return}
  const track=(W.kind==='capital'&&sm<=5)?-6:0;
  const rofB=W.rof?(typeof rofBonus==='function'?rofBonus(W.rof):1):0;
- const eff=g.lvl+sm+(isNaN(rng)?-4:rng)+track+(evasive?-2:0)+rofB;
+ const accB=aim?(+W.acc||0):0;
+ const eff=g.lvl+sm+band+track+(evasive?-2:0)+rofB+accB;
+ const spend=()=>{ if(mount&&mount.shots!=null){ mount.shotsNow=Math.max(0,(+mount.shotsNow||0)-1); } };
  if(W.kind==='neural'){
   const r2=rollDice(3,0);
   const held=r2.total<=eff;
@@ -4992,14 +5084,19 @@ function fireShipWeapon(i){
  const critMiss=r.total>=18||(r.total===17&&eff<16);
  const hit=r.total<=eff&&!critMiss;
  const crit=hit&&(r.total<=4||(r.total===5&&eff>=15)||(r.total===6&&eff>=16));
- let msg='\u{1F52B} '+W.name+' \u2014 3d6 '+r.total+' vs '+eff+' ('+g.name+' '+g.lvl+(sm?(sm>0?' +':' ')+sm+' SM':'')+(track?' '+track+' tracking':'')+(evasive?' \u22122 evasive':'')+(rofB?' +'+rofB+' RoF':'')+(isNaN(rng)?' \u22124 range':(rng?' '+rng+' range':''))+'): ';
+ spend();
+ const bandName=(RANGE_BANDS.find(b=>b[1]===band)||['?'])[0].split(' ')[0];
+ let msg='\u{1F52B} '+(mount?esc(mount.label)+' \u2014 ':'')+W.name+' \u2014 3d6 '+r.total+' vs '+eff+' ('+g.name+' '+g.lvl+(sm?(sm>0?' +':' ')+sm+' SM':'')+' '+(band||'\u00b10')+' '+bandName+(accB?' +'+accB+' Aim':'')+(track?' '+track+' tracking':'')+(evasive?' \u22122 evasive':'')+(rofB?' +'+rofB+' RoF':'')+'): ';
  if(!hit){ msg+=critMiss?'\u2620 CRITICAL MISS':'MISS'; }
+ else if(W.fx){ msg+=(crit?'\u2605 CRITICAL HIT':'HIT')+' \u2014 '+W.fx; }
  else{
   const dd=rollDmgSpec(parseDmg(W.dmg));
-  msg+=(crit?'\u2605 CRITICAL HIT':'HIT')+' \u2014 <b>'+dd.total+'</b> damage'+(W.ap?', AP '+W.ap:'')+(W.kind==='ion'?' \u00b7 ION (\u00d72 vs shields, no structure)':'')+(W.kind==='missile'?' \u00b7 warhead':'')+'. Feed it to the target\u2019s \u2694 Incoming hit.';
+  msg+=(crit?'\u2605 CRITICAL HIT':'HIT')+' \u2014 <b>'+dd.total+'</b> damage'+(W.ap?', AP '+W.ap:'')+(W.kind==='ion'?' \u00b7 ION (\u00d72 vs shields, no structure)':'')+(W.kind==='missile'?' \u00b7 warhead (target dodges at \u22122)':'')+(crit?' \u00b7 crit: ignore cover DR or +1 damage step \u2014 GM call':'')+'. Feed it to the target\u2019s \u2694 Incoming hit.';
+  if(typeof _rollLog!=='undefined'){(_rollCount++,_rollLog).unshift({label:W.name+' dmg',target:null,dice:dd.rolls||[],sum:dd.total,outcome:String(dd.total),cls:'ok',margin:null});if(_rollLog.length>14)_rollLog.pop();}
  }
+ if(mount&&mount.shots!=null) msg+=' <span class="dim">['+mount.shotsNow+'/'+mount.shots+' left]</span>';
  v.lastFire=msg;
- if(typeof _rollLog!=='undefined'){(_rollCount++,_rollLog).unshift({label:'Ship: '+W.name,target:eff,dice:r.rolls,sum:r.total,outcome:hit?(crit?'Crit hit':'HIT'):(critMiss?'Crit miss':'MISS'),cls:hit?(crit?'crit':'ok'):(critMiss?'fail':'miss'),margin:eff-r.total});if(_rollLog.length>14)_rollLog.pop();if(typeof _renderRollPanel==='function')_renderRollPanel();}
+ if(typeof _rollLog!=='undefined'){(_rollCount++,_rollLog).unshift({label:(mount?mount.label+' ':'')+W.name,target:eff,dice:r.rolls,sum:r.total,outcome:critMiss?'crit miss':crit?'CRIT':hit?'hit':'miss',cls:hit?'ok':'miss',margin:eff-r.total});if(_rollLog.length>14)_rollLog.pop();if(typeof _renderRollPanel==='function')_renderRollPanel();}
  touch();renderVehicles();
 }
 function regenShield(i){
@@ -5232,12 +5329,70 @@ function addVehicleFromCatalog(name){
 }
 
 // ─── RENDER DROIDS TAB ───
+const DROID_RANGES=[['\u22642 m',0],['5 m',-2],['10 m',-4],['20 m',-6],['50 m',-8],['100 m',-10],['200 m',-12],['500 m',-14]];
+function droidWpns(d){
+ if(!d.wpns){
+  d.wpns=[];
+  const kit=String(d.kit||d.weapons||'');
+  let m=kit.match(/Beam Wpns \((Pistol)\)\s*(\d+)/);
+  if(m) d.wpns.push(_seedDroidWpn('Blaster pistol',+m[2]));
+  m=kit.match(/Beam Wpns \((Rifle)\)\s*(\d+)/);
+  if(m) d.wpns.push(_seedDroidWpn('Blaster rifle',+m[2]));
+  m=kit.match(/Brawling\s*(\d+)/);
+  if(m) d.wpns.push({label:'Brawling strike',dmg:'1d-1',dtype:'cr',ad:1,acc:0,rof:'',shots:null,shotsNow:null,lvl:+m[1],melee:1});
+ }
+ return d.wpns;
+}
+function _seedDroidWpn(name,lvl){
+ const W=(DATA.weapons||[]).find(w=>w.name===name)||{};
+ return {label:name,dmg:W.fixed||'3d',dtype:W.dtype||'burn',ad:(W.ad!=null?W.ad:1),acc:parseInt(W.acc)||0,rof:W.rof||'',shots:W.shots||null,shotsNow:W.shots||null,lvl:lvl};
+}
+function addDroidWpn(i){const d=C.droids[i];if(!d)return;droidWpns(d).push({label:'',dmg:'3d',dtype:'burn',ad:1,acc:0,rof:'',shots:null,shotsNow:null,lvl:10});touch();renderDroids();}
+function delDroidWpn(i,w){const d=C.droids[i];if(!d)return;droidWpns(d).splice(w,1);touch();renderDroids();}
+function setDroidWpnField(i,w,f,val){
+ const d=C.droids[i];if(!d)return;const r=droidWpns(d)[w];if(!r)return;
+ if(f==='lvl'||f==='acc')r[f]=parseInt(val)||0;
+ else if(f==='ad')r.ad=parseFloat(val)||1;
+ else if(f==='shotsNow')r.shotsNow=val===''?null:Math.max(0,parseInt(val)||0);
+ else if(f==='label'){
+  r.label=val;
+  const W=(DATA.weapons||[]).find(x=>x.name===val);
+  if(W){r.dmg=W.fixed||r.dmg;r.dtype=W.dtype||r.dtype;r.ad=(W.ad!=null?W.ad:r.ad);r.acc=parseInt(W.acc)||0;r.rof=W.rof||'';if(W.shots){r.shots=W.shots;r.shotsNow=W.shots}r.melee=W.cls==='Melee'?1:0;}
+ }
+ else r[f]=val;
+ touch();renderDroids();
+}
+function fireDroidWeapon(i,w){
+ const d=C.droids[i];if(!d)return;const r=droidWpns(d)[w];if(!r)return;
+ if(r.shots!=null&&(+r.shotsNow||0)<=0){d.lastFire='\u26a0 '+esc(r.label||'weapon')+' \u2014 power cell dry.';touch();renderDroids();return}
+ const band=+((document.getElementById('dwBand'+i)||{}).value||0);
+ const aim=!!((document.getElementById('dwAim'+i)||{}).checked);
+ const rofB=r.rof?(typeof rofBonus==='function'?rofBonus(r.rof):0):0;
+ const eff=(+r.lvl||10)+(r.melee?0:band)+(aim&&!r.melee?(+r.acc||0):0)+rofB;
+ const roll=rollDice(3,0);
+ const critMiss=roll.total>=18||(roll.total===17&&eff<16);
+ const hit=roll.total<=eff&&!critMiss;
+ const crit=hit&&(roll.total<=4||(roll.total===5&&eff>=15)||(roll.total===6&&eff>=16));
+ if(r.shots!=null)r.shotsNow=Math.max(0,(+r.shotsNow||0)-1);
+ let msg='\u{1F916} '+esc(d.name||'Droid')+' \u2014 '+esc(r.label||'weapon')+': 3d6 '+roll.total+' vs '+eff+' ('+(+r.lvl||10)+(r.melee?'':(band?' '+band+' rng':''))+(aim&&!r.melee&&r.acc?' +'+r.acc+' Aim':'')+(rofB?' +'+rofB+' RoF':'')+'): ';
+ if(!hit) msg+=critMiss?'\u2620 CRITICAL MISS':'MISS';
+ else{
+  let dd={total:'?'};
+  try{dd=rollDmgSpec(parseDmg(String(r.dmg||'1d')));}catch(e){}
+  msg+=(crit?'\u2605 CRITICAL HIT':'HIT')+' \u2014 <b>'+dd.total+'</b> '+esc(r.dtype||'')+(r.ad&&r.ad!==1?' AD('+r.ad+')':'')+(crit?' \u00b7 crit: max damage or bypass armour \u2014 GM call':'');
+ }
+ if(r.shots!=null) msg+=' <span class="dim">['+r.shotsNow+'/'+r.shots+']</span>';
+ d.lastFire=msg;
+ if(typeof _rollLog!=='undefined'){(_rollCount++,_rollLog).unshift({label:(d.name||'Droid')+' '+(r.label||'wpn'),target:eff,dice:roll.rolls,sum:roll.total,outcome:critMiss?'crit miss':crit?'CRIT':hit?'hit':'miss',cls:hit?'ok':'miss',margin:eff-roll.total});if(_rollLog.length>14)_rollLog.pop();if(typeof _renderRollPanel==='function')_renderRollPanel();}
+ touch();renderDroids();
+}
 function renderDroids(){
  const el=document.getElementById('tab-droids');if(!el)return;
  const db=_dbState();const st=droidBuilderStats();
  const partCats=[...new Set(DROID_PARTS.map(p=>p.cat))];
  const degs=['1st','2nd','3rd','4th','5th'];
  el.innerHTML=`
+ <datalist id="dwAll">${(DATA.weapons||[]).map(w=>`<option value="${esc(w.name)}">`).join('')}</datalist>
  <div class="tab-intro">Build, buy, and manage droids. Pick parts → derived stats. Catalogue of ${DROIDS_FULL.length} canon droids across 5 degrees. C.droids[] persists with your character.</div>
 
  <div class="sec-head">Your Droids${(C.droids||[]).length?` <span class="dim" style="font-weight:400;font-size:11px">— ${C.droids.length}</span>`:''}</div>
@@ -5266,6 +5421,29 @@ function renderDroids(){
     </div>
    </div>
    ${(()=>{const _pd=(d.parts||[]).filter(p=>p.status!=='ok');return _pd.length?`<div class="dim" style="font-size:10px;margin-top:3px;color:var(--amber)">⚠ ${_pd.length} part${_pd.length===1?'':'s'} compromised — effective: HP ${droidEffectiveStat(d,'hp')||'?'} · DR ${droidEffectiveStat(d,'dr')||'?'} · Move ${droidEffectiveStat(d,'move')||'?'}</div>`:'';})()}
+   ${(()=>{const ws=droidWpns(d);
+     const rows=ws.map((r,w)=>'<tr>'
+      +'<td><input class="cell" list="dwAll" style="width:130px" value="'+esc(r.label||'')+'" onchange="setDroidWpnField('+i+','+w+',\'label\',this.value)" title="Type a name or pick from the armoury — stats autofill for catalogue weapons"></td>'
+      +'<td><input class="cell" type="number" style="width:42px" value="'+(+r.lvl||10)+'" onchange="setDroidWpnField('+i+','+w+',\'lvl\',this.value)" title="The droid&#39;s own skill with this weapon (from its kit)"></td>'
+      +'<td><input class="cell" style="width:52px" value="'+esc(r.dmg||'')+'" onchange="setDroidWpnField('+i+','+w+',\'dmg\',this.value)"></td>'
+      +'<td class="dim" style="font-size:10px">'+esc(r.dtype||'')+'</td>'
+      +'<td><input class="cell" type="number" step="0.5" style="width:40px" value="'+(r.ad!=null?r.ad:1)+'" onchange="setDroidWpnField('+i+','+w+',\'ad\',this.value)" title="Armour Divisor — personal scale divides DR"></td>'
+      +'<td class="num">'+(r.melee?'—':(r.acc||0))+'</td>'
+      +'<td class="num">'+(r.rof||'—')+'</td>'
+      +'<td style="white-space:nowrap">'+(r.shots!=null?('<input class="cell" type="number" style="width:40px" value="'+(r.shotsNow==null?'':r.shotsNow)+'" onchange="setDroidWpnField('+i+','+w+',\'shotsNow\',this.value)"><span class="dim">/'+r.shots+'</span>'):'<span class="dim">—</span>')+'</td>'
+      +'<td><button class="btn-sm" onclick="fireDroidWeapon('+i+','+w+')" title="The droid attacks with its own skill">\u{1F52B}</button></td>'
+      +'<td><button class="btn-del" onclick="delDroidWpn('+i+','+w+')">✕</button></td></tr>').join('');
+     return '<details style="margin-top:8px"'+(ws.length?' open':'')+'><summary style="font-size:11px;color:var(--cyan);cursor:pointer;font-weight:600">\u{1F52B} Armament ('+ws.length+') — the droid fights with its own skills</summary>'
+      +'<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:11px;margin:5px 0">'
+      +'<label class="dim">range <select id="dwBand'+i+'" class="cell" style="width:90px" title="Speed/Range penalty to the droid&#39;s attack">'+DROID_RANGES.map(b=>'<option value="'+b[1]+'"'+(b[1]===-4?' selected':'')+'>'+b[0]+' ('+(b[1]||'\u00b10')+')</option>').join('')+'</select></label>'
+      +'<label class="dim" style="display:inline-flex;align-items:center;gap:3px" title="The droid aimed for a turn: +Acc to this shot"><input type="checkbox" id="dwAim'+i+'">Aim</label>'
+      +'<span class="dim" style="font-size:10px">3d6 \u2264 skill + range + Aim (+RoF 5+)</span></div>'
+      +'<table class="g" style="font-size:10.5px"><tr><th>Weapon</th><th title="Droid&#39;s skill level">Lvl</th><th>Dmg</th><th></th><th title="Armour Divisor (personal scale)">AD</th><th>Acc</th><th>RoF</th><th>Shots</th><th></th><th></th></tr>'
+      +(rows||'<tr><td colspan="10" class="dim" style="padding:6px">No armament \u2014 combat droids seed from their kit; + weapon to arm this one.</td></tr>')
+      +'</table><button class="btn-add" style="margin-top:4px" onclick="addDroidWpn('+i+')">+ weapon</button>'
+      +(d.lastFire?'<div style="font-size:11px;margin-top:5px;padding:5px 7px;background:var(--bg3);border-left:3px solid var(--cyan);border-radius:4px">'+d.lastFire+'</div>':'')
+      +'</details>';
+   })()}
    ${renderDroidPartsBlock(d,i)}
   </div>`;
  }).join('')+`</div>`:'<div class="dim" style="font-size:12px;padding:6px 0">No droids yet.</div>'}
