@@ -1953,7 +1953,8 @@ html { scroll-behavior: smooth; }
     <li><b>Ion weapons keyed to Ion Gunner;</b> Gunner defaults at −2 (and vice versa). The sheet picks the right skill automatically.</li>
     <li><b>Launcher ammunition is explicit.</b> Warhead counts live on each ship card; a “missile rack” is a 4-shot launcher. No more infinite torpedoes.</li>
     <li><b>Hull damage restated in DT, not HP.</b> There is no hit-point pool at ship scale: a crippled hull now degrades the vessel’s DT by 25% (50% breached), so a battered ship breaks up under fire — same attrition, component-native math. Repair ladder restated to match: jury-rig ◐→ working in combat · Field Patch ✕→◐ out of combat · hangar restores ● fully.</li>
-  </ul></section>
+    <li><b>Force &amp; stances conform pass.</b> The sheet and compendium catalogues are now verified against each other, both directions: the sheet gains the two minor-tradition capstones it was missing (<b>The Sky Made Answer</b>, Baran Do T5 · <b>Heart of the Multitude</b>, Zeltron T5 — every minor tradition now runs T1→T5 like the great books); the compendium gains the <b>Force Deflection</b> power entry (Common Force T2 — it was referenced by the Bolt Deflection technique but never statted) and the two <b>Iktotchi battle stances</b> that existed only on the sheet; and the sheet gains <b>Echani Flowing Mirror</b>, which existed only here. Both catalogues now hold the same 44 stances. Point costs audited: all 205 powers sit exactly on the 5/10/20/35/60 ladder — no outliers.</li>
+</ul></section>
 
 <section class="toc" id="toc">
   <h1 class="toc__h">Contents</h1>
@@ -4066,6 +4067,24 @@ html { scroll-behavior: smooth; }
     </div>
     <div class="stance-benefit"><b>Stance —</b> +3 to Slam and shove attacks and to knock a foe back or down, your Slam counts your ST as 4 higher for damage and knockback, and a successful Slam may stun a smaller foe.</div>
     <div class="stance-cost"><b>Trade-off —</b> Committing your mass leaves you off-balance: −1 to active defenses for the rest of that turn.</div>
+  </div>
+  <div class="stance-block">
+    <div class="stance-header">
+      <h3>Iktotchi Foresight Guard</h3>
+      <div class="stance-meta"><span class="stance-focus focus-mixed">Mixed</span> · <span class="stance-origin">Iktotchi (seer-court guard drill)</span></div>
+      <div class="tagline">The blow is seen before it is thrown.</div>
+    </div>
+    <div class="stance-benefit"><b>Stance —</b> Precognitive defense: +2 to all active defenses, you are never at the −4 penalty for defending against an attack you could not see coming, and once per fight you may declare a defense <em>after</em> seeing the attack roll’s result.</div>
+    <div class="stance-cost"><b>Trade-off —</b> The foresight needs a clear mind: −2 to all defenses for the rest of any turn in which you are mentally stunned, surprised or afflicted.</div>
+  </div>
+  <div class="stance-block">
+    <div class="stance-header">
+      <h3>Iktotchi Windreader’s Aim</h3>
+      <div class="stance-meta"><span class="stance-focus focus-blaster">Blaster</span> · <span class="stance-origin">Iktotchi (windhide hunter craft)</span></div>
+      <div class="tagline">Read the wind and the moment to come.</div>
+    </div>
+    <div class="stance-benefit"><b>Stance —</b> After one turn of Aim or Evaluate, your next ranged attack ignores up to −3 of range, movement, or weather penalties, and a miss by exactly 1 may be re-rolled once per fight.</div>
+    <div class="stance-cost"><b>Trade-off —</b> The read breaks if you are struck, or forced to move more than a step before firing.</div>
   </div>
 
   </div>
@@ -8125,6 +8144,19 @@ html { scroll-behavior: smooth; }
     <p class="flavor">You move and leave nothing — a glide that skips friction entirely. No footfall sound.</p>
     <p class="med"><b>Movement Meditation (10 min):</b> double the range of the blink and, on arrival, you are not winded — may act immediately at no penalty. <b>[PREPARED</b> — meditate beforehand to charge it, then release in a normal action; the charge holds until used or your next rest, and resolves on its own once loosed.]</p>
     <p class="warn">Cannot be used while Grappled or Pinned.</p>
+  </div>
+</div>
+<div class="power">
+  <div class="power-stats">
+    <h4 class="power-name">Force Deflection</h4>
+    <div class="statgrid"><div class="stat-sum">Attune your blade to the current — parry blaster bolts at full Parry for the scene.</div><span class="stat-k">Affinity</span><span class="stat-v">DX</span><span class="stat-k">Action</span><span class="stat-v">Instant — reflexive attunement</span><span class="stat-k">Range</span><span class="stat-v">Self</span><span class="stat-k">Defence</span><span class="stat-v">— (it is the defence)</span><span class="stat-k fp">FP</span><span class="stat-v fp">2 per scene</span><span class="stat-k">Reaction</span><span class="stat-v">No</span></div>
+  </div>
+  <div class="power-body">
+    <p class="effect"><b>Effect.</b> While attuned (one scene per casting), a ready lightsaber in your hands may <b>Parry blaster bolts at your full Parry</b> — without this power running, bolts cannot be parried at all. Your parry margin feeds the <b>Bolt Deflection</b> technique (Doc&nbsp;II) for returning shots to sender; the power enables the parry, the technique governs the reflection.</p>
+    <p class="soma"><b>BODY.</b> The blade-arm loosens; she stops watching the bolt and starts watching the only line it can take.</p>
+    <p class="flavor">The bolt arrives where the blade already is.</p>
+    <p class="med"><b>Deflection Meditation (10 min):</b> the attunement holds for a full day, and once per fight you may stretch one parry to cover an ally within one hex. <b>[PREPARED</b> — meditate beforehand and the attunement simply is, no action spent in the fight.]</p>
+    <p class="warn">Lightsaber (or a Tempered Blade) only — plasma vaporises ordinary steel. Bare-handed work against energy is Tutaminis’ province, not this power’s.</p>
   </div>
 </div>
 <div class="power">
