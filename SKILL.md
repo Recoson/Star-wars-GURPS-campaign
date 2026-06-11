@@ -160,9 +160,11 @@ the GitHub MCP connector's ~50 KB write ceiling entirely.
   individual raw files or trusting `/mnt/project/` mounts (both go stale).
   The MCP connector remains fine for quick single-file reads.
 - **Writes:** edit in `/home/claude/<clone>/`, run the verify loop above, then
-  commit and push. This is the standard ship path for large files (sheet,
-  compendium, GM console). Still copy final deliverables to
-  `/mnt/user-data/outputs/` so they're visible in-chat.
+  commit and push. **Pushing to `main` is the default final ship step for every
+  session that edits any project file** — not just large ones. The repo is the
+  source of truth; an update that only lands in `/mnt/user-data/outputs/` is
+  not shipped. Still copy final deliverables to `/mnt/user-data/outputs/` so
+  they're visible in-chat.
 
 ### Token hygiene — never echo the PAT
 
