@@ -676,10 +676,10 @@ const SPACES=[
 function route(id){SPACES.forEach(s=>{const el=$('sp-'+s.id);if(el)el.classList.toggle('on',s.id===id);});document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.sp===id));if(id==='cast'&&typeof renderCastKept==='function')renderCastKept();window.scrollTo({top:0,behavior:'smooth'});}
 
 /* ═══ THE BRIDGE — fleet battle screen (components-are-the-health engine) ═══ */
-const BR_CAT={ // class: [DR,SPmax,DT,Hnd,SM]
- 'Interceptor':[6,50,10,2,4],'Light Fighter':[7,45,10,1,4],'Heavy Fighter':[10,60,10,0,4],
- 'Gunship':[14,80,15,-1,5],'Shuttle':[11,60,15,-1,5],'Light Freighter':[13,70,15,-2,6],
- 'Heavy Freighter':[24,110,15,-2,6],'Corvette':[80,440,25,-3,8],'Frigate':[160,980,40,-4,9],'Cruiser':[216,1040,40,-5,10]};
+const BR_CAT={ // class: [DR,SPmax,DT,Hnd,SM] — canon: compendium ship catalogue, shields ×5 reband 2026-06-11
+ 'Interceptor':[8,250,10,2,4],'Light Fighter':[7,225,10,1,4],'Heavy Fighter':[10,300,10,0,4],
+ 'Gunship':[14,400,15,-1,5],'Shuttle':[12,300,15,-1,5],'Light Freighter':[16,350,15,-2,6],
+ 'Heavy Freighter':[36,550,15,-2,6],'Corvette':[70,950,25,-3,8],'Frigate':[160,1800,40,-4,9],'Cruiser':[260,2700,40,-5,10]};
 const BR_WPN=[['Light laser','6dx2',0,'l'],['Laser cannon','6dx3',0,'l'],['Heavy laser','6dx4',5,'l'],
  ['Ion cannon','6dx2',0,'i'],['Ion railgun','6dx3',5,'i'],['Concussion msl','6dx4',10,'m'],
  ['Proton torpedo','6dx6',20,'m'],['Thermite torp','6dx4',80,'m'],['Slug railgun','6dx6',20,'l'],
@@ -729,7 +729,7 @@ function brFire(aid){
 function brPrize(x){const base={'Interceptor':90000,'Light Fighter':80000,'Heavy Fighter':150000,'Gunship':900000,'Shuttle':400000,'Light Freighter':450000,'Heavy Freighter':800000,'Corvette':40000000,'Frigate':70000000,'Cruiser':120000000}[x.cls]||100000;
  const ok=x.parts.filter(p=>p.st===0).length;return Math.round(base*ok/x.parts.length)}
 function brStrip(x){
- const b=brStore();const pips=x.parts.map((p,j)=>'<span title="'+p.c+'" style="cursor:pointer;font-size:13px" onclick="brPip(\''+x.id+'\','+j+')">'+(p.st===0?'●':p.st===1?'◐':'✕')+'</span>').join(' ');
+ const b=brStore();const pips=x.parts.map((p,j)=>'<span title="'+p.c+' \u2014 click to cycle \u25cf intact \u2192 \u25d0 damaged \u2192 \u2715 destroyed" style="cursor:pointer;font-size:10px;padding:1px 7px;border:1px solid '+(p.st===0?'rgba(120,200,140,.5)':p.st===1?'rgba(250,170,50,.7)':'rgba(240,80,80,.7)')+';border-radius:9px;white-space:nowrap;display:inline-block;margin:1px 0;color:'+(p.st===0?'inherit':p.st===1?'#f9a838':'#f05050')+'" onclick="brPip(\''+x.id+'\','+j+')">'+p.c+' '+(p.st===0?'\u25cf':p.st===1?'\u25d0':'\u2715')+'</span>').join(' ');
  const opp=b.ships.filter(s=>s.id!==x.id).map(s=>'<option value="'+s.id+'">'+esc(s.name)+'</option>').join('');
  const wsel=BR_WPN.map((w,k)=>'<option value="'+k+'"'+(k===x.wpn?' selected':'')+'>'+w[0]+(w[2]?' AP'+w[2]:'')+'</option>').join('');
  const dead=brDead(x);
@@ -1326,7 +1326,7 @@ function buildCombat(el){
    +'<div class="field"><span class="lab">Terrain</span><select id="pTerrain"><option value="open">Open ground</option><option value="mixed">Mixed</option><option value="tight">Tight quarters</option></select></div>'
   +'</div></div>'
   +'<div class="controls">'
-   +'<div class="field"><span class="lab">Count</span><select id="encCount">'+[1,2,3,4,5,6,8,10].map(n=>'<option'+(n===3?' selected':'')+'>'+n+'</option>').join('')+'</select></div>'
+   +'<div class="field"><span class="lab">Count</span><select id="encCount">'+[1,2,3,4,5,6,8,10].map(n=>'<option value="'+n+'"'+(n===3?' selected':'')+'>'+n+(n===1?' foe':' foes')+'</option>').join('')+'</select></div>'
    +'<div class="field"><span class="lab">Archetype</span><select id="encArch"><option value="surprise">\u2014 random \u2014</option>'+ARCHE_KEYS.map(k=>'<option>'+esc(k)+'</option>').join('')+'</select></div>'
    +'<div class="field"><span class="lab">Tier</span><select id="encTier">'+BAND.map((t,i)=>'<option'+(i===0?' selected':'')+'>'+t+'</option>').join('')+'</select></div>'
    +'<button class="btn" id="encAdd">+ Add group</button>'
