@@ -5,7 +5,7 @@ Live site: **https://recoson.github.io/Star-wars-GURPS-campaign/**
 | What | Where |
 |---|---|
 | Campaign hub | [index.html](https://recoson.github.io/Star-wars-GURPS-campaign/) |
-| Star Wars the Old Republic — GURPS 4E Conversion (the rulebook, 12 documents) | [Star Wars the Old Republic GURPS 4E conversion.html](https://recoson.github.io/Star-wars-GURPS-campaign/Star%20Wars%20the%20Old%20Republic%20GURPS%204E%20conversion.html) |
+| Star Wars the Old Republic — GURPS 4E Conversion (the rulebook, 13 documents) | [Star Wars the Old Republic GURPS 4E conversion.html](https://recoson.github.io/Star-wars-GURPS-campaign/Star%20Wars%20the%20Old%20Republic%20GURPS%204E%20conversion.html) |
 | Character sheet | [sheet.html](https://recoson.github.io/Star-wars-GURPS-campaign/sheet.html) |
 | Galaxy Map (hyperspace travel) | [galaxy-map.html](https://recoson.github.io/Star-wars-GURPS-campaign/galaxy-map.html) |
 | Galactic Record (lore) | [galactic-record.html](https://recoson.github.io/Star-wars-GURPS-campaign/galactic-record.html) |

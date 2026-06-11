@@ -1788,6 +1788,9 @@ html { scroll-behavior: smooth; }
 @media(max-width:600px){.power{flex-direction:column;}.power-stats{flex-basis:auto;border-right:none;border-bottom:2px solid;}}
 
 .statgrid .stat-sum{grid-column:1/-1;font-style:italic;font-size:8.4pt;line-height:1.32;color:inherit;opacity:.9;margin:0 0 1.8mm;padding-bottom:1.5mm;border-bottom:1px solid rgba(128,120,100,.35);}
+
+/* --- Perf: skip layout/paint of offscreen books (find-in-page & #anchors still work) --- */
+@media screen { .book { content-visibility: auto; contain-intrinsic-size: auto 4000px; } }
 </style>
 
 <style id="contrast-patch">
@@ -14606,10 +14609,10 @@ Crew Surrender.</span> Often the cleanest outcome. Once boarders have secured th
 <h2 class="section-head" id="sec-faction-role">Faction &amp; Role</h2>
 <p class="rule"><span class="rule__name">Jedi Combat Robes.</span> <span class="tag tag--sw">SW</span> Light armourweave under traditional robes (DR <span class="dr-e">8</span>/<span class="dr-k">3</span>) — for the Jedi who expects blaster fire and wants a little protection without abandoning mobility or the Order’s aesthetic.</p>
 <p class="rule"><span class="rule__name">Chiss Commando Armour.</span> <span class="tag tag--sw">SW</span> Sealed Chiss combat armour in a colour-shifting, fractal-pattern weave (DR <span class="dr-e">14</span>/<span class="dr-k">10</span>) that bends light to its surroundings — +3 Stealth, and −2 to any roll to spot or target the wearer at range. Rated for the cold and vacuum of the Unknown Regions; standard issue for the Expansionary Defense Fleet’s warrior corps. Almost never seen outside Chiss hands.</p>
-<p class="rule"><span class="rule__name">Sith Lord Battle Armour.</span> <span class="tag tag--sw">SW</span> Heavy armour (DR <span class="dr-e">26</span>/<span class="dr-k">24</span>) often alchemically treated to resist the Force (<a href="#book-force">Doc IV</a>). The dark-side warlord’s panoply — protection backed by sorcery.</p>
-<p class="rule"><span class="rule__name">Czerka Security Armour.</span> <span class="tag tag--sw">SW</span> Corporate mass-produced plate (DR <span class="dr-e">15</span>/<span class="dr-k">14</span>) — whatever Czerka is stamping out this quarter. Adequate, affordable, everywhere their security operates.</p>
+<p class="rule"><span class="rule__name">Sith Lord Battle Armour.</span> <span class="tag tag--sw">SW</span> Heavy armour (DR <span class="dr-e">38</span>/<span class="dr-k">36</span>) often alchemically treated to resist the Force (<a href="#book-force">Doc IV</a>). The dark-side warlord’s panoply — protection backed by sorcery.</p>
+<p class="rule"><span class="rule__name">Czerka Security Armour.</span> <span class="tag tag--sw">SW</span> Corporate mass-produced plate (DR <span class="dr-e">14</span>/<span class="dr-k">14</span>) — whatever Czerka is stamping out this quarter. Adequate, affordable, everywhere their security operates.</p>
 <p class="rule"><span class="rule__name">Exchange Light Armour.</span> <span class="tag tag--sw">SW</span> Concealable armour (DR <span class="dr-e">12</span>/<span class="dr-k">8</span>) with a Stealth bonus — the criminal operative’s choice, protection that doesn’t announce itself.</p>
-<p class="rule"><span class="rule__name">Zeyd-Cloth / Armorweave Robes.</span> <span class="tag tag--sw">SW</span> Armoured cloth (DR <span class="dr-e">8</span>/<span class="dr-k">6</span>) worn under robes — the discreet protection of those who must look unarmoured.</p>
+<p class="rule"><span class="rule__name">Zeyd-Cloth / Armorweave Robes.</span> <span class="tag tag--sw">SW</span> Armoured cloth (DR <span class="dr-e">9</span>/<span class="dr-k">7</span>) worn under robes — the discreet protection of those who must look unarmoured.</p>
 
 <h2 class="section-head" id="sec-personal-energy-shields">Personal Energy Shields</h2>
 <p class="rule"><span class="rule__name">Energy Shield (DR 50+).</span> <span class="tag tag--sw">SW</span> A forearm or belt generator projecting a field that reduces incoming <em>energy</em> damage by its DR — and does nothing against kinetic. Because the field faces no armour divisor, shields are rated far higher than worn armour: from <strong>DR 50</strong> (civilian) past <strong>DR 150</strong> on the finest models (see the Named Shields table). Roughly 5 charges, raised as a quick action, once per encounter with overload lockout, then recharged. The defining defensive tech of the era — and the reason slugs and blades never went away.</p>
