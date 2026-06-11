@@ -744,7 +744,7 @@ function exportChar(){
 function importChar(e){
  const f=e.target.files[0];if(!f)return;
  const r=new FileReader();r.onload=ev=>{
-  try{C=JSON.parse(ev.target.result);save();renderAll()}catch(err){alert('Bad file: '+err.message)}
+  try{C=mergeChar(JSON.parse(ev.target.result));save();renderAll()}catch(err){alert('Bad file: '+err.message)}
  };r.readAsText(f);e.target.value='';
 }
 function newChar(){if(confirm('Start new character?')){C=blankChar();save();renderAll()}}
@@ -785,7 +785,16 @@ async function cloudLoad(id,silent){
   const txt=await ghGetFile('characters/'+id+'.json',true);
   if(txt==null){if(!silent)alert('No cloud character "'+id+'" found.');return null}
   return JSON.parse(txt);
- }catch(e){if(!silent)alert('Cloud load failed: '+e.message);return null}
+ }catch(e){
+  // API failed (rate limit, network) — fall back to the copy served beside this
+  // page (GitHub Pages / any static host). Quota-free; may lag a fresh save by
+  // ~1 min of Pages deploy time, which the savedAt comparison already handles.
+  try{
+   const r=await fetch('characters/'+id+'.json?_='+Date.now());
+   if(r.ok)return JSON.parse(await r.text());
+  }catch(_){}
+  if(!silent)alert('Cloud load failed: '+e.message);return null
+ }
 }
 async function cloudInit(){
  if(!CHAR_ID)return;

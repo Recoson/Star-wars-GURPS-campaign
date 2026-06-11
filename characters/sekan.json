@@ -8,10 +8,18 @@
   "tl": 10,
   "sm": 0,
   "appearance": "Average",
+  "height": "",
+  "weight": "",
+  "age": "",
+  "gender": "",
   "hand": "Right",
   "statusLevel": 0,
   "wealthLevel": "Average",
-  "ptTarget": 693,
+  "reputation": "",
+  "rank": "",
+  "react": "",
+  "fright": "",
+  "bio": "",
   "attr": {
     "ST": 100,
     "DX": 180,
@@ -233,6 +241,7 @@
       "levels": 1
     }
   ],
+  "cyber": [],
   "weapons": [
     {
       "name": "Vibrosword"
@@ -291,9 +300,54 @@
     }
   ],
   "inventory": [],
-  "cyber": [],
+  "force": {
+    "primary": "IQ",
+    "bonded": false,
+    "saberPoints": 0,
+    "powers": [],
+    "books": {},
+    "bookTiers": {},
+    "tradition": "",
+    "activeBook": "",
+    "viewBook": "",
+    "holocrons": [],
+    "holoRes": {
+      "frag": 0,
+      "frame": 0,
+      "kyber": 0
+    }
+  },
+  "forms": [],
+  "techniques": [],
+  "stances": [],
+  "vehicles": [],
+  "droids": [],
+  "customDB": {
+    "weapons": [],
+    "armour": [],
+    "shields": [],
+    "explosives": [],
+    "gear": []
+  },
+  "conditions": {},
   "credits": 0,
+  "creditLog": [],
+  "combat": {
+    "hp": null,
+    "fp": null,
+    "statuses": [],
+    "concentrations": [],
+    "charges": [],
+    "turn": 0,
+    "log": []
+  },
   "notes": "Imported from Sekan_Nightfall.or export 2026-05-23. Fixes: 2H Sword → Two-Handed Sword; Neo-Crusader armour (base) → Neo-Crusader armour; Blasters specs assigned 44→Rifle (carbine), 28→Pistol; 4-pt Blasters row left spec-blank — Anthony to assign; duplicate Code of Honor removed (points assumed counted once); Gunner → spec Beams (emplaced repeater). Beskar single pieces set to cover torso (vitals) and head (skull) zones. Vibrosword has no Broadsword skill behind it — Anthony: take Broadsword, or swap the blade to a Heavy vibrosword (Two-Handed Sword 12pts is ready) or shortsword-class vibroblade.",
+  "trainRate": 200,
+  "study": [],
+  "ptTarget": 693,
+  "languages": "",
+  "languages2": null,
+  "layout": {},
   "_meta": {
     "savedAt": "2026-06-07T12:00:56.000Z",
     "savedBy": "James (initial import via Claude)"
