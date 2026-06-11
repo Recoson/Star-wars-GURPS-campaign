@@ -4713,7 +4713,7 @@ function renderVehicles(){
 
 /* ═══ SHIP PARTS DAMAGE & BREAKDOWN ═══ */
 const SHIP_PART_EFFECT={
- 'Hull':       {hit:0,  cover:'surface',  dmg:'Hull integrity compromised. -25% max HP.',                          dest:'Hull breach. Atmosphere bleeding; -50% HP cap, all repairs at -4.'},
+ 'Hull':       {hit:0,  cover:'surface',  dmg:'Structure cracked. Vessel DT \u221225%; repairs at \u22124 until reframed.',  dest:'Catastrophic breach. Atmosphere bleeding; DT \u221250%, all repairs at \u22124.'},
  'Armour':     {hit:0,  cover:'surface',  dmg:'Hull plating spalled. DR -25%.',                                    dest:'Armour gone. DR 0 for affected facing.'},
  'Sublight':   {hit:-2, cover:'exposed',  dmg:'Sublight engines limp. -25% Move and -1 to Piloting evasions.',     dest:'Engines dead. Move 0 (drift). Cannot maneuver.'},
  'Cargo':      {hit:-2, cover:'internal', dmg:'Cargo hold damaged. -50% cargo cap; contents at risk.',             dest:'Cargo hold gone. No cargo capacity; lose contents.'},
@@ -4910,14 +4910,21 @@ function syncDroidParts(i){
    Below DT = superficial. Ships die by part destruction (Hull breach,
    Reactor loss, crit table) — not by grinding an HP pool. ═══ */
 function vehicleDT(v){
- if(v&&+v.dt)return +v.dt;
- const c=String((v&&v.cat)||'').toLowerCase();
- if(/speeder|swoop|bike|walker/.test(c))return 8;
- if(/fighter|intercept|bomber|patrol|scout/.test(c))return 10;
- if(/shuttle|freighter|transport|gunship|drop/.test(c))return 15;
- if(/corvette|frigate/.test(c))return 25;
- if(/cruiser|capital|destroyer|flagship|battle/.test(c))return 40;
- return 12;
+ let base;
+ if(v&&+v.dt)base=+v.dt;
+ else{
+  const c=String((v&&v.cat)||'').toLowerCase();
+  base=/speeder|swoop|bike|walker/.test(c)?8
+   :/fighter|intercept|bomber|patrol|scout/.test(c)?10
+   :/shuttle|freighter|transport|gunship|drop/.test(c)?15
+   :/corvette|frigate/.test(c)?25
+   :/cruiser|capital|destroyer|flagship|battle/.test(c)?40
+   :12;
+ }
+ // hull state degrades structural integrity: ◐ −25% DT · ✕ −50% DT (canon: Balance Log 2026-06-11)
+ let mult=1;
+ ((v&&v.parts)||[]).forEach(p=>{ if(p.cat==='Hull'){ if(p.status==='dmg')mult=Math.min(mult,0.75); else if(p.status==='dest')mult=Math.min(mult,0.5); } });
+ return Math.max(1,Math.round(base*mult));
 }
 function _vIntact(v){return (v.parts||[]).filter(p=>p.status==='ok').length}
 function vehiclePrizeValue(v){
