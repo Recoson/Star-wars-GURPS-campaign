@@ -96,6 +96,11 @@
   .travelbar .val.empty{color:var(--ink-dim);font-style:italic;}
   .travelbar select{background:rgba(2,12,22,.6);border:1px solid var(--line-soft);color:var(--ink);font-family:var(--body);font-size:12px;border-radius:3px;padding:3px 4px;outline:none;max-width:150px;}
   .travelbar .seg.act{cursor:pointer;} .travelbar .seg.act:hover{background:rgba(95,214,255,.1);}
+  .travelbar .segq{display:none;background:rgba(2,12,22,.75);border:1px solid var(--line);border-radius:3px;color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.2;padding:3px 7px;outline:none;width:140px;max-width:40vw;}
+  .travelbar .segq:focus{border-color:var(--holo);box-shadow:0 0 0 2px rgba(95,214,255,.18);}
+  .travelbar .seg.searching .val{display:none;} .travelbar .seg.searching .segq{display:block;}
+  .segres{top:56px;left:50%;right:auto;transform:translateX(-50%);width:min(340px,92vw);z-index:23;}
+  .segres .row{min-height:36px;}
   .travelbar .seg.go{background:rgba(95,214,255,.12);cursor:pointer;justify-content:center;align-items:center;min-width:78px;}
   .travelbar .seg.go:hover{background:rgba(95,214,255,.22);} .travelbar .seg.go .val{font-family:var(--display);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--holo-bright);}
   .travelbar .seg.result .val{color:var(--gold);font-size:15px;}
@@ -129,14 +134,15 @@
   <div class="scan"></div><div class="vig"></div>
   <div class="count" id="count"></div>
   <div class="travelbar" id="travelbar">
-    <div class="seg act" id="segFrom"><span class="lab">From</span><span class="val empty" id="fromV">tap a world</span></div>
-    <div class="seg act" id="segTo"><span class="lab">To</span><span class="val empty" id="toV">tap a world</span></div>
+    <div class="seg act" id="segFrom"><span class="lab">From</span><span class="val empty" id="fromV">tap a world</span><input class="segq" id="fromQ" type="text" autocomplete="off" spellcheck="false" placeholder="type a world…"></div>
+    <div class="seg act" id="segTo"><span class="lab">To</span><span class="val empty" id="toV">tap a world</span><input class="segq" id="toQ" type="text" autocomplete="off" spellcheck="false" placeholder="type a world…"></div>
     <div class="seg"><span class="lab">Hyperdrive</span><select id="driveSel"></select></div>
     <div class="seg go" id="segGo"><span class="val">Plot Course</span></div>
     <div class="seg result" id="segResult" style="display:none"><span class="lab" id="resLab">Est. transit</span><span class="val" id="resV">—</span></div>
     <div class="seg go" id="shipBtn" style="display:none;min-width:96px">⏸ Pause</div>
     <div class="clr" id="travelClr" title="Clear">✕</div>
   </div>
+  <div class="results segres" id="segResults"></div>
   <div class="pickhint" id="pickhint"></div>
   <div class="hint-z" id="hintz">Zoom to explore · sector grid &amp; names sharpen as you zoom · zoom out for territories &amp; regions</div>
   <div class="tip" id="tip"></div>
@@ -351,9 +357,22 @@ document.getElementById('segGo').onclick=plotCourse;
 document.getElementById('travelClr').onclick=clearTravel;
 driveSel.onchange=()=>{if(travelFrom>=0&&travelTo>=0)plotCourse();};
 document.getElementById('shipBtn').onclick=toggleShip;
-function armPick(which){travelPick=which;pickhint.classList.add('show');pickhint.textContent=which==='from'?'Select the ORIGIN world (tap it on the chart or search)':'Select the DESTINATION world (tap it on the chart or search)';}
-function setEndpoint(i){if(travelPick==='from'){travelFrom=i;fromV.textContent=PL[i][0];fromV.classList.remove('empty');}else if(travelPick==='to'){travelTo=i;toV.textContent=PL[i][0];toV.classList.remove('empty');}travelPick=null;pickhint.classList.remove('show');selected=i;draw();if(travelFrom>=0&&travelTo>=0)plotCourse();}
-function clearTravel(){travelFrom=travelTo=-1;travelRoute=null;travelPick=null;stopShip();fromV.textContent='tap a world';toV.textContent='tap a world';fromV.classList.add('empty');toV.classList.add('empty');segResult.style.display='none';pickhint.classList.remove('show');draw();}
+function armPick(which){travelPick=which;pickhint.classList.add('show');pickhint.textContent=which==='from'?'Select the ORIGIN world \u2014 type to search, or tap it on the chart':'Select the DESTINATION world \u2014 type to search, or tap it on the chart';openSegInput(which);}
+const segResults=document.getElementById('segResults'),fromQ=document.getElementById('fromQ'),toQ=document.getElementById('toQ');let segActiveRow=-1;
+fromQ.onclick=toQ.onclick=e=>e.stopPropagation();
+function openSegInput(which){const seg=document.getElementById(which==='from'?'segFrom':'segTo'),inp=which==='from'?fromQ:toQ;if(!seg.classList.contains('searching')){document.querySelectorAll('.travelbar .seg.searching').forEach(s=>s.classList.remove('searching'));seg.classList.add('searching');inp.value='';segResults.classList.remove('open');segActiveRow=-1;}inp.focus();}
+function closeSegInput(){document.querySelectorAll('.travelbar .seg.searching').forEach(s=>s.classList.remove('searching'));segResults.classList.remove('open');segActiveRow=-1;}
+function segWorldRow(i){const p=PL[i],cur=CUR[p[0]],col=cur?F[cur.c].c:(REG[p[3]]||REG.UNK).c;return '<div class="row" data-i="'+i+'"><span class="dot" style="background:'+col+'"></span><span class="nm">'+p[0]+'</span>'+(cur?'<span class="star">\u2605</span>':'')+'<span class="meta">'+(REG[p[3]]||REG.UNK).n+'</span></div>';}
+function segSearch(inp){const v=inp.value.trim().toLowerCase();segActiveRow=-1;if(!v){segResults.classList.remove('open');if(travelPick)pickhint.classList.add('show');return;}pickhint.classList.remove('show');let m=[];for(let i=0;i<PL.length;i++){const nm=PL[i][0].toLowerCase();if(nm.startsWith(v))m.push([i,0]);else if(nm.includes(v))m.push([i,1]);}m.sort((a,b)=>{const ca=CUR[PL[a[0]][0]]?0:1,cb=CUR[PL[b[0]][0]]?0:1;return a[1]-b[1]||ca-cb||PL[a[0]][0].length-PL[b[0]][0].length;});m=m.slice(0,9);segResults.innerHTML=m.length?m.map(([i])=>segWorldRow(i)).join(''):'<div class="none">No world by that name on the chart.</div>';segResults.classList.add('open');}
+function chooseSeg(i){if(i==null||isNaN(i)||i<0)return;closeSegInput();setEndpoint(i);}
+segResults.addEventListener('pointerdown',e=>{const r=e.target.closest('.row');if(!r)return;e.preventDefault();chooseSeg(parseInt(r.dataset.i,10));});
+function segKeys(e){if(e.key==='Escape'){closeSegInput();return;}if(!segResults.classList.contains('open'))return;const rows=[...segResults.querySelectorAll('.row')];if(e.key==='ArrowDown'){e.preventDefault();segActiveRow=Math.min(rows.length-1,segActiveRow+1);}else if(e.key==='ArrowUp'){e.preventDefault();segActiveRow=Math.max(0,segActiveRow-1);}else if(e.key==='Enter'){e.preventDefault();const r=rows[segActiveRow<0?0:segActiveRow];if(r)chooseSeg(parseInt(r.dataset.i,10));return;}else{return;}rows.forEach((r,k)=>r.classList.toggle('active',k===segActiveRow));}
+fromQ.addEventListener('input',()=>segSearch(fromQ));toQ.addEventListener('input',()=>segSearch(toQ));
+fromQ.addEventListener('keydown',segKeys);toQ.addEventListener('keydown',segKeys);
+fromQ.addEventListener('blur',()=>setTimeout(()=>{if(document.activeElement!==fromQ&&document.activeElement!==toQ)closeSegInput();},140));
+toQ.addEventListener('blur',()=>setTimeout(()=>{if(document.activeElement!==fromQ&&document.activeElement!==toQ)closeSegInput();},140));
+function setEndpoint(i){if(travelPick==='from'){travelFrom=i;fromV.textContent=PL[i][0];fromV.classList.remove('empty');}else if(travelPick==='to'){travelTo=i;toV.textContent=PL[i][0];toV.classList.remove('empty');}travelPick=null;pickhint.classList.remove('show');closeSegInput();selected=i;draw();if(travelFrom>=0&&travelTo>=0)plotCourse();}
+function clearTravel(){travelFrom=travelTo=-1;travelRoute=null;travelPick=null;stopShip();fromV.textContent='tap a world';toV.textContent='tap a world';fromV.classList.add('empty');toV.classList.add('empty');segResult.style.display='none';pickhint.classList.remove('show');closeSegInput();draw();}
 // is a planet on a given lane (within tolerance)?
 function planetOnLane(i,rt){const p=PL[i];for(let k=0;k<rt.pts.length;k++){if((p[1]-rt.pts[k][0])**2+(p[2]-rt.pts[k][1])**2<0.0008)return k;}return -1;}
 // find a shared lane both endpoints sit on
