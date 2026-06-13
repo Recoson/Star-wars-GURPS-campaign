@@ -267,14 +267,15 @@
           "cost": 3600
         },
         {
-          "label": "Extended power cell",
-          "preset": "Extended power cell",
+          "label": "High-output pack",
+          "preset": "High-output pack",
           "slotLock": "power",
-          "tier": "civ",
-          "note": "Bigger cell, sized to the frame (max +10 shots). [fitted: long-arm, +10 shots]",
-          "shots": 10,
-          "wt": 0.5,
-          "cost": 420
+          "tier": "mil",
+          "note": "+1 RoF; weight scales with the frame and Bulk worsens by 1. Runs hot — a malfunction roll of 17–18 vents the pack. [fitted: long-arm]",
+          "rof": 1,
+          "wt": 1.2,
+          "cost": 4400,
+          "bulk": -1
         }
       ]
     }
@@ -409,7 +410,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-13T04:53:30.587Z",
+    "savedAt": "2026-06-13T04:54:33.492Z",
     "savedBy": "Anthony"
   }
 }
