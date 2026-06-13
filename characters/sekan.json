@@ -244,14 +244,39 @@
   "cyber": [],
   "weapons": [
     {
-      "name": "Repeating blaster (emplaced)"
-    },
-    {
       "name": "Mandalorian blaster rifle",
       "cls": "Ranged",
       "_cat": "Mandalorian",
       "_bought": false,
       "_type": ""
+    },
+    {
+      "name": "Mandalorian repeating blaster",
+      "cls": "Ranged",
+      "_cat": "Mandalorian",
+      "_bought": false,
+      "_type": "",
+      "mods": [
+        {
+          "label": "Underbarrel grenade launcher",
+          "preset": "Underbarrel grenade launcher",
+          "slotLock": "under",
+          "tier": "mil",
+          "note": "Single-shot 40mm grenade attack as separate weapon. +2 Wt.",
+          "wt": 2,
+          "cost": 3600
+        },
+        {
+          "label": "Extended power cell",
+          "preset": "Extended power cell",
+          "slotLock": "power",
+          "tier": "civ",
+          "note": "Bigger cell, sized to the frame (max +10 shots). [fitted: long-arm, +10 shots]",
+          "shots": 10,
+          "wt": 0.5,
+          "cost": 420
+        }
+      ]
     }
   ],
   "armour": [
@@ -384,7 +409,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-13T04:49:39.931Z",
+    "savedAt": "2026-06-13T04:53:30.587Z",
     "savedBy": "Anthony"
   }
 }
