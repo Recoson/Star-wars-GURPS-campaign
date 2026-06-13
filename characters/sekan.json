@@ -244,19 +244,14 @@
   "cyber": [],
   "weapons": [
     {
-      "name": "Vibrosword"
-    },
-    {
-      "name": "Combat knife"
-    },
-    {
-      "name": "Blaster carbine"
-    },
-    {
-      "name": "Heavy blaster pistol"
-    },
-    {
       "name": "Repeating blaster (emplaced)"
+    },
+    {
+      "name": "Mandalorian blaster rifle",
+      "cls": "Ranged",
+      "_cat": "Mandalorian",
+      "_bought": false,
+      "_type": ""
     }
   ],
   "armour": [
@@ -307,6 +302,14 @@
       "_cat": "Mandalorian",
       "_bought": false,
       "_type": ""
+    },
+    {
+      "kind": "weapons",
+      "name": "Combat knife"
+    },
+    {
+      "kind": "weapons",
+      "name": "Heavy blaster pistol"
     }
   ],
   "force": {
@@ -381,7 +384,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-13T04:44:45.061Z",
+    "savedAt": "2026-06-13T04:49:39.931Z",
     "savedBy": "Anthony"
   }
 }
