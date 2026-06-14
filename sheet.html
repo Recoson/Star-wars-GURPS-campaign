@@ -1578,6 +1578,18 @@ function addTwoDice(a,b){
  const m=(A[2]?parseInt(A[2],10):0)+(B[2]?parseInt(B[2],10):0);
  return d+'d'+(m?(m>0?'+':'')+m:'');
 }
+// follow-up / secondary damage line (electrical burn, stun affliction, etc.) —
+// a real, separate component rather than text buried in the primary damage type.
+function _fuLine(w){
+ if(!w||!w.fu)return'';
+ const f=w.fu;const parts=[];
+ if(f.dmg)parts.push('+'+esc(f.dmg)+' '+esc(f.dtype||'')+(f.vsDroid?' <span style="opacity:.75">('+esc(f.vsDroid)+' vs droids)</span>':''));
+ if(f.aff)parts.push('+'+esc(f.aff));
+ if(!parts.length && !w.stunSetting)return'';
+ let s='<span style="color:var(--amber);font-weight:600">\u26a1 follow-up</span> '+parts.join(' \u00b7 ');
+ if(w.stunSetting)s+=' <span style="opacity:.7">\u00b7 stun setting</span>';
+ return s;
+}
 function wpnDamage(w,dmgBonus){
  dmgBonus=+dmgBonus||0;
  if(!w)return'';
@@ -1599,6 +1611,7 @@ function wpnDamage(w,dmgBonus){
    const dt=(w.th.dtype||'').trim();
    lines.push('<span style="color:var(--cyan);font-weight:600">Th</span> '+dmg+adS+(dt?' '+esc(dt):''));
   }
+  const _fu=_fuLine(w); if(_fu)lines.push(_fu);
   return lines.join('<br>');
  }
  // ── LEGACY: fixed string OR swMod/thMod scalars ──
@@ -1619,6 +1632,7 @@ function wpnDamage(w,dmgBonus){
  if(dt && !dmg.toLowerCase().includes(dt.toLowerCase())){
   dmg = dmg ? (dmg+' '+esc(dt)) : esc(dt);
  } else if(!dmg){ dmg=esc(dt); }
+ const _fu2=_fuLine(w); if(_fu2)dmg=dmg?(dmg+'<br>'+_fu2):_fu2;
  return dmg||'';
 }
 function weaponParry(w,parryBonus){
@@ -6400,7 +6414,7 @@ function combatRollAttack(i){ const o=_charWeapons().find(x=>x.i==i); if(!o)retu
 function combatRollDamage(i,mode){ const o=_charWeapons().find(x=>x.i==i); if(!o)return; const w=o.w; const dmgB=wDmgBonus(o.it,w); let dmgStr='', dtype='', ad=1;
   if(w.sw||w.th){ const part = (mode==='th'&&w.th)?w.th:(w.sw||w.th); dmgStr = part.fixed?addDiceMod(part.fixed,dmgB):addDiceMod(mode==='th'?thrust():swing(), (+part.mod||0)+dmgB); ad=+part.ad||1; dtype=part.dtype||''; }
   else { const base = w.fixed || (w.swMod!=null?addDiceMod(swing(),+w.swMod||0):(w.thMod!=null?addDiceMod(thrust(),+w.thMod||0):'')); dmgStr = base?addDiceMod(base,dmgB):base; ad=+w.ad||1; dtype=w.dtype||''; }
-  const spec=parseDmg(dmgStr); if(!spec)return; spec.ad=ad; const res=rollDmgSpec(spec); COMBAT_UI.lastRoll={name:w.name, dmgStr, dtype, ad, res, mode}; if(typeof _rollLog!=='undefined'){ (_rollCount++,_rollLog).unshift({label:'Dmg: '+w.name+(mode==='th'?' (Th)':(w.sw?' (Sw)':'')), target:null, dice:res.rolls, sum:res.total, outcome:(dtype||'')+(ad&&ad!==1?' AD'+ad:''), cls:'', margin:null}); if(_rollLog.length>14)_rollLog.pop(); if(typeof _renderRollPanel==='function')_renderRollPanel(); } renderCombat(); }
+  const spec=parseDmg(dmgStr); if(!spec)return; spec.ad=ad; const res=rollDmgSpec(spec); COMBAT_UI.lastRoll={name:w.name, dmgStr, dtype, ad, res, mode}; if(typeof _rollLog!=='undefined'){ (_rollCount++,_rollLog).unshift({label:'Dmg: '+w.name+(mode==='th'?' (Th)':(w.sw?' (Sw)':'')), target:null, dice:res.rolls, sum:res.total, outcome:(dtype||'')+(ad&&ad!==1?' AD'+ad:''), cls:'', margin:null}); if(w.fu&&w.fu.dmg){const _fs=parseDmg(addDiceMod(w.fu.dmg,0));if(_fs){_fs.ad=+w.fu.ad||1;const _fr=rollDmgSpec(_fs);(_rollCount++,_rollLog).unshift({label:'\u21b3 '+w.name+' follow-up',target:null,dice:_fr.rolls,sum:_fr.total,outcome:(w.fu.dtype||'')+(w.fu.vsDroid?' \u00b7 '+w.fu.vsDroid+' vs droids':''),cls:'',margin:null});}} if(_rollLog.length>14)_rollLog.pop(); if(typeof _renderRollPanel==='function')_renderRollPanel(); } renderCombat(); }
 
 
 /* fill the resolver's DR fields from the character's own armour at a chosen location */
@@ -7452,7 +7466,7 @@ const CANON_MELEE_PATCH=[
  {name:'Combat knife',sw:null,th:{mod:0,dtype:'cut/imp'}},
  {name:'Shiv / dirk',sw:null,th:{mod:-1,dtype:'imp'}},
  {name:'Vibroknife',sw:null,th:{fixed:'thr+1d',ad:2,dtype:'cut/imp'}},
- {name:'Electroknife',sw:null,th:{fixed:'thr+1d',ad:2,dtype:'cut + 1d burn'}},
+ {name:'Electroknife',sw:null,th:{fixed:'thr+1d',ad:2,dtype:'cut'},fu:{dmg:'1d',dtype:'burn',vsDroid:'ion'},stunSetting:true},
  {name:'Short sword',sw:{mod:0,dtype:'cut'},th:{mod:0,dtype:'imp'}},
  {name:'War sword',sw:{mod:1,dtype:'cut'},th:{mod:0,dtype:'imp'}},
  {name:'Dire sword',sw:{mod:2,dtype:'cut'},th:{mod:1,dtype:'imp'}},
@@ -7463,11 +7477,11 @@ const CANON_MELEE_PATCH=[
  {name:'Bardiche / vibro-axe',sw:{mod:3,ad:2,dtype:'cut'},th:null},
  {name:'Gaderffii (gaffi stick)',sw:{mod:2,dtype:'cr'},th:{mod:1,dtype:'imp'}},
  {name:'Zhaboka',sw:{mod:1,dtype:'cut (both ends)'},th:null},
- {name:'Electrostaff',sw:{mod:2,ad:2,dtype:'cr + 1d burn (both ends); stun'},th:null},
- {name:'Shockstaff',sw:{mod:1,ad:2,dtype:'cr + 1d burn (both ends); stun'},th:null},
+ {name:'Electrostaff',sw:{mod:2,ad:2,dtype:'cr (both ends)'},th:null,fu:{dmg:'1d',dtype:'burn',vsDroid:'ion'},stunSetting:true},
+ {name:'Shockstaff',sw:{mod:1,ad:2,dtype:'cr (both ends)'},th:null,fu:{dmg:'1d',dtype:'burn',vsDroid:'ion'},stunSetting:true},
  {name:'Techstaff',sw:{mod:2,dtype:'cr'},th:{mod:1,dtype:'cr (both ends)'}},
- {name:'Force pike',sw:null,th:{mod:3,ad:2,dtype:'imp + 1d burn'}},
- {name:'Stun baton',sw:null,th:{mod:0,dtype:'cr + HT-3 aff (stun)'}},
+ {name:'Force pike',sw:null,th:{mod:3,ad:2,dtype:'imp'},fu:{dmg:'1d',dtype:'burn',vsDroid:'ion'},stunSetting:true},
+ {name:'Stun baton',sw:null,th:{mod:0,dtype:'cr'},fu:{aff:'HT-3 aff (stun)'}},
  {name:'Vibro-pike (thrown)',sw:null,th:{mod:6,ad:4,dtype:'imp'}},
  {name:'Crushgaunt',sw:null,th:{fixed:'thr+1d',dtype:'cr (grapple crush)'}},
 ];
@@ -7970,6 +7984,8 @@ function applyCanonMeleePatch(){
   const w=DATA.weapons.find(x=>x.name===p.name);
   if(!w)return;
   if(p.sw!==undefined)w.sw=p.sw;
+  if(p.fu!==undefined)w.fu=p.fu;
+  if(p.stunSetting!==undefined)w.stunSetting=p.stunSetting;
   if(p.th!==undefined)w.th=p.th;
   w._canon=true;
  });
