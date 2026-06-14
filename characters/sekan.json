@@ -435,7 +435,7 @@
     "cyber": []
   },
   "conditions": {},
-  "credits": 0,
+  "credits": 207000,
   "creditLog": [],
   "combat": {
     "hp": null,
@@ -471,7 +471,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T06:34:24.193Z",
+    "savedAt": "2026-06-14T06:36:23.755Z",
     "savedBy": "Anthony"
   },
   "builder": {
@@ -479,6 +479,11 @@
       "parts": {},
       "name": "My Droid",
       "deg": "5th"
+    },
+    "ship": {
+      "parts": {},
+      "name": "My Custom Vessel",
+      "role": ""
     }
   }
 }
