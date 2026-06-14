@@ -106,6 +106,13 @@
       "pts": 4
     },
     {
+      "name": "Battlesuit",
+      "pts": 2,
+      "attr": "DX",
+      "diff": "A",
+      "spec": "Jet Pack"
+    },
+    {
       "name": "Soldier",
       "attr": "IQ",
       "diff": "A",
@@ -457,7 +464,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T04:36:35.813Z",
+    "savedAt": "2026-06-14T05:26:44.082Z",
     "savedBy": "Anthony"
   },
   "builder": {
