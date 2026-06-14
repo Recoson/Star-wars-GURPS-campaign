@@ -10,9 +10,9 @@
   "appearance": "Average",
   "height": "1.9",
   "weight": "110",
-  "age": "135",
+  "age": "56",
   "gender": "Male",
-  "hand": "Right",
+  "hand": "Ambidextrous",
   "statusLevel": 5,
   "wealthLevel": "Wealthy",
   "reputation": "",
@@ -36,10 +36,10 @@
   },
   "skills": [
     {
-      "name": "Staff",
-      "pts": 24,
-      "attr": "DX",
-      "diff": "A",
+      "name": "",
+      "pts": 0,
+      "attr": "",
+      "diff": "",
       "spec": ""
     },
     {
@@ -49,20 +49,21 @@
       "diff": "H"
     },
     {
-      "name": "Intimidation",
-      "pts": 4,
-      "attr": "Will",
-      "diff": "A"
-    },
-    {
-      "name": "Meditation",
-      "pts": 1,
-      "attr": "DX",
-      "diff": "H",
+      "name": "Astrogation (Hyperspace Navigation)",
+      "pts": 16,
+      "attr": "IQ",
+      "diff": "A",
       "spec": ""
     },
     {
-      "name": "Fast-Draw",
+      "name": "Blaster (Pistol)",
+      "pts": 8,
+      "attr": "DX",
+      "diff": "E",
+      "spec": ""
+    },
+    {
+      "name": "Brawling",
       "pts": 8,
       "attr": "DX",
       "diff": "E"
@@ -74,86 +75,22 @@
       "diff": "A"
     },
     {
-      "name": "Brawling",
-      "pts": 8,
-      "attr": "DX",
-      "diff": "E"
-    },
-    {
-      "name": "Streetwise",
-      "pts": 4,
-      "attr": "IQ",
-      "diff": "A"
-    },
-    {
-      "name": "Urban Survival",
-      "pts": 4,
-      "attr": "Per",
-      "diff": "A"
-    },
-    {
-      "name": "Throwing",
-      "pts": 4,
-      "attr": "DX",
-      "diff": "A"
-    },
-    {
       "name": "Dancing",
       "pts": 4,
       "attr": "DX",
       "diff": "A"
     },
     {
-      "name": "Persuade",
-      "pts": 16,
-      "attr": "Will",
-      "diff": "H"
+      "name": "Fast-Draw",
+      "pts": 8,
+      "attr": "DX",
+      "diff": "E"
     },
     {
       "name": "Fast-Talk",
       "pts": 4,
       "attr": "IQ",
       "diff": "A"
-    },
-    {
-      "name": "Smuggling",
-      "pts": 4,
-      "attr": "IQ",
-      "diff": "A"
-    },
-    {
-      "name": "Search",
-      "pts": 8,
-      "attr": "Per",
-      "diff": "A"
-    },
-    {
-      "name": "Astrogation (Hyperspace Navigation)",
-      "pts": 16,
-      "attr": "IQ",
-      "diff": "A",
-      "spec": ""
-    },
-    {
-      "name": "Mechanic",
-      "pts": 8,
-      "attr": "IQ",
-      "diff": "A",
-      "spec": "Walker / Locomotion"
-    },
-    {
-      "name": "",
-      "pts": 0,
-      "attr": "",
-      "diff": "",
-      "spec": ""
-    },
-    {
-      "name": "Blaster (Pistol)",
-      "pts": 8,
-      "attr": "DX",
-      "diff": "E",
-      "spec": ""
     },
     {
       "name": "Gambling",
@@ -169,18 +106,31 @@
       "spec": "Beams"
     },
     {
-      "name": "Spacer",
-      "pts": 12,
-      "attr": "IQ",
-      "diff": "E",
+      "name": "Intimidation",
+      "pts": 4,
+      "attr": "Will",
+      "diff": "A"
+    },
+    {
+      "name": "Lightsaber",
+      "pts": 32,
+      "attr": "DX",
+      "diff": "VH",
       "spec": ""
     },
     {
-      "name": "Piloting",
-      "pts": 16,
-      "attr": "DX",
+      "name": "Mechanic",
+      "pts": 8,
+      "attr": "IQ",
       "diff": "A",
-      "spec": "Starfighter"
+      "spec": "Walker / Locomotion"
+    },
+    {
+      "name": "Meditation",
+      "pts": 1,
+      "attr": "DX",
+      "diff": "H",
+      "spec": ""
     },
     {
       "name": "Merchant",
@@ -195,30 +145,49 @@
       "diff": "A"
     },
     {
-      "name": "Teaching",
+      "name": "Persuade",
       "pts": 16,
+      "attr": "Will",
+      "diff": "H"
+    },
+    {
+      "name": "Piloting",
+      "pts": 16,
+      "attr": "DX",
+      "diff": "A",
+      "spec": "Starfighter"
+    },
+    {
+      "name": "Search",
+      "pts": 8,
+      "attr": "Per",
+      "diff": "A"
+    },
+    {
+      "name": "Smuggling",
+      "pts": 4,
       "attr": "IQ",
       "diff": "A"
     },
     {
-      "name": "Submersible Piloting",
-      "pts": 1,
-      "attr": "DX",
+      "name": "Soldier",
+      "pts": 12,
+      "attr": "IQ",
       "diff": "A",
+      "spec": "Special Ops"
+    },
+    {
+      "name": "Spacer",
+      "pts": 12,
+      "attr": "IQ",
+      "diff": "E",
       "spec": ""
     },
     {
-      "name": "Submarine",
-      "pts": 1,
+      "name": "Staff",
+      "pts": 24,
       "attr": "DX",
       "diff": "A",
-      "spec": ""
-    },
-    {
-      "name": "Lightsaber",
-      "pts": 32,
-      "attr": "DX",
-      "diff": "VH",
       "spec": ""
     },
     {
@@ -228,11 +197,42 @@
       "diff": "H"
     },
     {
-      "name": "Soldier",
-      "pts": 12,
+      "name": "Streetwise",
+      "pts": 4,
       "attr": "IQ",
+      "diff": "A"
+    },
+    {
+      "name": "Submarine",
+      "pts": 1,
+      "attr": "DX",
       "diff": "A",
-      "spec": "Special Ops"
+      "spec": ""
+    },
+    {
+      "name": "Submersible Piloting",
+      "pts": 1,
+      "attr": "DX",
+      "diff": "A",
+      "spec": ""
+    },
+    {
+      "name": "Teaching",
+      "pts": 16,
+      "attr": "IQ",
+      "diff": "A"
+    },
+    {
+      "name": "Throwing",
+      "pts": 4,
+      "attr": "DX",
+      "diff": "A"
+    },
+    {
+      "name": "Urban Survival",
+      "pts": 4,
+      "attr": "Per",
+      "diff": "A"
     }
   ],
   "traits": [
@@ -634,7 +634,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-14T03:29:24.637Z",
+    "savedAt": "2026-06-14T03:29:54.887Z",
     "savedBy": "Csuman"
   }
 }
