@@ -149,6 +149,12 @@
       "spec": "Beams"
     },
     {
+      "name": "Tracking",
+      "attr": "Per",
+      "diff": "A",
+      "pts": 16
+    },
+    {
       "name": "Intelligence Analysis",
       "attr": "IQ",
       "diff": "H",
@@ -185,12 +191,6 @@
       "attr": "IQ",
       "diff": "H",
       "pts": 12
-    },
-    {
-      "name": "Tracking",
-      "attr": "Per",
-      "diff": "A",
-      "pts": 16
     },
     {
       "name": "Driving",
@@ -445,7 +445,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T03:20:36.557Z",
+    "savedAt": "2026-06-14T03:20:51.010Z",
     "savedBy": "Anthony"
   }
 }
