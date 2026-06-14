@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ship Hold — Group Storage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#07080c;
+    --panel:#0e1118;
+    --panel-2:#141925;
+    --row:#10141d;
+    --ink:#e8e9ee;
+    --ink-dim:#8b93a7;
+    --ink-faint:#5b6275;
+    --gold:#c9a23a;
+    --gold-bright:#e8c860;
+    --holo:#4fd0e0;
+    --holo-dim:#2a6b76;
+    --green:#6fcf8c;
+    --danger:#c8543f;
+    --line:rgba(201,162,58,0.16);
+    --line-holo:rgba(79,208,224,0.22);
+    --mono:ui-monospace,"SF Mono","JetBrains Mono","Cascadia Code",Consolas,monospace;
+    --sans:"EB Garamond",Georgia,serif;
+    --display:"Cinzel",Georgia,serif;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 700px at 80% -10%, rgba(79,208,224,0.06), transparent 60%),
+      radial-gradient(900px 600px at 8% 112%, rgba(201,162,58,0.05), transparent 55%),
+      var(--void);
+    color:var(--ink);font-family:var(--sans);font-size:16px;-webkit-font-smoothing:antialiased;
+  }
+  .app{max-width:1180px;margin:0 auto;padding:16px 20px 56px}
+
+  /* ---------- top bar ---------- */
+  .topbar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:6px 2px 14px;border-bottom:1px solid var(--line);margin-bottom:16px}
+  .brand{font-family:var(--display);font-weight:700;letter-spacing:.13em;font-size:18px;text-transform:uppercase;color:var(--gold-bright);display:flex;align-items:baseline;gap:11px;white-space:nowrap;text-shadow:0 0 18px rgba(201,162,58,0.22)}
+  .brand .mark{color:var(--holo);font-size:14px;text-shadow:0 0 12px var(--holo)}
+  .brand .sub{font-family:var(--sans);font-size:13px;letter-spacing:.03em;text-transform:none;color:var(--ink-faint);font-weight:400}
+  .shipfield{display:flex;align-items:center;gap:7px;margin-left:4px}
+  .shipfield label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint)}
+  .who{margin-left:auto;display:flex;align-items:center;gap:7px}
+  .who label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint)}
+
+  input[type=text], input[type=search], input[type=number], select{
+    background:var(--panel-2);border:1px solid var(--line);color:var(--ink);
+    font-family:var(--sans);font-size:15px;padding:8px 11px;border-radius:6px;outline:none;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  input::placeholder{color:var(--ink-faint)}
+  input:focus, select:focus{border-color:var(--line-holo);box-shadow:0 0 0 3px rgba(79,208,224,0.10)}
+  input[type=number]{width:96px;font-family:var(--mono)}
+  input.ship{width:190px}
+  input.whoin{width:140px}
+  select{cursor:pointer;padding-right:26px;-webkit-appearance:none;appearance:none;
+    background-image:linear-gradient(45deg,transparent 50%,var(--ink-dim) 50%),linear-gradient(135deg,var(--ink-dim) 50%,transparent 50%);
+    background-position:calc(100% - 14px) 15px,calc(100% - 9px) 15px;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+
+  button{font-family:var(--sans);font-size:15px;cursor:pointer;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);border-radius:6px;padding:8px 13px;transition:background .15s,border-color .15s,color .15s,transform .05s}
+  button:hover{border-color:rgba(201,162,58,0.45);background:#1a2030}
+  button:active{transform:translateY(1px)}
+  button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--holo);outline-offset:2px}
+  .btn-gold{background:linear-gradient(180deg,#1d2231,#141925);border-color:rgba(201,162,58,0.5);color:var(--gold-bright);font-weight:500;letter-spacing:.02em}
+  .btn-gold:hover{border-color:var(--gold);background:linear-gradient(180deg,#232a3c,#171c29)}
+  .btn-holo{border-color:rgba(79,208,224,0.5);color:var(--holo)}
+  .btn-holo:hover{border-color:var(--holo);background:#10222a}
+
+  .panel{background:linear-gradient(180deg,rgba(20,25,37,0.55),rgba(14,17,24,0.85));border:1px solid var(--line);border-radius:12px}
+
+  /* ---------- vitals strip ---------- */
+  .vitals{display:grid;grid-template-columns:1.1fr 1.4fr;gap:14px;margin-bottom:16px}
+  @media (max-width:760px){ .vitals{grid-template-columns:1fr} }
+  .vital{position:relative;padding:14px 16px;border-radius:12px;border:1px solid var(--line-holo);
+    background:radial-gradient(120% 120% at 0% -30%,rgba(79,208,224,0.08),transparent 55%),var(--panel)}
+  .vital .eyebrow{font-family:var(--display);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);opacity:.9;margin-bottom:8px}
+  .credits-big{font-family:var(--mono);font-size:34px;font-weight:600;color:var(--gold-bright);line-height:1;letter-spacing:.01em;text-shadow:0 0 18px rgba(232,200,96,0.22)}
+  .credits-big small{font-size:15px;color:var(--ink-faint);margin-left:6px;font-weight:400}
+  .adjustrow{display:flex;align-items:center;gap:7px;margin-top:12px;flex-wrap:wrap}
+  .adjustrow input[type=text]{flex:1;min-width:120px}
+  .minighost{background:transparent;border:1px solid var(--line);color:var(--ink-dim);padding:7px 11px;font-size:14px}
+  .minighost:hover{color:var(--ink)}
+  .logline{margin-top:10px;font-family:var(--mono);font-size:11px;color:var(--ink-faint);max-height:0;overflow:hidden;transition:max-height .2s}
+  .logline.open{max-height:140px;overflow:auto}
+  .logline div{padding:2px 0;border-top:1px solid rgba(201,162,58,0.07)}
+  .logline .pos{color:var(--green)}
+  .logline .neg{color:#e0a08f}
+  .loglink{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--holo);background:none;border:0;padding:4px 0;cursor:pointer}
+
+  /* fuel */
+  .fuel-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .fuel-amt{font-family:var(--mono);font-size:26px;font-weight:600;color:var(--holo);line-height:1}
+  .fuel-amt small{font-size:14px;color:var(--ink-faint);font-weight:400}
+  .fuel-cost{font-family:var(--mono);font-size:11px;color:var(--ink-dim);text-align:right}
+  .fuel-cost b{color:var(--gold-bright);font-weight:600}
+  .gauge{position:relative;height:12px;border-radius:7px;background:#0b0f17;border:1px solid var(--line);overflow:hidden;margin:11px 0 4px}
+  .gauge .fill{position:absolute;inset:0;width:0;border-radius:7px;background:linear-gradient(90deg,var(--holo-dim),var(--holo));box-shadow:0 0 14px -2px var(--holo);transition:width .25s}
+  .gauge.low .fill{background:linear-gradient(90deg,#7a3a2a,var(--danger));box-shadow:0 0 14px -2px var(--danger)}
+  .fuel-ctl{display:flex;align-items:center;gap:7px;margin-top:10px;flex-wrap:wrap}
+  .fuel-ctl .cap{display:flex;align-items:center;gap:5px;margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--ink-faint)}
+  .fuel-ctl .cap input{width:74px}
+  .steplink{font-family:var(--mono);font-size:11px;color:var(--ink-faint);text-decoration:none;border-bottom:1px dotted var(--line-holo)}
+  .steplink:hover{color:var(--holo)}
+
+  /* ---------- library head ---------- */
+  .libhead{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .libhead .addname{flex:1;min-width:200px}
+  .libhead input[type=number].qty{width:74px}
+  .searchwrap{margin-left:auto;display:flex;gap:8px}
+  .searchwrap input[type=search]{min-width:180px}
+
+  /* ---------- categories / items ---------- */
+  .cat{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel);margin-bottom:10px}
+  .cat-head{display:flex;align-items:center;gap:10px;padding:10px 13px;cursor:pointer;user-select:none;background:linear-gradient(90deg,rgba(201,162,58,0.05),transparent)}
+  .cat-head:hover{background:linear-gradient(90deg,rgba(201,162,58,0.10),transparent)}
+  .cat-caret{width:13px;color:var(--gold);transition:transform .2s;font-size:11px;flex:0 0 auto}
+  .cat.collapsed .cat-caret{transform:rotate(-90deg)}
+  .cat-name{font-family:var(--display);font-weight:600;letter-spacing:.05em;font-size:14px;color:var(--ink);flex:1;text-transform:uppercase}
+  .cat-count{font-family:var(--mono);font-size:11px;color:var(--ink-faint);background:var(--panel-2);padding:2px 8px;border-radius:10px}
+  .cat-tools{display:flex;gap:4px;opacity:0;transition:opacity .15s}
+  .cat-head:hover .cat-tools{opacity:1}
+  .minibtn{width:25px;height:25px;padding:0;display:flex;align-items:center;justify-content:center;font-size:12px;background:transparent;border:1px solid transparent;color:var(--ink-dim)}
+  .minibtn:hover{border-color:var(--line);color:var(--ink)}
+  .minibtn.del:hover{color:var(--danger);border-color:rgba(200,84,63,0.4)}
+  .cat.collapsed .cat-body{display:none}
+  .cat-empty{padding:11px 16px;color:var(--ink-faint);font-style:italic;font-size:13px}
+
+  .item{display:flex;align-items:center;gap:11px;padding:9px 13px;border-top:1px solid rgba(201,162,58,0.07)}
+  .item:hover{background:rgba(79,208,224,0.04)}
+  .qtybox{display:flex;align-items:center;gap:0;flex:0 0 auto;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--panel-2)}
+  .qtybox button{border:0;border-radius:0;background:transparent;color:var(--ink-dim);width:26px;height:30px;padding:0;font-size:16px;line-height:1}
+  .qtybox button:hover{color:var(--gold-bright);background:#1a2030}
+  .qtybox .qn{min-width:34px;text-align:center;font-family:var(--mono);font-size:14px;color:var(--ink);padding:0 2px}
+  .item-main{flex:1;min-width:0}
+  .item-name{font-size:15px;color:var(--ink);line-height:1.2;word-break:break-word}
+  .item-note{font-size:12px;color:var(--ink-faint);margin-top:2px;word-break:break-word}
+  .item-by{font-family:var(--mono);font-size:10px;color:var(--ink-faint);opacity:.75;margin-top:2px;letter-spacing:.04em}
+  .item-tools{display:flex;gap:3px;opacity:0;transition:opacity .15s;flex:0 0 auto}
+  .item:hover .item-tools{opacity:1}
+  a.itemlink{color:var(--holo);text-decoration:none;width:25px;height:25px;display:inline-flex;align-items:center;justify-content:center;border:1px solid transparent;border-radius:5px}
+  a.itemlink:hover{border-color:var(--line-holo)}
+
+  .empty-lib{padding:34px 24px;text-align:center;color:var(--ink-faint);font-style:italic;line-height:1.6;border:1px dashed var(--line);border-radius:10px}
+  .empty-lib b{color:var(--ink-dim);font-style:normal}
+
+  /* ---------- sync bar ---------- */
+  .syncbar{position:sticky;bottom:0;margin-top:18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    padding:11px 14px;border-radius:11px;border:1px solid var(--line-holo);
+    background:linear-gradient(180deg,rgba(20,25,37,0.92),rgba(10,13,20,0.96));backdrop-filter:blur(6px)}
+  .syncstatus{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;color:var(--ink-dim)}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--ink-faint);flex:0 0 auto}
+  .dot.ok{background:var(--green);box-shadow:0 0 8px var(--green)}
+  .dot.dirty{background:var(--gold-bright);box-shadow:0 0 8px var(--gold-bright)}
+  .dot.err{background:var(--danger);box-shadow:0 0 8px var(--danger)}
+  .dot.busy{background:var(--holo);box-shadow:0 0 8px var(--holo);animation:pulse 1s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+  .syncbar .spacer{margin-left:auto}
+  .toggle{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-dim);cursor:pointer;user-select:none}
+  .toggle input{accent-color:var(--holo)}
+  .conflict{flex-basis:100%;font-family:var(--sans);font-size:13px;color:#f0c98f;border-top:1px solid rgba(201,162,58,0.18);padding-top:9px;display:none;align-items:center;gap:10px;flex-wrap:wrap}
+  .conflict.show{display:flex}
+
+  /* ---------- toast ---------- */
+  .toast{position:fixed;left:50%;bottom:78px;transform:translateX(-50%) translateY(18px);background:var(--panel-2);border:1px solid var(--line-holo);color:var(--ink);padding:11px 19px;border-radius:8px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:60;max-width:90vw;box-shadow:0 12px 40px -12px rgba(0,0,0,0.8)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast.err{border-color:rgba(200,84,63,0.6);color:#f0b6ab}
+  .toast.ok{border-color:rgba(201,162,58,0.5)}
+
+  .footnav{margin-top:20px;display:flex;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;letter-spacing:.05em}
+  .footnav a{color:var(--ink-faint);text-decoration:none;border-bottom:1px dotted var(--line)}
+  .footnav a:hover{color:var(--holo);border-color:var(--line-holo)}
+
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.001ms !important;transition-duration:.05ms !important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><span class="mark">&#9670;</span> Ship Hold <span class="sub">Dara Dara &middot; group storage</span></div>
+    <div class="shipfield">
+      <label for="shipName">Vessel</label>
+      <input type="text" id="shipName" class="ship" placeholder="(unnamed ship)" autocomplete="off">
+    </div>
+    <div class="who">
+      <label for="whoName">You</label>
+      <input type="text" id="whoName" class="whoin" placeholder="your name" autocomplete="off">
+    </div>
+  </header>
+
+  <!-- VITALS: credits + fuel -->
+  <section class="vitals">
+    <div class="vital">
+      <div class="eyebrow">Party credits</div>
+      <div class="credits-big" id="creditsBig">0<small>cr</small></div>
+      <div class="adjustrow">
+        <input type="number" id="credAmt" placeholder="0" step="1">
+        <button class="btn-holo" id="credAdd" title="Add credits">+ Add</button>
+        <button class="minighost" id="credSpend" title="Spend credits">&minus; Spend</button>
+        <input type="text" id="credNote" placeholder="reason (optional)">
+      </div>
+      <button class="loglink" id="credLogToggle">show ledger</button>
+      <div class="logline" id="credLog"></div>
+    </div>
+
+    <div class="vital">
+      <div class="eyebrow">Ship fuel</div>
+      <div class="fuel-top">
+        <div class="fuel-amt" id="fuelAmt">0 <small>/ 0 units</small></div>
+        <div class="fuel-cost" id="fuelCost"></div>
+      </div>
+      <div class="gauge" id="fuelGauge"><div class="fill" id="fuelFill"></div></div>
+      <div class="fuel-ctl">
+        <input type="number" id="fuelAmt2" placeholder="units" step="1">
+        <button class="btn-holo" id="fuelAdd" title="Add fuel units">+ Refuel</button>
+        <button class="minighost" id="fuelBurn" title="Burn fuel units">&minus; Burn</button>
+        <span class="cap">cap <input type="number" id="fuelCap" step="1" title="Tank capacity (units)"></span>
+      </div>
+      <div style="margin-top:8px"><a class="steplink" href="galaxy-map.html" title="Plan a jump and read its fuel burn">&#8599; plan a jump on the galaxy map</a></div>
+    </div>
+  </section>
+
+  <!-- ADD ITEM -->
+  <div class="libhead">
+    <input type="text" id="addName" class="addname" placeholder="Add an item (e.g. Medpac, Thermal detonator, Datapad)&hellip;" autocomplete="off">
+    <input type="number" id="addQty" class="qty" value="1" min="0" step="1" title="Quantity">
+    <select id="addCat" aria-label="Category"></select>
+    <button id="addBtn" class="btn-gold">+ Add</button>
+    <div class="searchwrap">
+      <input type="search" id="search" placeholder="Search hold&hellip;" autocomplete="off">
+      <button id="newCatBtn" title="New category">+ Cat</button>
+    </div>
+  </div>
+
+  <div id="libList"></div>
+
+  <!-- SYNC -->
+  <div class="syncbar">
+    <div class="syncstatus"><span class="dot" id="syncDot"></span><span id="syncText">Local only</span></div>
+    <label class="toggle" title="Automatically push your changes to the shared copy"><input type="checkbox" id="autoSync"> auto-share</label>
+    <div class="spacer"></div>
+    <button class="btn-holo" id="pullBtn" title="Load the latest shared copy">&#8635; Pull</button>
+    <button class="btn-gold" id="pushBtn" title="Push your copy to the shared store">&#8593; Push to shared</button>
+    <button class="minighost" id="exportBtn" title="Download a JSON backup">Export</button>
+    <button class="minighost" id="importBtn" title="Load from a JSON backup">Import</button>
+    <input type="file" id="importFile" accept="application/json,.json" hidden>
+    <div class="conflict" id="conflictBar">
+      <span id="conflictMsg"></span>
+      <button class="btn-holo" id="conflictPull">Pull theirs</button>
+      <button class="minighost" id="conflictForce">Overwrite with mine</button>
+    </div>
+  </div>
+
+  <nav class="footnav">
+    <a href="galaxy-map.html">&#9670; Galaxy map &amp; fuel</a>
+    <a href="sheet.html">&#9670; Character sheets</a>
+    <a href="index.html">&#9670; All tools</a>
+  </nav>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+/* ============================================================
+   Ship Hold — shared group storage for the Dara Dara campaign
+   Credits, ship fuel, and a categorised item list, shared across
+   the whole party via the campaign GitHub repo (same token the
+   character sheet uses). Reads fall back to the Pages-served copy
+   so anyone can VIEW with no token; writes need a Contents:R/W PAT.
+   Local-first: everything persists in this browser too.
+   ============================================================ */
+
+var GH_OWNER='Recoson', GH_REPO='Star-wars-GURPS-campaign', GH_BRANCH='main';
+var DATA_PATH='group-storage.json';
+var STORE_KEY='kotor_group_storage_v1';
+var TOKEN_KEY='kotor_gh_token';     // shared with the character sheet
+var WHO_KEY='kotor_storage_who';
+var AUTO_KEY='kotor_storage_autosync';
+var DEFAULT_PER_UNIT=50;            // credits per fuel unit (compendium)
+var AUTOSYNC_MS=12000;
+
+/* ---------- tiny helpers ---------- */
+function $(id){return document.getElementById(id);}
+function uid(){return 'i'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+function nowISO(){return new Date().toISOString();}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function b64u(str){var b=new TextEncoder().encode(str);var s='';for(var i=0;i<b.length;i++)s+=String.fromCharCode(b[i]);return btoa(s);}
+function fmtNum(n){n=Math.round(n||0);var neg=n<0;n=Math.abs(n);var s=n.toString();s=s.replace(/\B(?=(\d{3})+(?!\d))/g,',');return (neg?'-':'')+s;}
+function clamp(n,lo,hi){return Math.max(lo,Math.min(hi,n));}
+function shortTime(iso){if(!iso)return '';try{var d=new Date(iso);return d.toLocaleString(undefined,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}catch(e){return iso;}}
+
+/* ---------- state ---------- */
+function defaultState(){
+  return {
+    version:1,
+    ship:'',
+    credits:0,
+    creditLog:[],                              // newest first: {d, l, t, by}
+    fuel:{ units:0, capacity:100, perUnit:DEFAULT_PER_UNIT },
+    categories:[
+      {id:uid(), name:'Consumables & Medical', collapsed:false},
+      {id:uid(), name:'Weapons & Ammo',        collapsed:false},
+      {id:uid(), name:'Armour & Shields',      collapsed:false},
+      {id:uid(), name:'Gear & Equipment',      collapsed:false},
+      {id:uid(), name:'Valuables & Misc',      collapsed:false}
+    ],
+    items:[],                                  // {id, name, qty, categoryId, note, link, by, at}
+    _meta:{ savedAt:'', savedBy:'' }
+  };
+}
+
+/* Defensive load: overlay persisted data on a full default so a
+   missing key can never break the tool. */
+function coerce(raw){
+  var d=defaultState();
+  if(!raw||typeof raw!=='object') return d;
+  d.ship=typeof raw.ship==='string'?raw.ship:'';
+  d.credits=Math.round(Number(raw.credits)||0);
+  d.creditLog=Array.isArray(raw.creditLog)?raw.creditLog.filter(function(e){return e&&typeof e==='object';}).map(function(e){
+    return {d:Math.round(Number(e.d)||0), l:String(e.l||''), t:e.t||'', by:String(e.by||'')};
+  }):[];
+  var f=raw.fuel&&typeof raw.fuel==='object'?raw.fuel:{};
+  d.fuel={ units:Math.max(0,Math.round(Number(f.units)||0)),
+           capacity:Math.max(0,Math.round(Number(f.capacity)|| (f.capacity===0?0:100))),
+           perUnit:Math.max(0,Number(f.perUnit)||DEFAULT_PER_UNIT) };
+  if(d.fuel.capacity<d.fuel.units && d.fuel.capacity>0){} // allow over-cap; gauge clamps display
+  var cats=Array.isArray(raw.categories)&&raw.categories.length?raw.categories:d.categories;
+  cats=cats.map(function(c){return {id:c.id||uid(), name:String(c.name||'Untitled'), collapsed:!!c.collapsed};});
+  d.categories=cats;
+  var valid={}; cats.forEach(function(c){valid[c.id]=true;});
+  d.items=Array.isArray(raw.items)?raw.items.filter(function(t){return t&&typeof t==='object'&&(t.name||t.id);}).map(function(t){
+    return { id:t.id||uid(), name:String(t.name||'Item'), qty:Math.max(0,Math.round(Number(t.qty)||0)),
+      categoryId:valid[t.categoryId]?t.categoryId:cats[0].id, note:String(t.note||''), link:String(t.link||''),
+      by:String(t.by||''), at:t.at||'' };
+  }):[];
+  d._meta={ savedAt:(raw._meta&&raw._meta.savedAt)||'', savedBy:(raw._meta&&raw._meta.savedBy)||'' };
+  return d;
+}
+function loadLocal(){
+  try{ var raw=localStorage.getItem(STORE_KEY); if(!raw) return defaultState(); return coerce(JSON.parse(raw)); }
+  catch(e){ console.warn('Ship Hold: local load failed',e); return defaultState(); }
+}
+function saveLocal(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(STATE)); }catch(e){ console.warn('save failed',e); } }
+
+var STATE=loadLocal();
+var LOADED_AT=STATE._meta.savedAt||'';   // savedAt of the version our edits are based on
+var conflictPending=false;
+
+/* ---------- identity ---------- */
+function getWho(){ try{ return localStorage.getItem(WHO_KEY)||''; }catch(e){ return ''; } }
+function setWho(v){ try{ localStorage.setItem(WHO_KEY, v||''); }catch(e){} }
+
+/* ---------- toast ---------- */
+function toast(msg,kind){
+  var t=$('toast'); t.textContent=msg; t.className='toast show'+(kind?' '+kind:'');
+  clearTimeout(toast._t); toast._t=setTimeout(function(){ t.className='toast'; },3000);
+}
+
+/* ============================================================
+   GitHub-as-backend sync  (mirrors the character sheet's pattern)
+   ============================================================ */
+function ghTokenStored(){ try{ return localStorage.getItem(TOKEN_KEY)||null; }catch(e){ return null; } }
+function ghTokenPrompt(){
+  var t=prompt('GitHub token for shared saves.\n(Fine-grained PAT with Contents read/write on '+GH_OWNER+'/'+GH_REPO+'. Stored only in this browser; the same token the character sheet uses.)');
+  if(t){ t=t.trim(); try{ localStorage.setItem(TOKEN_KEY,t); }catch(e){} }
+  return t||null;
+}
+async function ghGetFile(path,raw){
+  var url='https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/'+path+'?ref='+GH_BRANCH+'&_='+Date.now();
+  var headers={'Accept':raw?'application/vnd.github.raw':'application/vnd.github+json'};
+  var t=ghTokenStored(); if(t) headers['Authorization']='Bearer '+t;
+  var r=await fetch(url,{headers:headers});
+  if(r.status===404) return null;
+  if(!r.ok) throw new Error('GitHub '+r.status+': '+(await r.text()).slice(0,160));
+  return raw?await r.text():await r.json();
+}
+
+/* Pull the shared copy. Tries the API; on failure falls back to the
+   copy served beside this page (GitHub Pages) so reads never need a
+   token and never hit the API quota. */
+async function cloudPull(silent){
+  setSync('busy','Pulling\u2026');
+  var obj=null;
+  try{
+    var txt=await ghGetFile(DATA_PATH,true);
+    if(txt!=null) obj=JSON.parse(txt);
+  }catch(e){
+    try{ var r=await fetch(DATA_PATH+'?_='+Date.now()); if(r.ok) obj=JSON.parse(await r.text()); }catch(_){}
+    if(!obj){ if(!silent) toast('Pull failed: '+e.message,'err'); setSync(dirty?'dirty':'idle'); return false; }
+  }
+  if(obj==null){ if(!silent) toast('No shared storage exists yet \u2014 push to create it.'); setSync(dirty?'dirty':'idle'); return false; }
+  return adoptRemote(coerce(obj), silent);
+}
+function adoptRemote(remote, silent){
+  var rAt=remote._meta.savedAt||'';
+  var localEmpty = !STATE.items.length && !STATE.credits && !STATE.creditLog.length && !STATE.fuel.units && !STATE.ship;
+  if(localEmpty || (rAt && rAt>LOADED_AT) || (rAt && rAt>(STATE._meta.savedAt||''))){
+    if(!localEmpty && !silent && dirty){
+      if(!confirm('The shared copy ('+(remote._meta.savedBy||'someone')+', '+shortTime(rAt)+') will replace your unsynced local changes. Continue?')) { setSync('dirty'); return false; }
+    }
+    STATE=remote; LOADED_AT=rAt; dirty=false; conflictPending=false; hideConflict();
+    saveLocal(); renderAll(); setSync('ok','Shared \u2022 '+(remote._meta.savedBy?('by '+remote._meta.savedBy+' '):'')+shortTime(rAt));
+    if(!silent) toast('Pulled the latest shared copy.','ok');
+    return true;
+  }
+  if(!silent) toast('You already have the latest.');
+  setSync(dirty?'dirty':(LOADED_AT?'ok':'idle'));
+  return false;
+}
+
+var _pushBusy=false;
+async function cloudPush(silent, force){
+  var t=ghTokenStored() || (silent?null:ghTokenPrompt());
+  if(!t){ if(!silent) toast('Set a token first (or use Export).','err'); return false; }
+  if(_pushBusy){ dirty=true; return false; }
+  _pushBusy=true; setSync('busy','Pushing\u2026');
+  try{
+    // conflict guard: has someone pushed since we loaded?
+    var existing=null;
+    try{ existing=await ghGetFile(DATA_PATH,false); }catch(e){ /* treat as create */ }
+    if(existing && existing.sha){
+      var rMeta={};
+      try{ rMeta=JSON.parse(decodeURIComponent(escape(atob(existing.content||'')))); }catch(e){ rMeta={}; }
+      var rAt=(rMeta&&rMeta._meta&&rMeta._meta.savedAt)||'';
+      if(rAt && LOADED_AT && rAt>LOADED_AT && !force){
+        _pushBusy=false;
+        conflictPending=true;
+        showConflict((rMeta._meta&&rMeta._meta.savedBy)||'someone', rAt);
+        setSync('err','Conflict \u2014 newer shared copy');
+        if(!silent) toast('Shared copy changed since you loaded \u2014 pull or overwrite.','err');
+        return false;
+      }
+    }
+    STATE._meta={ savedAt:nowISO(), savedBy:getWho()||'' };
+    var body={ message:'Update group storage'+(getWho()?(' ('+getWho()+')'):''), branch:GH_BRANCH, content:b64u(JSON.stringify(STATE,null,2)) };
+    if(existing && existing.sha) body.sha=existing.sha;
+    var r=await fetch('https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/'+DATA_PATH,{
+      method:'PUT',
+      headers:{'Accept':'application/vnd.github+json','Authorization':'Bearer '+t,'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    if(r.status===401||r.status===403){ try{localStorage.removeItem(TOKEN_KEY);}catch(e){} throw new Error('token rejected ('+r.status+') and cleared \u2014 Push again with a valid Contents:R/W token.'); }
+    if(r.status===409){ throw new Error('conflict \u2014 someone saved meanwhile. Pull, then push again.'); }
+    if(!r.ok) throw new Error('GitHub '+r.status+': '+(await r.text()).slice(0,160));
+    LOADED_AT=STATE._meta.savedAt; dirty=false; conflictPending=false; hideConflict();
+    saveLocal();
+    _pushBusy=false;
+    setSync('ok','Shared \u2022 saved '+shortTime(LOADED_AT));
+    if(!silent) toast('Pushed to shared storage.','ok');
+    if(dirty) scheduleAuto();
+    return true;
+  }catch(e){
+    _pushBusy=false; setSync('err','Push failed');
+    if(!silent) toast('Push failed: '+e.message,'err');
+    return false;
+  }
+}
+
+/* autosync: debounce a push after edits, flush on tab hide */
+var dirty=false, _autoTimer=null;
+function autoOn(){ return $('autoSync') && $('autoSync').checked; }
+function markDirty(){
+  saveLocal();
+  dirty=true;
+  setSync('dirty', LOADED_AT?('Unsynced \u2022 last shared '+shortTime(LOADED_AT)):'Unsynced changes');
+  if(autoOn() && ghTokenStored()) scheduleAuto();
+}
+function scheduleAuto(){
+  if(_autoTimer) return;
+  _autoTimer=setTimeout(function(){ _autoTimer=null; if(dirty && autoOn() && ghTokenStored() && !conflictPending) cloudPush(true,false); }, AUTOSYNC_MS);
+}
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='hidden' && dirty && autoOn() && ghTokenStored() && !conflictPending){
+    if(_autoTimer){ clearTimeout(_autoTimer); _autoTimer=null; }
+    cloudPush(true,false);
+  }
+});
+
+/* ---------- sync status UI ---------- */
+function setSync(kind,text){
+  var dot=$('syncDot'), txt=$('syncText');
+  dot.className='dot'+(kind&&kind!=='idle'?(' '+kind):'');
+  if(text!=null) txt.textContent=text;
+  else if(kind==='idle') txt.textContent= ghTokenStored()?'Ready to share':'Local only';
+}
+function showConflict(who,at){
+  $('conflictMsg').textContent='Shared storage was updated by '+who+' at '+shortTime(at)+'. Your local changes aren\u2019t pushed.';
+  $('conflictBar').classList.add('show');
+}
+function hideConflict(){ $('conflictBar').classList.remove('show'); }
+
+/* ============================================================
+   Credits
+   ============================================================ */
+function logCredit(delta,label){
+  STATE.creditLog.unshift({ d:Math.round(delta), l:label||'', t:nowISO(), by:getWho()||'' });
+  if(STATE.creditLog.length>200) STATE.creditLog.length=200;
+}
+function adjustCredits(delta,label){
+  delta=Math.round(delta);
+  if(!delta){ toast('Enter an amount.'); return; }
+  STATE.credits=Math.round(STATE.credits+delta);
+  logCredit(delta,label);
+  renderVitals(); markDirty();
+}
+function renderVitals(){
+  $('creditsBig').innerHTML=fmtNum(STATE.credits)+'<small>cr</small>';
+  renderFuel();
+  renderCredLog();
+}
+function renderCredLog(){
+  var box=$('credLog');
+  if(!STATE.creditLog.length){ box.innerHTML='<div style="border:0;color:var(--ink-faint)">No entries yet.</div>'; return; }
+  box.innerHTML=STATE.creditLog.slice(0,40).map(function(e){
+    var cls=e.d>=0?'pos':'neg';
+    var amt=(e.d>=0?'+':'')+fmtNum(e.d);
+    var meta=[e.l, e.by?('\u2014 '+e.by):'', e.t?shortTime(e.t):''].filter(Boolean).join('  ');
+    return '<div><span class="'+cls+'">'+esc(amt)+'</span> &nbsp;'+esc(meta)+'</div>';
+  }).join('');
+}
+
+/* ============================================================
+   Fuel
+   ============================================================ */
+function renderFuel(){
+  var f=STATE.fuel;
+  $('fuelAmt').innerHTML=fmtNum(f.units)+' <small>/ '+fmtNum(f.capacity)+' units</small>';
+  var pct=f.capacity>0?clamp(f.units/f.capacity*100,0,100):0;
+  var fill=$('fuelFill'); fill.style.width=pct+'%';
+  $('fuelGauge').classList.toggle('low', f.capacity>0 && f.units/f.capacity<=0.2);
+  var need=Math.max(0,f.capacity-f.units);
+  $('fuelCost').innerHTML= (f.capacity>0?('fill needs '+fmtNum(need)+' &middot; <b>'+fmtNum(need*f.perUnit)+' cr</b>'):'set a tank capacity')
+    + '<br>'+fmtNum(f.perUnit)+' cr / unit';
+  if($('fuelCap')!==document.activeElement) $('fuelCap').value=f.capacity;
+}
+function adjustFuel(delta){
+  delta=Math.round(delta);
+  if(!delta){ toast('Enter a number of units.'); return; }
+  STATE.fuel.units=Math.max(0, Math.round(STATE.fuel.units+delta));
+  renderFuel(); markDirty();
+}
+
+/* ============================================================
+   Items + categories
+   ============================================================ */
+function catById(id){ for(var i=0;i<STATE.categories.length;i++) if(STATE.categories[i].id===id) return STATE.categories[i]; return null; }
+function itemById(id){ for(var i=0;i<STATE.items.length;i++) if(STATE.items[i].id===id) return STATE.items[i]; return null; }
+function itemsInCat(cid){ return STATE.items.filter(function(t){ return t.categoryId===cid; }); }
+
+function renderCatSelect(){
+  var sel=$('addCat'); var cur=sel.value; sel.innerHTML='';
+  STATE.categories.forEach(function(c){ var o=document.createElement('option'); o.value=c.id; o.textContent=c.name; sel.appendChild(o); });
+  if(cur && catById(cur)) sel.value=cur;
+}
+function renderItems(){
+  var list=$('libList'); var q=($('search').value||'').trim().toLowerCase();
+  list.innerHTML='';
+  if(STATE.items.length===0 && !q){
+    var e=document.createElement('div'); e.className='empty-lib';
+    e.innerHTML='The hold is empty.<br>Add gear, medpacs, weapons, or valuables above &mdash; then <b>Push to shared</b> so the whole crew sees it.';
+    list.appendChild(e); renderCatSelect(); return;
+  }
+  STATE.categories.forEach(function(cat){
+    var all=itemsInCat(cat.id);
+    var shown=q?all.filter(function(t){ return (t.name||'').toLowerCase().indexOf(q)!==-1 || (t.note||'').toLowerCase().indexOf(q)!==-1; }):all;
+    if(q && shown.length===0) return;
+    var sec=document.createElement('div'); sec.className='cat'+(cat.collapsed&&!q?' collapsed':'');
+    var head=document.createElement('div'); head.className='cat-head'; head.dataset.act='toggleCat'; head.dataset.cat=cat.id;
+    var qtySum=all.reduce(function(s,t){return s+(t.qty||0);},0);
+    head.innerHTML='<span class="cat-caret">\u25BC</span><span class="cat-name"></span>'
+      +'<span class="cat-count">'+all.length+(all.length?(' \u00b7 '+fmtNum(qtySum)):'')+'</span>'
+      +'<span class="cat-tools">'
+      +'<button class="minibtn" data-act="renameCat" data-cat="'+cat.id+'" title="Rename" aria-label="Rename category">\u270E</button>'
+      +'<button class="minibtn del" data-act="delCat" data-cat="'+cat.id+'" title="Delete" aria-label="Delete category">\u2715</button>'
+      +'</span>';
+    head.querySelector('.cat-name').textContent=cat.name;
+    sec.appendChild(head);
+    var body=document.createElement('div'); body.className='cat-body';
+    if(shown.length===0){
+      var em=document.createElement('div'); em.className='cat-empty'; em.textContent='Nothing here yet.'; body.appendChild(em);
+    } else {
+      shown.forEach(function(t){
+        var row=document.createElement('div'); row.className='item';
+        var qbox=document.createElement('div'); qbox.className='qtybox';
+        qbox.innerHTML='<button data-act="dec" data-id="'+t.id+'" title="-1" aria-label="Decrease">\u2212</button>'
+          +'<span class="qn">'+fmtNum(t.qty)+'</span>'
+          +'<button data-act="inc" data-id="'+t.id+'" title="+1" aria-label="Increase">+</button>';
+        row.appendChild(qbox);
+        var main=document.createElement('div'); main.className='item-main';
+        var nm=document.createElement('div'); nm.className='item-name'; nm.textContent=t.name; main.appendChild(nm);
+        if(t.note){ var nt=document.createElement('div'); nt.className='item-note'; nt.textContent=t.note; main.appendChild(nt); }
+        if(t.by||t.at){ var by=document.createElement('div'); by.className='item-by'; by.textContent=(t.by?('added by '+t.by):'')+(t.by&&t.at?'  ':'')+(t.at?shortTime(t.at):''); main.appendChild(by); }
+        row.appendChild(main);
+        var tools=document.createElement('span'); tools.className='item-tools';
+        var linkHtml = t.link?('<a class="itemlink" href="'+esc(t.link)+'" target="_blank" rel="noopener" title="Open link">\u2197</a>'):'';
+        tools.innerHTML=linkHtml
+          +'<button class="minibtn" data-act="moveItem" data-id="'+t.id+'" title="Move category" aria-label="Move">\u21C6</button>'
+          +'<button class="minibtn" data-act="editItem" data-id="'+t.id+'" title="Edit name / note / link" aria-label="Edit">\u270E</button>'
+          +'<button class="minibtn del" data-act="delItem" data-id="'+t.id+'" title="Remove" aria-label="Remove">\u2715</button>';
+        row.appendChild(tools);
+        body.appendChild(row);
+      });
+    }
+    sec.appendChild(body); list.appendChild(sec);
+  });
+  renderCatSelect();
+}
+
+function addItemFromInput(){
+  var name=($('addName').value||'').trim();
+  if(!name){ toast('Type an item name.'); return; }
+  var qty=Math.max(0,Math.round(Number($('addQty').value)||0));
+  var cid=$('addCat').value || (STATE.categories[0]&&STATE.categories[0].id);
+  // merge into an existing same-name item in the same category
+  var existing=STATE.items.filter(function(t){ return t.categoryId===cid && t.name.toLowerCase()===name.toLowerCase(); })[0];
+  if(existing){ existing.qty+=qty||1; toast('Added to existing \u2014 now '+fmtNum(existing.qty)+'.','ok'); }
+  else { STATE.items.push({ id:uid(), name:name, qty:qty, categoryId:cid, note:'', link:'', by:getWho()||'', at:nowISO() }); toast('Item added.','ok'); }
+  var c=catById(cid); if(c) c.collapsed=false;
+  $('addName').value=''; $('addQty').value='1';
+  renderItems(); markDirty();
+}
+function incItem(id,delta){ var t=itemById(id); if(!t) return; t.qty=Math.max(0,t.qty+delta); renderItems(); markDirty(); }
+function editItem(id){
+  var t=itemById(id); if(!t) return;
+  var name=prompt('Item name:', t.name); if(name===null) return; name=name.trim(); if(!name) return;
+  var note=prompt('Note / description (optional):', t.note||''); if(note===null) note=t.note||'';
+  var link=prompt('Link (optional URL \u2014 compendium entry, wiki, etc.):', t.link||''); if(link===null) link=t.link||'';
+  t.name=name; t.note=note.trim(); t.link=link.trim();
+  renderItems(); markDirty();
+}
+function moveItem(id){
+  var t=itemById(id); if(!t) return;
+  if(STATE.categories.length<2){ toast('Make another category first.'); return; }
+  var names=STATE.categories.map(function(c,i){ return (i+1)+'. '+c.name; }).join('\n');
+  var ans=prompt('Move to which category? Enter a number:\n\n'+names, ''); if(ans===null) return;
+  var idx=parseInt(ans,10)-1;
+  if(isNaN(idx)||!STATE.categories[idx]){ toast('No category '+ans+'.','err'); return; }
+  t.categoryId=STATE.categories[idx].id; STATE.categories[idx].collapsed=false;
+  renderItems(); markDirty();
+}
+function delItem(id){
+  var t=itemById(id); if(!t) return;
+  if(!confirm('Remove "'+(t.name)+'"'+(t.qty>1?(' (\u00d7'+t.qty+')'):'')+' from the hold?')) return;
+  STATE.items=STATE.items.filter(function(x){ return x.id!==id; });
+  renderItems(); markDirty();
+}
+function addCategory(){
+  var name=prompt('New category name:',''); if(name===null) return; name=name.trim(); if(!name) return;
+  STATE.categories.push({ id:uid(), name:name, collapsed:false }); renderItems(); markDirty(); toast('Category added.','ok');
+}
+function renameCategory(cid){
+  var c=catById(cid); if(!c) return;
+  var name=prompt('Category name:', c.name); if(name===null) return; name=name.trim(); if(!name) return;
+  c.name=name; renderItems(); markDirty();
+}
+function deleteCategory(cid){
+  var c=catById(cid); if(!c) return;
+  var here=itemsInCat(cid);
+  if(STATE.categories.length===1){
+    if(here.length && !confirm('This is your only category. Delete it and its '+here.length+' item line(s)?')) return;
+    STATE.categories=[{id:uid(),name:'Gear & Equipment',collapsed:false}];
+    STATE.items=STATE.items.filter(function(t){ return false; });
+    renderItems(); markDirty(); return;
+  }
+  var dest=STATE.categories.filter(function(x){ return x.id!==cid; })[0];
+  if(here.length){
+    if(!confirm('Delete "'+c.name+'" and move its '+here.length+' item line(s) to "'+dest.name+'"?')) return;
+    here.forEach(function(t){ t.categoryId=dest.id; });
+  } else if(!confirm('Delete category "'+c.name+'"?')) return;
+  STATE.categories=STATE.categories.filter(function(x){ return x.id!==cid; });
+  renderItems(); markDirty();
+}
+
+/* ---------- export / import ---------- */
+function exportJSON(){
+  var blob=new Blob([JSON.stringify(STATE,null,2)],{type:'application/json'});
+  var url=URL.createObjectURL(blob); var a=document.createElement('a');
+  var d=new Date(),p=function(n){return(n<10?'0':'')+n;};
+  a.href=url; a.download='ship-hold-'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); },1000); toast('Backup downloaded.','ok');
+}
+function importJSON(file){
+  var rd=new FileReader();
+  rd.onload=function(){
+    try{
+      var data=JSON.parse(rd.result);
+      if(!data||typeof data!=='object') throw new Error('shape');
+      if(!confirm('Replace the current hold with this backup? (Your current local copy will be overwritten.)')) return;
+      STATE=coerce(data); LOADED_AT=STATE._meta.savedAt||''; dirty=true;
+      saveLocal(); renderAll(); setSync('dirty','Imported \u2014 not yet shared');
+      toast('Backup loaded.','ok');
+    }catch(e){ toast('That isn\u2019t a valid Ship Hold backup.','err'); }
+  };
+  rd.readAsText(file);
+}
+
+/* ============================================================
+   Render + wiring
+   ============================================================ */
+function renderAll(){
+  $('shipName').value=STATE.ship||'';
+  renderVitals();
+  renderItems();
+}
+
+/* header fields */
+$('shipName').addEventListener('input',function(){ STATE.ship=this.value; markDirty(); });
+$('whoName').addEventListener('input',function(){ setWho(this.value.trim()); });
+$('whoName').value=getWho();
+
+/* credits */
+$('credAdd').addEventListener('click',function(){ adjustCredits(Math.abs(Number($('credAmt').value)||0), ($('credNote').value||'').trim()); $('credAmt').value=''; $('credNote').value=''; });
+$('credSpend').addEventListener('click',function(){ adjustCredits(-Math.abs(Number($('credAmt').value)||0), ($('credNote').value||'').trim()); $('credAmt').value=''; $('credNote').value=''; });
+$('credAmt').addEventListener('keydown',function(e){ if(e.key==='Enter') $('credAdd').click(); });
+$('credLogToggle').addEventListener('click',function(){ var l=$('credLog'); var open=l.classList.toggle('open'); this.textContent=open?'hide ledger':'show ledger'; });
+
+/* fuel */
+$('fuelAdd').addEventListener('click',function(){ adjustFuel(Math.abs(Number($('fuelAmt2').value)||0)); $('fuelAmt2').value=''; });
+$('fuelBurn').addEventListener('click',function(){ adjustFuel(-Math.abs(Number($('fuelAmt2').value)||0)); $('fuelAmt2').value=''; });
+$('fuelAmt2').addEventListener('keydown',function(e){ if(e.key==='Enter') $('fuelAdd').click(); });
+$('fuelCap').addEventListener('change',function(){ STATE.fuel.capacity=Math.max(0,Math.round(Number(this.value)||0)); renderFuel(); markDirty(); });
+
+/* items */
+$('addBtn').addEventListener('click',addItemFromInput);
+$('addName').addEventListener('keydown',function(e){ if(e.key==='Enter') addItemFromInput(); });
+$('search').addEventListener('input',renderItems);
+$('newCatBtn').addEventListener('click',addCategory);
+$('libList').addEventListener('click',function(ev){
+  var el=ev.target.closest('[data-act]'); if(!el) return;
+  var act=el.dataset.act, id=el.dataset.id, cid=el.dataset.cat;
+  if(act==='inc'){ incItem(id,1); return; }
+  if(act==='dec'){ incItem(id,-1); return; }
+  if(act==='toggleCat'){ var c=catById(cid); if(c){ c.collapsed=!c.collapsed; saveLocal(); renderItems(); } return; }
+  if(act==='renameCat'){ ev.stopPropagation(); renameCategory(cid); return; }
+  if(act==='delCat'){ ev.stopPropagation(); deleteCategory(cid); return; }
+  if(act==='moveItem'){ ev.stopPropagation(); moveItem(id); return; }
+  if(act==='editItem'){ ev.stopPropagation(); editItem(id); return; }
+  if(act==='delItem'){ ev.stopPropagation(); delItem(id); return; }
+});
+
+/* sync controls */
+$('pullBtn').addEventListener('click',function(){ cloudPull(false); });
+$('pushBtn').addEventListener('click',function(){ cloudPush(false,false); });
+$('exportBtn').addEventListener('click',exportJSON);
+$('importBtn').addEventListener('click',function(){ $('importFile').click(); });
+$('importFile').addEventListener('change',function(e){ if(e.target.files[0]) importJSON(e.target.files[0]); e.target.value=''; });
+$('conflictPull').addEventListener('click',function(){ cloudPull(false); });
+$('conflictForce').addEventListener('click',function(){ hideConflict(); cloudPush(false,true); });
+
+/* autosync toggle (persisted) */
+(function(){
+  var on=false; try{ on=localStorage.getItem(AUTO_KEY)==='1'; }catch(e){}
+  $('autoSync').checked=on;
+  $('autoSync').addEventListener('change',function(){
+    try{ localStorage.setItem(AUTO_KEY,this.checked?'1':'0'); }catch(e){}
+    if(this.checked && dirty && ghTokenStored()) scheduleAuto();
+  });
+})();
+
+/* ---------- first paint + initial pull ---------- */
+renderAll();
+setSync(ghTokenStored()?'idle':'idle', ghTokenStored()?(LOADED_AT?('Shared \u2022 '+shortTime(LOADED_AT)):'Ready to share'):'Local only');
+cloudPull(true); // silently adopt the shared copy if it's newer / we're empty
+</script>
+</body>
+</html>
