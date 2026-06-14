@@ -419,7 +419,122 @@
   "forms": [],
   "techniques": [],
   "stances": [],
-  "vehicles": [],
+  "vehicles": [
+    {
+      "name": "D5-Mantis patrol craft",
+      "cat": "Shuttle",
+      "hullDR": "11",
+      "shieldDR": "300",
+      "shieldNow": 300,
+      "hpMax": 720,
+      "hpNow": 720,
+      "weapons": "2× laser cannons; carbonite capture rig",
+      "crew": "1",
+      "fuel": "18/3",
+      "cost": "620,000",
+      "lc": "Res",
+      "notes": "The bounty hunter's ship — built to track, corner, carry a prize home cold. (SWTOR Bounty Hunter ship.)",
+      "parts": [
+        {
+          "cat": "Hull",
+          "name": "Hull plating",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Sublight",
+          "name": "Sublight engines",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Reactor",
+          "name": "Power plant",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Shields",
+          "name": "Shield generator",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Sensors",
+          "name": "Sensor array",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Targeting",
+          "name": "Targeting computer",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Life Support",
+          "name": "Life-support system",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Astrogation",
+          "name": "Navicomputer",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Hyperdrive",
+          "name": "Hyperdrive motivator",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Crew",
+          "name": "Crew quarters",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Cargo",
+          "name": "Cargo hold",
+          "status": "ok",
+          "hpPct": 100
+        },
+        {
+          "cat": "Weapon",
+          "name": "Defensive turret",
+          "status": "ok",
+          "hpPct": 100
+        }
+      ],
+      "rfNow": 18,
+      "hfNow": 3,
+      "mounts": [
+        {
+          "label": "Laser cannons",
+          "w": "Laser cannon",
+          "n": 2,
+          "shots": null,
+          "shotsNow": null
+        },
+        {
+          "label": "Carbonite capture rig",
+          "w": null,
+          "n": 1,
+          "shots": null,
+          "shotsNow": null
+        },
+        {
+          "label": "",
+          "w": "Laser cannon",
+          "n": 1,
+          "shots": null,
+          "shotsNow": null
+        }
+      ]
+    }
+  ],
   "droids": [],
   "customDB": {
     "weapons": [],
@@ -477,7 +592,7 @@
   ],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T06:54:46.254Z",
+    "savedAt": "2026-06-14T06:56:10.719Z",
     "savedBy": "Anthony"
   },
   "builder": {
