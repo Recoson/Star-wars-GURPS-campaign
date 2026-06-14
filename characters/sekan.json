@@ -108,7 +108,8 @@
       "name": "Soldier",
       "attr": "IQ",
       "diff": "A",
-      "pts": 20
+      "pts": 20,
+      "spec": "Special Ops"
     },
     {
       "name": "Acrobatics",
@@ -121,13 +122,15 @@
       "name": "Armoury",
       "attr": "IQ",
       "diff": "A",
-      "pts": 4
+      "pts": 4,
+      "spec": "Body Armour"
     },
     {
       "name": "Smith",
       "attr": "IQ",
       "diff": "A",
-      "pts": 8
+      "pts": 8,
+      "spec": "Durasteel"
     },
     {
       "name": "Spacer",
@@ -453,7 +456,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T04:15:33.441Z",
+    "savedAt": "2026-06-14T04:17:28.386Z",
     "savedBy": "Anthony"
   },
   "builder": {
