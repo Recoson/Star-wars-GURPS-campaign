@@ -261,6 +261,14 @@
       "name": "Social Stigma (minority group)",
       "type": "Disadvantage",
       "levels": 1
+    },
+    {
+      "name": "Extra Attack",
+      "type": "Advantage",
+      "levels": 1,
+      "enh": [],
+      "lim": [],
+      "varCost": 0
     }
   ],
   "cyber": [],
@@ -445,7 +453,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T03:21:00.611Z",
+    "savedAt": "2026-06-14T03:21:45.924Z",
     "savedBy": "Anthony"
   }
 }
