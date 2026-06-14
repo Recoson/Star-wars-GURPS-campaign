@@ -342,10 +342,10 @@ input.cell::placeholder{color:var(--dim)}
 .btn-add:hover{border-color:var(--green);background:var(--bg4)}
 .btn-del{
  background:none;border:none;color:var(--red);cursor:pointer;
- font-size:16px;line-height:1;padding:0 5px;opacity:.55;transition:opacity .1s;
+ font-size:16px;line-height:1;padding:3px 7px;opacity:.55;transition:opacity .1s;display:inline-block;
 }
 .btn-del:hover{opacity:1}
-.btn-stow{background:none;border:none;color:var(--cyan);cursor:pointer;font-size:14px;line-height:1;padding:0 4px;opacity:.6;transition:opacity .1s}
+.btn-stow{background:none;border:none;color:var(--cyan);cursor:pointer;font-size:14px;line-height:1;padding:3px 6px;opacity:.6;transition:opacity .1s;display:inline-block}
 .btn-stow:hover{opacity:1}
 .btn-equip{font-size:10.5px;font-weight:600;padding:3px 9px;margin:1px 3px;background:var(--bg2);color:var(--cyan);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:border-color .1s,background .1s}
 .btn-equip:hover{border-color:var(--cyan);background:var(--bg4)}
@@ -377,6 +377,15 @@ input.cell::placeholder{color:var(--dim)}
  transition:border-color .1s,background .1s;
 }
 .btn-sm:hover{background:var(--bg4);border-color:var(--cyan)}
+/* — finger-friendly tap targets in the Inventory / Stored / Manual sections —
+   (the dense glyph buttons were hard to hit, especially on iPad) — */
+.inv-grp .btn-equip{font-size:12px;padding:8px 14px;margin:2px 3px;min-height:36px}
+.inv-grp .btn-del{font-size:18px;padding:7px 12px;margin:0 1px;min-height:36px;display:inline-block;line-height:1.1;opacity:.7;border:1px solid transparent;border-radius:var(--radius)}
+.inv-grp .btn-del:hover{opacity:1;background:var(--bg4);border-color:var(--red)}
+.inv-grp .btn-stow{font-size:17px;padding:7px 11px;margin:0 1px;min-height:36px;display:inline-block;line-height:1.1;opacity:.78;border:1px solid transparent;border-radius:var(--radius)}
+.inv-grp .btn-stow:hover{opacity:1;background:var(--bg4);border-color:var(--cyan)}
+.inv-grp .btn-add{font-size:12px;padding:6px 12px}
+.inv-grp td{vertical-align:middle}
 
 /* ===================================================================
    COMBAT CALL-OUTS
@@ -3664,7 +3673,7 @@ function manualInvSection(){
    :'<div class="dim" style="font-size:11px;padding:2px">Nothing recorded yet — hit <b>+ Add line</b> and just type.</div>';
  return `<div class="sec-head" style="margin-top:18px">✍ Manual Record <span class="dim" style="font-weight:400;font-size:11px;margin-left:6px">free-text — type anything, no catalogue needed</span> <button class="btn-add" style="margin:0" onclick="addManualLine()">+ Add line</button></div>
  <div class="tab-intro">A plain ledger for anything you'd rather not wire through the catalogue — quest items, odds and ends, loot to sort later. <b>It doesn't count toward weight or encumbrance</b> — it's just a written record so you can jot things down fast instead of swapping items in and out.</div>
- ${table}`;
+ <div class="inv-grp">${table}</div>`;
 }
 function setInvCat(idx,cat){const e=(C.inventory||[])[idx];if(!e)return;e._cat=cat;if(cat&&e.name&&eqItemGrp(e.kind,e.name)!==cat&&e.kind!=='cyber'){e.name='';}touch();_eqRerender();}
 function setInvName(idx,name){
