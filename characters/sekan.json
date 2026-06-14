@@ -36,11 +36,11 @@
   },
   "skills": [
     {
-      "name": "Blaster (Rifle)",
+      "name": "Blasters",
       "attr": "DX",
       "diff": "E",
       "pts": 48,
-      "spec": ""
+      "spec": "Rifle"
     },
     {
       "name": "Blaster (Pistol)",
@@ -651,7 +651,7 @@
   ],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T10:32:52.347Z",
+    "savedAt": "2026-06-14T10:37:27.081Z",
     "savedBy": "Anthony"
   },
   "builder": {
