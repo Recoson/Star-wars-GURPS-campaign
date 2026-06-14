@@ -274,31 +274,40 @@
   "cyber": [],
   "weapons": [
     {
-      "name": "Mandalorian blaster rifle",
+      "name": "Experimental greatsword (2H)",
+      "cls": "Melee",
+      "_cat": "Mandalorian",
+      "_bought": false,
+      "_type": ""
+    },
+    {
+      "name": "Mandalorian repeating blaster",
       "cls": "Ranged",
       "_cat": "Mandalorian",
       "_bought": false,
       "_type": "",
       "mods": [
         {
-          "label": "High-capacity drum",
-          "note": "Huge mag sized to the frame; +1 Rcl from weight imbalance.",
-          "shots": 40,
-          "preset": "High-capacity drum",
-          "tier": "pol",
-          "slot": "power",
-          "wt": 1.5,
-          "rcl": 1,
-          "cost": 960
+          "label": "Underbarrel grenade launcher",
+          "preset": "Underbarrel grenade launcher",
+          "slotLock": "under",
+          "tier": "mil",
+          "note": "Single-shot 40mm grenade attack as separate weapon. +2 Wt.",
+          "wt": 2,
+          "cost": 3600
+        },
+        {
+          "label": "High-output pack",
+          "preset": "High-output pack",
+          "slotLock": "power",
+          "tier": "mil",
+          "note": "+1 RoF; weight scales with the frame and Bulk worsens by 1. Runs hot — a malfunction roll of 17–18 vents the pack. [fitted: long-arm]",
+          "rof": 1,
+          "wt": 1.2,
+          "cost": 4400,
+          "bulk": -1
         }
       ]
-    },
-    {
-      "name": "Experimental greatsword (2H)",
-      "cls": "Melee",
-      "_cat": "Mandalorian",
-      "_bought": false,
-      "_type": ""
     }
   ],
   "armour": [
@@ -348,31 +357,22 @@
     },
     {
       "kind": "weapons",
-      "name": "Mandalorian repeating blaster",
+      "name": "Mandalorian blaster rifle",
       "cls": "Ranged",
       "_cat": "Mandalorian",
       "_bought": false,
       "_type": "",
       "mods": [
         {
-          "label": "Underbarrel grenade launcher",
-          "preset": "Underbarrel grenade launcher",
-          "slotLock": "under",
-          "tier": "mil",
-          "note": "Single-shot 40mm grenade attack as separate weapon. +2 Wt.",
-          "wt": 2,
-          "cost": 3600
-        },
-        {
-          "label": "High-output pack",
-          "preset": "High-output pack",
-          "slotLock": "power",
-          "tier": "mil",
-          "note": "+1 RoF; weight scales with the frame and Bulk worsens by 1. Runs hot — a malfunction roll of 17–18 vents the pack. [fitted: long-arm]",
-          "rof": 1,
-          "wt": 1.2,
-          "cost": 4400,
-          "bulk": -1
+          "label": "High-capacity drum",
+          "note": "Huge mag sized to the frame; +1 Rcl from weight imbalance.",
+          "shots": 40,
+          "preset": "High-capacity drum",
+          "tier": "pol",
+          "slot": "power",
+          "wt": 1.5,
+          "rcl": 1,
+          "cost": 960
         }
       ]
     },
@@ -453,7 +453,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T04:10:00.283Z",
+    "savedAt": "2026-06-14T04:11:19.138Z",
     "savedBy": "Anthony"
   },
   "builder": {
