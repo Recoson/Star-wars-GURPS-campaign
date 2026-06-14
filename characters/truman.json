@@ -139,7 +139,7 @@
       "pts": 8,
       "attr": "IQ",
       "diff": "A",
-      "spec": ""
+      "spec": "Walker / Locomotion"
     },
     {
       "name": "",
@@ -166,7 +166,7 @@
       "pts": 4,
       "attr": "DX",
       "diff": "E",
-      "spec": ""
+      "spec": "Beams"
     },
     {
       "name": "Spacer",
@@ -242,7 +242,8 @@
       "levels": 1,
       "enh": [],
       "lim": [],
-      "varCost": 0
+      "varCost": 0,
+      "_mods": false
     },
     {
       "name": "High Pain Threshold",
@@ -627,7 +628,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-14T03:21:44.412Z",
+    "savedAt": "2026-06-14T03:22:35.442Z",
     "savedBy": "Csuman"
   }
 }
