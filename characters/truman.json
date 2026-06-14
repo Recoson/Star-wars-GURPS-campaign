@@ -501,7 +501,7 @@
     },
     "tradition": "",
     "darkSurgeLog": [],
-    "activeBook": "Common Force",
+    "activeBook": "Minor Traditions",
     "training": {
       "Common Force": {
         "tier": 1,
@@ -518,7 +518,7 @@
         "log": []
       }
     },
-    "viewBook": "Common Force"
+    "viewBook": "Minor Traditions"
   },
   "forms": [],
   "techniques": [
@@ -611,7 +611,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-14T03:18:07.425Z",
+    "savedAt": "2026-06-14T03:18:45.469Z",
     "savedBy": "Csuman"
   }
 }
