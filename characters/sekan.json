@@ -39,7 +39,7 @@
       "name": "Blaster (Rifle)",
       "attr": "DX",
       "diff": "E",
-      "pts": 44,
+      "pts": 48,
       "spec": ""
     },
     {
@@ -53,7 +53,7 @@
       "name": "Blasters",
       "attr": "DX",
       "diff": "E",
-      "pts": 4,
+      "pts": 8,
       "spec": "Cannon"
     },
     {
@@ -112,7 +112,7 @@
     },
     {
       "name": "Acrobatics",
-      "pts": 1,
+      "pts": 2,
       "attr": "DX",
       "diff": "H",
       "spec": ""
@@ -294,33 +294,11 @@
       ]
     },
     {
-      "name": "Mandalorian repeating blaster",
-      "cls": "Ranged",
+      "name": "Experimental greatsword (2H)",
+      "cls": "Melee",
       "_cat": "Mandalorian",
       "_bought": false,
-      "_type": "",
-      "mods": [
-        {
-          "label": "Underbarrel grenade launcher",
-          "preset": "Underbarrel grenade launcher",
-          "slotLock": "under",
-          "tier": "mil",
-          "note": "Single-shot 40mm grenade attack as separate weapon. +2 Wt.",
-          "wt": 2,
-          "cost": 3600
-        },
-        {
-          "label": "High-output pack",
-          "preset": "High-output pack",
-          "slotLock": "power",
-          "tier": "mil",
-          "note": "+1 RoF; weight scales with the frame and Bulk worsens by 1. Runs hot — a malfunction roll of 17–18 vents the pack. [fitted: long-arm]",
-          "rof": 1,
-          "wt": 1.2,
-          "cost": 4400,
-          "bulk": -1
-        }
-      ]
+      "_type": ""
     }
   ],
   "armour": [
@@ -366,19 +344,41 @@
   "inventory": [
     {
       "kind": "weapons",
-      "name": "Experimental greatsword (2H)",
-      "cls": "Melee",
-      "_cat": "Mandalorian",
-      "_bought": false,
-      "_type": ""
-    },
-    {
-      "kind": "weapons",
       "name": "Combat knife"
     },
     {
       "kind": "weapons",
       "name": "Heavy blaster pistol"
+    },
+    {
+      "kind": "weapons",
+      "name": "Mandalorian repeating blaster",
+      "cls": "Ranged",
+      "_cat": "Mandalorian",
+      "_bought": false,
+      "_type": "",
+      "mods": [
+        {
+          "label": "Underbarrel grenade launcher",
+          "preset": "Underbarrel grenade launcher",
+          "slotLock": "under",
+          "tier": "mil",
+          "note": "Single-shot 40mm grenade attack as separate weapon. +2 Wt.",
+          "wt": 2,
+          "cost": 3600
+        },
+        {
+          "label": "High-output pack",
+          "preset": "High-output pack",
+          "slotLock": "power",
+          "tier": "mil",
+          "note": "+1 RoF; weight scales with the frame and Bulk worsens by 1. Runs hot — a malfunction roll of 17–18 vents the pack. [fitted: long-arm]",
+          "rof": 1,
+          "wt": 1.2,
+          "cost": 4400,
+          "bulk": -1
+        }
+      ]
     }
   ],
   "force": {
@@ -453,7 +453,14 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T03:22:44.419Z",
+    "savedAt": "2026-06-14T04:04:29.598Z",
     "savedBy": "Anthony"
+  },
+  "builder": {
+    "droid": {
+      "parts": {},
+      "name": "My Droid",
+      "deg": "5th"
+    }
   }
 }
