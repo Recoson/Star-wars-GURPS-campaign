@@ -36,6 +36,12 @@
   },
   "skills": [
     {
+      "name": "",
+      "pts": 1,
+      "attr": "",
+      "diff": ""
+    },
+    {
       "name": "Blaster (Rifle)",
       "attr": "DX",
       "diff": "E",
@@ -453,7 +459,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T04:06:47.573Z",
+    "savedAt": "2026-06-14T04:08:32.710Z",
     "savedBy": "Anthony"
   },
   "builder": {
