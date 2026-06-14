@@ -123,7 +123,7 @@
       "attr": "IQ",
       "diff": "A",
       "pts": 4,
-      "spec": "Body Armour"
+      "spec": ""
     },
     {
       "name": "Smith",
@@ -456,7 +456,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T04:17:28.386Z",
+    "savedAt": "2026-06-14T04:17:35.981Z",
     "savedBy": "Anthony"
   },
   "builder": {
