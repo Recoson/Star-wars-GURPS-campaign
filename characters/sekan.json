@@ -576,10 +576,16 @@
   "study": [],
   "ptTarget": 750,
   "languages": "",
-  "languages2": [],
+  "languages2": [
+    {
+      "name": "",
+      "sp": 3,
+      "wr": 3
+    }
+  ],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T06:41:35.892Z",
+    "savedAt": "2026-06-14T06:42:46.144Z",
     "savedBy": "Anthony"
   },
   "builder": {
