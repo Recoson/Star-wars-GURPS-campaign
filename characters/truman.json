@@ -344,9 +344,21 @@
   "cyber": [],
   "weapons": [
     {
-      "name": "Double-bladed lightsaber",
+      "name": "Standard lightsaber",
       "cls": "Melee",
-      "_cat": "Jedi Order"
+      "_cat": "Jedi Order",
+      "mods": [
+        {
+          "label": "Dual-grip hilt (saberstaff)",
+          "preset": "Dual-grip hilt (saberstaff)",
+          "slotLock": "grip",
+          "tier": "mil",
+          "note": "Two-bladed double saber: 2 attacks per turn at -2 each; requires Two-Handed style.",
+          "wt": 0.5,
+          "cost": 4200,
+          "prereq": "Saberstaff form training (Doc VI)"
+        }
+      ]
     },
     {
       "name": "Ion pistol",
@@ -379,9 +391,110 @@
     "saberPoints": 0,
     "conflict": 0,
     "channeling": false,
-    "powers": [],
+    "powers": [
+      {
+        "name": "Force Balance Walk",
+        "skill": "Force",
+        "aff": "DX",
+        "fp": "1",
+        "tier": 1,
+        "pts": 5,
+        "book": "Common Force"
+      },
+      {
+        "name": "Force Brace",
+        "skill": "Force",
+        "aff": "ST",
+        "fp": "1",
+        "tier": 1,
+        "pts": 5,
+        "book": "Common Force"
+      },
+      {
+        "name": "Force Echo",
+        "skill": "Force",
+        "aff": "IQ",
+        "fp": "2",
+        "tier": 1,
+        "pts": 5,
+        "book": "Common Force"
+      },
+      {
+        "name": "Force Focus",
+        "skill": "Force",
+        "aff": "IQ",
+        "fp": "1",
+        "tier": 1,
+        "pts": 5,
+        "book": "Common Force"
+      },
+      {
+        "name": "Force Leap",
+        "skill": "Force",
+        "aff": "DX",
+        "fp": "1",
+        "tier": 1,
+        "pts": 5,
+        "book": "Common Force"
+      },
+      {
+        "name": "Force Object Sense",
+        "skill": "Force",
+        "aff": "IQ",
+        "fp": "2",
+        "tier": 1,
+        "pts": 5,
+        "book": "Common Force"
+      },
+      {
+        "name": "Force Pull",
+        "skill": "Force",
+        "aff": "ST",
+        "fp": "1",
+        "tier": 1,
+        "pts": 5,
+        "book": "Common Force"
+      },
+      {
+        "name": "Force Push",
+        "skill": "Force",
+        "aff": "ST",
+        "fp": "1",
+        "tier": 1,
+        "pts": 5,
+        "book": "Common Force"
+      },
+      {
+        "name": "Force Sense",
+        "skill": "Force",
+        "aff": "IQ",
+        "fp": "2",
+        "tier": 1,
+        "pts": 5,
+        "book": "Common Force"
+      },
+      {
+        "name": "Force Stealth",
+        "skill": "Force",
+        "aff": "DX",
+        "fp": "2",
+        "tier": 1,
+        "pts": 5,
+        "book": "Common Force"
+      },
+      {
+        "name": "Veil of the Quiet Self",
+        "skill": "Force",
+        "aff": "Will",
+        "fp": "2",
+        "tier": 1,
+        "pts": 5,
+        "book": "Common Force"
+      }
+    ],
     "books": {
-      "Common Force": true
+      "Common Force": true,
+      "Minor Traditions": true
     },
     "bookTiers": {
       "Common Force": 3
@@ -396,8 +509,16 @@
         "regimen": "Open Hours",
         "mentor": "",
         "log": []
+      },
+      "Minor Traditions": {
+        "tier": 1,
+        "hours": 0,
+        "regimen": "Open Hours",
+        "mentor": "",
+        "log": []
       }
-    }
+    },
+    "viewBook": "Common Force"
   },
   "forms": [],
   "techniques": [
@@ -490,7 +611,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-13T09:28:57.716Z",
+    "savedAt": "2026-06-14T03:18:07.425Z",
     "savedBy": "Csuman"
   }
 }
