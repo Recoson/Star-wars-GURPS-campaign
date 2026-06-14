@@ -56,8 +56,8 @@
     },
     {
       "name": "Meditation",
-      "pts": 0,
-      "attr": "Will",
+      "pts": 1,
+      "attr": "DX",
       "diff": "H",
       "spec": ""
     },
@@ -634,7 +634,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-14T03:27:51.370Z",
+    "savedAt": "2026-06-14T03:28:05.691Z",
     "savedBy": "Csuman"
   }
 }
