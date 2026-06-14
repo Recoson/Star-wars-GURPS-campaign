@@ -278,13 +278,6 @@
   "cyber": [],
   "weapons": [
     {
-      "name": "Experimental greatsword (2H)",
-      "cls": "Melee",
-      "_cat": "Mandalorian",
-      "_bought": false,
-      "_type": ""
-    },
-    {
       "name": "Mandalorian blaster rifle",
       "cls": "Ranged",
       "_cat": "Mandalorian",
@@ -303,6 +296,9 @@
           "cost": 960
         }
       ]
+    },
+    {
+      "name": "Heavy blaster pistol"
     }
   ],
   "armour": [
@@ -352,10 +348,6 @@
     },
     {
       "kind": "weapons",
-      "name": "Heavy blaster pistol"
-    },
-    {
-      "kind": "weapons",
       "name": "Mandalorian repeating blaster",
       "cls": "Ranged",
       "_cat": "Mandalorian",
@@ -383,6 +375,14 @@
           "bulk": -1
         }
       ]
+    },
+    {
+      "kind": "weapons",
+      "name": "Experimental greatsword (2H)",
+      "cls": "Melee",
+      "_cat": "Mandalorian",
+      "_bought": false,
+      "_type": ""
     }
   ],
   "force": {
@@ -457,7 +457,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T04:33:41.162Z",
+    "savedAt": "2026-06-14T04:34:31.322Z",
     "savedBy": "Anthony"
   },
   "builder": {
