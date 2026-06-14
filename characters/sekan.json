@@ -107,10 +107,17 @@
     },
     {
       "name": "Battlesuit",
-      "pts": 2,
+      "pts": 1,
       "attr": "DX",
       "diff": "A",
       "spec": "Jet Pack"
+    },
+    {
+      "name": "Free Fall",
+      "pts": 1,
+      "attr": "DX",
+      "diff": "A",
+      "spec": ""
     },
     {
       "name": "Soldier",
@@ -464,7 +471,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T05:26:44.082Z",
+    "savedAt": "2026-06-14T05:29:17.250Z",
     "savedBy": "Anthony"
   },
   "builder": {
