@@ -278,26 +278,6 @@
   "cyber": [],
   "weapons": [
     {
-      "name": "Mandalorian blaster rifle",
-      "cls": "Ranged",
-      "_cat": "Mandalorian",
-      "_bought": false,
-      "_type": "",
-      "mods": [
-        {
-          "label": "High-capacity drum",
-          "note": "Huge mag sized to the frame; +1 Rcl from weight imbalance.",
-          "shots": 40,
-          "preset": "High-capacity drum",
-          "tier": "pol",
-          "slot": "power",
-          "wt": 1.5,
-          "rcl": 1,
-          "cost": 960
-        }
-      ]
-    },
-    {
       "name": "Heavy blaster pistol"
     }
   ],
@@ -383,6 +363,27 @@
       "_cat": "Mandalorian",
       "_bought": false,
       "_type": ""
+    },
+    {
+      "kind": "weapons",
+      "name": "Mandalorian blaster rifle",
+      "cls": "Ranged",
+      "_cat": "Mandalorian",
+      "_bought": false,
+      "_type": "",
+      "mods": [
+        {
+          "label": "High-capacity drum",
+          "note": "Huge mag sized to the frame; +1 Rcl from weight imbalance.",
+          "shots": 40,
+          "preset": "High-capacity drum",
+          "tier": "pol",
+          "slot": "power",
+          "wt": 1.5,
+          "rcl": 1,
+          "cost": 960
+        }
+      ]
     }
   ],
   "force": {
@@ -457,7 +458,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T04:34:31.322Z",
+    "savedAt": "2026-06-14T04:35:34.525Z",
     "savedBy": "Anthony"
   },
   "builder": {
