@@ -252,7 +252,7 @@
       "mods": [
         {
           "label": "High-capacity drum",
-          "note": "Huge mag sized to the frame; +1 Rcl from weight imbalance.",
+          "note": "Huge mag sized to the frame; +1 Reload from weight imbalance.",
           "shots": 40,
           "preset": "High-capacity drum",
           "tier": "pol",
@@ -423,7 +423,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T03:14:08.716Z",
+    "savedAt": "2026-06-14T03:14:25.957Z",
     "savedBy": "Anthony"
   }
 }
