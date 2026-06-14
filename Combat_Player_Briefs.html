@@ -74,6 +74,11 @@ td .tag{color:var(--gold);border-color:var(--gold)}
 .stepn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--cyan);color:#0d1014;font-family:var(--mono);font-weight:700;font-size:11px;margin-right:7px;vertical-align:1px}
 .num2 td,.num2 th{padding:4px 9px;font-size:12.5px}
 .num2 td:nth-child(2),.num2 td:nth-child(4){font-family:var(--mono);color:var(--gold);font-weight:600}
+.num2 .hot2{background:rgba(226,176,99,.16);color:var(--gold);font-weight:700}
+.rof th,.rof td{padding:5px 6px;font-size:12px;text-align:center}
+.rof td:first-child,.rof th:first-child{text-align:left;white-space:nowrap;font-family:var(--sans)}
+.rof td{font-family:var(--mono);font-weight:600;color:var(--gold)}
+.rof td:first-child{color:var(--text);font-weight:400}
 .pwt td{padding:4px 9px;font-size:12.5px}
 .pwt tr.bookrow td{background:var(--bg);border-bottom:1px solid var(--border2);padding:7px 9px 6px}
 .pwt .bk{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
@@ -484,7 +489,7 @@ td .tag{color:var(--gold);border-color:var(--gold)}
     a malfunction roll of 17&ndash;18 vents it). The repeating blaster also has an <b>underbarrel grenade launcher</b> for lobbing detonators.</p>
   </div>
   <div class="panel">
-    <h3>The two tables you'll actually use <span class="sub">subtract range; add the rapid-fire bonus</span></h3>
+    <h3>Range &amp; called shots <span class="sub">subtract these from your number</span></h3>
     <div class="grid2">
       <div>
         <p class="kh">Range &mdash; subtract from your number</p>
@@ -499,19 +504,53 @@ td .tag{color:var(--gold);border-color:var(--gold)}
         <p class="mini">Inside the rifle's 600 m half-range, damage is full. Past it, damage halves.</p>
       </div>
       <div>
-        <p class="kh">Rapid-fire bonus &mdash; add to your number</p>
+        <p class="kh">Aim at a part &mdash; subtract from your number</p>
         <table class="num2">
-          <tr><th>Bolts fired (RoF)</th><th class="c">Bonus</th></tr>
-          <tr><td>5&ndash;8</td><td class="c">+1</td></tr>
-          <tr><td>9&ndash;12 &nbsp;<span class="mini">(rifle)</span></td><td class="c">+2</td></tr>
-          <tr><td>13&ndash;16 &nbsp;<span class="mini">(repeater)</span></td><td class="c">+3</td></tr>
-          <tr><td>17&ndash;24</td><td class="c">+4</td></tr>
+          <tr><th>Target</th><th class="c">Mod</th><th>Target</th><th class="c">Mod</th></tr>
+          <tr><td>Skull</td><td class="c">&minus;7</td><td>Arm / leg</td><td class="c">&minus;2</td></tr>
+          <tr><td>Face</td><td class="c">&minus;5</td><td>Hand / foot</td><td class="c">&minus;4</td></tr>
+          <tr><td>Vitals</td><td class="c">&minus;3</td><td>Torso</td><td class="c">0</td></tr>
         </table>
-        <p class="kh" style="margin-top:10px">Aim at a part &mdash; subtract</p>
-        <p class="mini">Skull <b>&minus;7</b> &middot; face <b>&minus;5</b> &middot; vitals <b>&minus;3</b> &middot; arm/leg <b>&minus;2</b> &middot; hand/foot <b>&minus;4</b>.
-        You have skill to spare &mdash; called shots find the gaps in armour.</p>
+        <p class="mini">You have skill to spare &mdash; called shots find the gaps and soft spots in armour.</p>
       </div>
     </div>
+  </div>
+  <div class="panel gun">
+    <h3>Rapid fire &mdash; how a burst piles on hits <span class="sub">the two numbers that make your guns shred</span></h3>
+    <p class="kh">A &middot; Rate of Fire bonus &mdash; <span class="kt">how many bolts you fire = a flat bonus to hit (already in your base numbers)</span></p>
+    <table class="num2 rof">
+      <tr><th>Bolts fired (RoF)</th><th class="c">5&ndash;8</th><th class="c">9&ndash;12</th><th class="c">13&ndash;16</th><th class="c">17&ndash;24</th><th class="c">25&ndash;49</th><th class="c">50&ndash;99</th><th class="c">100+</th></tr>
+      <tr><td>Bonus to hit</td><td class="c">+1</td><td class="c hot2">+2</td><td class="c hot2">+3</td><td class="c">+4</td><td class="c">+5</td><td class="c">+6</td><td class="c">+7</td></tr>
+    </table>
+    <p class="mini">Your <b>rifle (RoF 10) = +2</b>; your <b>repeating blaster (RoF 16) = +3</b>. So <b>RoF 9&ndash;12 is the +2 band</b>, 13&ndash;16 is +3.</p>
+    <div class="grid2 t-sep">
+      <div>
+        <p class="kh">B &middot; Recoil &rarr; extra bolts that hit <span class="kt">rifle, Recoil 4</span></p>
+        <table class="num2">
+          <tr><th>Beat your number by&hellip;</th><th class="c">Bolts hit</th></tr>
+          <tr><td>0&ndash;3</td><td class="c">1</td></tr>
+          <tr><td>4&ndash;7</td><td class="c">2</td></tr>
+          <tr><td>8&ndash;11</td><td class="c">3</td></tr>
+          <tr><td>12&ndash;15</td><td class="c">4</td></tr>
+          <tr><td class="hot2">16&ndash;19</td><td class="c hot2">5</td></tr>
+          <tr><td>20&ndash;23</td><td class="c">6</td></tr>
+        </table>
+      </div>
+      <div>
+        <p class="kh">&nbsp; &nbsp; Recoil &rarr; extra bolts that hit <span class="kt">repeating blaster, Recoil 7</span></p>
+        <table class="num2">
+          <tr><th>Beat your number by&hellip;</th><th class="c">Bolts hit</th></tr>
+          <tr><td>0&ndash;6</td><td class="c">1</td></tr>
+          <tr><td>7&ndash;13</td><td class="c">2</td></tr>
+          <tr><td>14&ndash;20</td><td class="c">3</td></tr>
+          <tr><td>21&ndash;27</td><td class="c">4</td></tr>
+          <tr><td>28&ndash;34</td><td class="c">5</td></tr>
+          <tr><td>35+</td><td class="c">6+</td></tr>
+        </table>
+      </div>
+    </div>
+    <p class="ex"><b>Rule:</b> bolts that hit = <b>1 + (how much you beat the number by &divide; Recoil, rounded down)</b>, up to the weapon's RoF.
+    In the worked example you beat 27 by <b>16</b>, and on the rifle's Recoil-4 table that lands in the <b>16&ndash;19 row &rarr; 5 bolts</b>.</p>
   </div>
   <div class="panel">
     <h3>Grenades &amp; melee backup <span class="sub">when they close the distance</span></h3>
