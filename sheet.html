@@ -695,7 +695,7 @@ const ATTR_COST={ST:10,DX:20,IQ:20,HT:10};
 const SEC_STEP={HP:2,Will:5,Per:5,FP:3,Speed:5,Move:5};
 const ENC_MULT=[1,0.8,0.6,0.4,0.2,0];
 const WOUND_MULT={cr:1,cut:1.5,imp:2,'pi-':0.5,pi:1,'pi+':1.5,'pi++':2,burn:1,tox:1,cor:1,fat:1,son:1,ion:1};
-const HIT_LOCS=['Skull','Face','Neck','Torso','Vitals','Groin','Right Arm','Left Arm','Right Hand','Left Hand','Right Leg','Left Leg','Right Foot','Left Foot'];
+const HIT_LOCS=['Skull','Face','Eye','Neck','Torso','Vitals','Groin','Right Arm','Left Arm','Right Hand','Left Hand','Right Leg','Left Leg','Right Foot','Left Foot'];
 const STORE_KEY='kotor_gurps_v2';
 // ── Cloud campaign database (GitHub) ──
 const GH_OWNER='Recoson', GH_REPO='Star-wars-GURPS-campaign', GH_BRANCH='main';
@@ -1069,13 +1069,13 @@ function armourBaseCover(a){const ld=(a&&a.locDR)||{};const n=LOC6.map(x=>x[0]).
 /* Body-mass distribution of armour weight by location — a torso plate is far
    heavier than a glove. Fractions sum to 1.0 across a full suit. */
 const LOC_WEIGHT={head:0.12,torso:0.34,arms:0.16,hands:0.06,legs:0.24,feet:0.08};
-function armourBaseCoverSet(a){const ld=(a&&a.locDR)||{};const set=LOC6.map(x=>x[0]).filter(k=>ld[k]);return set.length?set:LOC6.map(x=>x[0]);}
+function armourBaseCoverSet(a){const ld=(a&&a.locDR)||{};const set=expandCover(LOC6.map(function(x){return x[0];}).filter(function(k){return ld[k];}));return set.length?set:ALL_FINE.slice();}
 function armourEffWeight(it,a){
  const base=(+((a&&a.wt))||0)+modSum(it,'wt');
  if(!a||!Array.isArray(it.cover))return base;            // default coverage → full catalogue weight
  const baseSet=armourBaseCoverSet(a);
- const baseFrac=baseSet.reduce((s,z)=>s+(LOC_WEIGHT[z]||0),0)||1;   // mass the catalogue weight represents
- const wornFrac=it.cover.reduce((s,z)=>s+(LOC_WEIGHT[z]||0),0);     // mass actually worn
+ const baseFrac=Array.from(new Set(armourBaseCoverSet(a).map(fineBucket))).reduce((s,z)=>s+(LOC_WEIGHT[z]||0),0)||1;   // mass the catalogue weight represents
+ const wornFrac=Array.from(new Set(expandCover(it.cover).map(fineBucket))).reduce((s,z)=>s+(LOC_WEIGHT[z]||0),0);     // mass actually worn
  return Math.round(base*(wornFrac/baseFrac)*100)/100;   // proportion by real body mass, not zone count
 }
 function _wtFromCatalogue(kind,name){
@@ -1948,11 +1948,11 @@ function renderSheet(){
      const hasShield=shE>0||shK>0;
      const rows=HIT_LOCS.map(loc=>{
        let drE=0,drK=0;
-       const cKey=LOC_MAP[loc]||loc.replace('Right ','').replace('Left ','').toLowerCase();
+       const fKey=locFine(loc), cKey=fineBucket(fKey);
        (C.armour||[]).forEach(it=>{
         const a=DATA.armour.find(x=>x.name===it.name);
         if(!a)return;
-        if(armCover(it,a).indexOf(cKey)<0)return;
+        if(armCover(it,a).indexOf(fKey)<0)return;
         const ld=(a.locDR&&a.locDR[cKey])||null;
         const qm=(+it.quality||0)+(+it.material||0);
         const oE=(it.ovr&&it.ovr.drE!=null&&it.ovr.drE!=='')?+it.ovr.drE:null;
@@ -2795,11 +2795,30 @@ const SHD_OVR=[['dr','DR'],['vs','Vs']];
 const EXP_OVR=[['dmg','Dmg'],['wt','Wt']];
 const GER_OVR=[['effect','Effect'],['wt','Wt']];
 const LOC6=[['head','Head'],['torso','Torso'],['arms','Arms'],['hands','Hands'],['legs','Legs'],['feet','Feet']];
-const LOC_MAP={'Skull':'head','Face':'head','Neck':'torso','Torso':'torso','Vitals':'torso','Groin':'torso','Right Arm':'arms','Left Arm':'arms','Right Hand':'hands','Left Hand':'hands','Right Leg':'legs','Left Leg':'legs','Right Foot':'feet','Left Foot':'feet'};
-function armCover(it,a){ if(it&&Array.isArray(it.cover))return it.cover; const ld=(a&&a.locDR)||{}; return LOC6.map(x=>x[0]).filter(k=>ld[k]); }
-function coverLbl(it,a){ const c=armCover(it,a); if(c.length>=6)return'Full body'; if(!c.length)return'—'; const M={head:'Head',torso:'Torso',arms:'Arms',hands:'Hands',legs:'Legs',feet:'Feet'}; return c.map(k=>M[k]||k).join(', '); }
-function setCover(i,k){ const arr=_eqArr('armour'),it=arr[i]; if(!it)return; const a=DATA.armour.find(x=>x.name===it.name); if(!Array.isArray(it.cover))it.cover=armCover(it,a).slice(); const x=it.cover.indexOf(k); if(x>=0)it.cover.splice(x,1); else it.cover.push(k); touch();renderEquipment(); }
-function setCoverAll(i){ const arr=_eqArr('armour'),it=arr[i]; if(!it)return; it.cover=LOC6.map(x=>x[0]); touch();renderEquipment(); }
+const LOC_MAP={'Skull':'head','Face':'head','Eye':'head','Neck':'torso','Torso':'torso','Vitals':'torso','Groin':'torso','Right Arm':'arms','Left Arm':'arms','Right Hand':'hands','Left Hand':'hands','Right Leg':'legs','Left Leg':'legs','Right Foot':'feet','Left Foot':'feet'};
+/* === Granular hit-location coverage (face vs eyes etc.) ===
+   DR stays bucketed (head/torso/arms/hands/legs/feet); COVERAGE is tracked at the
+   fine GURPS-location level so a piece can protect the face but not the eyes. A
+   worn item's `cover` array holds fine keys; legacy 6-bucket keys (old saves /
+   relic catalogue) are expanded on the fly so no data migration is needed. */
+const FINE_LOCS=[['skull','Skull','head'],['face','Face','head'],['eyes','Eyes','head'],['neck','Neck','torso'],['chest','Chest','torso'],['vitals','Vitals','torso'],['groin','Groin','torso'],['armR','R Arm','arms'],['armL','L Arm','arms'],['handR','R Hand','hands'],['handL','L Hand','hands'],['legR','R Leg','legs'],['legL','L Leg','legs'],['footR','R Foot','feet'],['footL','L Foot','feet']];
+const FINE_BUCKET={}, FINE_LBL={}; FINE_LOCS.forEach(function(r){FINE_BUCKET[r[0]]=r[2];FINE_LBL[r[0]]=r[1];});
+const ALL_FINE=FINE_LOCS.map(function(x){return x[0];});
+/* Eyes are opt-in: a helmet does NOT cover the eye slit unless ticked (matches the
+   compendium's "Skull DR doesn't protect the eye"). Neck/groin stay in the torso
+   default so existing characters keep the coverage they already had. */
+const BUCKET_FINE={head:['skull','face'],torso:['neck','chest','vitals','groin'],arms:['armR','armL'],hands:['handR','handL'],legs:['legR','legL'],feet:['footR','footL']};
+const OLD_BUCKETS={head:1,torso:1,arms:1,hands:1,legs:1,feet:1};
+const LOC_FINE={'Skull':'skull','Face':'face','Eye':'eyes','Eyes':'eyes','Neck':'neck','Torso':'chest','Vitals':'vitals','Groin':'groin','Right Arm':'armR','Left Arm':'armL','Right Hand':'handR','Left Hand':'handL','Right Leg':'legR','Left Leg':'legL','Right Foot':'footR','Left Foot':'footL'};
+function locFine(loc){ return LOC_FINE[loc]||(''+loc).replace('Right ','').replace('Left ','').toLowerCase(); }
+function fineBucket(fk){ return FINE_BUCKET[fk]||fk; }
+function expandCover(arr){ const out=[]; (arr||[]).forEach(function(k){ if(OLD_BUCKETS[k]){(BUCKET_FINE[k]||[]).forEach(function(f){if(out.indexOf(f)<0)out.push(f);});} else if(out.indexOf(k)<0)out.push(k); }); return out; }
+const COVER_REGIONS=[{id:'head',label:'Head',subs:[{k:'skull',l:'Skull'},{k:'face',l:'Face'},{k:'eyes',l:'Eyes',opt:1}]},{id:'torso',label:'Torso',subs:[{k:'neck',l:'Neck'},{k:'chest',l:'Chest'},{k:'vitals',l:'Vitals'},{k:'groin',l:'Groin'}]},{id:'arms',label:'Arms',subs:[{k:'armR',l:'R'},{k:'armL',l:'L'}]},{id:'hands',label:'Hands',subs:[{k:'handR',l:'R'},{k:'handL',l:'L'}]},{id:'legs',label:'Legs',subs:[{k:'legR',l:'R'},{k:'legL',l:'L'}]},{id:'feet',label:'Feet',subs:[{k:'footR',l:'R'},{k:'footL',l:'L'}]}];
+function toggleCoverRegion(i,regId){ const arr=_eqArr('armour'),it=arr[i]; if(!it)return; const a=DATA.armour.find(function(x){return x.name===it.name;}); it.cover=Array.isArray(it.cover)?expandCover(it.cover):armCover(it,a).slice(); const reg=COVER_REGIONS.find(function(r){return r.id===regId;}); if(!reg)return; const subs=reg.subs.map(function(s){return s.k;}); const allOn=subs.every(function(k){return it.cover.indexOf(k)>=0;}); if(allOn){it.cover=it.cover.filter(function(k){return subs.indexOf(k)<0;});} else {subs.forEach(function(k){if(it.cover.indexOf(k)<0)it.cover.push(k);});} touch();renderEquipment(); }
+function armCover(it,a){ if(it&&Array.isArray(it.cover))return expandCover(it.cover); const ld=(a&&a.locDR)||{}; return expandCover(LOC6.map(function(x){return x[0];}).filter(function(k){return ld[k];})); }
+function coverLbl(it,a){ const c=armCover(it,a); if(!c.length)return'—'; if(c.length===ALL_FINE.length)return'Full body + eyes'; const noEye=ALL_FINE.filter(function(k){return k!=='eyes';}); if(c.indexOf('eyes')<0&&noEye.every(function(k){return c.indexOf(k)>=0;}))return'Full body'; const parts=COVER_REGIONS.map(function(reg){const subs=reg.subs.map(function(s){return s.k;});const on=subs.filter(function(k){return c.indexOf(k)>=0;});if(!on.length)return null;if(on.length===subs.length)return reg.label;return reg.label+' ('+on.map(function(k){return FINE_LBL[k];}).join('/')+')';}).filter(Boolean); return parts.join(' · ')||'—'; }
+function setCover(i,k){ const arr=_eqArr('armour'),it=arr[i]; if(!it)return; const a=DATA.armour.find(function(x){return x.name===it.name;}); it.cover=Array.isArray(it.cover)?expandCover(it.cover):armCover(it,a).slice(); const x=it.cover.indexOf(k); if(x>=0)it.cover.splice(x,1); else it.cover.push(k); touch();renderEquipment(); }
+function setCoverAll(i){ const arr=_eqArr('armour'),it=arr[i]; if(!it)return; it.cover=ALL_FINE.slice(); touch();renderEquipment(); }
 function clearCover(i){ const arr=_eqArr('armour'),it=arr[i]; if(it){delete it.cover;touch();renderEquipment();} }
 let _modOpen={}; let _detOpen={};
 let _eqEdit={};
@@ -3074,11 +3093,17 @@ function modPanel(cat,i,it,cfg){
  let coverBlock='';
  if(cfg.cover){
   const cov=armCover(it,cfg.base);
-  const chip=(k,l)=>`<button class="cov-chip${cov.indexOf(k)>=0?' on':''}" onclick="setCover(${i},'${k}')">${l}</button>`;
-  coverBlock=`<div class="dim" style="font-size:10px;margin:1px 0 3px">Coverage — click each location this piece protects</div>
-   <div style="display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:8px">${LOC6.map(([k,l])=>chip(k,l)).join('')}
-    <button class="btn-add" style="margin:0" onclick="setCoverAll(${i})">Full body</button>
-    <button class="btn-add" style="margin:0" onclick="clearCover(${i})">Reset</button></div>`;
+  const rows=COVER_REGIONS.map(function(reg){
+    const subs=reg.subs;const onN=subs.filter(function(s){return cov.indexOf(s.k)>=0;}).length;
+    const rs=onN===0?'':(onN===subs.length?' on':' part');
+    const rbtn=`<button class="cov-region${rs}" onclick="toggleCoverRegion(${i},'${reg.id}')">${reg.label}</button>`;
+    const chips=subs.map(function(sub){return `<button class="cov-chip${cov.indexOf(sub.k)>=0?' on':''}${sub.opt?' opt':''}" onclick="setCover(${i},'${sub.k}')">${sub.l}</button>`;}).join('');
+    return `<div class="cov-row">${rbtn}<span class="cov-subs">${chips}</span></div>`;
+  }).join('');
+  coverBlock=`<div class="dim" style="font-size:10px;margin:1px 0 3px">Coverage — tick each spot this piece protects. Untick a sub-part to leave it bare (e.g. face on, <b>eyes off</b>); a region button toggles the whole row.</div>
+   <div class="cov-tree" style="margin-bottom:8px">${rows}
+    <div class="cov-row" style="margin-top:3px"><button class="btn-add" style="margin:0" onclick="setCoverAll(${i})">All + eyes</button>
+    <button class="btn-add" style="margin:0" onclick="clearCover(${i})">Reset to default</button></div></div>`;
  }
  let ovrBlock='';
  if(cfg.ovr&&cfg.ovr.length){
@@ -6281,10 +6306,10 @@ var COMBAT_UI = {wpnIdx:'', mode:'sw', target:'Torso', tdrE:'', tdrK:'', tphase:
 /* reusable: character DR at a hit location (energy/kinetic), mirrors the DR-by-Location table */
 function charDRAt(loc){
   let drE=0,drK=0;
-  const cKey=(typeof LOC_MAP!=='undefined'&&LOC_MAP[loc])||(''+loc).replace('Right ','').replace('Left ','').toLowerCase();
+  const fKey=locFine(loc), cKey=fineBucket(fKey);
   (C.armour||[]).forEach(it=>{
     const a=DATA.armour.find(x=>x.name===it.name); if(!a)return;
-    if(armCover(it,a).indexOf(cKey)<0)return;
+    if(armCover(it,a).indexOf(fKey)<0)return;
     const ld=(a.locDR&&a.locDR[cKey])||null;
     const qm=(+it.quality||0)+(+it.material||0);
     const oE=(it.ovr&&it.ovr.drE!=null&&it.ovr.drE!=='')?+it.ovr.drE:null;
@@ -6297,11 +6322,11 @@ function charDRAt(loc){
 }
 // Largest applicable armour Damage Divisor at a location for a given damage type
 function charArmourDD(loc,dtype){
-  const cKey=(typeof LOC_MAP!=='undefined'&&LOC_MAP[loc])||(''+loc).replace('Right ','').replace('Left ','').toLowerCase();
+  const fKey=locFine(loc), cKey=fineBucket(fKey);
   const d=(''+(dtype||'')).toLowerCase(); let best=1;
   (C.armour||[]).forEach(it=>{
     const a=DATA.armour.find(x=>x.name===it.name); if(!a||!a.dd||a.dd<=1)return;
-    if(armCover(it,a).indexOf(cKey)<0)return;
+    if(armCover(it,a).indexOf(fKey)<0)return;
     const vs=(''+(a.ddVs||'all')).toLowerCase(); let applies=false;
     if(vs.indexOf('all')>=0) applies=true;
     else if(vs.indexOf('cut')>=0 && d.indexOf('cut')>=0) applies=true;
@@ -6313,11 +6338,11 @@ function charArmourDD(loc,dtype){
 }
 // Does any covering armour have an energy-dispersing weave (halves energy AD)?
 function charArmourHalfEnergyAD(loc){
-  const cKey=(typeof LOC_MAP!=='undefined'&&LOC_MAP[loc])||(''+loc).replace('Right ','').replace('Left ','').toLowerCase();
+  const fKey=locFine(loc), cKey=fineBucket(fKey);
   let f=false;
   (C.armour||[]).forEach(it=>{
     const a=DATA.armour.find(x=>x.name===it.name); if(!a||!a.halfEnergyAD)return;
-    if(armCover(it,a).indexOf(cKey)<0)return; f=true;
+    if(armCover(it,a).indexOf(fKey)<0)return; f=true;
   });
   return f;
 }
@@ -6354,7 +6379,7 @@ function rofBonus(rof){
 }
 // Hit-location to-hit penalties (B398/552)
 function locPenalty(loc){
-  return ({'Skull':-7,'Face':-5,'Neck':-5,'Torso':0,'Vitals':-3,'Groin':-3,
+  return ({'Skull':-7,'Face':-5,'Eye':-9,'Neck':-5,'Torso':0,'Vitals':-3,'Groin':-3,
     'Right Arm':-2,'Left Arm':-2,'Right Hand':-4,'Left Hand':-4,
     'Right Leg':-2,'Left Leg':-2,'Right Foot':-4,'Left Foot':-4})[loc]||0;
 }
@@ -6368,6 +6393,7 @@ function locWoundMult(loc,dtype,baseWM){
   const d=(''+(dtype||'')).toLowerCase();
   if(loc==='Vitals'&&/imp|pi/.test(d))return 3;
   if(loc==='Skull'&&!/tox/.test(d))return Math.max(baseWM,4);
+  if(loc==='Eye'&&/imp|pi|burn|tib/.test(d))return Math.max(baseWM,4);
   return baseWM;
 }
 // roll a weapon's damage (mirrors combatRollDamage but returns the result)
@@ -6772,11 +6798,11 @@ function renderCombat(){ const el=document.getElementById('tab-combat')||documen
      const hasShield=shE>0||shK>0;
      const rows=HIT_LOCS.map(loc=>{
        let drE=0,drK=0;
-       const cKey=LOC_MAP[loc]||loc.replace('Right ','').replace('Left ','').toLowerCase();
+       const fKey=locFine(loc), cKey=fineBucket(fKey);
        (C.armour||[]).forEach(it=>{
         const a=DATA.armour.find(x=>x.name===it.name);
         if(!a)return;
-        if(armCover(it,a).indexOf(cKey)<0)return;
+        if(armCover(it,a).indexOf(fKey)<0)return;
         const ld=(a.locDR&&a.locDR[cKey])||null;
         const qm=(+it.quality||0)+(+it.material||0);
         const oE=(it.ovr&&it.ovr.drE!=null&&it.ovr.drE!=='')?+it.ovr.drE:null;
@@ -8128,7 +8154,15 @@ function _comboStyle(){
   +'.combo-item .mt{color:var(--cyan);font-weight:700}'
   +'.combo-item.active .mt,.combo-item:hover .mt{color:#062b33}'
   +'.cov-chip{font-size:10px;padding:2px 9px;border:1px solid var(--border);border-radius:11px;background:var(--bg3);color:var(--text2);cursor:pointer}'
-  +'.cov-chip.on{background:var(--cyan);color:#062b33;border-color:var(--cyan);font-weight:700}';
+  +'.cov-chip.on{background:var(--cyan);color:#062b33;border-color:var(--cyan);font-weight:700}'
+  +'.cov-chip.opt{border-style:dashed}'
+  +'.cov-chip.opt.on{background:var(--amber,#d4a04e);color:#2b1d06;border-color:var(--amber,#d4a04e)}'
+  +'.cov-region{font-size:10px;padding:2px 10px;border:1px solid var(--border);border-radius:11px;background:var(--bg3);color:var(--text2);cursor:pointer;min-width:56px;font-weight:600}'
+  +'.cov-region.on{background:var(--cyan);color:#062b33;border-color:var(--cyan)}'
+  +'.cov-region.part{border-color:var(--cyan);color:var(--cyan);background:transparent}'
+  +'.cov-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:2px 0}'
+  +'.cov-subs{display:flex;flex-wrap:wrap;gap:4px}'
+  +'.cov-tree{display:flex;flex-direction:column;gap:2px}';
  document.head.appendChild(st);
 }
 function _snapCombo(inp){
