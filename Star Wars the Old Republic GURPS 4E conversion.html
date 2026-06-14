@@ -10,7 +10,7 @@
   --accent:#3a4a6a;        /* the Path — a balanced indigo */
   --light:#1d6e7a; --dark:#7a1818; --neutral:#5a5048; --gold:#b8860b;
   --row:#f1ede3;
-}.path-doc * {box-sizing:border-box;}.path-doc {scroll-behavior:smooth;-webkit-text-size-adjust:100%;}.path-doc {margin:0 auto;max-width:210mm;width:100%;background:var(--paper);color:var(--ink);
+}.path-doc * {box-sizing:border-box;}.path-doc {scroll-behavior:auto;-webkit-text-size-adjust:100%;}.path-doc {margin:0 auto;max-width:210mm;width:100%;background:var(--paper);color:var(--ink);
   font-family:'Source Serif Pro',Georgia,serif;font-size:10.2px;line-height:1.5;
   padding:0 0 60px 0;box-shadow:0 0 30px rgba(0,0,0,.12);}.path-doc .wrap {padding:0 22px;}.path-doc h1, .path-doc h2, .path-doc h3, .path-doc h4 {font-family:'Cinzel',serif;color:var(--accent);line-height:1.15;}.path-doc .cover {background:radial-gradient(ellipse at top,#2f3a52 0%,#1c2230 75%);color:#ede6d6;
   text-align:center;padding:46px 22px 38px;}.path-doc .cover .series {font-family:'Cinzel',serif;letter-spacing:.4em;font-size:11px;color:#c9a84a;text-transform:uppercase;}.path-doc .cover h1 {color:#f4ede0;font-size:34px;font-weight:800;margin:14px 0 4px;}.path-doc .cover .sub {font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:#ccc4b2;max-width:520px;margin:8px auto 0;line-height:1.5;}.path-doc .cover .draft {margin-top:16px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.2em;color:#9a8a6a;text-transform:uppercase;}.path-doc .part-head {border-top:3px solid var(--accent);margin:34px 0 4px;padding-top:14px;}.path-doc .part-head .pnum {font-family:'Cinzel',serif;letter-spacing:.3em;font-size:11px;color:var(--accent);text-transform:uppercase;}.path-doc .part-head h2 {font-size:25px;font-weight:800;margin:3px 0 2px;color:#2a2424;}.path-doc .part-head .psub {font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--soft);}.path-doc h3 {font-size:16px;margin:22px 0 6px;border-bottom:1px solid var(--hair);padding-bottom:3px;}.path-doc h4 {font-size:12.5px;margin:16px 0 4px;color:#2a2424;letter-spacing:.02em;}.path-doc p {margin:0 0 9px;}.path-doc ul, .path-doc ol {margin:4px 0 10px;padding-left:20px;}.path-doc li {margin-bottom:4px;}.path-doc strong {font-weight:700;}.path-doc em {font-style:italic;}.path-doc .lead {font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13.5px;color:var(--soft);margin-bottom:12px;}.path-doc .box {border:1px solid var(--hair);border-left:4px solid var(--accent);background:#fff;padding:12px 15px;margin:14px 0;border-radius:2px;}.path-doc .box .lbl {font-family:'Cinzel',serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);margin-bottom:6px;}.path-doc .box--light {border-left-color:var(--light);}.path-doc .box--light .lbl {color:var(--light);}.path-doc .box--dark {border-left-color:var(--dark);background:#fdf6f6;}.path-doc .box--dark .lbl {color:var(--dark);}.path-doc .box--gold {border-left-color:var(--gold);background:#fdfaf0;}.path-doc .box--gold .lbl {color:var(--gold);}.path-doc .box--neutral {border-left-color:var(--neutral);}.path-doc table {width:100%;border-collapse:collapse;margin:10px 0 16px;font-size:9.6px;}.path-doc thead th {background:#1c2230;color:#f4ede0;font-family:'Cinzel',serif;font-weight:600;font-size:9px;
@@ -37,7 +37,7 @@
 .slot-legend .li span:last-child{color:#555;}
 
 /* REVpolish: smooth reading */
-html{scroll-behavior:smooth}
+html{scroll-behavior:auto}
 @media (prefers-reduced-motion: no-preference){
  .power,.callout{transition:box-shadow .15s,border-color .15s}
  .power:hover{box-shadow:0 2px 10px rgba(0,0,0,.12)}
@@ -660,7 +660,7 @@ p { margin: 0 0 1.8mm 0; }
 .book--droids, .book--droids .book-divider { --accent: #7a1818; --accent-tint: #7a1818; }
 
 /* ===================== SCREEN / NAV LAYER ===================== */
-html { scroll-behavior: smooth; }
+html { scroll-behavior: auto; }
 @media screen {
   /* Fluid page: caps at A4 width on large screens, shrinks to fit on small ones (never forces horizontal scroll) */
   body {
