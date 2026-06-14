@@ -651,7 +651,7 @@
   ],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T10:27:09.294Z",
+    "savedAt": "2026-06-14T10:32:52.347Z",
     "savedBy": "Anthony"
   },
   "builder": {
@@ -665,5 +665,6 @@
       "name": "My Custom Vessel",
       "role": ""
     }
-  }
+  },
+  "manualInv": []
 }
