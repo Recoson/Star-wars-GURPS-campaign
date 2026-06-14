@@ -6,12 +6,12 @@
   "concept": "",
   "species": "Iktotchi",
   "tl": 10,
-  "sm": 0,
+  "sm": 1,
   "appearance": "Average",
-  "height": "",
-  "weight": "",
+  "height": "1.9",
+  "weight": "110",
   "age": "135",
-  "gender": "",
+  "gender": "Male",
   "hand": "Right",
   "statusLevel": 5,
   "wealthLevel": "Wealthy",
@@ -634,7 +634,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-14T03:28:27.018Z",
+    "savedAt": "2026-06-14T03:29:24.637Z",
     "savedBy": "Csuman"
   }
 }
