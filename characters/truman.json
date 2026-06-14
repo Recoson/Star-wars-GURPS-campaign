@@ -507,6 +507,15 @@
         "tier": 1,
         "pts": 5,
         "book": "Common Force"
+      },
+      {
+        "name": "Flash of Warning",
+        "skill": "Force",
+        "aff": "Per",
+        "fp": "2",
+        "tier": 1,
+        "pts": 5,
+        "book": "Minor Traditions"
       }
     ],
     "books": {
@@ -634,7 +643,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-14T03:29:54.887Z",
+    "savedAt": "2026-06-14T03:30:27.737Z",
     "savedBy": "Csuman"
   }
 }
