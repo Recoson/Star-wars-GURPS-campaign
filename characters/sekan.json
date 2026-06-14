@@ -39,7 +39,7 @@
       "name": "Blaster (Rifle)",
       "attr": "DX",
       "diff": "E",
-      "pts": 48,
+      "pts": 52,
       "spec": ""
     },
     {
@@ -453,7 +453,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T04:04:29.598Z",
+    "savedAt": "2026-06-14T04:05:31.318Z",
     "savedBy": "Anthony"
   },
   "builder": {
