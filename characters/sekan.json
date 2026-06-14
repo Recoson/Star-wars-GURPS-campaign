@@ -279,6 +279,13 @@
   "weapons": [
     {
       "name": "Heavy blaster pistol"
+    },
+    {
+      "name": "Experimental greatsword (2H)",
+      "cls": "Melee",
+      "_cat": "Mandalorian",
+      "_bought": false,
+      "_type": ""
     }
   ],
   "armour": [
@@ -355,14 +362,6 @@
           "bulk": -1
         }
       ]
-    },
-    {
-      "kind": "weapons",
-      "name": "Experimental greatsword (2H)",
-      "cls": "Melee",
-      "_cat": "Mandalorian",
-      "_bought": false,
-      "_type": ""
     },
     {
       "kind": "weapons",
@@ -458,7 +457,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T04:35:34.525Z",
+    "savedAt": "2026-06-14T04:36:35.813Z",
     "savedBy": "Anthony"
   },
   "builder": {
