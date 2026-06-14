@@ -22,7 +22,7 @@
   "bio": "",
   "attr": {
     "ST": 100,
-    "DX": 180,
+    "DX": 220,
     "IQ": 40,
     "HT": 40
   },
@@ -36,31 +36,37 @@
   },
   "skills": [
     {
-      "name": "Blasters",
+      "name": "Blaster (Pistol)",
       "attr": "DX",
       "diff": "E",
       "pts": 28,
-      "spec": "Pistol"
+      "spec": ""
     },
     {
-      "name": "Blasters",
+      "name": "Blaster (Rifle)",
       "attr": "DX",
       "diff": "E",
       "pts": 44,
-      "spec": "Rifle"
+      "spec": ""
     },
     {
       "name": "Blasters",
       "attr": "DX",
       "diff": "E",
       "pts": 4,
-      "spec": ""
+      "spec": "Cannon"
     },
     {
-      "name": "Fast-Draw",
+      "name": "Two-Handed Sword",
       "attr": "DX",
-      "diff": "E",
-      "pts": 8
+      "diff": "A",
+      "pts": 28
+    },
+    {
+      "name": "Shortsword",
+      "attr": "DX",
+      "diff": "A",
+      "pts": 12
     },
     {
       "name": "Knife",
@@ -75,7 +81,7 @@
       "pts": 4
     },
     {
-      "name": "Shield",
+      "name": "Fast-Draw",
       "attr": "DX",
       "diff": "E",
       "pts": 8
@@ -87,10 +93,23 @@
       "pts": 4
     },
     {
+      "name": "Shield",
+      "attr": "DX",
+      "diff": "E",
+      "pts": 8
+    },
+    {
       "name": "Soldier",
       "attr": "IQ",
       "diff": "A",
       "pts": 20
+    },
+    {
+      "name": "Acrobatics",
+      "pts": 1,
+      "attr": "DX",
+      "diff": "H",
+      "spec": ""
     },
     {
       "name": "Armoury",
@@ -117,6 +136,13 @@
       "pts": 4
     },
     {
+      "name": "Gunner",
+      "attr": "DX",
+      "diff": "E",
+      "pts": 12,
+      "spec": "Beams"
+    },
+    {
       "name": "Intelligence Analysis",
       "attr": "IQ",
       "diff": "H",
@@ -135,6 +161,20 @@
       "pts": 2
     },
     {
+      "name": "Persuade",
+      "pts": 8,
+      "attr": "Will",
+      "diff": "H",
+      "spec": ""
+    },
+    {
+      "name": "Politics",
+      "pts": 4,
+      "attr": "IQ",
+      "diff": "A",
+      "spec": ""
+    },
+    {
       "name": "Diplomacy",
       "attr": "IQ",
       "diff": "H",
@@ -150,38 +190,20 @@
       "name": "Driving",
       "attr": "DX",
       "diff": "A",
-      "pts": 4
-    },
-    {
-      "name": "Shortsword",
-      "attr": "DX",
-      "diff": "A",
-      "pts": 12
-    },
-    {
-      "name": "Gunner",
-      "attr": "DX",
-      "diff": "E",
-      "pts": 12,
-      "spec": "Beams"
-    },
-    {
-      "name": "Submersible Piloting",
-      "attr": "DX",
-      "diff": "A",
-      "pts": 2
-    },
-    {
-      "name": "Two-Handed Sword",
-      "attr": "DX",
-      "diff": "A",
-      "pts": 28
+      "pts": 4,
+      "spec": "Speeder Bike"
     },
     {
       "name": "Bolas",
       "attr": "DX",
       "diff": "A",
       "pts": 4
+    },
+    {
+      "name": "Submersible Piloting",
+      "attr": "DX",
+      "diff": "A",
+      "pts": 2
     }
   ],
   "traits": [
@@ -252,7 +274,7 @@
       "mods": [
         {
           "label": "High-capacity drum",
-          "note": "Huge mag sized to the frame; +1 Reload from weight imbalance.",
+          "note": "Huge mag sized to the frame; +1 Rcl from weight imbalance.",
           "shots": 40,
           "preset": "High-capacity drum",
           "tier": "pol",
@@ -423,7 +445,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T03:15:21.496Z",
+    "savedAt": "2026-06-14T03:20:09.430Z",
     "savedBy": "Anthony"
   }
 }
