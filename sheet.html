@@ -715,7 +715,7 @@ function blankChar(){
   sec:{HP:0,Will:0,Per:0,FP:0,Speed:0,Move:0},
   skills:[],traits:[],cyber:[],
   weapons:[],armour:[],shields:[],
-  explosives:[],gear:[],inventory:[],
+  explosives:[],gear:[],inventory:[],manualInv:[],
   force:{primary:'IQ',bonded:false,saberPoints:0,powers:[],books:{},bookTiers:{},tradition:'',activeBook:'',viewBook:'',holocrons:[],holoRes:{frag:0,frame:0,kyber:0}},
   forms:[],techniques:[],stances:[],vehicles:[],droids:[],customDB:{weapons:[],armour:[],shields:[],explosives:[],gear:[]},
   conditions:{},
@@ -3643,6 +3643,29 @@ function setInvStoreLoc(idx,loc){const e=(C.inventory||[])[idx];if(!e)return;if(
 function addToStorage(kind){C.inventory=C.inventory||[];const e={kind:kind,name:'',stored:true};if(kind==='gear'||kind==='explosives')e.qty=1;C.inventory.push(e);touch();_eqRerender();}
 function setInvBag(idx,bagId){const e=(C.inventory||[])[idx];if(!e||e.stored)return;if(bagId)e.inBag=bagId;else delete e.inBag;touch();_eqRerender();}
 function addToInventory(kind){C.inventory=C.inventory||[];const e={kind:kind,name:''};if(kind==='gear'||kind==='explosives')e.qty=1;C.inventory.push(e);touch();_eqRerender();}
+// ── editable quantity on carried/stored inventory rows (gear & explosives) ──
+function setInvQty(idx,v){const e=(C.inventory||[])[idx];if(!e)return;e.qty=Math.max(1,Math.round(+v||1));touch();_eqRerender();}
+// ── MANUAL RECORD — a frictionless free-text ledger. Does NOT touch weight,
+//    encumbrance or the catalogue; it's just somewhere to jot things down. ──
+function manualList(){return C.manualInv=C.manualInv||[];}
+function addManualLine(){manualList().push({name:'',qty:1,note:''});touch();_eqRerender();}
+function setManual(idx,field,v){const e=manualList()[idx];if(!e)return;if(field==='qty')e.qty=Math.max(1,Math.round(+v||1));else e[field]=v;touch();/* no rerender: nothing derived depends on these */}
+function delManual(idx){const a=manualList();if(!a[idx])return;a.splice(idx,1);touch();_eqRerender();}
+function manualInvSection(){
+ const a=manualList();
+ const rows=a.map((e,idx)=>`<tr>
+   <td><input class="cell" value="${esc(e.name||'')}" placeholder="e.g. spare power cell · datapad · ration packs…" onchange="setManual(${idx},'name',this.value)" style="width:100%"></td>
+   <td><input class="cell" type="number" min="1" value="${+e.qty||1}" onchange="setManual(${idx},'qty',this.value)" style="width:48px"></td>
+   <td><input class="cell" value="${esc(e.note||'')}" placeholder="note (optional)" onchange="setManual(${idx},'note',this.value)" style="width:100%"></td>
+   <td style="text-align:right;white-space:nowrap"><button class="btn-del" title="Delete line" onclick="delManual(${idx})">✕</button></td>
+ </tr>`).join('');
+ const table=a.length
+   ?`<table class="g"><tr><th>Item</th><th style="width:56px">Qty</th><th>Note</th><th style="width:36px"></th></tr>${rows}</table>`
+   :'<div class="dim" style="font-size:11px;padding:2px">Nothing recorded yet — hit <b>+ Add line</b> and just type.</div>';
+ return `<div class="sec-head" style="margin-top:18px">✍ Manual Record <span class="dim" style="font-weight:400;font-size:11px;margin-left:6px">free-text — type anything, no catalogue needed</span> <button class="btn-add" style="margin:0" onclick="addManualLine()">+ Add line</button></div>
+ <div class="tab-intro">A plain ledger for anything you'd rather not wire through the catalogue — quest items, odds and ends, loot to sort later. <b>It doesn't count toward weight or encumbrance</b> — it's just a written record so you can jot things down fast instead of swapping items in and out.</div>
+ ${table}`;
+}
 function setInvCat(idx,cat){const e=(C.inventory||[])[idx];if(!e)return;e._cat=cat;if(cat&&e.name&&eqItemGrp(e.kind,e.name)!==cat&&e.kind!=='cyber'){e.name='';}touch();_eqRerender();}
 function setInvName(idx,name){
  const e=(C.inventory||[])[idx];if(!e)return;
@@ -3716,7 +3739,8 @@ function renderInventorySection(){
    const bagSel=(bags.length&&e.name&&!isBagItem)
      ?`<select class="cell" title="Stow inside an equipped bag" onchange="setInvBag(${idx},this.value)" style="margin-top:3px;font-size:10px;max-width:150px">${bagOpts(e.inBag||'')}</select>`
      :(isBagItem?'<div class="dim" style="font-size:9px;margin-top:2px">equip to use as a bag</div>':'');
-   const wtCell=e.name?`<div class="dim" style="font-size:10px">${wt} kg</div>${bagSel}`:'';
+   const invQty=((k==='gear'||k==='explosives')&&e.name)?`<div style="margin-top:2px"><span class="dim" style="font-size:10px">Qty </span><input class="cell" type="number" min="1" value="${+e.qty||1}" onchange="setInvQty(${idx},this.value)" style="width:40px"></div>`:'';
+   const wtCell=e.name?`<div class="dim" style="font-size:10px">${wt} kg</div>${invQty}${bagSel}`:'';
    return `<tr><td><div class="eq-pick">${picker}${invBrandPill(k,e.name)}${upBadge(e)}</div></td>
      <td style="vertical-align:top">${wtCell}</td>
      <td style="white-space:nowrap;text-align:right;vertical-align:top">
@@ -3738,7 +3762,7 @@ function renderInventorySection(){
    const wt=e.name?Math.round(_wtFromCatalogue(e.kind,e.name)*q*100)/100:0;
    return `<tr><td><div class="eq-pick">${picker}${invBrandPill(e.kind,e.name)}${upBadge(e)}</div></td>
      <td><input class="cell" value="${esc(e.storeLoc||'')}" placeholder="ship hold / base / speeder" onchange="setInvStoreLoc(${idx},this.value)" style="width:100%;font-size:10px"></td>
-     <td class="dim" style="font-size:10px;text-align:right">${e.name?wt+' kg':''}</td>
+     <td class="dim" style="font-size:10px;text-align:right">${e.name?wt+' kg':''}${((e.kind==='gear'||e.kind==='explosives')&&e.name)?`<div style="margin-top:2px">Qty <input class="cell" type="number" min="1" value="${+e.qty||1}" onchange="setInvQty(${idx},this.value)" style="width:40px"></div>`:''}</td>
      <td style="white-space:nowrap;text-align:right">
       <button class="btn-equip" title="Bring back onto your person (into carried inventory)" onclick="setInvStored(${idx},false)"${e.name?'':' disabled'}>← Carry</button>
       <button class="btn-del" title="Discard" onclick="delFromInventory(${idx})">✕</button>
@@ -3754,6 +3778,7 @@ function renderInventorySection(){
  <div class="tab-intro">Everything on your person that isn't currently equipped — its full weight still counts toward your load. Equipped-slot limits: <b>1 armour</b>, <b>1 energy shield</b>, <b>2 weapons</b>; gear, explosives &amp; cybernetics are unlimited. Hit <b>⤒ Equip</b> to move an item into your active loadout — if the slot is full, the displaced item drops back here automatically. Use the <b>⤓</b> button on any equipped item above to stow it, or <b>⇄</b> to swap it for something you're carrying (mods are kept on both). <b>📡</b> sends an item to off-person storage. Assign an item to an equipped <b>bag</b> to shave weight off your load (up to 25%).</div>
  ${bagLine}
  <div class="inv-grid">${body}</div>
+ ${manualInvSection()}
  ${storedSection}`;
 }
 
@@ -5577,6 +5602,14 @@ function _cdb(){
  ['weapons','armour','shields','explosives','gear','skills','species','forcePowers','shipParts','droidParts','cyber'].forEach(k=>C.customDB[k]=C.customDB[k]||[]);
  return C.customDB;
 }
+function _gasNotes(e){
+ const bits=[];
+ const r=+e.radius||0; if(r)bits.push(r+'-m cloud (fills the radius, lingers per GM)');
+ bits.push('onset '+((''+(e.onset||'')).trim()||'immediate'));
+ bits.push(/odourless/i.test(''+e.odourless)?'odourless':'detectable odour');
+ bits.push(/invis/i.test(''+e.visible)?'no visible cloud — invisible':'visible cloud');
+ return 'Gas grenade — '+bits.join(' · ')+'.';
+}
 function syncCustomDB(){
  const cdb=_cdb();
  function strip(arr){for(let i=arr.length-1;i>=0;i--)if(arr[i]&&arr[i]._custom)arr.splice(i,1);}
@@ -5585,7 +5618,7 @@ function syncCustomDB(){
  cdb.weapons.forEach(w=>DATA.weapons.push(Object.assign({cat:'Custom',cls:'Melee',swMod:null,thMod:null,fixed:'',dtype:'',ad:1,reach:'',parry:'0',st:'-',wt:0,acc:'',r12:'',rmax:'',rof:'',shots:'',rcl:'',cost:0,notes:'(homebrew)'},w,{_custom:true})));
  cdb.armour.forEach(a=>{const drE=+a.drE||0,drK=+a.drK||0;const ld={};['head','torso','arms','hands','legs','feet'].forEach(L=>ld[L]={e:drE,k:drK});DATA.armour.push(Object.assign({cat:'Custom',loc:'body',wt:0,cost:0,notes:'(homebrew)'},a,{drE,drK,locDR:ld,_custom:true}));});
  cdb.shields.forEach(s=>DATA.shields.push(Object.assign({dr:0,vs:'energy',cost:0,notes:'(homebrew)'},s,{_custom:true})));
- cdb.explosives.forEach(e=>EXPLOSIVES.push(Object.assign({dmg:'',wt:0,cost:0},e,{_custom:true})));
+ cdb.explosives.forEach(e=>{const rec=Object.assign({dmg:'',wt:0,cost:0},e,{_custom:true});if(/gas/i.test(''+(e.gas||''))){rec.type='Gas';const extra=(e.notes&&!/gas grenade/i.test(e.notes))?' '+e.notes:'';rec.notes=(_gasNotes(e)+extra).trim();}EXPLOSIVES.push(rec);});
  cdb.gear.forEach(g=>UTILITY_GEAR.push(Object.assign({effect:'',wt:0,cost:0},g,{_custom:true})));
  // NEW: Skills
  stripSkills();
@@ -6263,14 +6296,18 @@ function customItemsSection(){
  const wpn=cdb.weapons.map((w,i)=>`<div class="cust-card">${I('weapons',i,'name',130,'Name')}${S('weapons',i,'cls',['Melee','Ranged'],66)}${S('weapons',i,'cat',cats,118)}${I('weapons',i,'fixed',56,'Dmg')}${I('weapons',i,'dtype',64,'Type')}${I('weapons',i,'ad',30,'AD')}${I('weapons',i,'reach',40,'Reach')}${I('weapons',i,'parry',38,'Parry')}${I('weapons',i,'st',30,'ST')}${I('weapons',i,'wt',38,'Wt')}${I('weapons',i,'acc',30,'Acc')}${I('weapons',i,'r12',40,'Rng½')}${I('weapons',i,'rmax',46,'RngMax')}${I('weapons',i,'rof',30,'RoF')}${I('weapons',i,'shots',40,'Shots')}${I('weapons',i,'cost',54,'Cost')}${del('weapons',i)}</div>`).join('');
  const arm=cdb.armour.map((a,i)=>`<div class="cust-card">${I('armour',i,'name',150,'Name')}${I('armour',i,'drE',46,'DR(E)')}${I('armour',i,'drK',46,'DR(K)')}${I('armour',i,'loc',90,'Locations')}${I('armour',i,'wt',40,'Wt')}${I('armour',i,'cost',60,'Cost')}${del('armour',i)}</div>`).join('');
  const shl=cdb.shields.map((s,i)=>`<div class="cust-card">${I('shields',i,'name',160,'Name')}${I('shields',i,'dr',44,'DR')}${S('shields',i,'vs',['energy','kinetic','both'],74)}${I('shields',i,'cost',60,'Cost')}${del('shields',i)}</div>`).join('');
- const exp=cdb.explosives.map((e,i)=>`<div class="cust-card">${I('explosives',i,'name',160,'Name')}${I('explosives',i,'dmg',120,'Damage')}${I('explosives',i,'wt',40,'Wt')}${I('explosives',i,'cost',60,'Cost')}${del('explosives',i)}</div>`).join('');
+ const exp=cdb.explosives.map((e,i)=>{
+   const isGas=/gas/i.test(''+(e.gas||''));
+   const gasRow=isGas?`${I('explosives',i,'radius',64,'Cloud radius (m)')}${I('explosives',i,'onset',96,'Onset (e.g. 1 turn)')}${S('explosives',i,'odourless',['Detectable odour','Odourless'],132)}${S('explosives',i,'visible',['Visible cloud','Invisible (no cloud)'],140)}`:'';
+   return `<div class="cust-card">${I('explosives',i,'name',150,'Name')}${I('explosives',i,'dmg',110,'Damage')}${I('explosives',i,'wt',38,'Wt')}${I('explosives',i,'cost',54,'Cost')}${S('explosives',i,'gas',['Standard','Gas grenade'],122)}${gasRow}${del('explosives',i)}</div>`;
+ }).join('');
  const ger=cdb.gear.map((g,i)=>`<div class="cust-card">${I('gear',i,'name',150,'Name')}${I('gear',i,'effect',240,'Effect')}${I('gear',i,'wt',40,'Wt')}${I('gear',i,'cost',60,'Cost')}${del('gear',i)}</div>`).join('');
  return `<div class="sec-head" style="margin-top:18px">Homebrew / Custom Items</div>
   <div class="dim" style="font-size:11px;margin-bottom:6px">Anything you add here appears in the dropdowns above and feeds every automation — damage, parry, weight, DR by hit location, encumbrance and cost.</div>
   <details open><summary>Custom Weapons (${cdb.weapons.length})</summary>${wpn}<button class="btn-add" onclick="addCustom('weapons')">+ Custom Weapon</button></details>
   <details><summary>Custom Armour (${cdb.armour.length})</summary>${arm}<button class="btn-add" onclick="addCustom('armour')">+ Custom Armour</button></details>
   <details><summary>Custom Shields (${cdb.shields.length})</summary>${shl}<button class="btn-add" onclick="addCustom('shields')">+ Custom Shield</button></details>
-  <details><summary>Custom Explosives (${cdb.explosives.length})</summary>${exp}<button class="btn-add" onclick="addCustom('explosives')">+ Custom Explosive</button></details>
+  <details><summary>Custom Explosives (${cdb.explosives.length})</summary><div class="dim" style="font-size:10px;margin:2px 0 4px">Set <b>Gas grenade</b> to reveal cloud radius, onset delay, odour and visibility — these feed the equipped-card notes &amp; blast read-out.</div>${exp}<button class="btn-add" onclick="addCustom('explosives')">+ Custom Explosive</button></details>
   <details><summary>Custom Gear (${cdb.gear.length})</summary>${ger}<button class="btn-add" onclick="addCustom('gear')">+ Custom Gear</button></details>`;
 }
 
