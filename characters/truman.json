@@ -383,7 +383,15 @@
   "shields": [],
   "explosives": [],
   "gear": [],
-  "inventory": [],
+  "inventory": [
+    {
+      "kind": "gear",
+      "name": "",
+      "stored": true,
+      "qty": 1,
+      "_type": "Medical"
+    }
+  ],
   "force": {
     "morality": 50,
     "primary": "DX",
@@ -611,7 +619,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-14T03:18:45.469Z",
+    "savedAt": "2026-06-14T03:19:23.559Z",
     "savedBy": "Csuman"
   }
 }
