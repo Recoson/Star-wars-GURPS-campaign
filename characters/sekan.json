@@ -313,7 +313,6 @@
           "tier": "pol",
           "slot": "power",
           "wt": 1.5,
-          "rcl": 1,
           "cost": 960
         }
       ]
@@ -651,7 +650,7 @@
   ],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T10:37:54.787Z",
+    "savedAt": "2026-06-14T11:23:09.716Z",
     "savedBy": "Anthony"
   },
   "builder": {
