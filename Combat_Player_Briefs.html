@@ -6,124 +6,88 @@
 <title>Combat &amp; Rules Brief — Dara Dara Campaign</title>
 <style>
 :root{
-  --bg:#12151a; --bg2:#1a1e25; --bg3:#222731; --bg4:#2c323d;
-  --text:#e7e3d6; --text2:#9aa1ad; --dim:#6b727d;
-  --border:#333a45; --border2:#4b5360;
-  --blue:#76a2e8; --gold:#e2b063; --cyan:#5fd0e1; --green:#69d68d; --red:#e87070; --purple:#b78ce8;
+  --bg:#12151a;--bg2:#1a1e25;--bg3:#222731;--bg4:#2c323d;
+  --text:#e7e3d6;--text2:#9aa1ad;--dim:#6b727d;--border:#333a45;--border2:#4b5360;
+  --blue:#76a2e8;--gold:#e2b063;--cyan:#5fd0e1;--green:#69d68d;--red:#e87070;--purple:#b78ce8;
   --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
   --mono:"SF Mono",ui-monospace,"DejaVu Sans Mono",Consolas,"Liberation Mono",monospace;
   --sans:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{background:var(--bg);color:var(--text);font-family:var(--serif);line-height:1.45;
-  -webkit-font-smoothing:antialiased}
+html,body{background:var(--bg);color:var(--text);font-family:var(--serif);line-height:1.45;-webkit-font-smoothing:antialiased}
 body{max-width:1180px;margin:0 auto;padding:18px 20px 60px}
 a{color:var(--blue)}
-
-.masthead{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:8px;
-  border-bottom:2px solid var(--gold);padding-bottom:10px;margin-bottom:4px}
-.masthead h1{font-family:var(--sans);font-weight:700;letter-spacing:.16em;text-transform:uppercase;
-  font-size:18px;color:var(--gold)}
+.masthead{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:2px solid var(--gold);padding-bottom:10px;margin-bottom:4px}
+.masthead h1{font-family:var(--sans);font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:18px;color:var(--gold)}
 .masthead .tag2{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--text2)}
-
 .tabs{display:flex;gap:6px;margin:14px 0 18px;flex-wrap:wrap}
-.tabs button{font-family:var(--sans);font-weight:600;letter-spacing:.05em;font-size:13px;
-  background:var(--bg2);color:var(--text2);border:1px solid var(--border);border-radius:7px;
-  padding:9px 18px;cursor:pointer;transition:.12s}
+.tabs button{font-family:var(--sans);font-weight:600;letter-spacing:.05em;font-size:13px;background:var(--bg2);color:var(--text2);border:1px solid var(--border);border-radius:7px;padding:9px 18px;cursor:pointer;transition:.12s}
 .tabs button:hover{color:var(--text);border-color:var(--border2)}
-.tabs button.on{background:linear-gradient(180deg,var(--bg4),var(--bg3));color:var(--gold);
-  border-color:var(--gold);box-shadow:0 0 0 1px rgba(226,176,99,.25)}
-.tabs button .sm{display:block;font-family:var(--mono);font-weight:400;font-size:9px;letter-spacing:.12em;
-  color:var(--dim);margin-top:2px;text-transform:uppercase}
+.tabs button.on{background:linear-gradient(180deg,var(--bg4),var(--bg3));color:var(--gold);border-color:var(--gold);box-shadow:0 0 0 1px rgba(226,176,99,.25)}
+.tabs button .sm{display:block;font-family:var(--mono);font-weight:400;font-size:9px;letter-spacing:.12em;color:var(--dim);margin-top:2px;text-transform:uppercase}
 .tabs button.on .sm{color:var(--text2)}
-
-.sheet{display:none}
-.sheet.on{display:block}
-
+.sheet{display:none}.sheet.on{display:block}
 .who{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.who .nm{font-family:var(--sans);font-weight:700;font-size:25px;letter-spacing:.02em;color:var(--text)}
+.who .nm{font-family:var(--sans);font-weight:700;font-size:25px;letter-spacing:.02em}
 .who .alias{color:var(--gold);font-weight:600}
-.who .meta{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--text2)}
+.who .meta{font-family:var(--mono);font-size:11px;letter-spacing:.05em;color:var(--text2)}
 .who .meta b{color:var(--cyan)}
-
-.statline{display:flex;flex-wrap:wrap;align-items:center;gap:0 16px;
-  background:var(--bg2);border:1px solid var(--border);border-radius:9px;
-  padding:11px 16px;margin-bottom:16px;font-family:var(--mono)}
-.statline span{font-size:16px;font-weight:600;color:var(--text);white-space:nowrap}
-.statline span i{font-style:normal;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--dim);margin-right:5px;vertical-align:1px}
-.statline .hl{color:var(--gold)}
-.statline .hl i{color:var(--gold);opacity:.7}
+.statline{display:flex;flex-wrap:wrap;align-items:center;gap:0 16px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:11px 16px;margin-bottom:16px;font-family:var(--mono)}
+.statline span{font-size:16px;font-weight:600;white-space:nowrap}
+.statline span i{font-style:normal;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-right:5px;vertical-align:1px}
+.statline .hl{color:var(--gold)}.statline .hl i{color:var(--gold);opacity:.7}
 .statline .sep{width:1px;height:18px;background:var(--border2);padding:0;margin:0 2px}
-
-.panel{background:var(--bg2);border:1px solid var(--border);border-radius:10px;
-  padding:14px 16px 15px;margin-bottom:14px}
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px 15px;margin-bottom:14px}
 .panel.core{background:linear-gradient(180deg,#161b22,#13171d);border-color:var(--border2)}
-.panel.edge{border-left:3px solid var(--gold)}
-.panel.gun{border-left:3px solid var(--cyan)}
-.panel h3{font-family:var(--sans);font-weight:700;font-size:14.5px;letter-spacing:.04em;
-  color:var(--gold);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:baseline;gap:10px;
-  border-bottom:1px solid var(--border);padding-bottom:7px;flex-wrap:wrap}
+.panel.edge{border-left:3px solid var(--gold)}.panel.gun{border-left:3px solid var(--cyan)}
+.panel h3{font-family:var(--sans);font-weight:700;font-size:14.5px;letter-spacing:.04em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:baseline;gap:10px;border-bottom:1px solid var(--border);padding-bottom:7px;flex-wrap:wrap}
 .panel.core h3,.panel.gun h3{color:var(--cyan)}
-.panel h3 .sub{font-family:var(--mono);font-weight:400;font-size:10px;letter-spacing:.08em;
-  color:var(--dim);text-transform:none}
-
+.panel h3 .sub{font-family:var(--mono);font-weight:400;font-size:10px;letter-spacing:.08em;color:var(--dim);text-transform:none}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.panel p{font-size:14px;margin-bottom:7px}
-.panel p:last-child{margin-bottom:0}
+.grid2.t-sep{border-top:1px solid var(--border);margin-top:13px;padding-top:12px}
+.panel p{font-size:14px;margin-bottom:7px}.panel p:last-child{margin-bottom:0}
 .panel p b{color:var(--text)}
-.mini{font-size:12px;color:var(--text2);font-style:italic}
-.mini b{color:var(--text);font-style:normal}
-
+.kh{font-family:var(--sans);font-weight:700;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--blue);margin-bottom:5px}
+.kt{font-family:var(--mono);font-weight:400;font-size:9.5px;letter-spacing:.05em;color:var(--dim);text-transform:none;margin-left:6px}
+.ex{font-size:13px;background:rgba(118,162,232,.08);border-left:2px solid var(--blue);border-radius:0 5px 5px 0;padding:8px 11px;color:var(--text2);margin-top:8px}
+.ex b{color:var(--text)}
+.mini{font-size:12px;color:var(--text2);font-style:italic}.mini b{color:var(--text);font-style:normal}
 ul.tight{list-style:none}
-ul.tight li{font-size:13.5px;padding:3px 0 3px 16px;position:relative;color:var(--text)}
+ul.tight li{font-size:13.5px;padding:3px 0 3px 16px;position:relative}
 ul.tight li:before{content:"\203A";position:absolute;left:2px;color:var(--gold);font-weight:700}
-ul.tight li b{color:var(--text)}
-ul.two{columns:2;column-gap:22px}
-ul.two li{break-inside:avoid}
+ul.two{columns:2;column-gap:22px}ul.two li{break-inside:avoid}
 @media(max-width:720px){ul.two{columns:1}.grid2{grid-template-columns:1fr}}
-
 table{width:100%;border-collapse:collapse;margin-top:2px}
-th{font-family:var(--sans);font-weight:600;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;
-  color:var(--text2);text-align:left;padding:5px 9px 6px;border-bottom:1px solid var(--border2);background:var(--bg3)}
-td{font-size:13px;padding:6px 9px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text)}
-tr:last-child td{border-bottom:none}
-.c{text-align:center}
+th{font-family:var(--sans);font-weight:600;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--text2);text-align:left;padding:5px 9px 6px;border-bottom:1px solid var(--border2);background:var(--bg3)}
+td{font-size:13px;padding:6px 9px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}.c{text-align:center}
 td b,td strong{color:var(--text)}
-tr.hot td{background:rgba(226,176,99,.07)}
-tr.hot td b{color:var(--gold)}
-
+tr.hot td{background:rgba(226,176,99,.07)}tr.hot td b{color:var(--gold)}
 .roll{font-family:var(--mono);font-weight:700;font-size:15px;color:var(--gold);display:inline-block}
-.atl{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--dim)}
-.tag{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.04em;color:var(--cyan);
-  border:1px solid var(--cyan);border-radius:4px;padding:0 4px;vertical-align:1px;margin-left:3px}
+.atl{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.04em;color:var(--dim)}
+.tag{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.04em;color:var(--cyan);border:1px solid var(--cyan);border-radius:4px;padding:0 4px;vertical-align:1px;margin-left:3px}
 td .tag{color:var(--gold);border-color:var(--gold)}
-
-.mv td:first-child,.tk td:first-child,.ar td:first-child{white-space:nowrap;color:var(--text)}
-.mv td:first-child b{color:var(--gold)}
-
+.mv td:first-child,.tk td:first-child,.ar td:first-child{white-space:nowrap}
+.mv td:first-child b,.ar td:first-child b{color:var(--text)}
+.steps td:first-child{white-space:normal;min-width:150px}
+.steps td:first-child b{color:var(--gold)}
+.stepn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--cyan);color:#0d1014;font-family:var(--mono);font-weight:700;font-size:11px;margin-right:7px;vertical-align:1px}
+.num2 td,.num2 th{padding:4px 9px;font-size:12.5px}
+.num2 td:nth-child(2),.num2 td:nth-child(4){font-family:var(--mono);color:var(--gold);font-weight:600}
 .pwt td{padding:4px 9px;font-size:12.5px}
 .pwt tr.bookrow td{background:var(--bg);border-bottom:1px solid var(--border2);padding:7px 9px 6px}
 .pwt .bk{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
-.pwt .bkn{font-family:var(--mono);font-size:10px;color:var(--dim);margin-left:8px}
-.pwt .bkn b{color:var(--text2)}
-.pwt .pw{font-weight:600;color:var(--text);white-space:nowrap}
-.pwt .fp{font-family:var(--mono);color:var(--cyan)}
-.pwt .eff{color:var(--text2);font-size:12.5px}
-.tier{font-family:var(--mono);font-size:9.5px;font-weight:700;border-radius:4px;padding:1px 5px;color:var(--bg)}
+.pwt .bkn{font-family:var(--mono);font-size:10px;color:var(--dim);margin-left:8px}.pwt .bkn b{color:var(--text2)}
+.pwt .pw{font-weight:600;white-space:nowrap}.pwt .fp{font-family:var(--mono);color:var(--cyan)}.pwt .eff{color:var(--text2)}
+.tier{font-family:var(--mono);font-size:9.5px;font-weight:700;border-radius:4px;padding:1px 5px;color:#12151a}
 .tier.t1{background:var(--dim)}.tier.t2{background:var(--blue)}.tier.t3{background:var(--gold)}.tier.t4{background:var(--purple)}
-
-.foot{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--dim);text-align:center;
-  margin-top:24px;border-top:1px solid var(--border);padding-top:12px}
-
+.foot{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--dim);text-align:center;margin-top:24px;border-top:1px solid var(--border);padding-top:12px}
 @media print{
-  :root{--bg:#fff;--bg2:#fff;--bg3:#f1ede3;--bg4:#e8e2d2;--text:#1d180f;--text2:#4a4438;--dim:#766f5e;
-    --border:#cfc7b3;--border2:#b3a988;--gold:#9a6b12;--blue:#2b568a;--cyan:#1b6a82}
-  body{max-width:none;padding:0}
-  .tabs{display:none}.masthead{display:none}
+  :root{--bg:#fff;--bg2:#fff;--bg3:#f1ede3;--bg4:#e8e2d2;--text:#1d180f;--text2:#4a4438;--dim:#766f5e;--border:#cfc7b3;--border2:#b3a988;--gold:#9a6b12;--blue:#2b568a;--cyan:#1b6a82}
+  body{max-width:none;padding:0}.tabs,.masthead{display:none}
   .sheet{display:block!important;page-break-after:always}
   .panel{break-inside:avoid;border:1px solid var(--border)}
-  .who .nm{color:#000}
+  .ex{background:#f3f0e7}
 }
 </style>
 </head>
@@ -132,116 +96,128 @@ td .tag{color:var(--gold);border-color:var(--gold)}
   <h1>Dara Dara &mdash; Combat &amp; Rules Brief</h1>
   <div class="tag2">GURPS 4e &middot; KOTOR era &middot; per-player quick reference</div>
 </div>
-
 <div class="tabs">
   <button data-go="truman" class="on">Truman / Tylo<span class="sm">Sabre-staff</span></button>
   <button data-go="chatni">Chatni<span class="sm">Force &amp; sabre</span></button>
   <button data-go="sekan">Sekan<span class="sm">Gunner</span></button>
 </div>
 
-
 <section class="sheet" data-who="truman">
   <header class="who">
     <div class="nm">Truman <span class="alias">&ldquo;Tylo&rdquo;</span></div>
     <div class="meta">Iktotchi &middot; player Csuman &middot; <b>Sabre-staff duelist</b></div>
   </header>
-
   <div class="statline">
     <span><i>ST</i>16</span><span><i>DX</i>26</span>
-    <span><i>IQ</i>12</span><span><i>HT</i>16</span>
-    <span class="sep"></span>
-    <span><i>Will</i>14</span><span><i>Per</i>13</span>
-    <span class="sep"></span>
-    <span><i>HP</i>36</span><span><i>FP</i>30</span>
-    <span class="sep"></span>
+    <span><i>IQ</i>12</span><span><i>HT</i>16</span><span class="sep"></span>
+    <span><i>Will</i>14</span><span><i>Per</i>13</span><span class="sep"></span>
+    <span><i>HP</i>36</span><span><i>FP</i>30</span><span class="sep"></span>
     <span class="hl"><i>Dodge</i>13</span><span class="hl"><i>Parry</i>20F</span>
     <span><i>Move</i>10</span><span><i>DR</i>5</span>
   </div>
-
   
 <div class="panel core">
-  <h3>How every roll works <span class="sub">the only dice rule you need</span></h3>
+  <h3>How every roll works <span class="sub">the whole dice system on one screen</span></h3>
   <div class="grid2">
     <div>
-      <p><b>Roll 3d6. Equal&nbsp;to or under your number = success.</b> Lower roll = bigger margin
-      (margin matters for damage spill, contests, and how well a Force power lands).</p>
+      <p class="kh">1 &middot; Rolling</p>
+      <p><b>Roll 3 dice. Total equal&nbsp;to or under your number = success.</b> How far under is your
+      <b>margin</b> (it decides extra hits, who wins a contest, and how hard a power lands).</p>
       <ul class="tight">
-        <li><b>3&ndash;4</b> always succeeds &mdash; and is a <b>critical</b> (best possible result).</li>
-        <li><b>5</b> crits if your number is 15+, <b>6</b> crits if 16+.</li>
-        <li><b>17</b> fails (critical fail if your number is under 16); <b>18</b> is always a critical fail.</li>
-        <li>Any roll that misses by 10+ is also a critical fail.</li>
+        <li><b>3&ndash;4</b> = automatic <b>critical success</b> (the best result).</li>
+        <li><b>5</b> crits if your number is 15+; <b>6</b> crits if 16+.</li>
+        <li><b>17</b> fails (a <i>critical</i> fail if your number is under 16); <b>18</b> always critical-fails.</li>
+        <li>Miss by 10+ = critical fail.</li>
       </ul>
     </div>
     <div>
-      <p><b>Getting attacked?</b> Pick <u>one</u> active defence and roll 3d6 against it:</p>
+      <p class="kh">2 &middot; Defending</p>
+      <p>Attacked? Pick <u>one</u> defence and roll 3d6 against it. Make it = the hit is avoided.</p>
       <ul class="tight">
-        <li><b>Dodge</b> &mdash; always available, works against anything you can see.</li>
-        <li><b>Parry</b> &mdash; with a melee weapon in hand (a lit sabre can Parry blaster bolts).</li>
-        <li><b>Block</b> &mdash; with a shield/gauntlet ready.</li>
-        <li><b>Retreat</b> 1 step as you defend: <b>+3 Dodge</b>, <b>+1 Parry/Block</b> (sabre = +3).</li>
+        <li><b>Dodge</b> &mdash; always available vs anything you can see.</li>
+        <li><b>Parry</b> &mdash; melee weapon in hand (a lit sabre Parries blaster bolts).</li>
+        <li><b>Block</b> &mdash; shield or gauntlet ready.</li>
+        <li><b>Retreat</b> a step while defending: <b>+3 Dodge</b>, <b>+1 Parry/Block</b> (sabre <b>+3</b>).</li>
       </ul>
-      <p class="mini">Common to-hit mods: target behind cover &minus;2 to &minus;5 &middot; you moved &amp; attacked &minus;2 (skill capped 9)
-      &middot; aim at a body part: torso 0, arm/leg &minus;2, hand/foot &minus;4, head &minus;5, eye/vitals &minus;3 to &minus;7.</p>
+    </div>
+  </div>
+  <div class="grid2 t-sep">
+    <div>
+      <p class="kh">3 &middot; Damage &amp; armour <span class="kt">the part new players miss</span></p>
+      <p>On a hit, roll the weapon's dice. Then the target's <b>DR</b> (armour) is subtracted &mdash;
+      <i>but first</i> the weapon's <b>Armour Divisor (AD)</b> divides that DR.</p>
+      <p class="ex"><b>Worked:</b> 6d bolt rolls <b>21</b>, weapon is <b>AD&nbsp;2</b>, target armour <b>DR&nbsp;18</b>.
+      AD&nbsp;2 &rarr; armour counts as <b>9</b>. Damage through = 21 &minus; 9 = <b>12</b>.</p>
+      <p class="mini">A lightsabre is <b>AD&nbsp;5</b> &mdash; DR 20 becomes 4. That's why blades cut through nearly anything.</p>
+    </div>
+    <div>
+      <p class="kh">4 &middot; Common modifiers <span class="kt">applied to your number before you roll</span></p>
+      <ul class="tight">
+        <li>Target behind cover: <b>&minus;2 to &minus;5</b>.</li>
+        <li>You moved &amp; attacked: <b>&minus;2</b> (and the shot/swing caps at skill 9).</li>
+        <li>Aiming at a body part: skull <b>&minus;7</b>, vitals <b>&minus;3</b>, arm/leg <b>&minus;2</b>, hand/foot <b>&minus;4</b>, face <b>&minus;5</b>.</li>
+        <li>Deceptive Attack: every <b>&minus;2</b> you take = <b>&minus;1</b> to the foe's defence.</li>
+      </ul>
     </div>
   </div>
 </div>
 
-
   <div class="panel">
-    <h3>Your weapons <span class="sub">what to roll &amp; what it does</span></h3>
+    <h3>Your weapons <span class="sub">number to roll, and the damage maths</span></h3>
     <table class="wt">
-      <tr><th>Weapon</th><th class="c">Roll</th><th>Damage</th><th>Reach</th><th class="c">Parry</th><th>Notes</th></tr>
+      <tr><th>Weapon</th><th class="c">Hit on</th><th>Damage</th><th>Reach</th><th class="c">Parry</th><th>Notes</th></tr>
       <tr class="hot"><td><b>Double sabre-staff</b></td><td class="c"><span class="roll">32</span></td>
-        <td><b>8d+8</b> imp+burn, AD&nbsp;5</td><td>1,&nbsp;2</td><td class="c">20F</td>
-        <td>Two lit ends. Cuts through almost all armour &amp; cauterises. Can Deflect blaster bolts.</td></tr>
+        <td><b>8d+8</b> imp+burn &middot; <b>AD&nbsp;5</b></td><td>1,&nbsp;2</td><td class="c">20F</td>
+        <td>Two lit ends. Cuts almost all armour &amp; cauterises. Can Deflect bolts.</td></tr>
       <tr><td>Ion pistol</td><td class="c"><span class="roll">29</span></td>
-        <td>2d+2 (5)&nbsp;ion</td><td>&mdash;</td><td class="c">&mdash;</td>
-        <td>Acc&nbsp;2 &middot; RoF&nbsp;3 &middot; Rcl&nbsp;2 &middot; 30 shots &middot; 50/600&nbsp;m. Anti-droid; near-harmless to flesh.</td></tr>
+        <td>2d+2 &middot; AD&nbsp;5 (ion)</td><td>&mdash;</td><td class="c">&mdash;</td>
+        <td>Acc&nbsp;2 &middot; RoF&nbsp;3 &middot; Rcl&nbsp;2 &middot; 30 shots &middot; 50/600&nbsp;m. Anti-droid only.</td></tr>
     </table>
-    <p class="mini">8d+8 averages <b>36 damage</b> before the AD&nbsp;5 divisor &mdash; one clean hit ends most things. The staff is the whole game; the ion pistol is for droids.</p>
+    <p class="ex"><b>8d+8 damage:</b> minimum 16, <b>average 36</b>, maximum 56. AD 5 divides the target's armour by 5 first
+    &mdash; e.g. DR 20 plate counts as just 4, so ~32 gets through. The staff ends most fights in one clean hit.</p>
   </div>
-
   <div class="panel">
-    <h3>Your turn <span class="sub">how a sabre-staff fighter actually moves</span></h3>
+    <h3>Your turn <span class="sub">what each choice does, with the numbers</span></h3>
     <table class="mv">
-      <tr><th>Do this</th><th>What happens</th></tr>
-      <tr><td><b>Attack &times;2</b> <span class="tag">your default</span></td>
-        <td>You have <b>Extra Attack</b>: two sabre swings a turn at <b>full 32</b>, no penalty. Put both ends into one foe, or hit two adjacent foes. Ambidexterity = no off-hand penalty for the second end.</td></tr>
+      <tr><th>Do this</th><th>The maths</th></tr>
+      <tr><td><b>Attack &times;2</b> <span class="tag">default</span></td>
+        <td><b>Extra Attack</b> gives you two swings a turn at <b>full 32</b> &mdash; no penalty. Both ends into one foe,
+        or one end each into two adjacent foes (Ambidexterity = no off-hand penalty).</td></tr>
       <tr><td><b>Rapid Strike</b></td>
-        <td>Want a 3rd & 4th swing? Take them at <b>26</b> each (&minus;6). Good when you need to overwhelm one defender.</td></tr>
-      <tr><td><b>All-Out Attack</b></td>
-        <td><i>Determined</i> +1 to hit, or <i>Double</i> = one extra swing &mdash; but <b>no defences</b> until your next turn. Use it when something will die this turn or you'll regret it.</td></tr>
+        <td>Want more swings? Each attack splits into two at <b>&minus;6</b>: so up to <b>four swings at 26</b> this turn.</td></tr>
       <tr><td><b>Deceptive Attack</b></td>
-        <td>Trade your skill 2-for-1 to lower the foe's defence. With 32 to burn, drop a tough duelist's Parry hard and still hit.</td></tr>
+        <td>Spend skill to lower their defence: <b>&minus;2 to your 32 = &minus;1 to their Parry/Dodge.</b> Drop to <b>26</b>
+        and the foe defends at <b>&minus;3</b> &mdash; you still hit easily.</td></tr>
+      <tr><td><b>All-Out Attack</b></td>
+        <td><i>Determined</i> = <b>+1</b> to hit (33); <i>Double</i> = one extra swing. Cost: <b>no defences</b> till your next turn.</td></tr>
       <tr><td><b>Defend</b></td>
-        <td>Parry <b>20</b> (retreat &rarr; <b>23</b> vs that attacker). Dodge <b>13</b> (retreat &rarr; <b>16</b>). With <b>Acrobatics 29</b> you may roll an Acrobatic Dodge first: success = +2 Dodge.</td></tr>
+        <td><b>Parry 20</b> = (32&divide;2) + 3 + 1 Combat Reflexes. Retreat a step &rarr; <b>23</b> vs that foe (fencing blade).
+        <b>Dodge 13</b>; retreat &rarr; <b>16</b>. With <b>Acrobatics 29</b>, roll it first for +2 Dodge on a success.</td></tr>
     </table>
   </div>
-
   <div class="panel">
     <h3>Sabre techniques <span class="sub">spend FP &mdash; you have 30</span></h3>
     <table class="tk">
       <tr><th>Technique</th><th class="c">Cost</th><th>When &amp; how</th></tr>
       <tr><td><b>Bolt Deflection</b></td><td class="c">&mdash;</td>
-        <td>Parry incoming blaster fire with the lit blade. Beat the bolt by enough and you <b>reflect it back</b> at the shooter.</td></tr>
+        <td>Parry incoming blaster fire with the blade (roll your <b>20</b> Parry vs the shot). Beat it by enough and you <b>reflect it back</b>.</td></tr>
       <tr><td><b>Sabre Throw</b></td><td class="c">4 / 6 FP</td>
-        <td>Hurl a blade as a ranged attack (roll <b>32</b> vs their Dodge/Parry), out to 10 hexes; it flies back to your hand. 4 FP returns next turn, 6 FP same turn.</td></tr>
+        <td>Throw a blade: roll <b>32</b> vs the target's Dodge/Parry, out to 10 hexes; it returns. 4 FP next turn, 6 FP same turn.</td></tr>
       <tr><td><b>Sabre Bind</b></td><td class="c">2 FP</td>
-        <td>On a <b>successful Parry</b>, trap their weapon &mdash; sets up a free Disarm or a clean opening next swing.</td></tr>
+        <td>On a <b>successful Parry</b>, trap their weapon &mdash; free Disarm attempt or a clean opening.</td></tr>
       <tr><td><b>Sabre Bash</b></td><td class="c">4 FP</td>
-        <td>Reactive (once per turn cycle): on a successful melee Parry, ST contest to interrupt and <b>drive the attacker back</b>. Locked out if you All-Out Attacked.</td></tr>
+        <td>After a successful melee Parry (1/turn): ST contest to interrupt and <b>drive them back</b>. Not after an All-Out Attack.</td></tr>
     </table>
   </div>
-
   <div class="panel edge">
-    <h3>Your edges <span class="sub">don't forget these</span></h3>
+    <h3>Your edges</h3>
     <ul class="tight two">
-      <li><b>Precognition</b> &mdash; the Force warns you. You're effectively never surprised; the GM gives you the jump when it counts.</li>
-      <li><b>Combat Reflexes</b> &mdash; already baked into your defences; +6 to rally from fear/stun, you act fast.</li>
-      <li><b>High Pain Threshold</b> &mdash; ignore the shock penalty when wounded; no flinching.</li>
-      <li><b>Very Fit</b> &mdash; you recover FP twice as fast and shrug off fatigue.</li>
-      <li><b>DX 26</b> &mdash; your acrobatics (29), climbing & fast-draw are off the charts; use the terrain.</li>
-      <li><b>Fast-Draw 29</b> &mdash; ignite and ready the staff as a free action on a successful roll.</li>
+      <li><b>Precognition</b> &mdash; you're effectively never surprised; the GM gives you the jump when it counts.</li>
+      <li><b>Combat Reflexes</b> &mdash; already in your defences; <b>+6</b> to recover from fear/stun, fast initiative.</li>
+      <li><b>High Pain Threshold</b> &mdash; no &minus;shock penalty when wounded.</li>
+      <li><b>Very Fit</b> &mdash; FP back twice as fast.</li>
+      <li><b>DX 26</b> &mdash; Acrobatics 29, Climbing/Fast-Draw 27&ndash;29; use the terrain.</li>
+      <li><b>Fast-Draw 29</b> &mdash; ignite &amp; ready the staff free on a success.</li>
     </ul>
   </div>
 </section>
@@ -252,70 +228,82 @@ td .tag{color:var(--gold);border-color:var(--gold)}
     <div class="nm">Chatni</div>
     <div class="meta">Dathomiri Nightsister &middot; player Zoe &middot; <b>Force concordance &amp; sabre</b></div>
   </header>
-
   <div class="statline">
     <span><i>ST</i>13</span><span><i>DX</i>10</span>
-    <span><i>IQ</i>18</span><span><i>HT</i>17</span>
-    <span class="sep"></span>
-    <span class="hl"><i>Will</i>35</span><span><i>Per</i>18</span>
-    <span class="sep"></span>
-    <span><i>HP</i>33</span><span class="hl"><i>FP</i>69</span>
-    <span class="sep"></span>
-    <span><i>Dodge</i>9</span><span class="hl"><i>Parry</i>22F</span>
-    <span><i>Move</i>6</span>
+    <span><i>IQ</i>18</span><span><i>HT</i>17</span><span class="sep"></span>
+    <span class="hl"><i>Will</i>35</span><span><i>Per</i>18</span><span class="sep"></span>
+    <span><i>HP</i>33</span><span class="hl"><i>FP</i>69</span><span class="sep"></span>
+    <span><i>Dodge</i>9</span><span class="hl"><i>Parry</i>22F</span><span><i>Move</i>6</span>
   </div>
-
   
 <div class="panel core">
-  <h3>How every roll works <span class="sub">the only dice rule you need</span></h3>
+  <h3>How every roll works <span class="sub">the whole dice system on one screen</span></h3>
   <div class="grid2">
     <div>
-      <p><b>Roll 3d6. Equal&nbsp;to or under your number = success.</b> Lower roll = bigger margin
-      (margin matters for damage spill, contests, and how well a Force power lands).</p>
+      <p class="kh">1 &middot; Rolling</p>
+      <p><b>Roll 3 dice. Total equal&nbsp;to or under your number = success.</b> How far under is your
+      <b>margin</b> (it decides extra hits, who wins a contest, and how hard a power lands).</p>
       <ul class="tight">
-        <li><b>3&ndash;4</b> always succeeds &mdash; and is a <b>critical</b> (best possible result).</li>
-        <li><b>5</b> crits if your number is 15+, <b>6</b> crits if 16+.</li>
-        <li><b>17</b> fails (critical fail if your number is under 16); <b>18</b> is always a critical fail.</li>
-        <li>Any roll that misses by 10+ is also a critical fail.</li>
+        <li><b>3&ndash;4</b> = automatic <b>critical success</b> (the best result).</li>
+        <li><b>5</b> crits if your number is 15+; <b>6</b> crits if 16+.</li>
+        <li><b>17</b> fails (a <i>critical</i> fail if your number is under 16); <b>18</b> always critical-fails.</li>
+        <li>Miss by 10+ = critical fail.</li>
       </ul>
     </div>
     <div>
-      <p><b>Getting attacked?</b> Pick <u>one</u> active defence and roll 3d6 against it:</p>
+      <p class="kh">2 &middot; Defending</p>
+      <p>Attacked? Pick <u>one</u> defence and roll 3d6 against it. Make it = the hit is avoided.</p>
       <ul class="tight">
-        <li><b>Dodge</b> &mdash; always available, works against anything you can see.</li>
-        <li><b>Parry</b> &mdash; with a melee weapon in hand (a lit sabre can Parry blaster bolts).</li>
-        <li><b>Block</b> &mdash; with a shield/gauntlet ready.</li>
-        <li><b>Retreat</b> 1 step as you defend: <b>+3 Dodge</b>, <b>+1 Parry/Block</b> (sabre = +3).</li>
+        <li><b>Dodge</b> &mdash; always available vs anything you can see.</li>
+        <li><b>Parry</b> &mdash; melee weapon in hand (a lit sabre Parries blaster bolts).</li>
+        <li><b>Block</b> &mdash; shield or gauntlet ready.</li>
+        <li><b>Retreat</b> a step while defending: <b>+3 Dodge</b>, <b>+1 Parry/Block</b> (sabre <b>+3</b>).</li>
       </ul>
-      <p class="mini">Common to-hit mods: target behind cover &minus;2 to &minus;5 &middot; you moved &amp; attacked &minus;2 (skill capped 9)
-      &middot; aim at a body part: torso 0, arm/leg &minus;2, hand/foot &minus;4, head &minus;5, eye/vitals &minus;3 to &minus;7.</p>
+    </div>
+  </div>
+  <div class="grid2 t-sep">
+    <div>
+      <p class="kh">3 &middot; Damage &amp; armour <span class="kt">the part new players miss</span></p>
+      <p>On a hit, roll the weapon's dice. Then the target's <b>DR</b> (armour) is subtracted &mdash;
+      <i>but first</i> the weapon's <b>Armour Divisor (AD)</b> divides that DR.</p>
+      <p class="ex"><b>Worked:</b> 6d bolt rolls <b>21</b>, weapon is <b>AD&nbsp;2</b>, target armour <b>DR&nbsp;18</b>.
+      AD&nbsp;2 &rarr; armour counts as <b>9</b>. Damage through = 21 &minus; 9 = <b>12</b>.</p>
+      <p class="mini">A lightsabre is <b>AD&nbsp;5</b> &mdash; DR 20 becomes 4. That's why blades cut through nearly anything.</p>
+    </div>
+    <div>
+      <p class="kh">4 &middot; Common modifiers <span class="kt">applied to your number before you roll</span></p>
+      <ul class="tight">
+        <li>Target behind cover: <b>&minus;2 to &minus;5</b>.</li>
+        <li>You moved &amp; attacked: <b>&minus;2</b> (and the shot/swing caps at skill 9).</li>
+        <li>Aiming at a body part: skull <b>&minus;7</b>, vitals <b>&minus;3</b>, arm/leg <b>&minus;2</b>, hand/foot <b>&minus;4</b>, face <b>&minus;5</b>.</li>
+        <li>Deceptive Attack: every <b>&minus;2</b> you take = <b>&minus;1</b> to the foe's defence.</li>
+      </ul>
     </div>
   </div>
 </div>
-
 
   <div class="panel">
     <h3>Casting the Force <span class="sub">your engine &mdash; read this first</span></h3>
     <div class="grid2">
       <div>
-        <p>Every power is <b>&ldquo;Roll Force&rdquo;</b>: roll 3d6 against the <b>governing attribute</b> listed on the power, then pay its FP. Your numbers:</p>
+        <p>Every power is <b>&ldquo;Roll Force&rdquo;</b>: roll 3d6 against the <b>attribute the power uses</b>, then pay its FP.</p>
         <ul class="tight">
-          <li><b>Will&nbsp;35</b> &mdash; Nightsister &amp; Will powers. Essentially automatic; you fail only on a natural 17&ndash;18.</li>
-          <li><b>IQ&nbsp;18</b> &mdash; Concordance &amp; Living-Path powers. Still very reliable.</li>
-          <li><b>ST&nbsp;13 / DX&nbsp;10</b> &mdash; the few push/pull/movement powers.</li>
+          <li><b>Will 35</b> (Nightsister & Will powers) &mdash; you only fail on a <b>17</b> or <b>18</b>. Treat these as automatic.</li>
+          <li><b>IQ 18</b> (Concordance & Living Path) &mdash; fails only on ~16+.</li>
+          <li><b>ST 13 / DX 10</b> &mdash; the push/pull/move powers.</li>
         </ul>
-        <p class="mini">You have <b>69 FP</b> &mdash; a huge tank. That's the real limit on how much you can do per fight, not the dice.</p>
+        <p class="mini">Your real limit is <b>69 FP</b>, not the dice. Spend it; it comes back with rest.</p>
       </div>
       <div>
-        <p><b>Resisted powers</b> are a Quick Contest: your attribute vs the target's (Will, HT, ST, etc. as the row says). You win ties on most; the table notes who resists with what.</p>
-        <p><b>Concentrate</b> powers take your turn (1 second) and can be spoiled if you're hit &mdash; your <b>Compartmentalized Mind</b> lets you hold a second mental action in parallel.</p>
-        <p class="mini">Bolster: many Inscribed powers can be over-charged for extra FP (the bigger number on your full sheet) for stronger effect.</p>
+        <p><b>Resisted powers</b> = a Quick Contest: your attribute vs the target's (Will/HT/ST as the row says); you win ties on most.</p>
+        <p class="ex"><b>Worked &mdash; Hex of Agony:</b> spend <b>4 FP</b> for <b>&minus;4</b>. Contest <b>Will 35</b> vs their Will (say 12):
+        you roll vs 35, they roll vs 12 &mdash; you win almost always &rarr; <b>&minus;4 to all their DX & IQ rolls.</b></p>
+        <p class="mini"><b>Compartmentalized Mind</b> lets you hold a mental action <i>and</i> act in the same turn.</p>
       </div>
     </div>
   </div>
-
   <div class="panel">
-    <h3>Power concordance <span class="sub">all 35 known &mdash; roll number is the target attribute</span></h3>
+    <h3>Power concordance <span class="sub">all 35 known &mdash; the &ldquo;Roll&rdquo; number is your target on 3d6</span></h3>
     <table class="pwt">
       <tr><th>Power</th><th class="c">Roll</th><th class="c">FP</th><th class="c">Tier</th><th>Effect</th></tr>
       <tr class="bookrow"><td colspan="5"><span class="bk">Inscribed Voice</span> <span class="bkn">Nightsister witchcraft — rolls vs <b>Will 35</b>. Your strongest school.</span></td></tr>
@@ -359,37 +347,37 @@ td .tag{color:var(--gold);border-color:var(--gold)}
 <tr><td class="pw">Revitalize</td><td class="c"><span class="roll">18</span><span class="atl">IQ</span></td><td class="c fp">10</td><td class="c"><span class="tier t3">T3</span></td><td class="eff">Instantly wake an ally downed at 0 HP, whatever their injury.</td></tr>
     </table>
   </div>
-
   <div class="panel">
-    <h3>Your sabre <span class="sub">Ghost-fire crystal &middot; Weapon Master</span></h3>
+    <h3>Your sabre <span class="sub">Ghost-fire crystal &middot; Weapon Master maths</span></h3>
     <table class="wt">
-      <tr><th>Weapon</th><th class="c">Roll</th><th>Damage</th><th>Reach</th><th class="c">Parry</th><th>Notes</th></tr>
+      <tr><th>Weapon</th><th class="c">Hit on</th><th>Damage</th><th>Reach</th><th class="c">Parry</th><th>Notes</th></tr>
       <tr class="hot"><td><b>Lightsabre</b></td><td class="c"><span class="roll">37</span></td>
-        <td><b>8d+8</b> imp+burn, AD&nbsp;5 <span class="tag">+WM</span></td><td>1,&nbsp;2</td><td class="c">22F</td>
-        <td>Weapon Master adds damage &amp; lets you Rapid Strike at only &minus;3. Cuts nearly all DR; can Deflect bolts.</td></tr>
+        <td><b>8d+24</b> imp+burn &middot; AD&nbsp;5</td><td>1,&nbsp;2</td><td class="c">22F</td>
+        <td>Cuts nearly all DR; can Deflect bolts.</td></tr>
     </table>
-    <p class="mini"><b>Extra Attack</b> = two swings at 37. Defend at Parry <b>22</b> (retreat &rarr; <b>25</b>). You can also <b>Force Deflection</b> (2 FP) or <b>Tutaminis 32</b> to swat blaster bolts with the Force.</p>
+    <p class="ex"><b>Where 8d+24 comes from:</b> the blade is 8d+8; <b>Weapon Master</b> adds <b>+2 per die</b> (your skill 37 is far above DX+2),
+    that's +16 &rarr; <b>8d+24</b> (average <b>~52</b>). Weapon Master also lets you <b>Rapid Strike at only &minus;3</b>.</p>
+    <p class="mini"><b>Extra Attack</b> = two swings at <b>37</b> (or four at <b>34</b> via Rapid Strike). Parry <b>22</b> = (37&divide;2)+3+1 Combat Reflexes;
+    retreat &rarr; <b>25</b>. You can also <b>Force Deflection</b> (2 FP, roll DX 10) or <b>Tutaminis 32</b> to stop bolts with the Force.</p>
   </div>
-
   <div class="panel edge">
     <h3>Niman &mdash; your signature combo <span class="sub">Form VI active, Tier 3</span></h3>
     <ul class="tight">
-      <li><b>+3 to every Force-skill roll</b> while Niman is up (already strong, now stronger).</li>
-      <li><b>Hit, then cast free:</b> after a sabre <b>hit</b>, fire one <i>Instant</i> power as a Follow-up for its base FP <b>&minus;2</b> (min 1) &mdash; <b>no extra action</b>. Swing &rarr; land &rarr; Force Push / Hex / Spirit Sever in the same beat.</li>
+      <li><b>+3 to every Force roll.</b> Will 35 is already a lock, but this lifts your <b>IQ powers to 21</b>, <b>ST to 16</b>, <b>DX to 13</b> &mdash; the lower ones become reliable too.</li>
+      <li><b>Hit, then cast free:</b> after a sabre <b>hit</b>, fire one <i>Instant</i> power as a Follow-up for its base FP <b>&minus;2</b> (min 1), <b>no extra action</b>. Swing &rarr; land &rarr; Force Push / Hex / Spirit Sever in the same beat.</li>
       <li><b>Convergence</b> (1/turn): fold a sabre attack <i>and</i> an Initiate-tier Instant power into one action; the power costs its own FP +1.</li>
-      <li><i>Diminishing Returns:</i> the 2nd Follow-up in a turn costs +1 FP, 3rd +2, etc. Resets each turn &mdash; so one big Follow-up per swing is the sweet spot.</li>
+      <li><i>Diminishing Returns:</i> a 2nd Follow-up in a turn costs +1 FP, 3rd +2&hellip; (resets each turn). One big Follow-up per swing is the sweet spot.</li>
     </ul>
   </div>
-
   <div class="panel">
     <h3>Sabre techniques &amp; edges</h3>
     <ul class="tight two">
-      <li><b>Bolt Deflection</b> &mdash; Parry blaster fire; reflect with margin.</li>
-      <li><b>Trakata</b> &mdash; flick the blade off/on mid-swing to slip past a Parry (rolls Lightsabre, 0 FP).</li>
-      <li><b>Sabre Throw</b> &mdash; thrown blade attack at range, returns.</li>
-      <li><b>Combat Reflexes + Compartmentalized Mind</b> &mdash; fast, and you act mentally + physically in parallel.</li>
+      <li><b>Bolt Deflection</b> &mdash; Parry blaster fire (22); reflect with margin.</li>
+      <li><b>Trakata</b> &mdash; blink the blade off/on to slip a Parry (roll 37, 0 FP).</li>
+      <li><b>Sabre Throw</b> &mdash; thrown attack at range, returns.</li>
+      <li><b>Combat Reflexes</b> &mdash; fast init, +6 vs fear/stun.</li>
       <li><b>High Pain Threshold</b> &mdash; no shock penalty when hurt.</li>
-      <li><b>Magery 4 / Empathy</b> &mdash; you read intent and the Force itself; lean on Sense / Spirit Sight before a fight.</li>
+      <li><b>Magery 4 / Empathy</b> &mdash; read the room with Sense / Spirit Sight before a fight.</li>
     </ul>
   </div>
 </section>
@@ -398,126 +386,167 @@ td .tag{color:var(--gold);border-color:var(--gold)}
 <section class="sheet" data-who="sekan">
   <header class="who">
     <div class="nm">Sekan Nightfall</div>
-    <div class="meta">Human Mandalorian &middot; player Anthony &middot; <b>Gunner &amp; armoured wall</b></div>
+    <div class="meta">Human Mandalorian &middot; player Anthony &middot; <b>Gunner &amp; armoured wall</b> &middot; new player &mdash; start here</div>
   </header>
-
   <div class="statline">
     <span class="hl"><i>ST</i>20</span><span><i>DX</i>19</span>
-    <span><i>IQ</i>12</span><span><i>HT</i>14</span>
-    <span class="sep"></span>
-    <span><i>Will</i>12</span><span><i>Per</i>12</span>
-    <span class="sep"></span>
-    <span class="hl"><i>HP</i>40</span><span><i>FP</i>14</span>
-    <span class="sep"></span>
-    <span><i>Dodge</i>10</span><span><i>Block</i>14</span>
-    <span><i>Move</i>8</span>
+    <span><i>IQ</i>12</span><span><i>HT</i>14</span><span class="sep"></span>
+    <span><i>Will</i>12</span><span><i>Per</i>12</span><span class="sep"></span>
+    <span class="hl"><i>HP</i>40</span><span><i>FP</i>14</span><span class="sep"></span>
+    <span><i>Dodge</i>10</span><span><i>Block</i>14</span><span><i>Move</i>8</span>
   </div>
-
   
 <div class="panel core">
-  <h3>How every roll works <span class="sub">the only dice rule you need</span></h3>
+  <h3>How every roll works <span class="sub">the whole dice system on one screen</span></h3>
   <div class="grid2">
     <div>
-      <p><b>Roll 3d6. Equal&nbsp;to or under your number = success.</b> Lower roll = bigger margin
-      (margin matters for damage spill, contests, and how well a Force power lands).</p>
+      <p class="kh">1 &middot; Rolling</p>
+      <p><b>Roll 3 dice. Total equal&nbsp;to or under your number = success.</b> How far under is your
+      <b>margin</b> (it decides extra hits, who wins a contest, and how hard a power lands).</p>
       <ul class="tight">
-        <li><b>3&ndash;4</b> always succeeds &mdash; and is a <b>critical</b> (best possible result).</li>
-        <li><b>5</b> crits if your number is 15+, <b>6</b> crits if 16+.</li>
-        <li><b>17</b> fails (critical fail if your number is under 16); <b>18</b> is always a critical fail.</li>
-        <li>Any roll that misses by 10+ is also a critical fail.</li>
+        <li><b>3&ndash;4</b> = automatic <b>critical success</b> (the best result).</li>
+        <li><b>5</b> crits if your number is 15+; <b>6</b> crits if 16+.</li>
+        <li><b>17</b> fails (a <i>critical</i> fail if your number is under 16); <b>18</b> always critical-fails.</li>
+        <li>Miss by 10+ = critical fail.</li>
       </ul>
     </div>
     <div>
-      <p><b>Getting attacked?</b> Pick <u>one</u> active defence and roll 3d6 against it:</p>
+      <p class="kh">2 &middot; Defending</p>
+      <p>Attacked? Pick <u>one</u> defence and roll 3d6 against it. Make it = the hit is avoided.</p>
       <ul class="tight">
-        <li><b>Dodge</b> &mdash; always available, works against anything you can see.</li>
-        <li><b>Parry</b> &mdash; with a melee weapon in hand (a lit sabre can Parry blaster bolts).</li>
-        <li><b>Block</b> &mdash; with a shield/gauntlet ready.</li>
-        <li><b>Retreat</b> 1 step as you defend: <b>+3 Dodge</b>, <b>+1 Parry/Block</b> (sabre = +3).</li>
+        <li><b>Dodge</b> &mdash; always available vs anything you can see.</li>
+        <li><b>Parry</b> &mdash; melee weapon in hand (a lit sabre Parries blaster bolts).</li>
+        <li><b>Block</b> &mdash; shield or gauntlet ready.</li>
+        <li><b>Retreat</b> a step while defending: <b>+3 Dodge</b>, <b>+1 Parry/Block</b> (sabre <b>+3</b>).</li>
       </ul>
-      <p class="mini">Common to-hit mods: target behind cover &minus;2 to &minus;5 &middot; you moved &amp; attacked &minus;2 (skill capped 9)
-      &middot; aim at a body part: torso 0, arm/leg &minus;2, hand/foot &minus;4, head &minus;5, eye/vitals &minus;3 to &minus;7.</p>
+    </div>
+  </div>
+  <div class="grid2 t-sep">
+    <div>
+      <p class="kh">3 &middot; Damage &amp; armour <span class="kt">the part new players miss</span></p>
+      <p>On a hit, roll the weapon's dice. Then the target's <b>DR</b> (armour) is subtracted &mdash;
+      <i>but first</i> the weapon's <b>Armour Divisor (AD)</b> divides that DR.</p>
+      <p class="ex"><b>Worked:</b> 6d bolt rolls <b>21</b>, weapon is <b>AD&nbsp;2</b>, target armour <b>DR&nbsp;18</b>.
+      AD&nbsp;2 &rarr; armour counts as <b>9</b>. Damage through = 21 &minus; 9 = <b>12</b>.</p>
+      <p class="mini">A lightsabre is <b>AD&nbsp;5</b> &mdash; DR 20 becomes 4. That's why blades cut through nearly anything.</p>
+    </div>
+    <div>
+      <p class="kh">4 &middot; Common modifiers <span class="kt">applied to your number before you roll</span></p>
+      <ul class="tight">
+        <li>Target behind cover: <b>&minus;2 to &minus;5</b>.</li>
+        <li>You moved &amp; attacked: <b>&minus;2</b> (and the shot/swing caps at skill 9).</li>
+        <li>Aiming at a body part: skull <b>&minus;7</b>, vitals <b>&minus;3</b>, arm/leg <b>&minus;2</b>, hand/foot <b>&minus;4</b>, face <b>&minus;5</b>.</li>
+        <li>Deceptive Attack: every <b>&minus;2</b> you take = <b>&minus;1</b> to the foe's defence.</li>
+      </ul>
     </div>
   </div>
 </div>
 
-
   <div class="panel edge gun">
-    <h3>Gunslinger &mdash; read this before you shoot <span class="sub">it changes every shot</span></h3>
-    <p><b>You get your weapon's full Accuracy on every shot without taking an Aim manoeuvre, and you ignore the penalties for snap/unready shots.</b> In plain terms: a normal gunner has to spend a turn aiming to add Acc &mdash; <b>you just add it, always.</b> So your effective number is <b>skill + Acc</b>, then apply range and situation.</p>
+    <h3>Gunslinger &mdash; read before you shoot <span class="sub">it changes your number on every shot</span></h3>
+    <p><b>You add your weapon's full Accuracy to every shot for free</b> &mdash; no Aim manoeuvre, and no penalty for snap or
+    unready shots. A normal shooter must spend a whole turn aiming to add Acc; <b>you just add it.</b> So your number is always
+    <b>skill + Accuracy</b>, then you adjust for range and the situation.</p>
   </div>
-
   <div class="panel">
-    <h3>Your guns <span class="sub">number shown already includes Gunslinger Acc</span></h3>
+    <h3>Anatomy of a shot <span class="sub">follow these 4 steps every time</span></h3>
+    <table class="mv steps">
+      <tr><td><span class="stepn">1</span><b>Build your number</b></td>
+        <td>Start with your skill, add Accuracy (free, Gunslinger), add the rapid-fire bonus, then subtract range and any aim-at-a-part penalty.</td></tr>
+      <tr><td><span class="stepn">2</span><b>Roll 3d6</b></td>
+        <td>Equal to or under the number = you're on target. How far under is your <b>margin</b>.</td></tr>
+      <tr><td><span class="stepn">3</span><b>Count the hits</b></td>
+        <td>Your guns fire bursts. <b>Extra bolts hit = margin &divide; Recoil, rounded down.</b> So 1 hit plus one more for each full Recoil you beat the number by.</td></tr>
+      <tr><td><span class="stepn">4</span><b>Roll damage, take off armour</b></td>
+        <td>Roll the dice per bolt. The Armour Divisor shrinks the target's DR first, then subtract DR. What's left is the wound.</td></tr>
+    </table>
+    <p class="ex"><b>Full worked example &mdash; rifle, trooper 100 m away, you spray full-auto:</b><br>
+    <b>Step 1:</b> 31 skill + 6 Acc + 2 (RoF 10) &minus; 10 (range 100 m) = <b>27</b>.&nbsp;
+    <b>Step 2:</b> you roll <b>11</b> &rarr; margin = 27 &minus; 11 = <b>16</b>.&nbsp;
+    <b>Step 3:</b> 16 &divide; Recoil 4 = 4, so <b>1 + 4 = 5 bolts hit</b>.&nbsp;
+    <b>Step 4:</b> each bolt 6d (avg <b>21</b>), AD 2 halves the trooper's DR 18 to <b>9</b>, so 21 &minus; 9 = <b>12</b> per bolt &mdash; about <b>60 damage</b> lands.</p>
+  </div>
+  <div class="panel">
+    <h3>Your guns <span class="sub">point-blank number already includes Accuracy + rapid-fire bonus</span></h3>
     <table class="wt">
-      <tr><th>Weapon</th><th class="c">Eff. Roll</th><th>Damage</th><th class="c">RoF</th><th class="c">Rcl</th><th>Range / shots</th></tr>
+      <tr><th>Weapon</th><th class="c">Base number</th><th>Damage</th><th class="c">RoF</th><th class="c">Rcl</th><th>Range / shots</th></tr>
       <tr class="hot"><td><b>Mando blaster rifle</b></td>
-        <td class="c"><span class="roll">37</span><span class="atl">31+6</span></td>
-        <td><b>6d</b> (2)&nbsp;burn</td><td class="c">10</td><td class="c">4</td>
-        <td>600 / 1200&nbsp;m &middot; 40 shots &middot; Bulk&nbsp;&minus;4</td></tr>
+        <td class="c"><span class="roll">39</span><span class="atl">31+6+2</span></td>
+        <td><b>6d</b> &middot; AD&nbsp;2 (burn)</td><td class="c">10</td><td class="c">4</td>
+        <td>600 / 1200&nbsp;m &middot; 40 shots</td></tr>
       <tr><td><b>Mando repeating blaster</b></td>
-        <td class="c"><span class="roll">35</span><span class="atl">31+4</span></td>
-        <td><b>6d+6</b> (3)&nbsp;burn</td><td class="c">15&nbsp;<span class="tag">+1</span></td><td class="c">7</td>
-        <td>500 / 1000&nbsp;m &middot; 100 shots &middot; Bulk&nbsp;&minus;7</td></tr>
+        <td class="c"><span class="roll">38</span><span class="atl">31+4+3</span></td>
+        <td><b>6d+6</b> &middot; AD&nbsp;3 (burn)</td><td class="c">16</td><td class="c">7</td>
+        <td>500 / 1000&nbsp;m &middot; 100 shots</td></tr>
     </table>
-    <p class="mini">Both fire on <b>Blasters (Rifle) 31</b>; the rolls above add each gun's Acc (Gunslinger). Rifle is your workhorse; the repeating blaster is for walls of fire &amp; suppression (high-output pack: +1 RoF, but a malfunction roll of 17&ndash;18 vents the hot pack). The repeating blaster also mounts an <b>underbarrel 40&nbsp;mm grenade launcher</b> (single shot) for lobbing detonators.</p>
+    <p class="mini">Both roll on <b>Blasters (Rifle) 31</b>. &ldquo;Base number&rdquo; = skill + that gun's Acc + its rapid-fire bonus, at close range
+    before you subtract for distance. Rifle = your workhorse; repeating blaster = walls of fire &amp; suppression (its <b>+1 RoF pack runs hot</b> &mdash;
+    a malfunction roll of 17&ndash;18 vents it). The repeating blaster also has an <b>underbarrel grenade launcher</b> for lobbing detonators.</p>
   </div>
-
   <div class="panel">
-    <h3>How to shoot &mdash; the maths, with numbers <span class="sub">your core loop</span></h3>
-    <table class="mv">
-      <tr><th>Situation</th><th>What you roll</th></tr>
-      <tr><td><b>Range penalty</b><br><span class="mini">from the Size/Speed-Range table</span></td>
-        <td>Subtract for distance: <b>10 m &minus;4 &middot; 20 m &minus;6 &middot; 50 m &minus;8 &middot; 100 m &minus;10 &middot; 200 m &minus;12 &middot; 500 m &minus;15</b>. Inside the rifle's 600 m half-range, damage is full.</td></tr>
-      <tr><td><b>Rapid fire</b><br><span class="mini">your guns spit a lot of bolts</span></td>
-        <td>High RoF gives a flat to-hit bonus: <b>RoF 10 &rarr; +2</b>, <b>RoF 15&ndash;16 &rarr; +3</b> (already in the rolls above). Then <b>recoil</b> turns overkill into extra hits: for every full <b>Rcl</b> you beat the number by, <b>+1 bolt hits</b>. Rifle Rcl 4: beat by 4 = 2 hits, by 8 = 3 hits&hellip;</td></tr>
-      <tr><td><b>Worked example</b></td>
-        <td>Rifle at a trooper <b>100 m</b> off: 37 &minus;10 range = <b>27</b>. You roll a 19 &mdash; you beat 27 by 8, so with Rcl 4 that's <b>three</b> 6d(2) hits landing. Each averages 21, divisor 2 vs his DR.</td></tr>
-      <tr><td><b>Suppression</b><br><span class="mini">repeating blaster</span></td>
-        <td>Spray a zone (RoF 15+): everyone crossing it must Dodge or risk a bolt; great for pinning a doorway or covering the others' move.</td></tr>
-      <tr><td><b>Aim at a part</b></td>
-        <td>Targeted: head &minus;5, vitals/eye &minus;3 to &minus;7, limb &minus;2, weapon-hand to disarm &minus;4. You have skill to spare &mdash; called shots punch through weak points.</td></tr>
-      <tr><td><b>Move &amp; shoot</b></td>
-        <td>Move-and-Attack caps the shot at skill <b>9</b> and &minus;2 (Gunslinger keeps your Acc but not the cap). Prefer to plant, fire, then reposition.</td></tr>
-    </table>
+    <h3>The two tables you'll actually use <span class="sub">subtract range; add the rapid-fire bonus</span></h3>
+    <div class="grid2">
+      <div>
+        <p class="kh">Range &mdash; subtract from your number</p>
+        <table class="num2">
+          <tr><th>Distance</th><th class="c">Mod</th><th>Distance</th><th class="c">Mod</th></tr>
+          <tr><td>up to 10 m</td><td class="c">&minus;4</td><td>100 m</td><td class="c">&minus;10</td></tr>
+          <tr><td>20 m</td><td class="c">&minus;6</td><td>150 m</td><td class="c">&minus;11</td></tr>
+          <tr><td>30 m</td><td class="c">&minus;7</td><td>200 m</td><td class="c">&minus;12</td></tr>
+          <tr><td>50 m</td><td class="c">&minus;8</td><td>300 m</td><td class="c">&minus;13</td></tr>
+          <tr><td>70 m</td><td class="c">&minus;9</td><td>500 m</td><td class="c">&minus;14</td></tr>
+        </table>
+        <p class="mini">Inside the rifle's 600 m half-range, damage is full. Past it, damage halves.</p>
+      </div>
+      <div>
+        <p class="kh">Rapid-fire bonus &mdash; add to your number</p>
+        <table class="num2">
+          <tr><th>Bolts fired (RoF)</th><th class="c">Bonus</th></tr>
+          <tr><td>5&ndash;8</td><td class="c">+1</td></tr>
+          <tr><td>9&ndash;12 &nbsp;<span class="mini">(rifle)</span></td><td class="c">+2</td></tr>
+          <tr><td>13&ndash;16 &nbsp;<span class="mini">(repeater)</span></td><td class="c">+3</td></tr>
+          <tr><td>17&ndash;24</td><td class="c">+4</td></tr>
+        </table>
+        <p class="kh" style="margin-top:10px">Aim at a part &mdash; subtract</p>
+        <p class="mini">Skull <b>&minus;7</b> &middot; face <b>&minus;5</b> &middot; vitals <b>&minus;3</b> &middot; arm/leg <b>&minus;2</b> &middot; hand/foot <b>&minus;4</b>.
+        You have skill to spare &mdash; called shots find the gaps in armour.</p>
+      </div>
+    </div>
   </div>
-
   <div class="panel">
-    <h3>Grenades &amp; melee backup <span class="sub">when they get close</span></h3>
+    <h3>Grenades &amp; melee backup <span class="sub">when they close the distance</span></h3>
     <table class="wt">
-      <tr><th>Option</th><th class="c">Roll</th><th>Damage</th><th>Notes</th></tr>
+      <tr><th>Option</th><th class="c">Hit on</th><th>Damage</th><th>Notes</th></tr>
       <tr><td><b>Thermal detonator &times;3</b></td><td class="c"><span class="roll">20</span></td>
-        <td><b>6d&times;3</b> (2) burn</td><td>Thrown (Throwing) or launched. ~4-hex blast; falls off from the centre. Devastating &mdash; mind your team.</td></tr>
+        <td><b>6d&times;3</b> &middot; AD&nbsp;2 (burn)</td><td>Thrown (Throwing) or launched. ~4-hex blast; damage drops off from the centre. Devastating &mdash; mind your team.</td></tr>
       <tr><td>Two-handed sword</td><td class="c"><span class="roll">26</span></td>
-        <td>sw <b>3d+2</b> + blade</td><td>Your best blade if drawn. ST 20 hits hard.</td></tr>
+        <td>3d+2 + blade</td><td>Your best blade if drawn. ST 20 swings hard.</td></tr>
       <tr><td>Knife / Shortsword</td><td class="c"><span class="roll">24 / 22</span></td>
-        <td>thr/sw + blade</td><td>Fast sidearm options in a clinch.</td></tr>
+        <td>thr/sw + blade</td><td>Fast options in a clinch.</td></tr>
       <tr><td>Bolas / Brawling</td><td class="c"><span class="roll">20 / 21</span></td>
-        <td>tangle / fists</td><td>Bolas to entangle &amp; drop a runner; fists when unarmed.</td></tr>
+        <td>tangle / fists</td><td>Bolas to drop a runner; fists when unarmed.</td></tr>
     </table>
-    <p class="mini">Defend with <b>Block 14</b> (shield/gauntlet) or <b>Dodge 10</b>; retreat for +1/+3. Honestly, your best defence is your armour &mdash; often just take the hit and fire back.</p>
+    <p class="mini">Defend with <b>Block 14</b> (shield/gauntlet) or <b>Dodge 10</b>; retreat for +1 / +3. But your real defence is the armour below &mdash;
+    most turns, just take the hit and fire back.</p>
   </div>
-
   <div class="panel edge">
-    <h3>The wall <span class="sub">why you can soak it</span></h3>
+    <h3>The wall <span class="sub">why you can stand in the open and soak it</span></h3>
     <table class="ar">
-      <tr><th>Location</th><th class="c">DR</th><th>Effect</th></tr>
-      <tr><td>Torso (heart)</td><td class="c"><b>85</b></td><td>Neo-Crusader 25 <b>+ beskar 60</b>, and beskar divides anything that gets through by <b>&divide;10</b>. Near-impervious.</td></tr>
-      <tr><td>Head (helm)</td><td class="c"><b>85</b></td><td>Same beskar crown over the helm &mdash; &divide;10 vs everything.</td></tr>
-      <tr><td>Everywhere else</td><td class="c"><b>25</b></td><td>Neo-Crusader plate, PD 2, &divide;2 vs cutting. Sealed suit.</td></tr>
+      <tr><th>Location</th><th class="c">DR</th><th>What it means</th></tr>
+      <tr><td>Torso (heart)</td><td class="c"><b>85</b></td><td>Neo-Crusader 25 <b>+ beskar 60</b>, and beskar divides anything that <i>does</i> get through by <b>&divide;10</b>. Near-impervious.</td></tr>
+      <tr><td>Head (helm)</td><td class="c"><b>85</b></td><td>Beskar crown over the helm &mdash; same <b>&divide;10</b> vs everything.</td></tr>
+      <tr><td>Arms / legs</td><td class="c"><b>25</b></td><td>Neo-Crusader plate, &divide;2 vs cutting. A 6d bolt (21) barely scratches it.</td></tr>
     </table>
     <ul class="tight two">
       <li><b>HP 40 + High Pain Threshold</b> &mdash; deep pool, no shock penalty.</li>
-      <li><b>Very Fit</b> &mdash; fast FP recovery, shrug off fatigue.</li>
-      <li><b>Combat Reflexes</b> &mdash; fast init, +6 vs fear/stun.</li>
-      <li><b>Your job:</b> stand in the open, draw fire off Tylo &amp; Chatni, and put bolts down range.</li>
+      <li><b>Very Fit</b> &mdash; shrug off fatigue, fast recovery.</li>
+      <li><b>Combat Reflexes</b> &mdash; fast initiative, +6 vs fear/stun.</li>
+      <li><b>Your job:</b> stand in front, draw fire off Tylo &amp; Chatni, put bolts down range.</li>
     </ul>
   </div>
 </section>
 
-
 <div class="foot">Built from the live sheet engine &middot; 1 m = 1 hex &middot; standard blasters AD 1 &middot; tap a name to switch &middot; print = full 3-sheet pack</div>
-
 <script>
 const tabs=[...document.querySelectorAll('.tabs button')];
 const sheets=[...document.querySelectorAll('.sheet')];
@@ -528,8 +557,7 @@ function show(who){
   window.scrollTo({top:0});
 }
 tabs.forEach(b=>b.addEventListener('click',()=>show(b.dataset.go)));
-let start='truman';
-try{const s=localStorage.getItem('cpb_tab');if(s)start=s}catch(e){}
+let start='truman';try{const s=localStorage.getItem('cpb_tab');if(s)start=s}catch(e){}
 if(!sheets.some(s=>s.dataset.who===start))start='truman';
 show(start);
 </script>
