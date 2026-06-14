@@ -64,13 +64,6 @@
       "spec": ""
     },
     {
-      "name": "Accounting",
-      "pts": 1,
-      "attr": "IQ",
-      "diff": "H",
-      "spec": ""
-    },
-    {
       "name": "Shortsword",
       "attr": "DX",
       "diff": "A",
@@ -135,7 +128,7 @@
     },
     {
       "name": "Acrobatics",
-      "pts": 1,
+      "pts": 2,
       "attr": "DX",
       "diff": "H",
       "spec": ""
@@ -658,7 +651,7 @@
   ],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T09:43:22.313Z",
+    "savedAt": "2026-06-14T09:44:32.856Z",
     "savedBy": "Anthony"
   },
   "builder": {
