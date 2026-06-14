@@ -180,7 +180,7 @@
       "pts": 16,
       "attr": "DX",
       "diff": "A",
-      "spec": ""
+      "spec": "Starfighter"
     },
     {
       "name": "Merchant",
@@ -232,7 +232,7 @@
       "pts": 12,
       "attr": "IQ",
       "diff": "A",
-      "spec": ""
+      "spec": "Special Ops"
     }
   ],
   "traits": [
@@ -634,7 +634,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-14T03:28:05.691Z",
+    "savedAt": "2026-06-14T03:28:23.755Z",
     "savedBy": "Csuman"
   }
 }
