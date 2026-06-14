@@ -348,10 +348,6 @@
     },
     {
       "kind": "weapons",
-      "name": "Heavy blaster pistol"
-    },
-    {
-      "kind": "weapons",
       "name": "Mandalorian repeating blaster",
       "cls": "Ranged",
       "_cat": "Mandalorian",
@@ -379,6 +375,10 @@
           "bulk": -1
         }
       ]
+    },
+    {
+      "kind": "weapons",
+      "name": "Heavy blaster pistol"
     }
   ],
   "force": {
@@ -453,7 +453,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T04:09:43.589Z",
+    "savedAt": "2026-06-14T04:10:00.283Z",
     "savedBy": "Anthony"
   },
   "builder": {
