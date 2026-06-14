@@ -380,7 +380,15 @@
       "_cat": "Iktotchi"
     }
   ],
-  "shields": [],
+  "shields": [
+    {
+      "name": "Personal shield",
+      "equipped": false,
+      "_cat": "Dual-phase (both)",
+      "_bought": false,
+      "_type": ""
+    }
+  ],
   "explosives": [],
   "gear": [],
   "inventory": [
@@ -619,7 +627,7 @@
     }
   },
   "_meta": {
-    "savedAt": "2026-06-14T03:21:27.704Z",
+    "savedAt": "2026-06-14T03:21:44.412Z",
     "savedBy": "Csuman"
   }
 }
