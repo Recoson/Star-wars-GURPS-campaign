@@ -57,10 +57,11 @@
       "spec": "Cannon"
     },
     {
-      "name": "Two-Handed Sword",
+      "name": "Broadsword",
       "attr": "DX",
       "diff": "A",
-      "pts": 28
+      "pts": 28,
+      "spec": ""
     },
     {
       "name": "Shortsword",
@@ -456,7 +457,7 @@
   "languages2": [],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T04:32:44.444Z",
+    "savedAt": "2026-06-14T04:33:41.162Z",
     "savedBy": "Anthony"
   },
   "builder": {
