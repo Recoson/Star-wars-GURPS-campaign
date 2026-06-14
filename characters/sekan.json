@@ -535,7 +535,66 @@
       ]
     }
   ],
-  "droids": [],
+  "droids": [
+    {
+      "name": "Service/Butler Droid",
+      "deg": "3rd",
+      "size": "SM 0",
+      "hp": 18,
+      "hpMax": 18,
+      "dr": 4,
+      "iq": 10,
+      "move": 4,
+      "weapons": "Savoir-Faire 13; Cooking 12",
+      "skills": "",
+      "cost": 14000,
+      "notes": "Affluent household standard.",
+      "fn": "Household service",
+      "parts": [
+        {
+          "cat": "Chassis",
+          "name": "Frame & shell",
+          "status": "ok"
+        },
+        {
+          "cat": "Core",
+          "name": "Logic core",
+          "status": "ok"
+        },
+        {
+          "cat": "Power",
+          "name": "Power cell",
+          "status": "ok"
+        },
+        {
+          "cat": "Mobility",
+          "name": "Locomotion system",
+          "status": "ok"
+        },
+        {
+          "cat": "Sensors",
+          "name": "Photoreceptor cluster",
+          "status": "ok"
+        },
+        {
+          "cat": "Manipulators",
+          "name": "Manipulator arms",
+          "status": "ok"
+        },
+        {
+          "cat": "Comms",
+          "name": "Comms suite",
+          "status": "ok"
+        },
+        {
+          "cat": "Programming",
+          "name": "Behavioral core",
+          "status": "ok"
+        }
+      ],
+      "wpns": []
+    }
+  ],
   "customDB": {
     "weapons": [],
     "armour": [],
@@ -592,7 +651,7 @@
   ],
   "layout": {},
   "_meta": {
-    "savedAt": "2026-06-14T06:56:10.719Z",
+    "savedAt": "2026-06-14T06:58:52.808Z",
     "savedBy": "Anthony"
   },
   "builder": {
