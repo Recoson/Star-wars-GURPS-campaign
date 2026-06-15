@@ -195,6 +195,11 @@ body.arrange .lay-size{display:block}
 body.arrange .char-grid>.section h3,body.arrange .char-grid>.char-left h3{padding-left:34px}
 @media print{.lay-move,.lay-size,.arrange-hint{display:none!important}}
 /* larger tap targets — easier on tablets (additive; desktop pointers unchanged) */
+/* collapsible sections — tap a section header to fold it (state saved per section) */
+.section.col-collapsed>*:not(h3){display:none!important}
+.section>h3{cursor:pointer;user-select:none}
+.section>h3 .col-caret{display:inline-block;width:13px;color:var(--cyan,#39b6c8);font-size:10px;transition:transform .15s}
+.section.col-collapsed>h3 .col-caret{transform:rotate(-90deg)}
 @media (pointer:coarse){
  button,.btn,.btn-sm,.btn-add,.btn-equip,.btn-stow,.btn-del{min-height:40px}
  .cell,input.cell,select.cell{min-height:40px;font-size:15px}
@@ -8231,9 +8236,28 @@ function resetLayout(){ try{ C.layout={}; if(typeof touch==='function')touch(); 
 /* ── re-apply after every render (observer, loop-guarded) ── */
 function initLayoutEngine(){ /* free-canvas arrange removed (observer disabled) */ }
 
+function _applyCollapse(){
+  var hs=document.querySelectorAll('#tabContent .section>h3');
+  for(var i=0;i<hs.length;i++){
+    var h=hs[i];
+    if(h.getAttribute('data-col')) continue;
+    h.setAttribute('data-col','1');
+    var sec=h.parentElement;
+    var c=document.createElement('span'); c.className='col-caret'; c.textContent='▾ '; h.insertBefore(c,h.firstChild);
+    var k='kc_'+((h.textContent||'').replace(/[^a-z]/gi,'').slice(0,22));
+    try{ if(localStorage.getItem(k)==='1') sec.classList.add('col-collapsed'); }catch(e){}
+    (function(sec,k){
+      h.addEventListener('click',function(ev){
+        if(ev.target.closest('button,select,input,a,textarea')) return;
+        sec.classList.toggle('col-collapsed');
+        try{ localStorage.setItem(k, sec.classList.contains('col-collapsed')?'1':'0'); }catch(e){}
+      });
+    })(sec,k);
+  }
+}
 function initCombobox(){
  const root=document.getElementById('tabContent');
- enhanceSelects(root);
+ enhanceSelects(root); _applyCollapse();
  const runEnhance=()=>{
   // Preserve focus + caret so a re-render/relayout doesn't yank the user out of the
   // field they're editing (the cause of "select a field and it deselects immediately").
@@ -8244,7 +8268,7 @@ function initCombobox(){
    _f={el:ae,id:ae.id||'',ss:ss,se:se};
   }
   _comboMO.disconnect();
-  try{ enhanceSelects(root); applyLayout(); }
+  try{ enhanceSelects(root); applyLayout(); _applyCollapse(); }
   finally{ _comboMO.observe(root,{childList:true,subtree:true}); }
   if(_f){
    const t=(_f.id&&document.getElementById(_f.id))||(root.contains(_f.el)?_f.el:null);
