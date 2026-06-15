@@ -200,6 +200,7 @@ body.arrange .char-grid>.section h3,body.arrange .char-grid>.char-left h3{paddin
 .section>h3,.sec-head{cursor:pointer;user-select:none}
 .section>h3 .col-caret,.sec-head .col-caret{display:inline-block;width:13px;color:var(--cyan,#39b6c8);font-size:10px;transition:transform .15s}
 .section.col-collapsed>h3 .col-caret,.sec-head.col-collapsed .col-caret{transform:rotate(-90deg)}
+.gear-eq>.eq-card{border-left:3px solid var(--green,#4caf50)}
 @media (pointer:coarse){
  button,.btn,.btn-sm,.btn-add,.btn-equip,.btn-stow,.btn-del{min-height:40px}
  .cell,input.cell,select.cell{min-height:40px;font-size:15px}
@@ -3566,42 +3567,102 @@ function vaultSection(){
    ${body}`;
 }
 
+/* ===== UNIFIED EQUIPMENT (prototype) ===== */
+function _catList(kind){
+  if(kind==='weapons')return DATA.weapons.map(function(w){return {name:w.name,grp:eqGrpForRec('weapons',w)};});
+  if(kind==='armour')return DATA.armour.map(function(a){return {name:a.name,grp:eqGrpForRec('armour',a)};});
+  if(kind==='shields')return DATA.shields.map(function(x){return {name:x.name,grp:eqGrpForRec('shields',x)};});
+  if(kind==='explosives')return EXPLOSIVES.map(function(e){return {name:e.name,grp:eqGrpForRec('explosives',e)};});
+  if(kind==='gear')return UTILITY_GEAR.map(function(g){return {name:g.name,grp:eqGrpForRec('gear',g)};});
+  return [];
+}
+function _grpOpts(list,placeholder){
+  var groups={}; list.forEach(function(o){(groups[o.grp]=groups[o.grp]||[]).push(o.name);});
+  var opts='<option value="">'+placeholder+'</option>';
+  Object.keys(groups).sort().forEach(function(g){
+    opts+='<optgroup label="'+esc(g)+'">'+groups[g].slice().sort(function(a,b){return a.localeCompare(b);}).map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>';}).join('')+'</optgroup>';
+  });
+  return opts;
+}
+function _addPick(kind){
+  var noun=({weapons:'weapon',armour:'armour',shields:'shield',gear:'gear',explosives:'explosive'})[kind]||'item';
+  return '<select class="cell" style="min-width:210px" onchange="if(this.value){addGearDirect(\''+kind+'\',this.value);this.value=\'\'}">'+_grpOpts(_catList(kind),'+ Add '+noun+'…')+'</select>';
+}
+function addGearDirect(kind,name){
+  if(!name)return;
+  var cap=(EQUIP_CAP[kind]||Infinity);
+  if((C[kind]||[]).filter(function(x){return x&&x.name;}).length < cap){
+    var it={name:name};
+    if(kind==='weapons'){var w=DATA.weapons.find(function(x){return x.name===name;});it.cls=w?w.cls:'Ranged';}
+    if(kind==='gear'||kind==='explosives')it.qty=1;
+    (C[kind]=C[kind]||[]).push(it);
+  } else {
+    var e={kind:kind,name:name};
+    if(kind==='gear'||kind==='explosives')e.qty=1;
+    (C.inventory=C.inventory||[]).push(e);
+  }
+  touch(); _eqRerender();
+}
+function _gearStat(kind,it){
+  if(!it||!it.name)return'';
+  try{
+    if(kind==='weapons'){var w=effWeapon(it);if(!w)return'';var isR=w.cls==='Ranged';var dmg=wpnDamage(w,wDmgBonus(it,w))||'-';var wt=(+w.wt||0)+modSum(it,'wt');
+      return isR?'Dmg '+dmg+' · Acc '+(w.acc||'-')+' · RoF '+(w.rof||'-')+' · Shots '+(w.shots||'-')+' · Rcl '+(w.rcl||'-')+' · Bulk '+(w.bulk!=null?w.bulk:'—')+' · Wt '+wt
+               :'Dmg '+dmg+' · Reach '+(w.reach||'-')+' · Parry '+weaponParry(w,wParryBonus(it))+' · ST '+(w.st||'-')+' · Wt '+wt;}
+    if(kind==='armour'){var a=DATA.armour.find(function(x){return x.name===it.name;});if(!a)return'';var e=effItem(a,it);var qm=(+it.quality||0)+(+it.material||0);var dE=(+e.drE||0)+qm+modSum(it,'drE'),dK=(+e.drK||0)+qm+modSum(it,'drK');var wt=(+e.wt||0)+modSum(it,'wt');var cov=Array.isArray(it.cover)?it.cover.join('/'):(e.loc||'');return 'DR e'+dE+'/k'+dK+' · Wt '+wt+(cov?(' · '+esc(cov)):'');}
+    if(kind==='shields'){var s=DATA.shields.find(function(x){return x.name===it.name;});if(!s)return'';var sh=effItem(s,it);return 'DR '+((+sh.dr||0)+modSum(it,'dr'))+' vs '+esc(sh.vs||'all');}
+    if(kind==='explosives'){var x=EXPLOSIVES.find(function(y){return y.name===it.name;});return x?(esc(x.dmg||'')+' · Wt '+(x.wt||0)+' ea'):'';}
+    if(kind==='gear'){var g=UTILITY_GEAR.find(function(y){return y.name===it.name;});return g?((g.dr?('DR '+g.dr+' · '):'')+'Wt '+(+g.wt||0)+' ea'):'';}
+  }catch(err){return'';}
+  return'';
+}
+function gearInvCard(idx){
+  var e=(C.inventory||[])[idx]; if(!e)return'';
+  var kind=e.kind, stored=!!e.stored;
+  var chip=stored?'<span class="eq-tag" style="background:#3a3f4b;color:#cfd3da">STORED</span>'
+                 :'<span class="eq-tag" style="background:#4a3c14;color:#e0c060">CARRIED</span>';
+  var bord=stored?'#6b7280':'#caa23a';
+  if(!e.name){
+    return '<div class="eq-card" style="border-left:3px solid '+bord+'"><div class="eq-card-top">'+chip+'<div class="eq-pick" style="flex:1;min-width:0"><select class="cell" onchange="setInvName('+idx+',this.value)">'+_grpOpts(_catList(kind),'— choose —')+'</select></div><div class="eq-card-act"><button class="btn-del" title="Remove" onclick="delFromInventory('+idx+')">✕</button></div></div></div>';
+  }
+  var qmGear=(kind==='gear'||kind==='explosives');
+  var qty=qmGear?(+e.qty||1):1;
+  var up=_hasUpgrades(e)?(' <span title="Upgrades: '+esc(_upgradeSummary(e))+'" style="font-size:11px">🔧</span>'):'';
+  var acts='<div class="eq-card-act">'
+    +'<button class="btn-sm" title="Equip (a full slot bumps the oldest equipped to carried)" onclick="equipFromInventory('+idx+')">⤒ Equip</button>'
+    +(stored?'<button class="btn-sm" title="Bring onto your person" onclick="setInvStored('+idx+',false)">← Carry</button>'
+            :'<button class="btn-sm" title="Stash off-person (no encumbrance)" onclick="setInvStored('+idx+',true)">⤓ Store</button>')
+    +'<button class="btn-del" title="Discard" onclick="delFromInventory('+idx+')">✕</button></div>';
+  var qtyHtml=qmGear?(' <span class="dim" style="font-size:10px;margin-left:6px">Qty <input class="cell" type="number" min="1" value="'+qty+'" style="width:46px" onchange="setInvQty('+idx+',this.value)"></span>'):'';
+  var locHtml=stored?('<input class="cell" value="'+esc(e.storeLoc||'')+'" placeholder="where? (ship hold, base…)" style="margin-top:5px;font-size:11px;max-width:240px" onchange="setInvStoreLoc('+idx+',this.value)">'):'';
+  var modNote=_hasUpgrades(e)?('<div class="dim" style="font-size:10px;margin-top:3px">🔧 '+esc(_upgradeSummary(e))+' — equip to edit mods</div>'):'';
+  return '<div class="eq-card" style="border-left:3px solid '+bord+';opacity:'+(stored?'.85':'1')+'">'
+    +'<div class="eq-card-top">'+chip+'<div class="eq-card-name" style="flex:1;min-width:0">'+esc(e.name)+up+'</div>'+acts+'</div>'
+    +'<div class="eq-stat">'+_gearStat(kind,e)+qtyHtml+'</div>'+locHtml+modNote+'</div>';
+}
 function renderEquipment(){
- const el=document.getElementById('tab-equipment');
- const cards=(kind)=>{const a=C[kind]||[];const h=a.map((it,i)=>eqCard(kind,i)).join('');return h||'<div class="dim" style="font-size:11px;padding:4px 2px;grid-column:1/-1">None equipped — use <b>+ Add</b>, or <b>⤒ Equip</b> from your Inventory below.</div>';};
- const brandStrip='';
- const bonus=(()=>{const b=[];const sb=armourStealthBonus();if(sb)b.push(`+${sb} Stealth`);const fm=armourForceMuffle();if(fm)b.push(`+${fm} Force-muffle`);const sn=armourSensorDefeat();if(sn)b.push(`+${sn} vs sensors`);const pb=armourParryBonus();if(pb)b.push(`+${pb} Parry`);const st=armourSTBonus();if(st)b.push(`+${st} eff. ST`);const sl=armourSealedLife();if(sl)b.push(`sealed ${sl}hr`);const sr=armourSelfRepair();if(sr)b.push(`${sr} HP/turn`);if(armourSaberResistant())b.push('saber-resistant');if(armourCortosisShort())b.push('cortosis short');return b.length?`<div class="dim" style="color:var(--green);font-size:10px;margin:2px 0">→ active armour bonuses: ${b.join(' · ')}</div>`:'';})();
- el.innerHTML=`
- <div class="tab-intro"><span style="cursor:help;color:var(--cyan);font-weight:700;float:right" title="BULK — how unwieldy a ranged weapon is. Apply Bulk as a penalty to Move-and-Attack, to firing from awkward positions, and to Holdout/concealment. Bands: holdouts −1 · pistols −2 (heavy −3) · rifles −4 (long/heavy −5) · launchers −5/−6 · emplaced −8. Component mods can worsen or improve it (Doc IX).&#10;&#10;WEIGHT — every kilogram counts toward encumbrance (Doc II): exceeding your Basic Lift bands reduces Move and Dodge. Mod weight deltas are added automatically.">ⓘ Bulk &amp; Weight</span>Your <b>equipped loadout</b> is shown as cards. <b>⇄</b> swaps the item · the <b>🔧 Modifications</b> line tunes Quality·Material·Mods · <b>⤓</b> stows it to your pack · <b>✕</b> removes it. Add a slot with <b>+ Add</b>, then choose <b>category → item</b>. Equipped limits: 1 armour · 1 shield · 2 weapons; gear &amp; explosives unlimited. Everything not equipped lives in <b>Inventory</b> at the bottom.</div>
-
- <div class="sec-head">⚔ Equipped — Weapons <button class="btn-add" onclick="addWpn('Melee')">+ Melee</button> <button class="btn-add" onclick="addWpn('Ranged')">+ Ranged</button></div>
- <div class="eq-cards">${cards('weapons')}</div>
-
- <div class="sec-head">🛡 Equipped — Armour <button class="btn-add" onclick="addArmour()">+ Add</button></div>
- ${brandStrip}${bonus}
- <div class="eq-cards">${cards('armour')}</div>
-
- <div class="sec-head">⟁ Equipped — Energy Shields <button class="btn-add" onclick="addShield()">+ Add</button></div>
- <div class="eq-cards">${cards('shields')}</div>
-
- <div class="sec-head">🧰 Equipped — Utility Gear <button class="btn-add" onclick="addGearItem()">+ Add</button></div>
- <div class="eq-cards">${cards('gear')}</div>
-
- <div class="sec-head">💥 Equipped — Explosives <button class="btn-add" onclick="addExplosive()">+ Add</button></div>
- <div class="eq-cards">${cards('explosives')}</div>
-
- ${customItemsSection()}
- ${vaultSection()}
- ${renderInventorySection()}
- <div class="budget-bar" style="margin-top:12px">
-  <div class="item"><span class="lbl">Carried (worn + pack):</span><span class="v">${gearWeight()} kg</span></div>
-  <div class="item"><span class="lbl">— Worn/Wielded:</span><span class="v">${equippedWeight()} kg</span></div>
-  <div class="item"><span class="lbl">— In Pack:</span><span class="v">${inventoryWeight()} kg</span></div>
-  <div class="item"><span class="lbl">Basic Lift:</span><span class="v">${basicLift()} kg</span></div>
-  <div class="item"><span class="lbl">Encumbrance:</span><span class="v">${encName()} (${encLevel()})</span></div>
-  <div class="item"><span class="lbl">Enc Move:</span><span class="v">${encMove()}</span></div>
-  <div class="item"><span class="lbl">Inventory Cost:</span><span class="v">${inventoryCost()} cr</span></div>
- </div>`;
+  var el=document.getElementById('tab-equipment'); if(!el)return;
+  var KINDS=[['weapons','⚔ Weapons'],['armour','🛡 Armour'],['shields','⟁ Energy Shields'],['gear','🧰 Utility Gear'],['explosives','💥 Explosives']];
+  var html='<div class="tab-intro">Your whole kit in one place. <b>+ Add</b> drops an item straight into an open slot (or into <b>Carried</b> if the slot is full). Use <b>⤒ Equip</b> / <b>⤓ Store</b> to move things between <b>Equipped · Carried · Stored</b>. Slots: 1 armour · 1 shield · 2 weapons; gear &amp; explosives unlimited.</div>';
+  KINDS.forEach(function(pair){
+    var kind=pair[0], label=pair[1];
+    var eqArr=(C[kind]||[]);
+    var carried=(C.inventory||[]).map(function(e,idx){return {e:e,idx:idx};}).filter(function(o){return o.e.kind===kind&&!o.e.stored;});
+    var stored=(C.inventory||[]).map(function(e,idx){return {e:e,idx:idx};}).filter(function(o){return o.e.kind===kind&&o.e.stored;});
+    var nEq=eqArr.filter(function(x){return x&&x.name;}).length;
+    var nCar=carried.filter(function(o){return o.e.name;}).length;
+    var count='<span class="dim" style="font-weight:400;font-size:10px;letter-spacing:.3px"> — '+nEq+' equipped'+(nCar?(' · '+nCar+' carried'):'')+(stored.length?(' · '+stored.length+' stored'):'')+'</span>';
+    html+='<div class="sec-head">'+label+count+'</div>';
+    html+='<div style="margin:7px 0 9px">'+_addPick(kind)+'</div>';
+    html+='<div class="eq-cards">';
+    eqArr.forEach(function(it,i){ html+='<div class="gear-eq">'+eqCard(kind,i)+'</div>'; });
+    carried.forEach(function(o){ html+=gearInvCard(o.idx); });
+    stored.forEach(function(o){ html+=gearInvCard(o.idx); });
+    if(!eqArr.length && !carried.length && !stored.length) html+='<div class="dim" style="font-size:11px;padding:4px">None yet — use <b>+ Add</b> above.</div>';
+    html+='</div>';
+  });
+  html+=(typeof manualInvSection==='function'?manualInvSection():'');
+  el.innerHTML=html;
 }
 function addWpn(cls){C.weapons=C.weapons||[];C.weapons.push({name:'',cls:cls});touch();renderEquipment()}
 function addArmour(){C.armour=C.armour||[];C.armour.push({name:''});touch();renderEquipment()}
