@@ -10,7 +10,7 @@
   };
 
   // ── Players type this word once when creating an account. Change it freely. '' = open signup. ──
-  var INVITE_CODE = 'daradara';
+  var INVITE_CODE = '';
 
   if (!window.firebase || !firebase.initializeApp) {
     console.error('[sync] Firebase compat SDK missing — the three SDK <script> tags must load BEFORE this file.');
