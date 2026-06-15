@@ -6544,18 +6544,63 @@ function resolveDefense(){
 function applyDefInjury(){ const r=COMBAT_UI.defRes; if(r&&r.injury>0) adjHP(-r.injury); _rerenderResolver(); }
 
 // ── the resolver UI (lives at the bottom of the sheet) ──
+/* ═══ ATTACK CALCULATOR — to-hit helper (manual damage) ═══ */
+function _acInt(x){ const n=parseInt((''+(x==null?'':x)).replace(/[^0-9-]/g,'')); return isNaN(n)?0:n; }
+function _acWeapons(){
+ const a=(C.weapons||[]).map(it=>({it:it,carr:false}));
+ const b=(C.inventory||[]).filter(e=>e.kind==='weapons'&&!e.stored&&e.name).map(e=>({it:e,carr:true}));
+ return a.concat(b).map((o,idx)=>({i:idx,it:o.it,carr:o.carr,w:effWeapon(o.it)})).filter(o=>o.w);
+}
 function combatResolverSection(){
-  const u=COMBAT_UI, mode=u.resMode||'attack', ws=_charWeapons();
-  const tab=(id,label)=>`<button class="btn-sm" onclick="setRes('resMode','${id}')" style="padding:6px 16px;border-radius:8px 8px 0 0;border-bottom:none;background:${mode===id?'var(--bg2)':'var(--bg3)'};color:${mode===id?'var(--text)':'var(--dim)'};font-weight:${mode===id?'700':'500'}">${label}</button>`;
-  return `<section class="section" data-size="full" style="grid-column:1/-1">
-    <div style="display:flex;gap:4px">
-      ${tab('attack','⚔ I attack an enemy')}
-      ${tab('defend','🛡 An enemy attacks me')}
-    </div>
-    <div style="border:1px solid var(--border);border-radius:0 8px 8px 8px;padding:13px;background:var(--bg2)">
-      ${mode==='defend'?_resolverDefendUI(u):_resolverAttackUI(u,ws)}
-    </div>
-  </section>`;
+ return `<section class="section" data-size="full" style="grid-column:1/-1"><h3>⚔ Attack calculator <span class="dim" style="font-weight:400;font-size:10px">— shows your to-hit; roll the damage dice yourself</span></h3><div id="acSection">${acInner()}</div></section>`;
+}
+function renderAttackCalc(){ const el=document.getElementById('acSection'); if(el) el.innerHTML=acInner(); }
+function acSet(k,v){ COMBAT_UI['ac'+k]=v; if(k==='Wpn')COMBAT_UI.acRoll=null; renderAttackCalc(); }
+function acInner(){
+ const list=_acWeapons();
+ if(!list.length) return '<div class="dim">Add or carry a weapon (Equipment tab) to use the calculator.</div>';
+ let sel=list.find(o=>(''+o.i)===(''+COMBAT_UI.acWpn)); if(!sel){ sel=list[0]; COMBAT_UI.acWpn=''+sel.i; }
+ const w=sel.w, isR=w.cls==='Ranged';
+ const skill=(weaponSkillLevel(w.name)||10)+modSum(sel.it,'skill');
+ const rofN=isR?(_acInt(w.rof)||1):1, rclN=isR?(_acInt(w.rcl)||1):1;
+ let shots=isR?(_acInt(COMBAT_UI.acShots)||rofN):1; shots=Math.max(1,Math.min(shots,rofN));
+ const rfB=isR?rofBonus(shots):0, cust=_acInt(COMBAT_UI.acMod), eff=skill+rfB+cust;
+ const dmgStr=wpnDamage(w,wDmgBonus(sel.it,w))||'—';
+ const wopts=list.map(o=>`<option value="${o.i}"${(''+COMBAT_UI.acWpn)===(''+o.i)?' selected':''}>${esc(o.w.name)}${o.w.cls==='Ranged'?' · ranged':' · melee'}${o.carr?' · carried':''}</option>`).join('');
+ let ctrl=`<div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end">
+   <label style="font-size:11px">Weapon<br><select class="cell" style="min-width:210px;margin-top:2px" onchange="acSet('Wpn',this.value)">${wopts}</select></label>`;
+ if(isR) ctrl+=`<label style="font-size:11px">Shots fired<br><input class="cell" style="width:78px;margin-top:2px" type="number" min="1" max="${rofN}" value="${shots}" oninput="COMBAT_UI.acShots=this.value"></label><span class="dim" style="font-size:11px;padding-bottom:7px">RoF ${rofN} · Rcl ${rclN}</span>`;
+ ctrl+=`<label style="font-size:11px">Custom modifier<br><input class="cell" style="width:96px;margin-top:2px" type="number" value="${COMBAT_UI.acMod==null?'':COMBAT_UI.acMod}" placeholder="e.g. -4" oninput="COMBAT_UI.acMod=this.value"></label>
+   <button class="btn-sm" style="background:var(--cyan,#39b6c8);color:#06222a;font-weight:700;padding:8px 18px" onclick="acDoRoll()">🎲 Roll to hit</button></div>`;
+ const breakdown=`<div class="dim" style="font-size:11.5px;margin-top:9px">Effective skill <b style="color:var(--text,#e8eaed);font-size:13px">${eff}</b> = ${skill} skill${isR&&rfB?` <b style="color:var(--green,#4caf50)">+${rfB}</b> rapid fire`:''}${cust?` <b style="color:${cust<0?'#e5544b':'#4caf50'}">${cust>0?'+':''}${cust}</b> custom`:''} &nbsp;·&nbsp; roll 3d6 ≤ this to hit</div>
+   <div class="dim" style="font-size:11.5px;margin-top:3px">Damage (roll yourself): <b style="color:var(--text,#e8eaed)">${esc(dmgStr)}</b> ${esc(w.dtype||'')}</div>`;
+ let res=''; const r=COMBAT_UI.acRoll;
+ if(r){
+   const col=r.isHit?'#4caf50':'#e5544b';
+   const verdict=r.isCrit?'CRITICAL HIT':r.isFail?'CRITICAL MISS':r.isHit?('HIT — margin '+r.margin):('MISS by '+(-r.margin));
+   res=`<div style="margin-top:11px;border:1px solid var(--border,#3a3f4b);border-radius:7px;padding:9px 11px">
+     <div><b>${esc(r.name)}</b> — rolled <b style="font-size:16px">${r.total}</b> <span class="dim">(${r.rolls.join('+')})</span> vs <b>${r.eff}</b> &nbsp; <span style="font-weight:800;color:${col};border:1px solid ${col};border-radius:5px;padding:2px 8px">${verdict}</span></div>
+     ${r.isR&&r.isHit?`<div class="dim" style="font-size:12px;margin-top:5px">Shots ${r.shots} · Rcl ${r.rclN} → up to <b style="color:var(--text,#e8eaed)">${r.hits}</b> hit${r.hits!==1?'s':''} <span style="opacity:.7">(1 + margin ÷ Rcl)</span></div>`:''}
+     <div class="dim" style="font-size:12px;margin-top:5px">Now roll damage: <b style="color:var(--text,#e8eaed)">${esc(r.dmg)}</b> ${esc(r.dtype)}</div>
+   </div>`;
+ }
+ return ctrl+breakdown+res;
+}
+function acDoRoll(){
+ const list=_acWeapons(); const sel=list.find(o=>(''+o.i)===(''+COMBAT_UI.acWpn))||list[0]; if(!sel)return;
+ const w=sel.w, isR=w.cls==='Ranged';
+ const skill=(weaponSkillLevel(w.name)||10)+modSum(sel.it,'skill');
+ const rofN=isR?(_acInt(w.rof)||1):1, rclN=isR?(_acInt(w.rcl)||1):1;
+ let shots=isR?(_acInt(COMBAT_UI.acShots)||rofN):1; shots=Math.max(1,Math.min(shots,rofN));
+ const rfB=isR?rofBonus(shots):0, cust=_acInt(COMBAT_UI.acMod), eff=skill+rfB+cust;
+ const rr=rollDice(3,0), total=rr.total;
+ const isCrit = total<=4 || (total===5&&eff>=15) || (total===6&&eff>=16);
+ const isFail = total>=18 || (total===17&&eff<=15) || ((total-eff)>=10);
+ const isHit = isCrit || (!isFail && total<=eff);
+ const margin = eff-total;
+ const hits = (isHit&&isR)?Math.max(1,Math.min(shots,1+Math.floor(Math.max(0,margin)/Math.max(1,rclN)))):(isHit?1:0);
+ COMBAT_UI.acRoll={name:w.name,isR:isR,skill:skill,rfB:rfB,cust:cust,eff:eff,total:total,rolls:rr.rolls,isCrit:isCrit,isFail:isFail,isHit:isHit,margin:margin,shots:shots,rclN:rclN,hits:hits,dmg:(wpnDamage(w,wDmgBonus(sel.it,w))||'—'),dtype:w.dtype||''};
+ renderAttackCalc();
 }
 
 function _resolverAttackUI(u,ws){
