@@ -197,9 +197,9 @@ body.arrange .char-grid>.section h3,body.arrange .char-grid>.char-left h3{paddin
 /* larger tap targets — easier on tablets (additive; desktop pointers unchanged) */
 /* collapsible sections — tap a section header to fold it (state saved per section) */
 .section.col-collapsed>*:not(h3){display:none!important}
-.section>h3{cursor:pointer;user-select:none}
-.section>h3 .col-caret{display:inline-block;width:13px;color:var(--cyan,#39b6c8);font-size:10px;transition:transform .15s}
-.section.col-collapsed>h3 .col-caret{transform:rotate(-90deg)}
+.section>h3,.sec-head{cursor:pointer;user-select:none}
+.section>h3 .col-caret,.sec-head .col-caret{display:inline-block;width:13px;color:var(--cyan,#39b6c8);font-size:10px;transition:transform .15s}
+.section.col-collapsed>h3 .col-caret,.sec-head.col-collapsed .col-caret{transform:rotate(-90deg)}
 @media (pointer:coarse){
  button,.btn,.btn-sm,.btn-add,.btn-equip,.btn-stow,.btn-del{min-height:40px}
  .cell,input.cell,select.cell{min-height:40px;font-size:15px}
@@ -8237,6 +8237,7 @@ function resetLayout(){ try{ C.layout={}; if(typeof touch==='function')touch(); 
 function initLayoutEngine(){ /* free-canvas arrange removed (observer disabled) */ }
 
 function _applyCollapse(){
+  var DC=/Reference Values|Injury & Fatigue|DR by Hit Location/;
   var hs=document.querySelectorAll('#tabContent .section>h3');
   for(var i=0;i<hs.length;i++){
     var h=hs[i];
@@ -8245,7 +8246,9 @@ function _applyCollapse(){
     var sec=h.parentElement;
     var c=document.createElement('span'); c.className='col-caret'; c.textContent='▾ '; h.insertBefore(c,h.firstChild);
     var k='kc_'+((h.textContent||'').replace(/[^a-z]/gi,'').slice(0,22));
-    try{ if(localStorage.getItem(k)==='1') sec.classList.add('col-collapsed'); }catch(e){}
+    var dc=DC.test(h.textContent||'');
+    var sv=null; try{ sv=localStorage.getItem(k); }catch(e){}
+    if(sv==='1' || (sv===null && dc)) sec.classList.add('col-collapsed');
     (function(sec,k){
       h.addEventListener('click',function(ev){
         if(ev.target.closest('button,select,input,a,textarea')) return;
@@ -8253,6 +8256,25 @@ function _applyCollapse(){
         try{ localStorage.setItem(k, sec.classList.contains('col-collapsed')?'1':'0'); }catch(e){}
       });
     })(sec,k);
+  }
+  var shs=document.querySelectorAll('#tabContent .sec-head');
+  for(var j=0;j<shs.length;j++){
+    var sh=shs[j];
+    if(sh.getAttribute('data-col')) continue;
+    sh.setAttribute('data-col','1');
+    var cc=document.createElement('span'); cc.className='col-caret'; cc.textContent='▾ '; sh.insertBefore(cc,sh.firstChild);
+    var sk='ks_'+((sh.textContent||'').replace(/[^a-z]/gi,'').slice(0,22));
+    (function(sh,sk){
+      function grp(){ var a=[],n=sh.nextElementSibling; while(n && !(n.classList&&n.classList.contains('sec-head'))){ a.push(n); n=n.nextElementSibling; } return a; }
+      function setHidden(hide){ grp().forEach(function(x){ x.style.display=hide?'none':''; }); sh.classList.toggle('col-collapsed',hide); }
+      var sv=null; try{ sv=localStorage.getItem(sk); }catch(e){}
+      if(sv==='1') setHidden(true);
+      sh.addEventListener('click',function(ev){
+        if(ev.target.closest('button,select,input,a,textarea')) return;
+        setHidden(!sh.classList.contains('col-collapsed'));
+        try{ localStorage.setItem(sk, sh.classList.contains('col-collapsed')?'1':'0'); }catch(e){}
+      });
+    })(sh,sk);
   }
 }
 function initCombobox(){
