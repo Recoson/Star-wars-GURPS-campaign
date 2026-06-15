@@ -1,8 +1,4 @@
-/* Dara Dara — Firebase live character sync  (classic script + Firebase "compat" SDK)
- * Installed via 4 <script> lines before </body> in sheet.html (see Step 2).
- * Uses the compat/global `firebase` build as a CLASSIC script on purpose, so it shares the
- * page scope and can see the sheet's character object `C` (an ES module cannot).
- * No secrets: the Firebase web config is PUBLIC by design; access is governed by Firestore rules. */
+/* Dara Dara — Firebase live character sync  (v2 — event-driven, near-instant) */
 (function () {
   var firebaseConfig = {
     apiKey: "AIzaSyA2dj_J5d4OTMDEmeSTGin1s_DCRCV3kHg",
@@ -46,10 +42,14 @@
   function applyRemote(obj) {
     var C = getChar(); if (!C) return;
     applyingRemote = true;
-    try { Object.keys(C).forEach(function (k) { delete C[k]; }); Object.assign(C, obj); redraw(); }
-    finally { applyingRemote = false; }
+    try {
+      Object.keys(C).forEach(function (k) { delete C[k]; });
+      Object.assign(C, obj);
+      redraw();
+      try { lastJSON = JSON.stringify(C); } catch (e) {}
+    } finally { applyingRemote = false; }
   }
-  function scheduleSave() {
+  function scheduleSave(delay) {
     if (applyingRemote || !ready) return;
     clearTimeout(writeTimer);
     writeTimer = setTimeout(function () {
@@ -57,26 +57,33 @@
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
                 updatedBy: auth.currentUser ? auth.currentUser.uid : null }, { merge: true })
         .catch(function (e) { console.warn('[sync] write', e.code || e.message); });
-    }, 700);
+    }, delay || 150);
   }
-  setInterval(function () {
+  function quickSync() {
     if (applyingRemote || !ready) return;
     var C = getChar(); if (!C) return;
     var cur; try { cur = JSON.stringify(C); } catch (e) { return; }
-    if (cur && cur !== lastJSON) { lastJSON = cur; scheduleSave(); }
-  }, 1200);
+    if (cur !== lastJSON) { lastJSON = cur; scheduleSave(120); }
+  }
+  function touch() { setTimeout(quickSync, 0); }
+  ['input', 'change', 'keyup', 'click'].forEach(function (ev) {
+    document.addEventListener(ev, touch, true);
+  });
+  setInterval(quickSync, 2000);
+
   function subscribe() {
     ref.onSnapshot(function (snap) {
       var C = getChar();
       if (!snap.exists) {
-        if (C) { try { lastJSON = JSON.stringify(C); } catch (e) { lastJSON = ''; } scheduleSave(); }
-        ready = true; pill('live · seeded'); return;
+        if (C) { try { lastJSON = JSON.stringify(C); } catch (e) { lastJSON = ''; } ready = true; scheduleSave(150); }
+        else { ready = true; }
+        pill('live · seeded'); return;
       }
       var d = snap.data() || {};
       if (d.updatedBy && auth.currentUser && d.updatedBy === auth.currentUser.uid) {
         lastJSON = d.data || lastJSON; ready = true; pill('live'); return;
       }
-      try { if (d.data) { applyRemote(JSON.parse(d.data)); lastJSON = d.data; } }
+      try { if (d.data) applyRemote(JSON.parse(d.data)); }
       catch (e) { console.warn('[sync] parse', e); }
       ready = true; pill('live');
     }, function (err) { console.warn('[sync] snapshot', err.code || err.message); pill('error'); });
@@ -126,7 +133,7 @@
     if (!getChar()) return setTimeout(start, 300);
     auth.onAuthStateChanged(function (user) {
       if (user) { gate(false); ready = false; lastJSON = ''; subscribe(); }
-      else { pill('sign in for live sync'); gate(true); }
+      else { ready = false; pill('sign in for live sync'); gate(true); }
     });
   })();
 })();
