@@ -194,6 +194,13 @@ body.arrange .lay-move{display:flex}
 body.arrange .lay-size{display:block}
 body.arrange .char-grid>.section h3,body.arrange .char-grid>.char-left h3{padding-left:34px}
 @media print{.lay-move,.lay-size,.arrange-hint{display:none!important}}
+/* larger tap targets — easier on tablets (additive; desktop pointers unchanged) */
+@media (pointer:coarse){
+ button,.btn,.btn-sm,.btn-add,.btn-equip,.btn-stow,.btn-del{min-height:40px}
+ .cell,input.cell,select.cell{min-height:40px;font-size:15px}
+ nav button{min-height:42px;padding:8px 14px}
+ table.g td,table.g th{padding-top:8px;padding-bottom:8px}
+}
 @media(max-width:980px){
  .char-grid{grid-template-columns:repeat(6,1fr)}
  .char-grid>.section[data-size="xl"],.char-grid>.section[data-size="lg"]{grid-column:1/-1}
@@ -612,8 +619,6 @@ html{scroll-behavior:smooth}
   <button onclick="cloudSave()" title="Save this character to the campaign cloud (GitHub)">☁ Save</button>
   <button onclick="location.href='index.html'" title="Open the campaign database hub">⌂ Hub</button>
   <button onclick="printSheet()">Print</button>
-  <button id="arrangeBtn" onclick="toggleArrange()" title="Free-arrange mode: drag the ✣ handle to move any panel anywhere (overlap allowed); drag the bottom-right corner to resize. Saved to this character.">✣ Arrange</button>
-  <button id="resetLayBtn" onclick="resetLayout()" style="display:none" title="Reset every panel to the default layout for this character.">↺ Reset layout</button>
   <button id="themeBtn" class="primary" onclick="toggleTheme()" title="Toggle paper / datapad theme">☾ Dark</button>
  </div>
 </header>
@@ -8496,26 +8501,14 @@ function _recalcMinH(cv){
 }
 /* apply saved free layouts after every render (per tab) */
 function applyLayout(){
+  /* Free-canvas arrange removed — keep panels in the normal responsive grid. */
+  if(applyLayout._d) return;
   try{
-  document.querySelectorAll('#tabContent .tab, .tab').forEach(tab=>{
-    if(!tab.id||!/^tab-/.test(tab.id))return;
-    _tagTab(tab);
-    const L=_lay();
-    const hasSaved=_leafPanels(tab).some(p=>L[_key(tab,p)]) ||
-                   (_canvas(tab,false)&&_panels(_canvas(tab,false)).some(p=>L[_key(tab,p)]));
-    if(hasSaved){
-      const cv=_freeTab(tab);
-      _panels(cv).forEach(p=>{ const pos=L[_key(tab,p)]; if(!pos)return;
-        p.style.left=(pos.x||0)+'px'; p.style.top=(pos.y||0)+'px';
-        if(pos.w)p.style.width=pos.w+'px'; if(pos.h)p.style.height=pos.h+'px';
-      });
-      _recalcMinH(cv);
-      if(ARRANGING)_decorate(cv);
-    } else if(ARRANGING){
-      _decorate(tab); // pre-flatten: handles on every leaf panel, drag triggers the flatten
-    }
-  });
+    document.querySelectorAll('.lay-canvas').forEach(function(cv){var par=cv.parentNode;if(!par)return;while(cv.firstChild)par.insertBefore(cv.firstChild,cv);cv.remove();});
+    document.querySelectorAll('.char-grid>.section,.char-grid>.char-left').forEach(function(sx){sx.style.position='';sx.style.left='';sx.style.top='';sx.style.width='';sx.style.height='';sx.style.margin='';});
+    if(document.body)document.body.classList.remove('arrange');
   }catch(e){}
+  applyLayout._d=true;
 }
 function _decorate(scope){
   const ps=scope.classList&&scope.classList.contains('lay-canvas')?_panels(scope):_leafPanels(scope);
@@ -8632,31 +8625,8 @@ function _sizeEnd(){
   _recalcMinH(cv); _saveL(); _sz=null;
 }
 /* ── arrange toggle + reset ── */
-function toggleArrange(){
-  ARRANGING=!ARRANGING;
-  document.body.classList.toggle('arrange',ARRANGING);
-  const b=document.getElementById('arrangeBtn'); if(b){ b.textContent=ARRANGING?'\u2713 Done':'\u2723 Arrange'; b.classList.toggle('active',ARRANGING); }
-  const rb=document.getElementById('resetLayBtn'); if(rb) rb.style.display=ARRANGING?'':'none';
-  let hint=document.getElementById('arrangeHint');
-  if(ARRANGING){
-    if(!hint){ hint=document.createElement('div'); hint.id='arrangeHint'; hint.className='arrange-hint';
-      hint.innerHTML='<b>Arrange mode</b> \u2014 every panel is fully modular: drag the \u2723 handle to move any panel anywhere on the tab (the first drag unlocks the whole tab into a free canvas); drag the bottom-right corner to resize. Panels <b>snap</b> to an 8px grid and to each other\u2019s edges (cyan guides) \u2014 hold <b>Alt</b> to place freely. Click a panel then <b>arrow keys</b> nudge it (<b>Shift</b> = 1px). Saved to this character; <b>\u21ba Reset layout</b> restores the default.';
-      const root=document.getElementById('tabContent'); root.insertBefore(hint,root.firstChild);
-    }
-    applyLayout();
-  } else { if(hint)hint.remove();
-    if(_layLast){_layLast.classList.remove('lay-active');_layLast=null;}
-    document.querySelectorAll('.lay-guide').forEach(g=>g.style.display='none');
-  }
-}
-function resetLayout(){
-  if(typeof confirm==='function' && !confirm('Reset every panel back to the default layout for this character?'))return;
-  C.layout={}; _saveL();
-  document.querySelectorAll('.lay-canvas').forEach(cv=>cv.remove());
-  document.querySelectorAll('.char-grid.lay-hidden').forEach(g=>g.classList.remove('lay-hidden'));
-  if(typeof renderAll==='function')renderAll();
-  setTimeout(applyLayout,0);
-}
+function toggleArrange(){ /* free-canvas arrange removed */ }
+function resetLayout(){ try{ C.layout={}; if(typeof touch==='function')touch(); }catch(e){} }
 /* ── re-apply after every render (observer, loop-guarded) ── */
 let _layObs=null,_layPend=false;
 function _layArm(){ if(_layPend)return; _layPend=true;
@@ -8666,13 +8636,7 @@ function _layArm(){ if(_layPend)return; _layPend=true;
     if(_layObs){ const r=document.getElementById('tabContent'); if(r)_layObs.observe(r,{childList:true,subtree:true}); }
   },0);
 }
-function initLayoutEngine(){
-  if(typeof MutationObserver==='undefined')return;
-  const root=document.getElementById('tabContent'); if(!root)return;
-  _layObs=new MutationObserver(function(muts){ for(const m of muts){ if(m.addedNodes.length||m.removedNodes.length){ _layArm(); return; } } });
-  _layObs.observe(root,{childList:true,subtree:true});
-  _layArm();
-}
+function initLayoutEngine(){ /* free-canvas arrange removed (observer disabled) */ }
 
 function initCombobox(){
  const root=document.getElementById('tabContent');
