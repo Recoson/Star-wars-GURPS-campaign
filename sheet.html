@@ -1912,15 +1912,21 @@ function renderSheet(){
   <div class="section" style="grid-column:1/-1" data-size="full"><h3>Attacks <span class="dim" style="font-weight:400;font-size:10px">— roll 3d6 ≤ Skill to hit (use the 🎲 panel, bottom-right). Damage shown with type.</span></h3>
    <table class="g">
     <tr><th>Weapon</th><th style="width:46px">Skill</th><th style="width:120px">Damage</th><th style="width:90px">Reach / Range</th><th style="width:50px">Parry</th><th>Acc / RoF / Shots · notes</th></tr>
-    ${(C.weapons||[]).map(it=>{const w=effWeapon(it);if(!w)return'';
-      const sk=(()=>{let _s=weaponSkillLevel(w.name);if(_s)_s+=modSum(it,'skill');return _s;})();
-      const isR=w.cls==='Ranged';
-      const reach=isR?((w.r12||'-')+' / '+(w.rmax||'-')):(w.reach||'-');
-      const parry=isR?'—':weaponParry(w,wParryBonus(it));
-      const extra=isR?`Acc ${w.acc||'-'} · RoF ${w.rof||'-'} · Shots ${w.shots||'-'} · Bulk ${w.bulk!=null?w.bulk:'—'}`:'';
-      const note=esc(w.dtype||'')+(extra?(w.dtype?' · ':'')+extra:'');
-      return `<tr><td>${esc(w.name)}${skillInfoBadge(w)}</td><td class="num val">${sk||'<span class=dim>—</span>'}</td><td class="num">${wpnDamage(w,wDmgBonus(it,w))}</td><td class="ctr">${reach}</td><td class="num">${parry}</td><td class="dim" style="font-size:10px">${note}</td></tr>`;
-    }).filter(Boolean).join('')||'<tr><td colspan="6" class="dim">No weapons equipped — add them on the Equipment tab.</td></tr>'}
+    ${(()=>{
+      const _wl=(C.weapons||[]).map(it=>({it,carr:false}))
+        .concat((C.inventory||[]).filter(e=>e.kind==='weapons'&&!e.stored&&e.name).map(e=>({it:e,carr:true})));
+      const _rows=_wl.map(({it,carr})=>{const w=effWeapon(it);if(!w)return'';
+        const sk=(()=>{let _s=weaponSkillLevel(w.name);if(_s)_s+=modSum(it,'skill');return _s;})();
+        const isR=w.cls==='Ranged';
+        const reach=isR?((w.r12||'-')+' / '+(w.rmax||'-')):(w.reach||'-');
+        const parry=isR?'—':weaponParry(w,wParryBonus(it));
+        const extra=isR?`Acc ${w.acc||'-'} · RoF ${w.rof||'-'} · Shots ${w.shots||'-'} · Rcl ${w.rcl||'-'} · Bulk ${w.bulk!=null?w.bulk:'—'}`:'';
+        const note=esc(w.dtype||'')+(extra?(w.dtype?' · ':'')+extra:'');
+        const tag=carr?` <span class="dim" style="font-size:9px">· carried</span>`:'';
+        return `<tr${carr?' style="opacity:.72"':''}><td>${esc(w.name)}${skillInfoBadge(w)}${tag}</td><td class="num val">${sk||'<span class=dim>—</span>'}</td><td class="num">${wpnDamage(w,wDmgBonus(it,w))}</td><td class="ctr">${reach}</td><td class="num">${parry}</td><td class="dim" style="font-size:10px">${note}</td></tr>`;
+      }).filter(Boolean).join('');
+      return _rows||'<tr><td colspan="6" class="dim">No weapons equipped or carried — add them on the Equipment tab.</td></tr>';
+    })()}
    </table>
   </div>
  </div>
@@ -3764,7 +3770,8 @@ function renderInventorySection(){
      :(isBagItem?'<div class="dim" style="font-size:9px;margin-top:2px">equip to use as a bag</div>':'');
    const invQty=((k==='gear'||k==='explosives')&&e.name)?`<div style="margin-top:2px"><span class="dim" style="font-size:10px">Qty </span><input class="cell" type="number" min="1" value="${+e.qty||1}" onchange="setInvQty(${idx},this.value)" style="width:40px"></div>`:'';
    const wtCell=e.name?`<div class="dim" style="font-size:10px">${wt} kg</div>${invQty}${bagSel}`:'';
-   return `<tr><td><div class="eq-pick">${picker}${invBrandPill(k,e.name)}${upBadge(e)}</div></td>
+   const statLine=(k==='weapons'&&e.name)?(()=>{const w=effWeapon(e);if(!w)return'';const isR=w.cls==='Ranged';const dmg=wpnDamage(w,wDmgBonus(e,w))||'-';return `<div class="dim" style="font-size:10px;margin-top:2px">${isR?`Dmg ${dmg} · Acc ${w.acc||'-'} · RoF ${w.rof||'-'} · Shots ${w.shots||'-'} · Rcl ${w.rcl||'-'} · Bulk ${w.bulk!=null?w.bulk:'—'}`:`Dmg ${dmg} · Reach ${w.reach||'-'} · Parry ${weaponParry(w,wParryBonus(e))} · ST ${w.st||'-'}`}</div>`;})():'';
+   return `<tr><td><div class="eq-pick">${picker}${invBrandPill(k,e.name)}${upBadge(e)}</div>${statLine}</td>
      <td style="vertical-align:top">${wtCell}</td>
      <td style="white-space:nowrap;text-align:right;vertical-align:top">
       <button class="btn-equip" title="${eqTitle}" onclick="equipFromInventory(${idx})"${e.name?'':' disabled'}>⤒ Equip</button>
@@ -6899,15 +6906,21 @@ function renderCombat(){ const el=document.getElementById('tab-combat')||documen
    <h3>Attacks <span class="dim" style="font-weight:400;font-size:10px">— roll 3d6 ≤ Skill to hit (use the 🎲 panel, bottom-right). Damage shown with type.</span></h3>
    <table class="g">
     <tr><th>Weapon</th><th style="width:46px">Skill</th><th style="width:120px">Damage</th><th style="width:90px">Reach / Range</th><th style="width:50px">Parry</th><th>Acc / RoF / Shots · notes</th></tr>
-    ${(C.weapons||[]).map(it=>{const w=effWeapon(it);if(!w)return'';
-      const sk=(()=>{let _s=weaponSkillLevel(w.name);if(_s)_s+=modSum(it,'skill');return _s;})();
-      const isR=w.cls==='Ranged';
-      const reach=isR?((w.r12||'-')+' / '+(w.rmax||'-')):(w.reach||'-');
-      const parry=isR?'—':weaponParry(w,wParryBonus(it));
-      const extra=isR?`Acc ${w.acc||'-'} · RoF ${w.rof||'-'} · Shots ${w.shots||'-'} · Bulk ${w.bulk!=null?w.bulk:'—'}`:'';
-      const note=esc(w.dtype||'')+(extra?(w.dtype?' · ':'')+extra:'');
-      return `<tr><td>${esc(w.name)}${skillInfoBadge(w)}</td><td class="num val">${sk||'<span class=dim>—</span>'}</td><td class="num">${wpnDamage(w,wDmgBonus(it,w))}</td><td class="ctr">${reach}</td><td class="num">${parry}</td><td class="dim" style="font-size:10px">${note}</td></tr>`;
-    }).filter(Boolean).join('')||'<tr><td colspan="6" class="dim">No weapons equipped — add them on the Equipment tab.</td></tr>'}
+    ${(()=>{
+      const _wl=(C.weapons||[]).map(it=>({it,carr:false}))
+        .concat((C.inventory||[]).filter(e=>e.kind==='weapons'&&!e.stored&&e.name).map(e=>({it:e,carr:true})));
+      const _rows=_wl.map(({it,carr})=>{const w=effWeapon(it);if(!w)return'';
+        const sk=(()=>{let _s=weaponSkillLevel(w.name);if(_s)_s+=modSum(it,'skill');return _s;})();
+        const isR=w.cls==='Ranged';
+        const reach=isR?((w.r12||'-')+' / '+(w.rmax||'-')):(w.reach||'-');
+        const parry=isR?'—':weaponParry(w,wParryBonus(it));
+        const extra=isR?`Acc ${w.acc||'-'} · RoF ${w.rof||'-'} · Shots ${w.shots||'-'} · Rcl ${w.rcl||'-'} · Bulk ${w.bulk!=null?w.bulk:'—'}`:'';
+        const note=esc(w.dtype||'')+(extra?(w.dtype?' · ':'')+extra:'');
+        const tag=carr?` <span class="dim" style="font-size:9px">· carried</span>`:'';
+        return `<tr${carr?' style="opacity:.72"':''}><td>${esc(w.name)}${skillInfoBadge(w)}${tag}</td><td class="num val">${sk||'<span class=dim>—</span>'}</td><td class="num">${wpnDamage(w,wDmgBonus(it,w))}</td><td class="ctr">${reach}</td><td class="num">${parry}</td><td class="dim" style="font-size:10px">${note}</td></tr>`;
+      }).filter(Boolean).join('');
+      return _rows||'<tr><td colspan="6" class="dim">No weapons equipped or carried — add them on the Equipment tab.</td></tr>';
+    })()}
    </table>
   </div>
 
