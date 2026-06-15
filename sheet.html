@@ -1656,7 +1656,6 @@ function weaponParry(w,parryBonus){
 // TAB SYSTEM
 // ─────────────────────────────────────────────────────
 const TABS=[
- ['summary','Summary'],
  ['sheet','Character Sheet'],
  ['background','Background'],
  ['skills','Skills'],
@@ -1681,7 +1680,7 @@ function showTab(id,btn){
  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.id==='tab-'+id));
  // re-render active tab
- const renderers={summary:renderSummary,sheet:renderSheet,background:renderBackground,skills:renderSkills,traits:renderTraits,
+ const renderers={sheet:renderSheet,background:renderBackground,skills:renderSkills,traits:renderTraits,
   equipment:renderEquipment,force:renderForce,stances:renderStances,vehicles:renderVehicles,droids:renderDroids,prereq:renderPrereq,notes:renderNotes,reference:renderReference};
  if(renderers[id])renderers[id]();
 }
@@ -7068,55 +7067,6 @@ function renderPrereq(){ const el=document.getElementById('tab-prereq'); if(!el)
    </section>`;
 }
 
-/* ═══ SUMMARY — at-a-glance combat block + full read-only overview ═══ */
-function renderSummary(){
- const el=document.getElementById('tab-summary'); if(!el) return;
- const SAFE=(fn,d)=>{try{const v=fn();return (v==null||v!==v)?d:v;}catch(e){return d;}};
- const mh=SAFE(maxHP,0), mf=SAFE(maxFP,0);
- const hpC=(C.combat&&C.combat.hp!=null)?C.combat.hp:mh;
- const fpC=(C.combat&&C.combat.fp!=null)?C.combat.fp:mf;
- const chip=(l,v)=>`<span style="display:inline-flex;flex-direction:column;align-items:center;min-width:52px;margin:3px;padding:5px 9px;border:1px solid var(--bd,#3a3f4a);border-radius:7px"><b style="font-size:16px;line-height:1">${v}</b><span class="dim" style="font-size:9px;letter-spacing:.4px;margin-top:2px">${l}</span></span>`;
- const attrChips=[['ST',SAFE(ST,'-')],['DX',SAFE(DX,'-')],['IQ',SAFE(IQ,'-')],['HT',SAFE(HT,'-')]].map(a=>chip(a[0],a[1])).join('');
- const vitalChips=[['HP',hpC+'/'+mh],['FP',fpC+'/'+mf],['Will',SAFE(Will,'-')],['Per',SAFE(Per,'-')],['Speed',SAFE(()=>basicSpeed().toFixed(2),'-')],['Move',SAFE(basicMove,'-')],['Dodge',SAFE(dodge,'-')]].map(a=>chip(a[0],a[1])).join('');
- const drAt=loc=>SAFE(()=>{const d=charDRAt(loc);return d?('e'+(d.e||0)+'/k'+(d.k||0)):'0/0';},'0/0');
- const drLine=[['Skull','Skull'],['Torso','Torso'],['Arm','Right Arm'],['Hand','Right Hand'],['Leg','Right Leg'],['Foot','Right Foot']].map(p=>`<span class="dim">${p[0]}</span> ${drAt(p[1])}`).join(' &nbsp;·&nbsp; ');
- const pv=(C.weapons||[]).map(it=>{const w=effWeapon(it);if(!w||w.cls!=='Melee')return null;const n=parseInt(String(weaponParry(w,wParryBonus(it))).replace(/[^0-9-]/g,''));return isNaN(n)?null:n;}).filter(v=>v!=null);
- const bestParry=pv.length?Math.max.apply(null,pv):'—';
- const wl=(C.weapons||[]).map(it=>({it,carr:false})).concat((C.inventory||[]).filter(e=>e.kind==='weapons'&&!e.stored&&e.name).map(e=>({it:e,carr:true})));
- const wRows=wl.map(o=>{const w=effWeapon(o.it);if(!w)return'';let sk=weaponSkillLevel(w.name);if(sk)sk+=modSum(o.it,'skill');const isR=w.cls==='Ranged';const dmg=wpnDamage(w,wDmgBonus(o.it,w))||'-';const rng=isR?((w.r12||'-')+'/'+(w.rmax||'-')):(w.reach||'-');const ex=isR?`Acc ${w.acc||'-'} · RoF ${w.rof||'-'} · Rcl ${w.rcl||'-'}`:('Parry '+weaponParry(w,wParryBonus(o.it)));return `<tr><td>${esc(w.name)}${o.carr?' <span class="dim" style="font-size:9px">· carried</span>':''}</td><td class="num val">${sk||'—'}</td><td class="num">${dmg}</td><td class="ctr">${rng}</td><td class="dim" style="font-size:10px">${esc(w.dtype||'')}${ex?' · '+ex:''}</td></tr>`;}).filter(Boolean).join('')||'<tr><td colspan="5" class="dim">No weapons equipped or carried.</td></tr>';
- const sArr=(C.combat&&Array.isArray(C.combat.statuses))?C.combat.statuses:[];
- const cArr=(C.conditions&&typeof C.conditions==='object')?Object.keys(C.conditions).filter(k=>C.conditions[k]):[];
- const statuses=[].concat(sArr.map(s=>typeof s==='string'?s:(s&&(s.name||s.label)||'')),cArr).filter(Boolean);
- const statusLine=statuses.length?`<div style="margin-top:6px;color:var(--amber,#e0a040);font-size:12px">⚠ ${statuses.map(esc).join(' · ')}</div>`:'';
- const idItem=(l,v)=>v?`<div class="item"><span class="lbl">${l}</span><span class="v">${esc(v)}</span></div>`:'';
- const idGrid=[idItem('Player',C.player),idItem('Species',C.species),idItem('Homeworld',C.homeworld),idItem('Concept',C.concept),idItem('Age',C.age),idItem('Gender',C.gender),idItem('Height',C.height),idItem('Weight',C.weight),idItem('Appearance',C.appearance),idItem('Wealth',C.wealthLevel),idItem('Rank',C.rank),idItem('Reputation',C.reputation),idItem('Credits',(C.credits!=null?(''+C.credits+' cr'):''))].join('');
- const skRows=(C.skills||[]).map(sk=>`<tr><td>${esc(SAFE(()=>skillDisplay(sk),sk.name||''))}</td><td class="num val">${SAFE(()=>skillLevel(sk),'-')}</td><td class="num dim">${sk.pts||0}</td></tr>`).join('')||'<tr><td colspan="3" class="dim">No skills.</td></tr>';
- const tr=(C.traits||[]); const fmtT=t=>esc(t.name)+(t.levels?(' '+t.levels):'');
- const adv=tr.filter(t=>!/dis/i.test(t.type||'')).map(fmtT).join(', ')||'—';
- const dis=tr.filter(t=>/dis/i.test(t.type||'')).map(fmtT).join(', ')||'—';
- const fpw=((C.force||{}).powers)||[];
- let forceBlock='<div class="dim">No Force powers.</div>';
- if(fpw.length){const byT={};fpw.forEach(p=>{const t=(p.tier!=null?p.tier:'?');(byT[t]=byT[t]||[]).push(p.name);});forceBlock=`<div class="item"><span class="lbl">Tradition</span><span class="v">${esc((C.force||{}).tradition||'—')}</span></div>`+Object.keys(byT).sort().map(t=>`<div style="margin:2px 0;font-size:12px"><span class="dim">T${t}</span> ${byT[t].map(esc).join(', ')}</div>`).join('');}
- const eqLine=(lbl,k)=>{const n=(C[k]||[]).filter(x=>x&&x.name).map(x=>esc(x.name)).join(', ');return n?`<div style="margin:2px 0;font-size:12px"><span class="dim">${lbl}</span> ${n}</div>`:'';};
- const eqBlock=[eqLine('Weapons','weapons'),eqLine('Armour','armour'),eqLine('Shields','shields'),eqLine('Gear','gear'),eqLine('Explosives','explosives')].join('')||'<div class="dim">Nothing equipped.</div>';
- const notesBlock=(C.bio||C.notes)?`<div class="section" style="grid-column:1/-1" data-size="full"><h3>Notes</h3><div style="white-space:pre-wrap;font-size:12px">${esc(C.bio||'')}${(C.bio&&C.notes)?'<br><br>':''}${esc(C.notes||'')}</div></div>`:'';
- el.innerHTML=`
- <div class="char-grid">
-  <div class="section" style="grid-column:1/-1" data-size="full">
-   <h3>${esc(C.name||'Unnamed')} <span class="dim" style="font-weight:400;font-size:11px">— ${esc(C.species||'')}${C.concept?' · '+esc(C.concept):''}</span></h3>
-   <div style="display:flex;flex-wrap:wrap;align-items:center;gap:2px;margin:2px 0 6px">${attrChips}<span style="width:10px"></span>${vitalChips}</div>
-   <div style="font-size:12px;margin:2px 0"><b>Defenses</b> &nbsp; <span class="dim">Dodge</span> ${SAFE(dodge,'-')} &nbsp;·&nbsp; <span class="dim">Parry</span> ${bestParry} &nbsp;·&nbsp; <b>DR</b> ${drLine}</div>
-   ${statusLine}
-   <table class="g" style="margin-top:8px"><tr><th>Weapon</th><th style="width:46px">Skill</th><th style="width:110px">Damage</th><th style="width:84px">Reach/Rng</th><th>Notes</th></tr>${wRows}</table>
-  </div>
-  <div class="section" data-size="md" style="grid-column:span 6"><h3>Identity</h3>${idGrid||'<div class="dim">—</div>'}</div>
-  <div class="section" data-size="md" style="grid-column:span 6"><h3>Traits</h3><div style="font-size:12px"><div style="margin:2px 0"><span class="dim">Advantages:</span> ${adv}</div><div style="margin:2px 0"><span class="dim">Disadvantages:</span> ${dis}</div></div><h3 style="margin-top:10px">Force</h3>${forceBlock}<h3 style="margin-top:10px">Equipped</h3>${eqBlock}</div>
-  <div class="section" style="grid-column:1/-1" data-size="full"><h3>Skills <span class="dim" style="font-weight:400;font-size:10px">— ${(C.skills||[]).length} purchased</span></h3><table class="g"><tr><th>Skill</th><th style="width:46px">Lvl</th><th style="width:40px">Pts</th></tr>${skRows}</table></div>
-  ${notesBlock}
- </div>`;
-}
-
-
 function renderAll(){
  syncCustomDB();
  buildTabs();
@@ -7136,7 +7086,7 @@ function renderAll(){
   TABS.forEach(([id])=>{const d=document.getElementById('tab-'+id); if(d)d.classList.toggle('active',id===activeTab);});
  }
  // Render active
- const renderers={summary:renderSummary,sheet:renderSheet,background:renderBackground,skills:renderSkills,traits:renderTraits,
+ const renderers={sheet:renderSheet,background:renderBackground,skills:renderSkills,traits:renderTraits,
   equipment:renderEquipment,force:renderForce,stances:renderStances,vehicles:renderVehicles,droids:renderDroids,prereq:renderPrereq,notes:renderNotes,reference:renderReference};
  if(renderers[activeTab])renderers[activeTab]();
 }
@@ -8183,7 +8133,7 @@ renderAll();
 // the whole character sheet prints, then restore afterwards.
 // ─────────────────────────────────────────────────────
 function prepPrint(){
- const renderers={summary:renderSummary,sheet:renderSheet,background:renderBackground,skills:renderSkills,traits:renderTraits,
+ const renderers={sheet:renderSheet,background:renderBackground,skills:renderSkills,traits:renderTraits,
   equipment:renderEquipment,force:renderForce,stances:renderStances,vehicles:renderVehicles,droids:renderDroids,prereq:renderPrereq,notes:renderNotes,reference:renderReference};
  TABS.forEach(([id])=>{ if(renderers[id]&&document.getElementById('tab-'+id))renderers[id](); });
 }
