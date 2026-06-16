@@ -3646,6 +3646,8 @@ function renderEquipment(){
   var el=document.getElementById('tab-equipment'); if(!el)return;
   var KINDS=[['weapons','⚔ Weapons'],['armour','🛡 Armour'],['shields','⟁ Energy Shields'],['gear','🧰 Utility Gear'],['explosives','💥 Explosives']];
   var html='<div class="tab-intro">Your whole kit in one place. <b>+ Add</b> drops an item straight into an open slot (or into <b>Carried</b> if the slot is full). Use <b>⤒ Equip</b> / <b>⤓ Store</b> to move things between <b>Equipped · Carried · Stored</b>. Slots: 1 armour · 1 shield · 2 weapons; gear &amp; explosives unlimited.</div>';
+  var _ew=gearWeight(),_bl=basicLift(),_el=encLevel(),_en=['None','Light','Medium','Heavy','X-Heavy','Overloaded'][_el]||'—';
+  html+='<div class="dim" style="font-size:11.5px;margin:0 0 6px">⚖ Carried <b style="color:var(--text)">'+_ew+' kg</b> · Basic Lift '+_bl+' · Encumbrance <b style="color:'+(_el>=3?'var(--amber,#e0a040)':'var(--text)')+'">'+_en+'</b></div>';
   KINDS.forEach(function(pair){
     var kind=pair[0], label=pair[1];
     var eqArr=(C[kind]||[]);
