@@ -3635,10 +3635,12 @@ function gearInvCard(idx){
     +'<button class="btn-del" title="Discard" onclick="delFromInventory('+idx+')">✕</button></div>';
   var qtyHtml=qmGear?(' <span class="dim" style="font-size:10px;margin-left:6px">Qty <input class="cell" type="number" min="1" value="'+qty+'" style="width:46px" onchange="setInvQty('+idx+',this.value)"></span>'):'';
   var locHtml=stored?('<input class="cell" value="'+esc(e.storeLoc||'')+'" placeholder="where? (ship hold, base…)" style="margin-top:5px;font-size:11px;max-width:240px" onchange="setInvStoreLoc('+idx+',this.value)">'):'';
+  var bagHtml='';
+  if(kind==='gear'&&!stored&&e.name&&!bagDefOf({name:e.name})){var _bags=equippedBags();if(_bags.length){bagHtml='<div style="margin-top:4px"><span class="dim" style="font-size:10px">Stow in </span><select class="cell" style="font-size:10px;max-width:175px" onchange="setInvBag('+idx+',this.value)"><option value="">— loose —</option>'+_bags.map(function(b){return '<option value="'+esc(b.id)+'"'+(e.inBag===b.id?' selected':'')+'>'+esc(b.it.name)+'</option>';}).join('')+'</select></div>';}}
   var modNote=_hasUpgrades(e)?('<div class="dim" style="font-size:10px;margin-top:3px">🔧 '+esc(_upgradeSummary(e))+' — equip to edit mods</div>'):'';
   return '<div class="eq-card" style="border-left:3px solid '+bord+';opacity:'+(stored?'.85':'1')+'">'
     +'<div class="eq-card-top">'+chip+'<div class="eq-card-name" style="flex:1;min-width:0">'+esc(e.name)+up+'</div>'+acts+'</div>'
-    +'<div class="eq-stat">'+_gearStat(kind,e)+qtyHtml+'</div>'+locHtml+modNote+'</div>';
+    +'<div class="eq-stat">'+_gearStat(kind,e)+qtyHtml+'</div>'+locHtml+bagHtml+modNote+'</div>';
 }
 function renderEquipment(){
   var el=document.getElementById('tab-equipment'); if(!el)return;
