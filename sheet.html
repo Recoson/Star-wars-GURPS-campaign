@@ -847,6 +847,22 @@ function cloudTouch(){
   if(_cloudDirty&&tk)_cloudWrite(CHAR_ID,tk,true);
  },CLOUD_AUTOSAVE_MS);
 }
+function cloudBanner(msg){
+ var b=document.getElementById('cloudBanner');
+ if(!msg){ if(b)b.style.display='none'; return; }
+ if(!b){
+  b=document.createElement('div'); b.id='cloudBanner';
+  b.style.cssText='position:fixed;left:10px;bottom:8px;max-width:min(560px,calc(100vw - 150px));z-index:9997;font:12px/1.45 system-ui,sans-serif;padding:9px 30px 9px 12px;border-radius:9px;cursor:pointer;background:var(--bg2);color:var(--red);border:1px solid var(--red);box-shadow:0 6px 22px rgba(0,0,0,.45)';
+  b.title='Click to reconnect / retry cloud save';
+  var lead=document.createElement('span'); lead.style.cssText='color:var(--amber);font-weight:600'; lead.textContent='☁ cloud not saving — '; b.appendChild(lead);
+  var body=document.createElement('span'); body.id='cloudBannerMsg'; b.appendChild(body);
+  var x=document.createElement('span'); x.textContent='×'; x.style.cssText='position:absolute;top:6px;right:10px;opacity:.6;font-size:15px;line-height:1'; x.onclick=function(e){ e.stopPropagation(); b.style.display='none'; }; b.appendChild(x);
+  b.onclick=function(){ try{cloudSave();}catch(e){} };
+  document.body.appendChild(b);
+ }
+ b.querySelector('#cloudBannerMsg').textContent=msg;
+ b.style.display='block';
+}
 async function _cloudWrite(id,t,silent){
  if(_cloudBusy){_cloudDirty=true;return false}
  _cloudBusy=true;
@@ -866,12 +882,14 @@ async function _cloudWrite(id,t,silent){
   if(!r.ok)throw new Error('GitHub '+r.status+': '+(await r.text()).slice(0,180));
   try{localStorage.setItem(ACTIVE_STORE_KEY,JSON.stringify(C))}catch(e){}
   if(el){el.textContent='● CLOUD ✓';el.style.color='var(--green)';setTimeout(()=>{el.textContent='● AUTO'},1600)}
+  cloudBanner(null);
   _cloudBusy=false;
   if(_cloudDirty)cloudTouch();
   return true;
  }catch(e){
   _cloudBusy=false;_cloudDirty=true;
-  if(el){el.textContent='● CLOUD ✗';setTimeout(()=>{el.textContent='● AUTO'},2600)}
+  if(el){el.textContent='● CLOUD ✗';el.style.color='var(--red)';setTimeout(()=>{el.textContent='● AUTO'},2600)}
+  cloudBanner(e.message||'save failed')
   if(!silent)alert('Cloud save failed: '+e.message);
   return false;
  }
