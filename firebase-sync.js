@@ -1,4 +1,8 @@
-/* Dara Dara — Firebase live character sync  (v3 — event-driven + self-service signup) */
+/* Dara Dara — Firebase live character sync  (v4 — modular SDK, named 'kotor' database) */
+import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, onSnapshot, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 (function () {
   var firebaseConfig = {
     apiKey: "AIzaSyA2dj_J5d4OTMDEmeSTGin1s_DCRCV3kHg",
@@ -12,17 +16,13 @@
   // ── Players type this word once when creating an account. Change it freely. '' = open signup. ──
   var INVITE_CODE = '';
 
-  if (!window.firebase || !firebase.initializeApp) {
-    console.error('[sync] Firebase compat SDK missing — the three SDK <script> tags must load BEFORE this file.');
-    return;
-  }
-  try { firebase.initializeApp(firebaseConfig); } catch (e) {}
-  var auth = firebase.auth();
-  var db   = firebase.firestore();
+  var app  = getApps().length ? getApp() : initializeApp(firebaseConfig);
+  var auth = getAuth(app);
+  var db   = getFirestore(app, 'kotor');   // ← named Cloud Firestore database (NOT "(default)")
 
   var charId = (new URLSearchParams(location.search).get('char') || 'default')
                  .toLowerCase().replace(/[^a-z0-9_-]/g, '') || 'default';
-  var ref = db.collection('characters').doc(charId);
+  var ref = doc(db, 'characters', charId);
   var applyingRemote = false, ready = false, writeTimer = null, lastJSON = '';
 
   function getChar() {
@@ -57,9 +57,9 @@
     if (applyingRemote || !ready) return;
     clearTimeout(writeTimer);
     writeTimer = setTimeout(function () {
-      ref.set({ data: lastJSON, char: charId,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                updatedBy: auth.currentUser ? auth.currentUser.uid : null }, { merge: true })
+      setDoc(ref, { data: lastJSON, char: charId,
+                    updatedAt: serverTimestamp(),
+                    updatedBy: auth.currentUser ? auth.currentUser.uid : null }, { merge: true })
         .catch(function (e) { console.warn('[sync] write', e.code || e.message); });
     }, delay || 150);
   }
@@ -76,9 +76,9 @@
   setInterval(quickSync, 2000);
 
   function subscribe() {
-    ref.onSnapshot(function (snap) {
+    onSnapshot(ref, function (snap) {
       var C = getChar();
-      if (!snap.exists) {
+      if (!snap.exists()) {
         if (C) { try { lastJSON = JSON.stringify(C); } catch (e) { lastJSON = ''; } ready = true; scheduleSave(150); }
         else { ready = true; }
         pill('live · seeded'); return;
@@ -103,7 +103,7 @@
     p.style.color = ({ 'live':'#7ddc8a','live · seeded':'#7ddc8a','error':'#ff9c6b','sign in for live sync':'#ffce6b' }[state]) || '#bbb';
     p.textContent = (inn ? '● ' : '○ ') + state + '  ·  ' + charId;
     p.title = inn ? 'Live sync on — click to sign out' : 'Click to sign in';
-    p.onclick = inn ? function () { auth.signOut(); } : function () { gate(true); };
+    p.onclick = inn ? function () { signOut(auth); } : function () { gate(true); };
   }
   function gate(show) {
     var o = document.getElementById('fb-login');
@@ -153,12 +153,12 @@
           if (INVITE_CODE && codeEl.value.trim() !== INVITE_CODE) { errEl.textContent = 'wrong invite code'; return; }
           if (pw.length < 6) { errEl.textContent = 'password needs 6+ characters'; return; }
           errEl.style.color = '#9c8'; errEl.textContent = 'creating account…';
-          auth.createUserWithEmailAndPassword(email, pw)
+          createUserWithEmailAndPassword(auth, email, pw)
             .then(function () { o.style.display = 'none'; })
             .catch(function (e) { errEl.style.color = '#ff7a9c'; errEl.textContent = (e.code || e.message).replace('auth/', ''); });
         } else {
           errEl.style.color = '#9c8'; errEl.textContent = 'signing in…';
-          auth.signInWithEmailAndPassword(email, pw)
+          signInWithEmailAndPassword(auth, email, pw)
             .then(function () { o.style.display = 'none'; })
             .catch(function (e) { errEl.style.color = '#ff7a9c'; errEl.textContent = (e.code || e.message).replace('auth/', ''); });
         }
@@ -172,7 +172,7 @@
   }
   (function start() {
     if (!getChar()) return setTimeout(start, 300);
-    auth.onAuthStateChanged(function (user) {
+    onAuthStateChanged(auth, function (user) {
       if (user) { gate(false); ready = false; lastJSON = ''; subscribe(); }
       else { ready = false; pill('sign in for live sync'); gate(true); }
     });
