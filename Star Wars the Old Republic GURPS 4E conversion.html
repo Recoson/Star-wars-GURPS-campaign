@@ -1946,7 +1946,13 @@ html { scroll-behavior: auto; }
 
   <h2 class="section-head" id="sec-balance-log">Balance &amp; Errata Log</h2>
   <p class="toc__intro">Living record of rules corrections — what changed, and why. The sheet and this volume move together.</p>
-  <p><strong>2026-06-17 — Ship damage rework (Hull HP pool).</strong></p>
+  <p><strong>2026-06-18 — Ship weapons: mounts, warhead flight &amp; balance.</strong></p>
+<ul>
+<li><b>Mounts have sizes, and hulls have a hardpoint budget.</b> Every ship weapon now sits in a <b>Small / Medium / Large / Capital</b> mount; a larger mount holds any smaller weapon, never the reverse. Each class carries a fixed count of each size (see <i>Mounts &amp; Hardpoints</i>) — a fighter can’t bolt on a turbolaser, and a frigate’s gun count is now a real ceiling rather than a vibe. The sheet enforces and totals it per ship.</li>
+<li><b>Guided warheads have travel time.</b> Beams hit the turn they fire; <b>missiles</b> arrive 0–2 turns later and <b>torpedoes</b> 1–3, by range. In the air they can be shot down by point-defence and dodged again — the trench-run shot is now a gamble, not a guaranteed hit. The sheet prints the impact turn; the GM console flies the warhead on its turn clock and resolves it on arrival.</li>
+<li><b>Sheet weapon stats reconciled to this table.</b> A stat-drift in the sheet had the heavy laser at RoF 3 (canon RoF 1), the laser cannon at RoF 3 (RoF 2), the burst laser at RoF 13 (RoF 8) and most cannons at Rcl 2 (Rcl 1, which is what lets a quad turret saturate). The sheet now reads its numbers from the catalogue here — the burst laser in particular drops from a 13-shot firehose to its intended 8.</li>
+</ul>
+<p><strong>2026-06-17 — Ship damage rework (Hull HP pool).</strong></p>
   <ul>
     <li><b>Hull is a hit-point pool again — and the Damage Threshold (DT) stat is retired.</b> The 11 Jun “no HP pool / compare-penetration-to-DT” model let a single post-shield hit destroy a random component outright (a 6d×3 cannon = 53 through ≥ 2×DT → system dead, and the location roll could read <i>reactor</i>), so a fighter went from shielded to gutted in one bolt. Resolution is now <b>shields → hull DR − AP → a Hull HP pool</b>. A plain hit just whittles the pool; <b>systems break only at integrity thresholds (½ and ¼) or under a called shot</b>. Hull HP is set <b>by hull class</b> (≈ Hull DR × 5–7), so no per-ship bookkeeping and no edits to the 65 catalogue cards.</li>
     <li><b>Crippled vs destroyed.</b> Hull HP 0 = <b>Crippled</b> (adrift, shields/drive/guns dead, hull intact and salvageable — feeds the prize economy); past −½ max = <b>Destroyed</b>. A single hit exceeding the whole pool still <b>vaporises</b> (a turbolaser on a fighter). Ion never vaporises and never touches hull — ×2 vs shields, into systems.</li>
@@ -11716,7 +11722,7 @@ Life endures
   <thead>
     <tr>
       <th>Vehicle Class</th>
-      <th>DT</th>
+      <th>Hull HP</th>
       <th>DR</th>
       <th>Move</th>
       <th>Crew</th>
@@ -11724,15 +11730,15 @@ Life endures
     </tr>
   </thead>
   <tbody>
-    <tr><td><strong>Speeder bike</strong></td><td>8</td><td>2-4</td><td>40-60 hex (400-600 m/turn)</td><td>1</td><td>Light blaster cannon (optional)</td></tr>
-    <tr><td><strong>Swoop</strong></td><td>8</td><td>1-3</td><td>50-80 hex (500-800 m/turn)</td><td>1</td><td>None typical (racing) or light blaster</td></tr>
-    <tr><td><strong>Landspeeder</strong> (civilian)</td><td>8</td><td>3-5</td><td>20-30 hex (200-300 m/turn)</td><td>1-4</td><td>None typical</td></tr>
-    <tr><td><strong>Airspeeder</strong> (civilian / patrol)</td><td>8</td><td>4-7</td><td>30-50 hex (300-500 m/turn)</td><td>1-2</td><td>Optional light cannon</td></tr>
-    <tr><td><strong>Combat speeder</strong></td><td>8</td><td>6-10</td><td>30-40 hex</td><td>2-3</td><td>Blaster cannons, light missiles</td></tr>
-    <tr><td><strong>Light walker</strong> (scout class)</td><td>8</td><td>8-12</td><td>10-20 hex (slow)</td><td>1-2</td><td>Twin blaster cannons</td></tr>
-    <tr><td><strong>Heavy walker</strong> (assault class)</td><td>15</td><td>12-20</td><td>5-15 hex (slow)</td><td>3-6</td><td>Heavy cannons, missile racks</td></tr>
-    <tr><td><strong>Light combat tank</strong></td><td>15</td><td>10-16</td><td>15-25 hex</td><td>2-3</td><td>Main cannon, secondary blasters</td></tr>
-    <tr><td><strong>Heavy combat tank</strong></td><td>15</td><td>16-30</td><td>10-20 hex</td><td>3-5</td><td>Heavy cannon, ion cannon, missile launcher</td></tr>
+    <tr><td><strong>Speeder bike</strong></td><td>15</td><td>2-4</td><td>40-60 hex (400-600 m/turn)</td><td>1</td><td>Light blaster cannon (optional)</td></tr>
+    <tr><td><strong>Swoop</strong></td><td>15</td><td>1-3</td><td>50-80 hex (500-800 m/turn)</td><td>1</td><td>None typical (racing) or light blaster</td></tr>
+    <tr><td><strong>Landspeeder</strong> (civilian)</td><td>15</td><td>3-5</td><td>20-30 hex (200-300 m/turn)</td><td>1-4</td><td>None typical</td></tr>
+    <tr><td><strong>Airspeeder</strong> (civilian / patrol)</td><td>18</td><td>4-7</td><td>30-50 hex (300-500 m/turn)</td><td>1-2</td><td>Optional light cannon</td></tr>
+    <tr><td><strong>Combat speeder</strong></td><td>20</td><td>6-10</td><td>30-40 hex</td><td>2-3</td><td>Blaster cannons, light missiles</td></tr>
+    <tr><td><strong>Light walker</strong> (scout class)</td><td>20</td><td>8-12</td><td>10-20 hex (slow)</td><td>1-2</td><td>Twin blaster cannons</td></tr>
+    <tr><td><strong>Heavy walker</strong> (assault class)</td><td>25</td><td>12-20</td><td>5-15 hex (slow)</td><td>3-6</td><td>Heavy cannons, missile racks</td></tr>
+    <tr><td><strong>Light combat tank</strong></td><td>25</td><td>10-16</td><td>15-25 hex</td><td>2-3</td><td>Main cannon, secondary blasters</td></tr>
+    <tr><td><strong>Heavy combat tank</strong></td><td>25</td><td>16-30</td><td>10-20 hex</td><td>3-5</td><td>Heavy cannon, ion cannon, missile launcher</td></tr>
   </tbody>
 </table></div>
 
@@ -12202,6 +12208,41 @@ Life endures
 <p>The default fit for a generic ship of each class — enough to drop a ready-made hull straight into a fight, or to kit out a buildable one. Named ships in the catalogue carry their own listed armament; this is the baseline everything else flies with.</p>
 <div class="tbl-scroll"><table class="tbl"><thead><tr><th>Class</th><th>Primary Weapons</th><th>Ordnance / Specials</th><th>Countermeasures &amp; Utility</th><th>Typical Role</th></tr></thead><tbody><tr><td><strong>Starfighter / Interceptor</strong></td><td>2× laser cannons</td><td>4–6 concussion missiles</td><td>Countermeasure launcher (flares); deflector shields; targeting computer</td><td>Line dogfighter — fast, balanced, Class 1 hyperdrive.</td></tr><tr><td><strong>Scout / Recon</strong></td><td>2× light or rapid-fire laser cannons</td><td>Sensor probe</td><td>Advanced sensor package; sensor dampening; distortion field; engine booster</td><td>Eyes of the fleet — finds, shadows, slips away.</td></tr><tr><td><strong>Bomber / Heavy Fighter</strong></td><td>2× heavy laser cannons</td><td>Proton torpedoes or seismic charges</td><td>Repair drone or EMP field; deflector shields; countermeasures</td><td>Capital-killer — saturates hulls with ordnance.</td></tr><tr><td><strong>Gunship</strong></td><td>1× railgun + 2× laser cannons</td><td>Ion cannon</td><td>Sensor jammer; deflector shields; distortion field</td><td>Long-range sniper and shield-stripper.</td></tr><tr><td><strong>Shuttle / Transport</strong></td><td>1–2× light laser turret</td><td>—</td><td>Countermeasure launcher; deflector shields</td><td>Ferry — lightly armed, not built to fight.</td></tr><tr><td><strong>Light Freighter</strong></td><td>1–2× quad laser turret (often concealed)</td><td>Concussion missile rack (optional)</td><td>Countermeasure launcher; shield booster; sometimes sensor dampening</td><td>The do-everything hull — punches above its weight when modded.</td></tr><tr><td><strong>Bulk Freighter / Hauler</strong></td><td>2–4× laser turrets</td><td>—</td><td>Point-defence lasers; heavy deflector shields</td><td>Cargo — guns ward off raiders, not win fights. Slow.</td></tr><tr><td><strong>Corvette / Patrol Ship</strong></td><td>4–6× laser cannons + 2× ion cannon</td><td>Concussion missile racks</td><td>Point-defence lasers; tractor beam; deflector shields</td><td>Fast warship — escort, patrol, boarding.</td></tr><tr><td><strong>Frigate / Cruiser</strong></td><td>Turbolaser banks + ion cannons</td><td>Torpedo launchers</td><td>Point-defence batteries; sensor suite; deflector shields; sometimes interdiction</td><td>Line warship — anchors a battle group.</td></tr><tr><td><strong>Capital / Dreadnought</strong></td><td>Heavy turbolaser batteries + heavy ion cannons</td><td>Torpedo / missile banks</td><td>Heavy point-defence; fighter &amp; bomber wing; tractor beams; deflector shields</td><td>Flagship — brings its own air wing and breaks fleets.</td></tr><tr><td><strong>Carrier</strong></td><td>Point-defence batteries + light guns</td><td>—</td><td>Multiple fighter &amp; bomber wings; deflector shields</td><td>Mobile airbase — fights through its wings.</td></tr></tbody></table></div>
 <p><b>Swapping in faction kit.</b> Lay the faction’s signature gear over the baseline (see Faction Fleet Doctrine): charric guns and superior sensors for the Chiss; beskar plating, grapples and a Basilisk for the Mandalorians; heavier Imperial turbolasers for the Sith; ion cannons, tractors and hidden guns for the Hutts and pirates; strong shields and standard parts for the Republic.</p>
+<h3 class="section-head" id="sec-mounts-hardpoints">Mounts, Hardpoints &amp; Warhead Flight</h3>
+<p>A hull does not carry guns at whim. Every weapon sits in a <b>hardpoint</b> of a given size, and a frame has only so many of each. Pick a fit the hull can physically mount and the power plant can feed. Four mount sizes, smallest to largest:</p>
+<table class="tbl tbl--compact"><tbody>
+<tr><th>Mount</th><th>Carries</th><th>Where they sit</th></tr>
+<tr><td class="c"><b>S</b><br>Small</td><td>Light laser cannon · point-defence laser · rapid-fire / burst laser</td><td>Fighter chin guns, turret stubs, PD blisters — nearly every hull has a few.</td></tr>
+<tr><td class="c"><b>M</b><br>Medium</td><td>Laser cannon · quad laser · ion cannon · concussion / cluster / ion / EMP missile launcher · sabotage probe</td><td>The workhorse gun-and-launcher hardpoint — fighters and up.</td></tr>
+<tr><td class="c"><b>L</b><br>Large</td><td>Heavy laser cannon · proton &amp; thermite torpedo · seismic charge · every railgun · plasma launcher</td><td>Bombers, gunships, corvettes and bigger — heavy ordnance and sniper guns.</td></tr>
+<tr><td class="c"><b>C</b><br>Capital</td><td>Turbolaser (light &amp; heavy) · heavy ion cannon · capital missile / torpedo bank · charric battery</td><td>Frigate and up only — the line-of-battle weapons.</td></tr>
+</tbody></table>
+<p class="rule"><span class="rule__name">Larger holds smaller.</span> A mount carries any weapon of its size or below — a Large hardpoint takes a heavy laser, a medium ion cannon, or a small PD stub. A Small mount can never carry a torpedo. Down-fitting wastes tonnage but is legal; up-fitting is not.</p>
+<p class="rule"><span class="rule__name">Hardpoint budget by class.</span> What a hull of each class can physically mount. Named catalogue ships fly their own listed armament, usually below this ceiling; these numbers are the build limit and the cap for a refit. Utility systems (countermeasures, sensors, tractors) spend <i>module slots</i>, not hardpoints — see the slot table above.</p>
+<table class="tbl tbl--compact"><tbody>
+<tr><th>Class</th><th>S</th><th>M</th><th>L</th><th>C</th></tr>
+<tr><td>Interceptor / starfighter</td><td class="c">2</td><td class="c">1</td><td class="c">—</td><td class="c">—</td></tr>
+<tr><td>Heavy fighter / bomber</td><td class="c">2</td><td class="c">2</td><td class="c">1</td><td class="c">—</td></tr>
+<tr><td>Gunship</td><td class="c">2</td><td class="c">2</td><td class="c">2</td><td class="c">—</td></tr>
+<tr><td>Shuttle / transport</td><td class="c">2</td><td class="c">1</td><td class="c">—</td><td class="c">—</td></tr>
+<tr><td>Light freighter</td><td class="c">2</td><td class="c">2</td><td class="c">—</td><td class="c">—</td></tr>
+<tr><td>Bulk freighter / hauler</td><td class="c">4</td><td class="c">2</td><td class="c">—</td><td class="c">—</td></tr>
+<tr><td>Corvette / patrol</td><td class="c">4</td><td class="c">4</td><td class="c">2</td><td class="c">—</td></tr>
+<tr><td>Frigate</td><td class="c">6</td><td class="c">6</td><td class="c">4</td><td class="c">1</td></tr>
+<tr><td>Cruiser</td><td class="c">6</td><td class="c">8</td><td class="c">6</td><td class="c">2</td></tr>
+<tr><td>Dreadnought / capital</td><td class="c">8</td><td class="c">10</td><td class="c">8</td><td class="c">4</td></tr>
+<tr><td>Carrier</td><td class="c">6</td><td class="c">4</td><td class="c">2</td><td class="c">1</td></tr>
+</tbody></table>
+<p class="tbl-note">These echo the Standard Loadouts above: a corvette’s “4–6 laser cannons + 2 ion” sits inside 4 S / 4 M / 2 L; a capital’s turbolaser batteries fill its 4 C. A hull rarely flies fully racked — power, crew and credits bite first.</p>
+<h4 class="subsection">Warhead Flight — guided ordnance takes time</h4>
+<p class="rule"><span class="rule__name">Beams are instant; warheads fly.</span> A laser, ion cannon, turbolaser or railgun bolt crosses the range in the turn it is fired — resolve the hit at once. A <b>guided warhead</b> (missile or torpedo) is a vehicle that has to <i>get there</i>: it launches this turn and <b>arrives a number of turns later</b>, set by how fast it flies and how far it must travel. In the gap it is live on the board — the target keeps its Dodge each turn, point-defence may shoot it down, and countermeasures may break its lock.</p>
+<table class="tbl tbl--compact"><tbody>
+<tr><th>Ordnance</th><th>Speed</th><th>Knife / Close</th><th>Medium</th><th>Long</th><th>Extreme</th></tr>
+<tr><td>Missiles — concussion, cluster, ion, EMP</td><td class="c"><b>Fast</b></td><td class="c">this turn</td><td class="c">+1</td><td class="c">+2</td><td class="c">+2</td></tr>
+<tr><td>Torpedoes — proton, thermite</td><td class="c"><b>Slow</b></td><td class="c">+1</td><td class="c">+1</td><td class="c">+2</td><td class="c">+3</td></tr>
+<tr><td>Mines &amp; seismic charges</td><td class="c">Placed</td><td class="c" colspan="4">Laid or dropped — detonate on proximity, no flight</td></tr>
+</tbody></table>
+<p class="rule"><span class="rule__name">In flight.</span> Roll the gunner’s attack <b>when the warhead launches</b> (lock and range at launch); it then counts down. Each turn it is in the air a <b>point-defence</b> mount may roll Gunnery to kill it (success destroys it) and the pilot may keep flying evasive. On the impact turn it strikes — apply its damage to the target’s Hull HP (or shields) then. A torpedo loosed at Long range is three turns of jeopardy for the bomber that fired it: this is the trench-run tension, and why escorts and a point-defence screen earn their keep. The companion sheet prints the impact turn on the firing result; the GM console tracks live warheads on its turn clock.</p>
 <h3 class="section-head" id="sec-ships-buying-owning">Buying, Owning, Flying</h3>
 <div class="body-3col">
 <p class="rule"><span class="rule__name">Used Beats New.</span> A working crew almost never buys new. Used and refit hulls run <strong>30–60%</strong> of list, often with a story attached — previous owner, war damage, missing logs. The <a href="#sec-price-availability-system">Variation System</a> (<a href="#sec-trade-galactic-economy">Trade &amp; Economy</a>) applies: a Corellian Run dealer sells at near-list; a Hutt-Space lot will sell you the same hull cheaper, with questions you don’t ask answered.</p>

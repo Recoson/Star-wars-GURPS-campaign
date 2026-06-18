@@ -4440,7 +4440,7 @@ const CAPITAL_CLASSES=[{"name":"Patrol corvette","cat":"Capital Ships","hp":"1,0
 /* addVehicle(): removed 2026-06-12 — dead legacy path (no callers); looked ships up in SHIPS_CATALOG while the UI pickers use SHIPS_FULL via addVehicleFromCatalog, so any call produced a statless "New Vehicle". */
 function delVehicle(i){C.vehicles.splice(i,1);touch();renderVehicles();}
 function setVehicleField(i,f,v){if(!C.vehicles[i])return;C.vehicles[i][f]=v;touch();renderVehicles();}
-function adjVehicleHP(i,d){if(!C.vehicles[i])return;const v=C.vehicles[i];v.hpNow=Math.max(0,Math.min(v.hpMax||v.hpNow+d,(v.hpNow||0)+d));touch();renderVehicles();}
+function adjVehicleHP(i,d){if(!C.vehicles[i])return;const v=C.vehicles[i];v.hpNow=Math.max(0,Math.min(v.hpMax||v.hpNow+d,(v.hpNow||0)+d));if(v._strain){const hm=(typeof vehicleEffectiveStat==='function'?vehicleEffectiveStat(v,'hpMax'):0)||v.hpMax||1;const pc=v.hpNow/hm;if(pc>0.5)v._strain.h=false;if(pc>0.25)v._strain.q=false;}touch();renderVehicles();}
 function adjVehicleShield(i,d){if(!C.vehicles[i])return;const v=C.vehicles[i];const cap=parseInt(v.shieldDR)||0;v.shieldNow=Math.max(0,Math.min(cap,(v.shieldNow||0)+d));touch();renderVehicles();}
 
 // ═══ SHIP & DROID BUILDER SYSTEM ═══
@@ -4714,6 +4714,7 @@ function renderVehicles(){ migrateVehicleStats();
       return '<tr>'
        +'<td><input class="cell" style="width:110px" value="'+esc(mt.label||'')+'" onchange="setMountField('+i+','+m+',\'label\',this.value)">'+(mt.n>1?' <span class="dim" style="font-size:10px">×'+mt.n+'</span>':'')+'</td>'
        +'<td><select class="cell" style="width:150px" onchange="setMountField('+i+','+m+',\'w\',this.value)">'+opts+'</select></td>'
+       +'<td class="num" style="font-weight:700;color:var(--cyan)">'+(W?(W.mount||'—'):'—')+'</td>'
        +'<td class="num">'+(W?W.dmg.replace('x','×'):'—')+'</td>'
        +'<td class="num">'+(W&&W.ap?W.ap:'—')+'</td>'
        +'<td class="num">'+(W&&W.acc?W.acc:'—')+'</td>'
@@ -4724,9 +4725,12 @@ function renderVehicles(){ migrateVehicleStats();
        +'<td><button class="btn-sm" '+(W?'':'disabled ')+'onclick="fireShipWeapon('+i+','+m+')" title="Fire this mount with the console settings below">🔫</button></td>'
        +'<td><button class="btn-del" onclick="delMount('+i+','+m+')">✕</button></td></tr>';
      }).join('');
-     return '<div style="margin-top:7px"><table class="g" style="font-size:10.5px"><tr><th>Mount</th><th>Weapon</th><th title="Damage dice">Dmg</th><th title="Armour Piercing: ignores this much hull DR (1:1 at ship scale)">AP</th><th title="Aim a turn to add Acc to one shot (fire-control computer)">Acc</th><th title="Rate of fire — RoF 5+ gives a to-hit bonus">RoF</th><th title="Recoil — extra hits on a hit = floor(margin ÷ Rcl), capped at RoF−1">Rcl</th><th title="Band where this weapon works best">Best band</th><th title="Remaining warheads (launchers only)">Ammo</th><th></th><th></th></tr>'
-      +(rows||'<tr><td colspan="10" class="dim" style="padding:6px">No mounts — add one, or they auto-fill from the catalogue armament line.</td></tr>')
-      +'</table><button class="btn-add" style="margin-top:4px" onclick="addMount('+i+')">+ mount</button></div>';
+     const _bud=hardpointBudget(v);const _used={S:0,M:0,L:0,C:0};ms.forEach(mt=>{const _W=mt.w?SHIP_WEAPONS.find(x=>x.name===mt.w):null;if(_W&&_W.mount)_used[_W.mount]+=(+mt.n||1);});
+     const _over=!fitsBudget(_used,_bud);const _bc=function(k){const u=_used[k],a=_bud[k]||0;return '<span style="color:'+(u?'var(--text)':'var(--text2)')+'">'+k+' '+u+'/'+(a||'—')+'</span>';};
+     const budLine='<div class="dim" style="font-size:10px;margin-top:5px;padding-top:4px;border-top:1px solid var(--border)">⚙ Hardpoints — '+['S','M','L','C'].map(_bc).join(' · ')+(_over?' · <span style="color:var(--red);font-weight:700">over this hull’s mount budget (larger mounts can host smaller guns)</span>':' · <span style="color:var(--text2)">within budget</span>')+'</div>';
+     return '<div style="margin-top:7px"><table class="g" style="font-size:10.5px"><tr><th>Mount</th><th>Weapon</th><th title="Hardpoint size this weapon needs — S/M/L/Capital">Mt</th><th title="Damage dice">Dmg</th><th title="Armour Piercing: ignores this much hull DR (1:1 at ship scale)">AP</th><th title="Aim a turn to add Acc to one shot (fire-control computer)">Acc</th><th title="Rate of fire — RoF 5+ gives a to-hit bonus">RoF</th><th title="Recoil — extra hits on a hit = floor(margin ÷ Rcl), capped at RoF−1">Rcl</th><th title="Band where this weapon works best">Best band</th><th title="Remaining warheads (launchers only)">Ammo</th><th></th><th></th></tr>'
+      +(rows||'<tr><td colspan="11" class="dim" style="padding:6px">No mounts — add one, or they auto-fill from the catalogue armament line.</td></tr>')
+      +'</table>'+budLine+'<button class="btn-add" style="margin-top:4px" onclick="addMount('+i+')">+ mount</button></div>';
    })()}
    <div style="margin-top:7px;padding:6px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:5px">
     <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:11px">
@@ -4779,8 +4783,7 @@ function renderVehicles(){ migrateVehicleStats();
    <table class="g" style="margin-top:4px;font-size:10.5px">
     <tr><td class="label" style="width:78px">Hull DR</td><td><input class="cell" value="${esc(v.hullDR||'')}" onchange="setVehicleField(${i},'hullDR',this.value)"></td>
         <td class="label" style="width:78px">Shield DR</td><td><input class="cell" value="${esc(v.shieldDR||'')}" onchange="setVehicleField(${i},'shieldDR',this.value)"></td></tr>
-    <tr><td class="label" title="Handling: maneuver & Dodge modifier. Blank = class default.">Hnd</td><td><input class="cell" value="${v.hnd==null?'':esc(''+v.hnd)}" placeholder="${vehicleHnd(v)}" onchange="setVehicleField(${i},'hnd',this.value)"></td>
-        <td class="label" title="Damage Threshold override. Blank = class default.">DT</td><td><input class="cell" value="${v.dt==null?'':esc(''+v.dt)}" placeholder="${vehicleDT(v)}" onchange="setVehicleField(${i},'dt',this.value)"></td></tr>
+    <tr><td class="label" title="Handling: maneuver & Dodge modifier. Blank = class default.">Hnd</td><td><input class="cell" value="${v.hnd==null?'':esc(''+v.hnd)}" placeholder="${vehicleHnd(v)}" onchange="setVehicleField(${i},'hnd',this.value)"></td></tr>
     <tr><td class="label">Crew + Pax</td><td><input class="cell" value="${esc(v.crew||'')}" onchange="setVehicleField(${i},'crew',this.value)"></td>
         <td class="label">Fuel (RF/HF)</td><td><input class="cell" value="${esc(v.fuel||'')}" onchange="setVehicleField(${i},'fuel',this.value)"></td></tr>
     <tr><td class="label">Weapons</td><td colspan="3"><input class="cell" value="${esc(v.weapons||'')}" onchange="setVehicleField(${i},'weapons',this.value)" style="width:100%"></td></tr>
@@ -5104,23 +5107,6 @@ function hullHPForClass(catOrFrame,hullDR){
  else{mult=6;lo=90;hi=260;}
  return Math.max(lo,Math.min(hi,Math.round(dr*mult)));
 }
-function vehicleDT(v){
- let base;
- if(v&&+v.dt)base=+v.dt;
- else{
-  const c=String((v&&v.cat)||'').toLowerCase();
-  base=/speeder|swoop|bike|walker/.test(c)?8
-   :/fighter|intercept|bomber|patrol|scout/.test(c)?10
-   :/shuttle|freighter|transport|gunship|drop/.test(c)?15
-   :/corvette|frigate/.test(c)?25
-   :/cruiser|capital|destroyer|flagship|battle/.test(c)?40
-   :12;
- }
- // hull state degrades structural integrity: ◐ −25% DT · ✕ −50% DT (canon: Balance Log 2026-06-11)
- let mult=1;
- ((v&&v.parts)||[]).forEach(p=>{ if(p.cat==='Hull'){ if(p.status==='dmg')mult=Math.min(mult,0.75); else if(p.status==='dest')mult=Math.min(mult,0.5); } });
- return Math.max(1,Math.round(base*mult));
-}
 function _vIntact(v){return (v.parts||[]).filter(p=>p.status==='ok').length}
 function vehiclePrizeValue(v){
  // catalogue price x intact fraction — the boarding payoff (compendium Part VI, Stage 5)
@@ -5168,30 +5154,61 @@ function charBestPilot(){
  return best;
 }
 const SHIP_WEAPONS=[
- {name:'Light laser cannon',dmg:'6dx2',ap:0,kind:'laser',acc:6,band:'Knife/Close',rof:3,rcl:2},
- {name:'Laser cannon',dmg:'6dx3',ap:0,kind:'laser',acc:6,band:'Close',rof:3,rcl:2},
- {name:'Heavy laser cannon',dmg:'6dx4',ap:5,kind:'laser',acc:7,band:'Close/Med',rof:3,rcl:3},
- {name:'Quad laser cannon',dmg:'6dx3',ap:0,kind:'laser',rof:4,acc:5,band:'Knife/Close',rcl:2},
- {name:'Rapid-fire burst laser',dmg:'6dx2',ap:0,kind:'laser',rof:13,acc:5,band:'Knife',rcl:2},
- {name:'Ion cannon',dmg:'6dx2',ap:0,kind:'ion',acc:6,band:'Close',rof:2,rcl:2},
- {name:'Concussion missile',dmg:'6dx4',ap:10,kind:'missile',acc:5,band:'Close/Med',guided:1,rof:1,rcl:1},
- {name:'Proton torpedo',dmg:'6dx6',ap:20,kind:'missile',acc:6,band:'Med/Long',guided:1,rof:1,rcl:1},
- {name:'Cluster missile',dmg:'3dx3',ap:0,kind:'missile',rof:4,acc:4,band:'Close/Med',guided:1,rcl:1},
- {name:'Ion missile',dmg:'6dx2',ap:0,kind:'ion',acc:5,band:'Close/Med',guided:1,warhead:1,rof:2,rcl:2},
- {name:'EMP missile',dmg:'',ap:0,kind:'emp',acc:5,band:'Close/Med',guided:1,fx:'Area systems-kill — shields, drones, mines and unshielded systems in the burst go dark (no hull damage). Droids in the volume roll HT or shut down; shielded military systems resist on HT+2.',rof:1,rcl:1},
- {name:'Seismic charge / mine',dmg:'6dx6',ap:10,kind:'missile',acc:3,band:'Knife',rof:1,rcl:1},
- {name:'Thermite torpedo',dmg:'6dx4',ap:80,kind:'missile',acc:6,band:'Med',guided:1,rof:1,rcl:1},
- {name:'Sabotage probe',dmg:'',ap:0,kind:'probe',acc:4,band:'Knife',fx:'Latches on — cumulative −1 per turn to the target&#39;s Gunnery and Sensor rolls (max −4) until pried off (Mechanics or EVA crew, 2 turns).',rof:1,rcl:1},
- {name:'Slug railgun',dmg:'6dx6',ap:20,kind:'rail',acc:8,band:'Long',rof:1,rcl:4},
- {name:'Ion railgun',dmg:'6dx3',ap:5,kind:'ion',acc:8,band:'Long',rof:2,rcl:2},
- {name:'Plasma railgun',dmg:'6dx4',ap:10,kind:'rail',acc:7,band:'Med/Long',rof:1,rcl:4},
- {name:'Point-defence laser',dmg:'6dx2',ap:0,kind:'pd',acc:4,band:'Knife',rof:3,rcl:2},
- {name:'Turbolaser (light)',dmg:'6dx10',ap:0,kind:'capital',acc:8,band:'Med/Long',rof:2,rcl:4},
- {name:'Turbolaser (heavy)',dmg:'6dx20',ap:0,kind:'capital',acc:9,band:'Long/Extreme',rof:2,rcl:4},
- {name:'Neuralyzer array',dmg:'',ap:0,kind:'neural',acc:0,band:'Close',rof:1,rcl:1}
+ {name:'Light laser cannon',dmg:'6dx2',ap:0,kind:'laser',acc:6,band:'Knife/Close',rof:3,rcl:1,mount:'S'},
+ {name:'Laser cannon',dmg:'6dx3',ap:0,kind:'laser',acc:6,band:'Close',rof:2,rcl:1,mount:'M'},
+ {name:'Heavy laser cannon',dmg:'6dx4',ap:5,kind:'laser',acc:7,band:'Close/Med',rof:1,rcl:1,mount:'L'},
+ {name:'Quad laser cannon',dmg:'6dx3',ap:0,kind:'laser',rof:4,acc:5,band:'Knife/Close',rcl:1,mount:'M'},
+ {name:'Rapid-fire burst laser',dmg:'6dx2',ap:0,kind:'laser',rof:8,acc:5,band:'Knife',rcl:2,mount:'S'},
+ {name:'Ion cannon',dmg:'6dx2',ap:0,kind:'ion',acc:6,band:'Close',rof:2,rcl:1,mount:'M'},
+ {name:'Concussion missile',dmg:'6dx4',ap:10,kind:'missile',acc:5,band:'Close/Med',guided:1,rof:1,rcl:1,mount:'M',speed:'fast'},
+ {name:'Proton torpedo',dmg:'6dx6',ap:20,kind:'missile',acc:6,band:'Med/Long',guided:1,rof:1,rcl:1,mount:'L',speed:'slow'},
+ {name:'Cluster missile',dmg:'3dx3',ap:0,kind:'missile',rof:4,acc:4,band:'Close/Med',guided:1,rcl:1,mount:'M',speed:'fast'},
+ {name:'Ion missile',dmg:'6dx2',ap:0,kind:'ion',acc:5,band:'Close/Med',guided:1,warhead:1,rof:1,rcl:1,mount:'M',speed:'fast'},
+ {name:'EMP missile',dmg:'',ap:0,kind:'emp',acc:5,band:'Close/Med',guided:1,fx:'Area systems-kill — shields, drones, mines and unshielded systems in the burst go dark (no hull damage). Droids in the volume roll HT or shut down; shielded military systems resist on HT+2.',rof:1,rcl:1,mount:'M',speed:'fast'},
+ {name:'Seismic charge / mine',dmg:'6dx6',ap:10,kind:'missile',acc:3,band:'Knife',rof:1,rcl:1,mount:'L',speed:'mine'},
+ {name:'Thermite torpedo',dmg:'6dx4',ap:80,kind:'missile',acc:6,band:'Med',guided:1,rof:1,rcl:1,mount:'L',speed:'slow'},
+ {name:'Sabotage probe',dmg:'',ap:0,kind:'probe',acc:4,band:'Knife',fx:'Latches on — cumulative −1 per turn to the target&#39;s Gunnery and Sensor rolls (max −4) until pried off (Mechanics or EVA crew, 2 turns).',rof:1,rcl:1,mount:'M',speed:'fast'},
+ {name:'Slug railgun',dmg:'6dx6',ap:20,kind:'rail',acc:8,band:'Long',rof:1,rcl:4,mount:'L'},
+ {name:'Ion railgun',dmg:'6dx3',ap:5,kind:'ion',acc:8,band:'Long',rof:1,rcl:1,mount:'L'},
+ {name:'Plasma railgun',dmg:'6dx4',ap:10,kind:'rail',acc:7,band:'Med/Long',rof:1,rcl:4,mount:'L'},
+ {name:'Point-defence laser',dmg:'6dx2',ap:0,kind:'pd',acc:4,band:'Knife',rof:3,rcl:2,mount:'S'},
+ {name:'Turbolaser (light)',dmg:'6dx10',ap:0,kind:'capital',acc:8,band:'Med/Long',rof:2,rcl:4,mount:'C'},
+ {name:'Turbolaser (heavy)',dmg:'6dx20',ap:0,kind:'capital',acc:9,band:'Long/Extreme',rof:2,rcl:4,mount:'C'},
+ {name:'Neuralyzer array',dmg:'',ap:0,kind:'neural',acc:0,band:'Close',rof:1,rcl:1,mount:'M'}
 ];
 const TGT_CLASSES=[['Speeder / walker',2],['Starfighter',4],['Gunship / shuttle',5],['Freighter',6],['Corvette',8],['Frigate',9],['Cruiser / capital',10]];
 const RANGE_BANDS=[['Knife-fight \u22641 km',0],['Close 1\u20135 km',-4],['Medium 5\u201315 km',-6],['Long 15\u201350 km',-8],['Extreme 50+ km',-12]];
+function travelTurns(band,speed){
+ if(!speed||speed==='mine')return 0;
+ if(speed==='slow'){ if(band>=-4)return 1; if(band===-6)return 1; if(band===-8)return 2; return 3; }
+ if(band>=-4)return 0; if(band===-6)return 1; return 2;
+}
+function hardpointBudget(v){
+ const s=String((v&&(v.hpClassHint||v.cat||v.frame||v.class))||'').toLowerCase();
+ const T=(S,M,L,C)=>({S:S,M:M,L:L,C:C});
+ if(/dreadn|battleship|battlecruiser|capital|flagship|war station|destroyer/.test(s))return T(8,10,8,4);
+ if(/carrier/.test(s))return T(6,4,2,1);
+ if(/cruiser/.test(s))return T(6,8,6,2);
+ if(/frigate/.test(s))return T(6,6,4,1);
+ if(/corvette|patrol/.test(s))return T(4,4,2,0);
+ if(/bulk|hauler/.test(s))return T(4,2,0,0);
+ if(/gunship/.test(s))return T(2,2,2,0);
+ if(/heavy fighter|bomber/.test(s))return T(2,2,1,0);
+ if(/freighter|transport|shuttle|drop|tender|courier|lander|skiff/.test(s))return T(2,2,0,0);
+ if(/intercept|fighter|scout/.test(s))return T(2,1,0,0);
+ return T(2,2,0,0);
+}
+function fitsBudget(used,bud){
+ const rank={S:0,M:1,L:2,C:3};
+ const free={S:bud.S||0,M:bud.M||0,L:bud.L||0,C:bud.C||0};
+ for(const wsz of ['C','L','M','S']){
+  let cnt=used[wsz]||0;
+  while(cnt>0){ let placed=false;
+   for(const msz of ['S','M','L','C']){ if(rank[msz]>=rank[wsz]&&free[msz]>0){ free[msz]--; placed=true; break; } }
+   if(!placed)return false; cnt--; }
+ }
+ return true;
+}
 function shipMounts(v){
  if(!v.mounts){ v.mounts=parseMountString(v.weapons||''); }
  return v.mounts;
@@ -5297,6 +5314,7 @@ function fireShipWeapon(i,mIdx){
   if(W.rof>1&&W.rcl){const _mgn=eff-r.total;const _eh=Math.max(0,Math.min((+W.rof||1)-1,Math.floor(_mgn/(+W.rcl||1))));if(_eh>0)msg+=' \u00b7 +'+_eh+' extra hit'+(_eh>1?'s':'')+' (RoF '+W.rof+', margin '+_mgn+'/Rcl '+W.rcl+')';}
   if(typeof _rollLog!=='undefined'){(_rollCount++,_rollLog).unshift({label:W.name+' dmg',target:null,dice:dd.rolls||[],sum:dd.total,outcome:String(dd.total),cls:'ok',margin:null});if(_rollLog.length>14)_rollLog.pop();}
  }
+ if(W.speed && W.speed!=='mine' && hit){ const _tt=travelTurns(band,W.speed); msg+= _tt>0 ? ' \u00b7 \u27f6 in flight: impacts in '+_tt+' turn'+(_tt>1?'s':'')+' \u2014 the target keeps its Dodge and point-defence may intercept before it lands' : ' \u00b7 \u27f6 reaches the target this turn'; }
  if(mount&&mount.shots!=null) msg+=' <span class="dim">['+mount.shotsNow+'/'+mount.shots+' left]</span>';
  v.lastFire=msg;
  if(typeof _rollLog!=='undefined'){(_rollCount++,_rollLog).unshift({label:(mount?mount.label+' ':'')+W.name,target:eff,dice:r.rolls,sum:r.total,outcome:critMiss?'crit miss':crit?'CRIT':hit?'hit':'miss',cls:hit?'ok':'miss',margin:eff-r.total});if(_rollLog.length>14)_rollLog.pop();if(typeof _renderRollPanel==='function')_renderRollPanel();}
