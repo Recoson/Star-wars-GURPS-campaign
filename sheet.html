@@ -4518,12 +4518,13 @@ function shipBuilderStats(){
 function buildShip(){
  const s=_sbState();const st=shipBuilderStats();
  if(st.errors.length){alert('Cannot build:\n• '+st.errors.join('\n• '));return;}
+ const _hp=hullHPForClass(s.parts['Hull']||s.role,st.dr);
  C.vehicles=C.vehicles||[];
  C.vehicles.push({
    name:s.name||'Unnamed Vessel',
    cat:s.role||'Custom Build',
    hullDR:String(st.dr), shieldDR:String(st.shieldSP), shieldNow:st.shieldSP,
-   hpMax:st.hp, hpNow:st.hp, weapons:st.weapons,
+   hpMax:_hp, hpNow:_hp, hpClassHint:(s.parts['Hull']||s.role||''), weapons:st.weapons,
    crew:String((SHIP_PARTS.find(p=>p.cat==='Hull'&&p.name===s.parts['Hull'])||{}).slots||1),
    cost:st.cost.toLocaleString(), lc:'—',
    notes:`Custom build · ${st.parts} parts · ${st.buildDays} build-days · ${st.fitHours} fit-hours`,
@@ -4607,6 +4608,11 @@ function migrateVehicleStats(){
    v.shieldNow=Math.min(newCap,Math.round((+v.shieldNow||0)*ratio));
   }
  });
+ (C.vehicles||[]).forEach(v=>{ // conform Hull HP pool to class every render
+  const want=hullHPForClass(v.hpClassHint||v.cat,v.hullDR);
+  const cur=+v.hpMax||0;
+  if(cur!==want){ const frac=cur>0?(v.hpNow==null?1:v.hpNow/cur):1; v.hpMax=want; v.hpNow=Math.round(want*frac); }
+ });
 }
 function renderVehicles(){ migrateVehicleStats();
  const el=document.getElementById('tab-vehicles');if(!el)return;
@@ -4646,11 +4652,11 @@ function renderVehicles(){ migrateVehicleStats();
     Full rules: compendium Part VI.</div>
    </div>
    <div class="section">
-    <h3>💥 Damage — components are the health</h3>
-    <div style="font-size:11px;line-height:1.6">Penetrating damage vs <b>DT</b>: &lt;DT superficial · <b>≥DT</b> system ◐ · <b>≥2×DT</b> system ✕ · <b>≥6×DT vs full hull DR = vaporised</b>.<br>
-    DT: speeder <b>8</b> · fighter <b>10</b> · freighter/gunship <b>15</b> · corvette <b>25</b> · capital <b>40</b>.<br>
-    Ship dies: <b>Hull ✕</b> (breach, 1d min) · <b>Reactor ✕</b> (dead in space) · <b>Sublight ✕</b> (adrift).<br>
-    <b>Ion:</b> ×2 vs shields, never Hull/Armour, never vaporises — disables for boarding.<br>
+    <h3>💥 Damage — the hull pool</h3>
+    <div style="font-size:11px;line-height:1.6">A hit's penetrating damage (after shields &amp; hull DR) drains the ship's <b>Hull HP pool</b>: cross <b>½</b> or <b>¼</b> and a random system strains ◐ (−1 crew); at <b>0</b> the ship is <b>crippled</b> (drives, guns, shields &amp; reactor dark — ripe for boarding); past <b>−½ pool</b> it is <b>destroyed</b>; a single hit <b>≥ the whole pool</b> vaporises it.<br>
+    Hull HP by class (≈ hull DR ×): speeder <b>×4</b> · fighter <b>×4</b> · freighter/gunship <b>×6</b> · corvette <b>×5</b> · frigate/cruiser <b>×6</b> · capital <b>×7</b>.<br>
+    <b>Called shot</b> (pick a system): bypasses the pool — punch its cover DR, ◐ on any hit, ✕ past 2× its outward DR.<br>
+    <b>Ion:</b> ×2 vs shields, then arcs into a system (never Hull/Armour, never the pool) — disables for boarding.<br>
     Use the <b>⚔ Incoming hit</b> tool on your ship card — it runs this whole pipeline.</div>
    </div>
   </div></details>
@@ -4671,9 +4677,8 @@ function renderVehicles(){ migrateVehicleStats();
    </div>
    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;font-size:11px">
     <div style="flex:1;min-width:170px">
-     <div class="dim">Integrity <span style="opacity:.7">· systems intact · DT ${vehicleDT(v)}</span>${(()=>{const pv=vehiclePrizeValue(v);return pv?` <span style="opacity:.7" title="Prize value = catalogue price × intact fraction. Fence pays ~1/3, legal registry ~60% (compendium Part VI, Stage 5).">· 💰 ${pv.toLocaleString()} cr</span>`:''})()}</div>
-     <div style="display:flex;align-items:center;gap:4px"><span style="font-family:monospace;font-weight:700;color:${cHP};min-width:80px;text-align:center">${_pOk} / ${_pTot} ●</span></div>
-     <div style="height:4px;background:var(--bg);border-radius:2px;margin-top:4px;overflow:hidden"><div style="height:100%;width:${hpPct}%;background:${cHP}"></div></div>
+     <div class="dim">Hull HP <span style="opacity:.7">· ${_pOk}/${_pTot} systems intact ●</span>${(()=>{const pv=vehiclePrizeValue(v);return pv?` <span style="opacity:.7" title="Prize value = catalogue price × intact fraction. Fence pays ~1/3, legal registry ~60% (compendium Part VI, Stage 5).">· 💰 ${pv.toLocaleString()} cr</span>`:''})()}</div>
+     ${(()=>{const hm=vehicleEffectiveStat(v,'hpMax')||1;const hn=(v.hpNow==null?hm:v.hpNow);const pc=Math.max(0,Math.min(100,Math.round(100*hn/hm)));const col=hn<=0?'var(--red)':pc<25?'var(--red)':pc<50?'var(--amber)':'var(--green)';const state=hn<=-0.5*hm?'☠ DESTROYED — nothing to salvage':hn<=0?'⚠ CRIPPLED — adrift, ripe for boarding':pc<25?'⚠ past ¼ — critical, systems straining':pc<50?'past ½ — structural strain':'holding';return `<div style="display:flex;align-items:center;gap:4px"><button onclick="adjVehicleHP(${i},-10)">−10</button><button onclick="adjVehicleHP(${i},-1)">−</button><span style="font-family:monospace;font-weight:700;color:${col};min-width:78px;text-align:center" title="Hull HP pool — structural health. Strain at ½ &amp; ¼; crippled at 0; destroyed past −½ cap.">${hn} / ${hm}</span><button onclick="adjVehicleHP(${i},1)">+</button><button onclick="adjVehicleHP(${i},10)">+10</button></div><div style="position:relative;height:6px;background:var(--bg);border-radius:2px;margin-top:4px;overflow:hidden"><div style="height:100%;width:${pc}%;background:${col}"></div><div style="position:absolute;top:0;bottom:0;left:50%;width:1px;background:var(--text2);opacity:.55" title="½"></div><div style="position:absolute;top:0;bottom:0;left:25%;width:1px;background:var(--text2);opacity:.55" title="¼"></div></div><div class="dim" style="font-size:10px;margin-top:2px;color:${col}">${state}</div>`})()}
     </div>
     <div style="flex:1;min-width:170px">
      <div class="dim">Shield SP / ${shieldCap||'—'}</div>
@@ -4697,8 +4702,8 @@ function renderVehicles(){ migrateVehicleStats();
      <li><b>Pilot</b> — fly steady, or <b>evasive</b> (+2 your Dodge, −2 your own gunnery). Dogfight maneuvers: compendium <i>Vehicles Playbook ③</i>.</li>
      <li><b>Gunner</b> — pick a mount below, set target class &amp; range band; tick <b>Aim</b> if you spent a turn aiming (+Acc). Roll 3d6 ≤ Gunner + SM + band + Aim − evasive. Capital guns −6 vs fighter-size; RoF 5+ adds a bonus. Ion weapons use <b>Ion Gunner</b> (or Gunner at −2).</li>
      <li><b>Defender</b> — Dodge = 3 + Pilot÷3 + Hnd on 3d6; guided warheads: Dodge at −2.</li>
-     <li><b>A hit lands</b> — feed the damage to the target’s <b>⚔ Incoming hit</b>: shields soak first (ion ×2 vs shields), then hull DR (weapon AP ignores that much), then vs <b>DT</b>: ≥DT cripples ◐ · ≥2×DT destroys ✕ · ≥6×DT vaporises the ship.</li>
-     <li><b>End of turn</b> — ⟳ shield regen · 🔧 damage control · resolve fires. Full canon: compendium <i>Part VIII — Components Are the Health</i>.</li>
+     <li><b>A hit lands</b> — feed the damage to the target's <b>⚔ Incoming hit</b>: shields soak first (ion ×2 vs shields), then hull DR (weapon AP ignores that much), then it drains the <b>Hull HP pool</b>: ½ &amp; ¼ thresholds strain a system, <b>0</b> cripples, past <b>−½</b> destroys, one hit <b>≥ the whole pool</b> vaporises. (A called shot instead kills the named system at its cover DR.)</li>
+     <li><b>End of turn</b> — ⟳ shield regen · 🔧 damage control · resolve fires. Full canon: compendium <i>Part VIII — Hull Integrity (the HP Pool)</i>.</li>
     </ol>
    </details>
    ${(()=>{const ms=shipMounts(v);
@@ -4713,12 +4718,13 @@ function renderVehicles(){ migrateVehicleStats();
        +'<td class="num">'+(W&&W.ap?W.ap:'—')+'</td>'
        +'<td class="num">'+(W&&W.acc?W.acc:'—')+'</td>'
        +'<td class="num">'+(W&&W.rof?W.rof:'—')+'</td>'
+       +'<td class="num">'+(W&&W.rcl?W.rcl:'—')+'</td>'
        +'<td class="dim" style="font-size:10px">'+(W?W.band:'')+'</td>'
        +'<td style="white-space:nowrap">'+ammo+'</td>'
        +'<td><button class="btn-sm" '+(W?'':'disabled ')+'onclick="fireShipWeapon('+i+','+m+')" title="Fire this mount with the console settings below">🔫</button></td>'
        +'<td><button class="btn-del" onclick="delMount('+i+','+m+')">✕</button></td></tr>';
      }).join('');
-     return '<div style="margin-top:7px"><table class="g" style="font-size:10.5px"><tr><th>Mount</th><th>Weapon</th><th title="Damage dice">Dmg</th><th title="Armour Piercing: ignores this much hull DR (1:1 at ship scale)">AP</th><th title="Aim a turn to add Acc to one shot (fire-control computer)">Acc</th><th title="Rate of fire — RoF 5+ gives a to-hit bonus">RoF</th><th title="Band where this weapon works best">Best band</th><th title="Remaining warheads (launchers only)">Ammo</th><th></th><th></th></tr>'
+     return '<div style="margin-top:7px"><table class="g" style="font-size:10.5px"><tr><th>Mount</th><th>Weapon</th><th title="Damage dice">Dmg</th><th title="Armour Piercing: ignores this much hull DR (1:1 at ship scale)">AP</th><th title="Aim a turn to add Acc to one shot (fire-control computer)">Acc</th><th title="Rate of fire — RoF 5+ gives a to-hit bonus">RoF</th><th title="Recoil — extra hits on a hit = floor(margin ÷ Rcl), capped at RoF−1">Rcl</th><th title="Band where this weapon works best">Best band</th><th title="Remaining warheads (launchers only)">Ammo</th><th></th><th></th></tr>'
       +(rows||'<tr><td colspan="10" class="dim" style="padding:6px">No mounts — add one, or they auto-fill from the catalogue armament line.</td></tr>')
       +'</table><button class="btn-add" style="margin-top:4px" onclick="addMount('+i+')">+ mount</button></div>';
    })()}
@@ -4740,10 +4746,10 @@ function renderVehicles(){ migrateVehicleStats();
      <span style="font-weight:700;color:var(--amber)">⚔ Incoming hit</span>
      <label class="dim">dmg <input id="vhDmg${i}" class="cell" type="number" style="width:54px" placeholder="—"></label>
      <label class="dim" title="Armour Piercing: flat DR ignored (from the attacker's weapon)">AP <input id="vhAD${i}" class="cell" type="number" value="0" style="width:42px"></label>
-     <select id="vhPart${i}" class="cell" style="width:140px"><option value="rand">🎲 random system</option>${(v.parts||[]).map((p,j)=>`<option value="${j}">${esc(p.name||p.cat)}</option>`).join('')}</select>
+     <select id="vhPart${i}" class="cell" style="width:185px"><option value="com">● centre-of-mass (hull pool)</option>${(v.parts||[]).map((p,j)=>`<option value="${j}">🎯 ${esc(p.name||p.cat)} (called shot)</option>`).join('')}</select>
      <label class="dim" style="display:inline-flex;align-items:center;gap:3px" title="Ion: counts double against shields, arcs over structure (never Hull/Armour), can never vaporise"><input type="checkbox" id="vhIon${i}">ion</label>
      <button class="btn-sm" onclick="applyVehicleHit(${i})">Apply</button>
-     <span class="dim" style="font-size:10px" title="Per hit: shields soak → DR of the struck system (exposed mounts 40% hull DR, minus weapon AP) → vs DT: ≥DT cripples one step, ≥2×DT two steps, ≥6×DT vs full hull DR vaporises the vessel">shields → DR−AP → DT ${vehicleDT(v)}</span>
+     <span class="dim" style="font-size:10px" title="● centre-of-mass drains the Hull HP pool (vaporises if one hit ≥ the pool; crippled at 0; destroyed past −½ cap; ½ &amp; ¼ thresholds strain a system + cost crew). A called shot instead kills the named system at its cover DR, pool untouched. Ion arcs into a system, hull untouched.">shields → hull DR−AP → Hull HP ${vehicleEffectiveStat(v,'hpMax')}</span>
     </div>
     ${v.lastHit?`<div style="font-size:10.5px;margin-top:4px">${esc(v.lastHit)}</div>`:''}
    </div>
@@ -4888,7 +4894,7 @@ function renderVehicles(){ migrateVehicleStats();
 
 /* ═══ SHIP PARTS DAMAGE & BREAKDOWN ═══ */
 const SHIP_PART_EFFECT={
- 'Hull':       {hit:0,  cover:'surface',  dmg:'Structure cracked. Vessel DT \u221225%; repairs at \u22124 until reframed.',  dest:'Catastrophic breach. Atmosphere bleeding; DT \u221250%, all repairs at \u22124.'},
+ 'Hull':       {hit:0,  cover:'surface',  dmg:'Structure cracked. Hull HP cap \u221225%; repairs at \u22124 until reframed.',  dest:'Catastrophic breach. Atmosphere bleeding; Hull HP cap \u221250%, all repairs at \u22124.'},
  'Armour':     {hit:0,  cover:'surface',  dmg:'Hull plating spalled. DR -25%.',                                    dest:'Armour gone. DR 0 for affected facing.'},
  'Sublight':   {hit:-2, cover:'exposed',  dmg:'Sublight engines limp. -25% Move and -1 to Piloting evasions.',     dest:'Engines dead. Move 0 (drift). Cannot maneuver.'},
  'Cargo':      {hit:-2, cover:'internal', dmg:'Cargo hold damaged. -50% cargo cap; contents at risk.',             dest:'Cargo hold gone. No cargo capacity; lose contents.'},
@@ -5084,6 +5090,20 @@ function syncDroidParts(i){
    one step (● Intact → ◐ Damaged → ✕ Destroyed), ≥2×DT degrades two steps.
    Below DT = superficial. Ships die by part destruction (Hull breach,
    Reactor loss, crit table) — not by grinding an HP pool. ═══ */
+function hullHPForClass(catOrFrame,hullDR){
+ const c=String(catOrFrame||'').toLowerCase();
+ const dr=Math.max(0,parseInt(hullDR)||0);
+ let mult,lo,hi;
+ if(/speeder|swoop|bike|walker/.test(c)){mult=4;lo=15;hi=25;}
+ else if(/capital|dreadn|destroyer|flagship|battlecruiser|battleship|carrier/.test(c)){mult=7;lo=1600;hi=2400;}
+ else if(/cruiser/.test(c)){mult=6;lo=750;hi=1100;}
+ else if(/frigate/.test(c)){mult=6;lo=750;hi=1100;}
+ else if(/corvette|patrol/.test(c)){mult=5;lo=280;hi=420;}
+ else if(/intercept|fighter|bomber/.test(c)){mult=4;lo=25;hi=40;}
+ else if(/shuttle|freighter|transport|gunship|drop|hauler|skiff|lander|tender|courier/.test(c)){mult=6;lo=90;hi=200;}
+ else{mult=6;lo=90;hi=260;}
+ return Math.max(lo,Math.min(hi,Math.round(dr*mult)));
+}
 function vehicleDT(v){
  let base;
  if(v&&+v.dt)base=+v.dt;
@@ -5148,27 +5168,27 @@ function charBestPilot(){
  return best;
 }
 const SHIP_WEAPONS=[
- {name:'Light laser cannon',dmg:'6dx2',ap:0,kind:'laser',acc:6,band:'Knife/Close'},
- {name:'Laser cannon',dmg:'6dx3',ap:0,kind:'laser',acc:6,band:'Close'},
- {name:'Heavy laser cannon',dmg:'6dx4',ap:5,kind:'laser',acc:7,band:'Close/Med'},
- {name:'Quad laser cannon',dmg:'6dx3',ap:0,kind:'laser',rof:4,acc:5,band:'Knife/Close'},
- {name:'Rapid-fire burst laser',dmg:'6dx2',ap:0,kind:'laser',rof:13,acc:5,band:'Knife'},
- {name:'Ion cannon',dmg:'6dx2',ap:0,kind:'ion',acc:6,band:'Close'},
- {name:'Concussion missile',dmg:'6dx4',ap:10,kind:'missile',acc:5,band:'Close/Med',guided:1},
- {name:'Proton torpedo',dmg:'6dx6',ap:20,kind:'missile',acc:6,band:'Med/Long',guided:1},
- {name:'Cluster missile',dmg:'3dx3',ap:0,kind:'missile',rof:4,acc:4,band:'Close/Med',guided:1},
- {name:'Ion missile',dmg:'6dx2',ap:0,kind:'ion',acc:5,band:'Close/Med',guided:1,warhead:1},
- {name:'EMP missile',dmg:'',ap:0,kind:'emp',acc:5,band:'Close/Med',guided:1,fx:'Area systems-kill — shields, drones, mines and unshielded systems in the burst go dark (no hull damage). Droids in the volume roll HT or shut down; shielded military systems resist on HT+2.'},
- {name:'Seismic charge / mine',dmg:'6dx6',ap:10,kind:'missile',acc:3,band:'Knife'},
- {name:'Thermite torpedo',dmg:'6dx4',ap:80,kind:'missile',acc:6,band:'Med',guided:1},
- {name:'Sabotage probe',dmg:'',ap:0,kind:'probe',acc:4,band:'Knife',fx:'Latches on — cumulative −1 per turn to the target&#39;s Gunnery and Sensor rolls (max −4) until pried off (Mechanics or EVA crew, 2 turns).'},
- {name:'Slug railgun',dmg:'6dx6',ap:20,kind:'rail',acc:8,band:'Long'},
- {name:'Ion railgun',dmg:'6dx3',ap:5,kind:'ion',acc:8,band:'Long'},
- {name:'Plasma railgun',dmg:'6dx4',ap:10,kind:'rail',acc:7,band:'Med/Long'},
- {name:'Point-defence laser',dmg:'6dx2',ap:0,kind:'pd',acc:4,band:'Knife'},
- {name:'Turbolaser (light)',dmg:'6dx10',ap:0,kind:'capital',acc:8,band:'Med/Long'},
- {name:'Turbolaser (heavy)',dmg:'6dx20',ap:0,kind:'capital',acc:9,band:'Long/Extreme'},
- {name:'Neuralyzer array',dmg:'',ap:0,kind:'neural',acc:0,band:'Close'}
+ {name:'Light laser cannon',dmg:'6dx2',ap:0,kind:'laser',acc:6,band:'Knife/Close',rof:3,rcl:2},
+ {name:'Laser cannon',dmg:'6dx3',ap:0,kind:'laser',acc:6,band:'Close',rof:3,rcl:2},
+ {name:'Heavy laser cannon',dmg:'6dx4',ap:5,kind:'laser',acc:7,band:'Close/Med',rof:3,rcl:3},
+ {name:'Quad laser cannon',dmg:'6dx3',ap:0,kind:'laser',rof:4,acc:5,band:'Knife/Close',rcl:2},
+ {name:'Rapid-fire burst laser',dmg:'6dx2',ap:0,kind:'laser',rof:13,acc:5,band:'Knife',rcl:2},
+ {name:'Ion cannon',dmg:'6dx2',ap:0,kind:'ion',acc:6,band:'Close',rof:2,rcl:2},
+ {name:'Concussion missile',dmg:'6dx4',ap:10,kind:'missile',acc:5,band:'Close/Med',guided:1,rof:1,rcl:1},
+ {name:'Proton torpedo',dmg:'6dx6',ap:20,kind:'missile',acc:6,band:'Med/Long',guided:1,rof:1,rcl:1},
+ {name:'Cluster missile',dmg:'3dx3',ap:0,kind:'missile',rof:4,acc:4,band:'Close/Med',guided:1,rcl:1},
+ {name:'Ion missile',dmg:'6dx2',ap:0,kind:'ion',acc:5,band:'Close/Med',guided:1,warhead:1,rof:2,rcl:2},
+ {name:'EMP missile',dmg:'',ap:0,kind:'emp',acc:5,band:'Close/Med',guided:1,fx:'Area systems-kill — shields, drones, mines and unshielded systems in the burst go dark (no hull damage). Droids in the volume roll HT or shut down; shielded military systems resist on HT+2.',rof:1,rcl:1},
+ {name:'Seismic charge / mine',dmg:'6dx6',ap:10,kind:'missile',acc:3,band:'Knife',rof:1,rcl:1},
+ {name:'Thermite torpedo',dmg:'6dx4',ap:80,kind:'missile',acc:6,band:'Med',guided:1,rof:1,rcl:1},
+ {name:'Sabotage probe',dmg:'',ap:0,kind:'probe',acc:4,band:'Knife',fx:'Latches on — cumulative −1 per turn to the target&#39;s Gunnery and Sensor rolls (max −4) until pried off (Mechanics or EVA crew, 2 turns).',rof:1,rcl:1},
+ {name:'Slug railgun',dmg:'6dx6',ap:20,kind:'rail',acc:8,band:'Long',rof:1,rcl:4},
+ {name:'Ion railgun',dmg:'6dx3',ap:5,kind:'ion',acc:8,band:'Long',rof:2,rcl:2},
+ {name:'Plasma railgun',dmg:'6dx4',ap:10,kind:'rail',acc:7,band:'Med/Long',rof:1,rcl:4},
+ {name:'Point-defence laser',dmg:'6dx2',ap:0,kind:'pd',acc:4,band:'Knife',rof:3,rcl:2},
+ {name:'Turbolaser (light)',dmg:'6dx10',ap:0,kind:'capital',acc:8,band:'Med/Long',rof:2,rcl:4},
+ {name:'Turbolaser (heavy)',dmg:'6dx20',ap:0,kind:'capital',acc:9,band:'Long/Extreme',rof:2,rcl:4},
+ {name:'Neuralyzer array',dmg:'',ap:0,kind:'neural',acc:0,band:'Close',rof:1,rcl:1}
 ];
 const TGT_CLASSES=[['Speeder / walker',2],['Starfighter',4],['Gunship / shuttle',5],['Freighter',6],['Corvette',8],['Frigate',9],['Cruiser / capital',10]];
 const RANGE_BANDS=[['Knife-fight \u22641 km',0],['Close 1\u20135 km',-4],['Medium 5\u201315 km',-6],['Long 15\u201350 km',-8],['Extreme 50+ km',-12]];
@@ -5274,6 +5294,7 @@ function fireShipWeapon(i,mIdx){
  else{
   const dd=rollDmgSpec(parseDmg(W.dmg));
   msg+=(crit?'\u2605 CRITICAL HIT':'HIT')+' \u2014 <b>'+dd.total+'</b> damage'+(W.ap?', AP '+W.ap:'')+(W.kind==='ion'?' \u00b7 ION (\u00d72 vs shields, no structure)':'')+(W.kind==='missile'?' \u00b7 warhead (target dodges at \u22122)':'')+(crit?' \u00b7 crit: ignore cover DR or +1 damage step \u2014 GM call':'')+'. Feed it to the target\u2019s \u2694 Incoming hit.';
+  if(W.rof>1&&W.rcl){const _mgn=eff-r.total;const _eh=Math.max(0,Math.min((+W.rof||1)-1,Math.floor(_mgn/(+W.rcl||1))));if(_eh>0)msg+=' \u00b7 +'+_eh+' extra hit'+(_eh>1?'s':'')+' (RoF '+W.rof+', margin '+_mgn+'/Rcl '+W.rcl+')';}
   if(typeof _rollLog!=='undefined'){(_rollCount++,_rollLog).unshift({label:W.name+' dmg',target:null,dice:dd.rolls||[],sum:dd.total,outcome:String(dd.total),cls:'ok',margin:null});if(_rollLog.length>14)_rollLog.pop();}
  }
  if(mount&&mount.shots!=null) msg+=' <span class="dim">['+mount.shotsNow+'/'+mount.shots+' left]</span>';
@@ -5344,37 +5365,81 @@ function applyVehicleHit(i){
  const pre=log.length?log.join(' \u00b7 ')+' \u00b7 ':'';
  if(dmg<=0){ v.lastHit=log.join(' \u00b7 '); touch();renderVehicles();return }
  if(!v.parts||!v.parts.length)v.parts=synthShipParts(v.cat);
- const DT=vehicleDT(v);
  const drBase=parseInt(v.hullDR)||0;
  let drMult=1;v.parts.forEach(q=>{if(q.cat==='Armour'){if(q.status==='dmg')drMult*=0.75;else if(q.status==='dest')drMult=0;}});
- // 2. vaporisation check vs FULL hull DR after AP (never ion): blow-through = vessel destroyed
- if(!ion && (dmg-Math.max(0,Math.floor(drBase*drMult)-ap))>=6*DT){
-  v.parts.forEach(q=>q.status='dest');
-  v.lastHit=pre+'\u2620\u{1F4A5} VAPORISED \u2014 penetration \u2265 6\u00d7DT: the vessel is destroyed outright. Nothing to salvage.';
+ const hpMax=vehicleEffectiveStat(v,'hpMax')||1;
+ const calledShot=(sel!=null&&sel!=='com'&&sel!=='rand'&&!!v.parts[+sel]);
+
+ // ── CALLED SHOT ── strike the chosen system at its cover DR; the hull pool is untouched
+ if(calledShot){
+  const part=v.parts[+sel];
+  const eff=SHIP_PART_EFFECT[part.cat]||{};
+  const cover=eff.cover||'internal';
+  const outward=Math.max(0,Math.floor(drBase*drMult*(cover==='exposed'?0.4:1)));
+  const dr=Math.max(0,outward-ap);
+  const pen=dmg-dr;
+  if(pen<=0){ v.lastHit=pre+'armour holds over '+(part.name||part.cat)+' (DR '+dr+(ap?' after AP '+ap:'')+') \u2014 scorch marks only \u00b7 hull pool untouched'; touch();renderVehicles();return }
+  const steps=pen>=2*Math.max(1,outward)?2:1; // \u25d0 on any pen, \u2715 past 2\u00d7 its outward DR
+  const st=_degrade(part,steps);
+  if(st==='dest'&&part.cat==='Shields')v.shieldNow=0;
+  let msg='\u{1F3AF} called shot \u2014 '+pen+' through '+(part.name||part.cat)+' '+(st==='dmg'?'\u25d0 DAMAGED':'\u2715 DESTROYED')+'. '+(st==='dmg'?(eff.dmg||''):(eff.dest||''));
+  if(st==='dest'&&part.cat==='Reactor')msg+=' \u2620 Dead in space.';
+  v.lastHit=pre+msg+' \u00b7 hull pool untouched.';
   touch();renderVehicles();return;
  }
- // 3. pick the struck system (ion arcs over structure: never Hull/Armour)
- const pickable=v.parts.map((q,k)=>({q,k})).filter(o=>o.q.status!=='dest'&&!(ion&&(o.q.cat==='Hull'||o.q.cat==='Armour')));
- let j=-1;
- if(sel==='rand'||sel==null){
-  const pool=[];
-  pickable.forEach(o=>{const cover=(SHIP_PART_EFFECT[o.q.cat]||{}).cover||'internal';const w=cover==='surface'?3:cover==='exposed'?2:1;for(let x=0;x<w;x++)pool.push(o.k)});
-  j=pool.length?pool[Math.floor(Math.random()*pool.length)]:-1;
- } else j=+sel;
- if(j<0||!v.parts[j]){ v.lastHit=pre+'every targetable system is already destroyed \u2014 the wreck shudders.'; touch();renderVehicles();return }
- const part=v.parts[j];
- // 4. DR by the struck part's cover: exposed mounts get only 40% of hull DR; AP subtracts flat
- const cover=(SHIP_PART_EFFECT[part.cat]||{}).cover||'internal';
- const dr=Math.max(0,Math.floor(drBase*drMult*(cover==='exposed'?0.4:1))-ap);
+
+ // ── ION ── arcs over structure into a random system; the hull pool is immune
+ if(ion){
+  const cand=v.parts.map((q,k)=>({q:q,k:k})).filter(o=>o.q.status!=='dest'&&o.q.cat!=='Hull'&&o.q.cat!=='Armour');
+  if(!cand.length){ v.lastHit=pre+'\u26a1 ion wash \u2014 no live systems left to fry; the hull pool is immune to ion.'; touch();renderVehicles();return }
+  const pool=[];cand.forEach(o=>{const cover=(SHIP_PART_EFFECT[o.q.cat]||{}).cover||'internal';const w=cover==='surface'?3:cover==='exposed'?2:1;for(let x=0;x<w;x++)pool.push(o.k);});
+  const j=pool[Math.floor(Math.random()*pool.length)];
+  const part=v.parts[j];const eff=SHIP_PART_EFFECT[part.cat]||{};
+  const st=_degrade(part,1);
+  if(st!=='ok'&&part.cat==='Shields')v.shieldNow=0;
+  v.lastHit=pre+'\u26a1 ION arc \u2014 '+(part.name||part.cat)+' '+(st==='dmg'?'\u25d0 DAMAGED':'\u2715 DESTROYED')+' ('+(st==='dmg'?(eff.dmg||'system disrupted'):(eff.dest||'system fried'))+'). Hull untouched \u2014 ion never bites structure.';
+  touch();renderVehicles();return;
+ }
+
+ // ── CENTRE-OF-MASS ── drain the Hull HP pool
+ const dr=Math.max(0,Math.floor(drBase*drMult)-ap);
  const pen=dmg-dr;
- if(pen<=0){ v.lastHit=pre+'armour holds over '+(part.name||part.cat)+' (DR '+dr+(ap?' after AP '+ap:'')+') \u2014 scorch marks only'; touch();renderVehicles();return }
- const steps=pen>=2*DT?2:(pen>=DT?1:0);
- if(!steps){ v.lastHit=pre+pen+' through at '+(part.name||part.cat)+' \u2014 below DT '+DT+': superficial'; touch();renderVehicles();return }
- const st=_degrade(part,steps);
- const eff=SHIP_PART_EFFECT[part.cat]||{};
- let msg='\u{1F4A5} '+pen+' through \u2014 '+(steps===2?'CRITICAL: ':'')+(part.name||part.cat)+' '+(st==='dmg'?'\u25d0 DAMAGED':'\u2715 DESTROYED')+'. '+(st==='dmg'?(eff.dmg||''):(eff.dest||''));
- if(st==='dest'&&part.cat==='Hull')msg+=' \u2620 HULL BREACH \u2014 vessel lost in 1d minutes.';
- if(st==='dest'&&part.cat==='Reactor')msg+=' \u2620 Dead in space.';
+ if(pen<=0){ v.lastHit=pre+'hull holds (DR '+dr+(ap?' after AP '+ap:'')+') \u2014 scorch marks only, pool untouched'; touch();renderVehicles();return }
+ // vaporise: a single hit \u2265 the whole effective pool
+ if(pen>=hpMax){
+  v.parts.forEach(q=>q.status='dest'); v.hpNow=0; v.shieldNow=0;
+  v.lastHit=pre+'\u2620\u{1F4A5} VAPORISED \u2014 '+pen+' \u2265 Hull HP '+hpMax+': the vessel is gutted in a single blow. Nothing to salvage.';
+  touch();renderVehicles();return;
+ }
+ const before=(v.hpNow==null?hpMax:v.hpNow);
+ v.hpNow=before-pen;
+ // destroyed past \u2212\u00bd of the pool; crippled at \u22640
+ if(v.hpNow<=-0.5*hpMax){
+  v.parts.forEach(q=>{ if(q.cat==='Sublight'||q.cat==='Reactor')q.status='dest'; });
+  v.shieldNow=0;
+  v.lastHit=pre+'\u2620 DESTROYED \u2014 '+pen+' through; Hull HP '+v.hpNow+'/'+hpMax+' (past \u2212\u00bd cap). The hull fails \u2014 breaking up, dead in space.';
+  touch();renderVehicles();return;
+ }
+ if(v.hpNow<=0){
+  v.shieldNow=0;
+  ['Sublight','Weapon','Shields','Reactor'].forEach(cat=>{v.parts.forEach(q=>{if(q.cat===cat&&q.status!=='dest')q.status='dest';});});
+  v.lastHit=pre+'\u26a0 CRIPPLED \u2014 '+pen+' through; Hull HP 0 (pool spent). Drives, guns, shields and reactor go dark \u2014 a derelict ripe for boarding.';
+  touch();renderVehicles();return;
+ }
+ // still flying: deplete the pool; fire the \u00bd and \u00bc Systems Strain once each
+ const pct=v.hpNow/hpMax;
+ v._strain=v._strain||{};
+ const _sm=[];
+ const fireStrain=function(label){
+  const c2=v.parts.map((q,k)=>({q:q,k:k})).filter(o=>o.q.status==='ok'&&o.q.cat!=='Hull'&&o.q.cat!=='Armour');
+  if(c2.length){ const pk=c2[Math.floor(Math.random()*c2.length)]; _degrade(v.parts[pk.k],1); _sm.push(label+': '+(v.parts[pk.k].name||v.parts[pk.k].cat)+' \u25d0'); }
+  else _sm.push(label+': systems already failing');
+  v.crewLost=(+v.crewLost||0)+1;
+ };
+ if(pct<=0.5&&!v._strain.h){ v._strain.h=true; fireStrain('\u00bd strain'); }
+ if(pct<=0.25&&!v._strain.q){ v._strain.q=true; fireStrain('\u00bc strain'); }
+ let msg='\u{1F4A5} '+pen+' through \u2014 Hull HP '+v.hpNow+'/'+hpMax+' ('+Math.round(pct*100)+'%).';
+ if(_sm.length)msg+=' \u26a1 Systems strain \u2014 '+_sm.join(' \u00b7 ')+' \u00b7 \u22121 crew each.';
  v.lastHit=pre+msg;
  touch();renderVehicles();
 }
