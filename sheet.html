@@ -4659,6 +4659,16 @@ function renderVehicles(){ migrateVehicleStats();
     <b>Ion:</b> ×2 vs shields, then arcs into a system (never Hull/Armour, never the pool) — disables for boarding.<br>
     Use the <b>⚔ Incoming hit</b> tool on your ship card — it runs this whole pipeline.</div>
    </div>
+   <div class="section">
+    <h3>🎲 The round, in order</h3>
+    <ol style="margin:5px 0 3px 18px;padding:0;font-size:11px;line-height:1.55">
+     <li><b>Pilot</b> — fly steady, or <b>evasive</b> (+2 your Dodge, −2 your own gunnery). Dogfight maneuvers: compendium <i>Vehicles Playbook ③</i>.</li>
+     <li><b>Gunner</b> — pick a mount, set target class &amp; range band; tick <b>Aim</b> if you spent a turn aiming (+Acc). Roll 3d6 ≤ Gunner + SM + band + Aim − evasive. Capital guns −6 vs fighter-size; RoF 5+ adds a bonus. Ion weapons use <b>Ion Gunner</b> (or Gunner at −2).</li>
+     <li><b>Defender</b> — Dodge = 3 + Pilot÷3 + Hnd on 3d6; guided warheads: Dodge at −2.</li>
+     <li><b>A hit lands</b> — feed the damage to the target's <b>⚔ Incoming hit</b>: shields soak first (ion ×2 vs shields), then hull DR (weapon AP ignores that much), then it drains the <b>Hull HP pool</b>: ½ &amp; ¼ thresholds strain a system, <b>0</b> cripples, past <b>−½</b> destroys, one hit <b>≥ the whole pool</b> vaporises. (A called shot instead kills the named system at its cover DR.)</li>
+     <li><b>End of turn</b> — ⟳ shield regen · 🔧 damage control · resolve fires. Full canon: compendium <i>Part VIII — Hull Integrity (the HP Pool)</i>.</li>
+    </ol>
+   </div>
   </div></details>
  <div class="sec-head">Your Fleet${(C.vehicles||[]).length?` <span class="dim" style="font-weight:400;font-size:11px">— ${C.vehicles.length} vessel${C.vehicles.length===1?'':'s'}</span>`:''}</div>
  ${(C.vehicles||[]).length?`<div class="fleet-grid">`+(C.vehicles).map((v,i)=>{
@@ -4696,16 +4706,6 @@ function renderVehicles(){ migrateVehicleStats();
     <span style="font-weight:700;color:var(--cyan)" title="Roll 3d6 ≤ Dodge against each attack you can see coming. Guided warheads: −2. Capital hulls effectively cannot dodge.">🛡 Defence</span> ${core}
     <span class="dim">· vs missiles −2 · foes hit you at SM +${sm}${sm<=5?' but capital batteries −6 vs you':''}</span>
    </div>`})()}
-   <details style="margin-top:7px" title="Player guidance — the whole exchange, in order">
-    <summary style="font-size:11px;color:#d4a843;cursor:pointer;font-weight:600">📖 How a ship round works</summary>
-    <ol style="margin:5px 0 3px 18px;padding:0;font-size:11px;line-height:1.55">
-     <li><b>Pilot</b> — fly steady, or <b>evasive</b> (+2 your Dodge, −2 your own gunnery). Dogfight maneuvers: compendium <i>Vehicles Playbook ③</i>.</li>
-     <li><b>Gunner</b> — pick a mount below, set target class &amp; range band; tick <b>Aim</b> if you spent a turn aiming (+Acc). Roll 3d6 ≤ Gunner + SM + band + Aim − evasive. Capital guns −6 vs fighter-size; RoF 5+ adds a bonus. Ion weapons use <b>Ion Gunner</b> (or Gunner at −2).</li>
-     <li><b>Defender</b> — Dodge = 3 + Pilot÷3 + Hnd on 3d6; guided warheads: Dodge at −2.</li>
-     <li><b>A hit lands</b> — feed the damage to the target's <b>⚔ Incoming hit</b>: shields soak first (ion ×2 vs shields), then hull DR (weapon AP ignores that much), then it drains the <b>Hull HP pool</b>: ½ &amp; ¼ thresholds strain a system, <b>0</b> cripples, past <b>−½</b> destroys, one hit <b>≥ the whole pool</b> vaporises. (A called shot instead kills the named system at its cover DR.)</li>
-     <li><b>End of turn</b> — ⟳ shield regen · 🔧 damage control · resolve fires. Full canon: compendium <i>Part VIII — Hull Integrity (the HP Pool)</i>.</li>
-    </ol>
-   </details>
    ${(()=>{const ms=shipMounts(v);
      const rows=ms.map((mt,m)=>{
       const W=mt.w?SHIP_WEAPONS.find(x=>x.name===mt.w):null;
@@ -4800,7 +4800,7 @@ function renderVehicles(){ migrateVehicleStats();
    <div style="display:flex;gap:6px">
     <select id="vehAddSizeSel" class="cell" style="flex:1;min-width:0">
      <option value="">— choose by size —</option>
-     ${SHIP_SIZE_ORDER.map(g=>{const ss=catalog.filter(s=>shipSizeGroup(s.cat)===g);return ss.length?`<optgroup label="${esc(g)}">${ss.map(s=>`<option value="${esc(s.name)}">${esc(s.name)}</option>`).join('')}</optgroup>`:'';}).join('')}
+     ${SHIP_SIZE_ORDER.map(g=>{const ss=catalog.filter(s=>shipSizeGroup(s.cat)===g).slice().sort((a,b)=>String(a.name).localeCompare(String(b.name)));return ss.length?`<optgroup label="${esc(g)}">${ss.map(s=>`<option value="${esc(s.name)}">${esc(s.name)}</option>`).join('')}</optgroup>`:'';}).join('')}
     </select>
     <button class="btn-add" onclick="(()=>{const el=document.getElementById('vehAddSizeSel');const n=el?el.value:'';if(n)addVehicleFromCatalog(n);else alert('Pick a vessel first.');})()">+ Add</button>
    </div>
@@ -4810,7 +4810,7 @@ function renderVehicles(){ migrateVehicleStats();
    <div style="display:flex;gap:6px">
     <select id="vehAddTypeSel" class="cell" style="flex:1;min-width:0">
      <option value="">— choose by type —</option>
-     ${SHIP_TYPE_ORDER.map(g=>{const ss=catalog.filter(s=>shipTypeGroup(s.cat)===g);return ss.length?`<optgroup label="${esc(g)}">${ss.map(s=>`<option value="${esc(s.name)}">${esc(s.name)}</option>`).join('')}</optgroup>`:'';}).join('')}
+     ${SHIP_TYPE_ORDER.map(g=>{const ss=catalog.filter(s=>shipTypeGroup(s.cat)===g).slice().sort((a,b)=>String(a.name).localeCompare(String(b.name)));return ss.length?`<optgroup label="${esc(g)}">${ss.map(s=>`<option value="${esc(s.name)}">${esc(s.name)}</option>`).join('')}</optgroup>`:'';}).join('')}
     </select>
     <button class="btn-add" onclick="(()=>{const el=document.getElementById('vehAddTypeSel');const n=el?el.value:'';if(n)addVehicleFromCatalog(n);else alert('Pick a vessel first.');})()">+ Add</button>
    </div>
@@ -4828,7 +4828,7 @@ function renderVehicles(){ migrateVehicleStats();
     <div style="font-size:10px;color:var(--text2);margin-bottom:2px">${cat}</div>
     <select class="cell" onchange="setSBPart('${cat}',this.value)" style="width:100%;font-size:11px">
      <option value="">— none —</option>
-     ${SHIP_PARTS.filter(p=>p.cat===cat).map(p=>`<option value="${esc(p.name)}"${sb.parts[cat]===p.name?' selected':''}>T${p.tier} · ${esc(p.name)} · ${p.cost.toLocaleString()}cr</option>`).join('')}
+     ${SHIP_PARTS.filter(p=>p.cat===cat).slice().sort((a,b)=>(a.tier-b.tier)||String(a.name).localeCompare(String(b.name))).map(p=>`<option value="${esc(p.name)}"${sb.parts[cat]===p.name?' selected':''}>T${p.tier} · ${esc(p.name)} · ${p.cost.toLocaleString()}cr</option>`).join('')}
     </select>
    </div>`).join('')}
   </div>
@@ -5717,7 +5717,7 @@ function renderDroids(){
  <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap">
   <select id="dAddSel" class="cell" style="min-width:340px;flex:1">
    <option value="">— Choose from ${DROIDS_FULL.length} canon droids —</option>
-   ${degs.map(g=>`<optgroup label="${g} Degree">${DROIDS_FULL.filter(d=>d.deg===g).map(d=>`<option value="${esc(d.name)}">${esc(d.name)}</option>`).join('')}</optgroup>`).join('')}
+   ${degs.map(g=>`<optgroup label="${g} Degree">${DROIDS_FULL.filter(d=>d.deg===g).slice().sort((a,b)=>String(a.name).localeCompare(String(b.name))).map(d=>`<option value="${esc(d.name)}">${esc(d.name)}</option>`).join('')}</optgroup>`).join('')}
   </select>
   <button class="btn-add" onclick="(()=>{const el=document.getElementById('dAddSel');const n=el?el.value:'';if(n)addDroidFromCatalog(n); else alert('Pick a droid from the dropdown first.');})()">+ Add</button>
  </div>
@@ -5734,7 +5734,7 @@ function renderDroids(){
     <div style="font-size:10px;color:var(--text2);margin-bottom:2px">${cat}</div>
     <select class="cell" onchange="setDBPart('${cat}',this.value)" style="width:100%;font-size:11px">
      <option value="">— none —</option>
-     ${DROID_PARTS.filter(p=>p.cat===cat).map(p=>`<option value="${esc(p.name)}"${db.parts[cat]===p.name?' selected':''}>T${p.tier} · ${esc(p.name)} · ${p.cost.toLocaleString()}cr</option>`).join('')}
+     ${DROID_PARTS.filter(p=>p.cat===cat).slice().sort((a,b)=>(a.tier-b.tier)||String(a.name).localeCompare(String(b.name))).map(p=>`<option value="${esc(p.name)}"${db.parts[cat]===p.name?' selected':''}>T${p.tier} · ${esc(p.name)} · ${p.cost.toLocaleString()}cr</option>`).join('')}
     </select>
    </div>`).join('')}
   </div>
@@ -5842,6 +5842,7 @@ function syncCustomDB(){
     DATA.species.push(Object.assign({name:'Custom',st:0,dx:0,iq:0,ht:0,cost:0,notes:'(homebrew)'},sp,{_custom:true}));
    }
   });
+  DATA.species.sort((a,b)=>String(a.name).localeCompare(String(b.name)));
  }
  // NEW: Force Powers
  if(typeof FORCE_POWERS!=='undefined'){
