@@ -706,7 +706,7 @@ const SPACES=[
 function route(id){SPACES.forEach(s=>{const el=$('sp-'+s.id);if(el)el.classList.toggle('on',s.id===id);});document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.sp===id));if(id==='cast'&&typeof renderCastKept==='function')renderCastKept();window.scrollTo({top:0,behavior:'smooth'});}
 
 function buildScene(sec){
- /* ============================ DATA BANKS ============================ */
+ /* ============================ WORLDS / SETTINGS ============================ */
  const PLANETS={
   taris:{loc:['amid the half-cleared rubble of Taris\u2019 endless ruin','on a re-pressurised level of bombed-out Taris','where fresh ferrocrete is poured over the bones of the old city'],
    arch:['scorched duracrete and salvaged girders','jury-rigged structures bolted into shattered towers','prefab shelters wedged among collapsed spires'],
@@ -768,11 +768,91 @@ function buildScene(sec){
    env:['heat ripples off acres of corroding wreckage','sand has gotten into everything, including your teeth','a hot, gritty wind never quite stops blowing'],
    sp:[['Human',6],['Teedo',2],['Rodian',2],['Nikto',2],['Devaronian',1],['Trandoshan',1]],
    col:['scavengers guard their finds with knives and worse','a lone water-merchant prices everyone\u2019s desperation to the drop']},
-  ordmandell:{loc:['in a hardscrabble port town on frontier Ord Mandell','on the lawless docks of an Ord Mandell freeport','where Ord Mandell\u2019s mud and neon run together at the galaxy\u2019s edge'],
+  ordmantell:{loc:['in a hardscrabble port town on frontier Ord Mantell','on the lawless docks of an Ord Mantell freeport','where Ord Mantell\u2019s mud and neon run together at the galaxy\u2019s edge'],
    arch:['hard-used prefab and corrugated plasteel','frontier construction patched more than it was ever built','grimy freeport sprawl thrown up fast and cheap'],
    env:['ship-exhaust and cold drizzle hang over everything','the streets are equal parts mud, oil and rumour','blaster-scarred walls say what the law won\u2019t'],
    sp:[['Human',6],['Rodian',3],['Devaronian',3],['Trandoshan',3],['Weequay',2],['Nikto',2],['Twi\u2019lek',2],['Mandalorian',1]],
    col:['bounty hunters and mercenaries outnumber the honest','every third face here is running from something']},
+  corellia:{loc:['in a hard-working shipyard district on Corellia','on a Coronet City street thick with spacers and starship grime','where Corellia\u2019s docks and foundries never seem to sleep'],
+   arch:['solid Corellian ferrocrete and towering gantry-cranes','practical industrial blocks streaked with engine-soot','shipwright yards stacked high with freight'],
+   env:['the boom and clang of the yards carries everywhere','half the people here are spacers, half build the ships they fly','the sky is criss-crossed with departing freighters'],
+   sp:[['Human',8],['Duros',3],['Selonian',1],['Sullustan',2],['Rodian',2]],
+   col:['Corellians wave off Republic regulations with a shrug','every second person claims to own a faster ship than yours']},
+  alderaan:{loc:['in a graceful terraced city on Alderaan','among Alderaan\u2019s clean avenues and open parklands','where Alderaan\u2019s elegant spires rise over green hills'],
+   arch:['graceful pale stone and sweeping arches','refined, harmonious architecture built to please the eye','open, airy halls beside manicured gardens'],
+   env:['everything is clean, calm and deliberately beautiful','soft light falls over parkland and polished stone','the loudest sound is birdsong and quiet conversation'],
+   sp:[['Human',9],['Twi\u2019lek',1],['Bothan',1],['Ithorian',1]],
+   col:['Alderaanians prize manners and pacifism, sometimes smugly','wealth here is quiet, old, and very real']},
+  moncal:{loc:['in a Mon Calamari floating shipyard-city on Dac','on a tiered ocean platform above Mon Cala\u2019s deep seas','where Mon Cal and Quarren lay down starships above the waves'],
+   arch:['flowing, organic Mon Calamari construction','bubble-domes and curved alloy over open ocean','elegant shipwright platforms strung above the water'],
+   env:['the sea stretches endless and deep below','everything curves; nothing is built in a straight line','the air is wet, salt-heavy and cool'],
+   sp:[['Mon Calamari',5],['Quarren',5],['Human',3],['Selkath',1],['Ithorian',1]],
+   col:['Mon Cal and Quarren eye one another with old wariness','the finest hulls in the sector are laid down here']},
+  sullust:{loc:['in a sealed SoroSuub habitat-warren on volcanic Sullust','deep in Sullust\u2019s underground cities, away from the toxic surface','where Sullust\u2019s lava-light glows beyond reinforced viewports'],
+   arch:['sealed volcanic-rock tunnels and SoroSuub plasteel','snug subterranean construction built against the heat','reinforced habitat domes lit by industrial glow'],
+   env:['the rock itself is warm to the touch','everything is sealed against the poison air outside','a faint sulphur tang gets past even the scrubbers'],
+   sp:[['Sullustan',7],['Human',3],['Bith',1],['Duros',1]],
+   col:['SoroSuub owns the very air you breathe here','Sullustans navigate the warrens by memory and never get lost']},
+  bothawui:{loc:['on mercantile Bothawui, where every deal hides three others','in a Bothan trade-city humming with quiet intrigue','where Bothawui\u2019s markets and back-rooms blur together'],
+   arch:['handsome, prosperous trade-city architecture','well-kept commercial blocks with a hundred discreet doors','elegant facades over a warren of private dealings'],
+   env:['conversation here is soft, constant and double-edged','everyone seems to be watching everyone else','prosperity and paranoia sit comfortably side by side'],
+   sp:[['Bothan',7],['Human',3],['Duros',1],['Twi\u2019lek',1],['Rodian',1]],
+   col:['the Bothan Spynet hears everything; assume it hears you too','a favour given here is a debt collected later']},
+  ryloth:{loc:['in a wind-carved cliff-city on Twi\u2019lek Ryloth','on the shadowed habitable band of harsh Ryloth','where Ryloth\u2019s caves shelter the living from the killing sun'],
+   arch:['dwellings and structures cut into red rock cliffs','homes burrowed away from the brutal day-side','wind-scoured stone and shielded passages'],
+   env:['a scouring wind moans across the rock outside','the murderous sun keeps everyone in the shadowed band','heat and grit work their way into everything'],
+   sp:[['Twi\u2019lek',8],['Human',2],['Rodian',1],['Devaronian',1]],
+   col:['offworld slavers prey on Ryloth\u2019s people openly','ryll-spice money runs under every clan\u2019s respectability']},
+  cathar:{loc:['among the regrowing ruins of war-scarred Cathar','on a Cathar coast still scarred from the Mandalorian cull','where the Cathar rebuild over the ashes of a massacre'],
+   arch:['rebuilt timber-and-stone over burnt foundations','simple new construction beside fire-blackened ruin','coastal settlements clawed back from devastation'],
+   env:['the sea wind carries the smell of regrowth and old smoke','the scars of the cull are everywhere still','the Cathar watch outsiders \u2014 Mandalorians especially \u2014 closely'],
+   sp:[['Cathar',7],['Human',3],['Twi\u2019lek',1]],
+   col:['the Cathar have not forgotten, and have not forgiven','rebuilding here is slow, proud and bitter work']},
+  iridonia:{loc:['on the harsh canyon-world of Zabrak Iridonia','in a tough, no-nonsense Iridonian settlement','where Iridonia\u2019s brutal landscape breeds a brutal pride'],
+   arch:['hard, defensible stone construction','spare, functional building with no soft edges','settlements wedged into defensible canyon walls'],
+   env:['the land itself is hostile, jagged and unforgiving','everything and everyone here is built to endure','a hard wind scours the bare rock'],
+   sp:[['Zabrak',8],['Human',2],['Devaronian',1],['Nikto',1]],
+   col:['Zabraks here respect strength and competence, nothing else','soft outsiders are tolerated, briefly']},
+  rodia:{loc:['in a humid Rodian hive-city on jungle Rodia','on a stilted walkway above Rodia\u2019s swampy jungle','where Rodia\u2019s clans prize the hunt above all else'],
+   arch:['stilted structures raised over green swamp','dense hive-city building wound through the jungle','damp organic construction slick with rot and rain'],
+   env:['the jungle drips and buzzes and seems to watch','everything is humid, green and faintly predatory','clan-marks and hunting trophies hang everywhere'],
+   sp:[['Rodian',8],['Human',2],['Trandoshan',1],['Duros',1]],
+   col:['Rodian clans settle debts in blood and bounty','a good hunter is worth more here than a rich one']},
+  trandosha:{loc:['in a trophy-hung Trandoshan settlement on Dosha','on harsh, scrub-covered Trandosha, the hunters\u2019 world','where Trandoshan scorekeepers prize the kill above mercy'],
+   arch:['rough, heavy construction hung with hunting trophies','spare, brutal building for a spare, brutal people','scrap and bone worked into the architecture'],
+   env:['the air is dry and the looks are colder still','everything here is measured by the hunt and the score','grim Wookiee pelts hang as a quiet provocation'],
+   sp:[['Trandoshan',8],['Human',2],['Nikto',1],['Weequay',1]],
+   col:['the Scorekeeper\u2019s favour is earned in kills, not credits','Trandoshans settle nothing peacefully here']},
+  sleheyron:{loc:['in the arena-shadowed sprawl of Hutt-ruled Sleheyron','on a sweltering Sleheyron tier beneath the fighting pits','where Sleheyron\u2019s Hutts run everything through blood-sport'],
+   arch:['baking stone terraces ringing colossal arenas','Hutt-built excess crusted over industrial grime','tiers of vice descending toward the fighting pits'],
+   env:['the roar of an arena crowd rolls over everything','heat, blood and spice hang in the thick air','everything here feeds the Hutts\u2019 games one way or another'],
+   sp:[['Hutt',1],['Nikto',4],['Weequay',4],['Gamorrean',3],['Trandoshan',3],['Human',3],['Rodian',2],['Devaronian',2]],
+   col:['a Hutt arena-master owns the lives staked in his pits','everyone here is a contender, a gambler, or a corpse-to-be']},
+  malachor:{loc:['on the shattered, storm-wracked surface of dead Malachor','among the broken rock and ruin of long-abandoned Malachor','where Malachor\u2019s ruined ground has been shunned for ages'],
+   arch:['shattered stone and the bones of ruined structures','jagged broken ground never meant to be walked','ancient ruin, wind-scoured and utterly abandoned'],
+   env:['a screaming wind tears across the broken rock','the place feels wrong in a way that raises the hackles','nothing living should be here, and almost nothing is'],
+   sp:[['Human',2],['Rodian',1]],
+   col:['only the desperate or the doomed set down on Malachor','whatever ruined this world, the ruin still lingers']},
+  dxun:{loc:['in the dripping war-jungle of Dxun, Onderon\u2019s savage moon','on a beast-trail through Dxun\u2019s predator-thick jungle','where Dxun\u2019s wild moon-jungle swallows the careless whole'],
+   arch:['rough field-camps and old battle-fortifications','little built to last; the jungle takes everything back','overgrown ruins and hastily-fortified clearings'],
+   env:['the jungle teems with things that want to eat you','rain, rot and the cries of war-beasts fill the dark','every shadow under the canopy could hold a predator'],
+   sp:[['Human',5],['Mandalorian',3],['Trandoshan',1]],
+   col:['Mandalorians prize Dxun as a proving-ground','out here, the wildlife is the least of your worries']},
+  mining:{loc:['inside a cramped asteroid-mining colony bored into the rock','on a dust-choked mining station clamped to a tumbling asteroid','where a mining crew claws ore out of an airless rock'],
+   arch:['raw bored-rock tunnels and bolted-on habitats','industrial mining gear wedged into hollowed stone','sealed, cramped colony modules under low ceilings'],
+   env:['rock-dust hangs in the recycled air and grits the teeth','the whole place shudders faintly with distant ore-cutting','beyond the hull is vacuum, dark and absolute'],
+   sp:[['Human',6],['Ugnaught',3],['Sullustan',2],['Duros',2],['Rodian',1]],
+   col:['the mining company prices the very air the crews breathe','a strike out here is a long, cold way from any law']},
+  flotilla:{loc:['among the lashed-together hulls of a drifting refugee flotilla','aboard a patchwork flotilla of ships welded into one community','where the dispossessed have made a home of mismatched starships'],
+   arch:['mismatched ship-hulls bolted and welded into a warren','salvaged corridors patched between a dozen vessels','a floating shantytown of lashed-together craft'],
+   env:['the whole structure creaks and shifts faintly underfoot','everyone here has lost something to end up here','recycled air carries the smell of too many people in too little space'],
+   sp:[['Human',5],['Twi\u2019lek',3],['Rodian',2],['Duros',2],['Ithorian',1],['Sullustan',1]],
+   col:['the flotilla survives on barter, rumour and sheer stubbornness','everyone is from somewhere else, and somewhere worse']},
+  derelict:{loc:['aboard a cold, drifting derelict hanging dead in space','in the lightless corridors of a powered-down ship-hulk','where a dead vessel drifts, its corridors silent and black'],
+   arch:['dead corridors lit only by what you bring with you','a powered-down hull, cold and groaning','drifting wreckage half-stripped by whoever came before'],
+   env:['your breath fogs in the freezing, stale air','the silence is total but for the creak of stressed metal','anything at all could be drifting in the dark ahead'],
+   sp:[['Human',3],['Rodian',1],['Trandoshan',1]],
+   col:['scavengers, squatters or worse may already be aboard','whatever killed this ship may not be entirely gone']},
   station:{loc:['aboard a working spacer station hung in the dark','on a transit-ring station between nowhere and nowhere','in the recycled-air corridors of an orbital freeport'],
    arch:['utilitarian durasteel decking and exposed bulkhead ribs','modular station architecture, function over all','sealed corridors lit by humming strip-light'],
    env:['the deck thrums faintly with reactor and recyclers','stars or a planet\u2019s curve wheel slowly past the viewports','the air is canned, faintly metallic, always the same temperature'],
@@ -784,8 +864,9 @@ function buildScene(sec){
    sp:[['Human',6],['Twi\u2019lek',3],['Rodian',3],['Duros',2],['Devaronian',2],['Trandoshan',2],['Bothan',1],['Sullustan',1],['Ithorian',1],['Nikto',1]],
    col:['the locals clock you the moment you arrive','word of strangers travels fast around here']}
  };
- const PLIST=[['any','\u2014 Any world (roll) \u2014'],['taris','Taris'],['coruscant','Coruscant'],['narshaddaa','Nar Shaddaa'],['tatooine','Tatooine'],['dantooine','Dantooine'],['manaan','Manaan'],['onderon','Onderon (Iziz)'],['nalhutta','Nal Hutta'],['telos','Telos IV'],['korriban','Korriban (dead)'],['kashyyyk','Kashyyyk'],['jakku','Jakku'],['ordmandell','Ord Mandell'],['station','Spacer station'],['custom','Generic / elsewhere']];
+ const PLIST=[['taris','Taris'],['coruscant','Coruscant'],['narshaddaa','Nar Shaddaa'],['tatooine','Tatooine'],['dantooine','Dantooine'],['manaan','Manaan'],['onderon','Onderon (Iziz)'],['nalhutta','Nal Hutta'],['telos','Telos IV'],['korriban','Korriban (dead)'],['kashyyyk','Kashyyyk'],['jakku','Jakku'],['ordmantell','Ord Mantell'],['corellia','Corellia'],['alderaan','Alderaan'],['moncal','Mon Cala (Dac)'],['sullust','Sullust'],['bothawui','Bothawui'],['ryloth','Ryloth'],['cathar','Cathar (war-scarred)'],['iridonia','Iridonia (Zabrak)'],['rodia','Rodia'],['trandosha','Trandosha (Dosha)'],['sleheyron','Sleheyron (arena world)'],['malachor','Malachor (dead)'],['dxun','Dxun (jungle moon)'],['mining','Asteroid mining colony'],['flotilla','Refugee flotilla'],['derelict','Drifting derelict'],['station','Spacer station'],['custom','Generic / elsewhere']];
 
+ /* ============================ AREAS ============================ */
  const AREAS={
   cantina:{nn:['Cantina','Sabacc','Vane','Flask','Lumen','Berth','Star','Spinner','Hold','Astrolabe','Den'],
    feat:['a long scarred bar and a scatter of dim booths','a sunken pit of mismatched tables around a sabacc game','a cramped taproom thick with smoke and low conversation','a bar built into a sliced-open cargo container'],
@@ -846,62 +927,113 @@ function buildScene(sec){
   prison:{nn:['Hold','Cells','Brig','Lockup','Pit','Block','Cage'],
    feat:['a row of force-cage cells and a guard station','a grim cell-block lit by flickering red','a holding pit sunk below a guarded walkway','damp cells and the constant sound of someone\u2019s despair'],
    role:['cell-block guard','desperate prisoner','corrupt warden','interrogator','newly-caught captive','informant in the cells'],
-   seed:['a prisoner here knows something the party badly needs','a jailbreak is being planned, with or without the party','the wrong person is about to be released \u2014 or executed']}
+   seed:['a prisoner here knows something the party badly needs','a jailbreak is being planned, with or without the party','the wrong person is about to be released \u2014 or executed']},
+  shops:{nn:['Row','Arcade','Strip','Market','Concourse','Galleria','Stalls'],
+   feat:['a commercial strip of shopfronts crammed shoulder to shoulder','an arcade of traders\u2019 signs and open shutters','a row of storefronts spilling goods onto the walkway','a busy galleria of dealers, fixers and hawkers'],
+   role:['shopkeeper','haggling customer','shutter-watching tout','delivery courier','window-shopping spacer','bored security guard'],
+   seed:['one shopfront is a front for something else entirely','a shopkeeper is being leaned on for protection money','a deal in a back room is about to go very wrong']}
  };
- const ALIST=[['any','\u2014 Any area (roll) \u2014'],['cantina','Cantina / bar'],['market','Market / bazaar'],['docks','Spaceport docks / hangar'],['residential','Residential block'],['slum','Slum / undercity'],['industrial','Industrial / factory'],['temple','Temple / shrine'],['admin','Government / admin'],['clinic','Clinic / medbay'],['warehouse','Warehouse / storage'],['den','Pleasure den / gambling'],['alley','Alley / backstreet'],['outpost','Frontier outpost'],['throne','Crime-lord\u2019s court'],['prison','Prison / holding']];
+ const ALIST=[['cantina','Cantina / bar'],['market','Market / bazaar'],['shops','Shopping row / storefronts'],['docks','Spaceport docks / hangar'],['residential','Residential block'],['slum','Slum / undercity'],['industrial','Industrial / factory'],['temple','Temple / shrine'],['admin','Government / admin'],['clinic','Clinic / medbay'],['warehouse','Warehouse / storage'],['den','Pleasure den / gambling'],['alley','Alley / backstreet'],['outpost','Frontier outpost'],['throne','Crime-lord\u2019s court'],['prison','Prison / holding']];
 
+ /* ============================ FACTIONS ============================ */
+ const FACTIONS={
+  republic:{name:'Galactic Republic',who:['a Republic security detail in clean uniforms','Republic troopers manning an orderly checkpoint'],sign:'the Republic\u2019s cog-and-stars is displayed prominently',tone:'There\u2019s an official, watched-over feel to the place \u2014 rules are enforced here, mostly.',sp:[['Human',3]],hook:'a Republic officer is quietly looking for capable, deniable help',estab:['recruiting post','customs office']},
+  jedi:{name:'Jedi presence',who:['a calm, watchful Jedi with a pair of Republic escorts','robed figures who carry themselves with unsettling composure'],sign:'a quiet Jedi presence keeps a watchful order',tone:'A strange calm hangs over the place, like someone here is paying very close attention.',sp:[],hook:'a Jedi is here on quiet business and may need \u2014 or offer \u2014 help',estab:['archive annex']},
+  exchange:{name:'The Exchange',who:['hard-eyed Exchange muscle watching the doors','Exchange enforcers who make no secret of who they answer to'],sign:'the Exchange\u2019s mark is sprayed over the doorways',tone:'Everyone here pays the Exchange one way or another, and everyone knows it.',sp:[['Rodian',2],['Devaronian',2],['Twi\u2019lek',2]],hook:'the local Exchange boss has a job that\u2019s hard to refuse',estab:['protection front','spice den']},
+  hutt:{name:'Hutt Cartel',who:['Gamorrean guards flanking a Hutt\u2019s oily majordomo','a Hutt kajidic\u2019s thugs lounging with lazy menace'],sign:'a Hutt kajidic\u2019s sigil claims the whole place',tone:'A Hutt owns this patch, and it runs on bribes, debt and fear.',sp:[['Nikto',3],['Weequay',2],['Gamorrean',2],['Twi\u2019lek',2]],hook:'a Hutt\u2019s agent is collecting a debt \u2014 and looking for muscle',estab:['spice den','gambling parlour']},
+  mando:{name:'Mandalorian clans',who:['armoured Mandalorian warriors who watch without a word','a Mandalorian or two in battle-worn beskar, openly armed'],sign:'a Mandalorian clan-sigil is mounted over the entrance',tone:'There\u2019s a hard, martial edge here \u2014 these are people who settle things with the gauntlet.',sp:[['Human',2]],hook:'a Mandalorian is recruiting for a contract, or hunting a mark',estab:['armour shop','weapons dealer']},
+  czerka:{name:'Czerka Corporation',who:['Czerka corporate security and a clipboard-toting overseer','Czerka guards and security droids logging everyone who passes'],sign:'Czerka\u2019s corporate logo is stamped on everything',tone:'This is company ground \u2014 every door, every breath, is somebody\u2019s line item.',sp:[['Human',2]],hook:'a Czerka manager needs a problem handled off the books',estab:['company store','requisition office']},
+  pirates:{name:'Pirate band',who:['swaggering pirates with mismatched gear and bad intentions','a pirate crew lording it over the locals'],sign:'a pirate crew\u2019s crude colours hang over the place',tone:'There\u2019s no law here but the pirates\u2019, and theirs changes with their mood.',sp:[['Weequay',3],['Nikto',2],['Rodian',2],['Trandoshan',2]],hook:'the pirate captain is hiring \u2014 or about to rob \u2014 anyone new in town',estab:['fence','black-market dealer']},
+  militia:{name:'Local government',who:['local militia in mismatched but serious gear','planetary guards keeping a wary, parochial order'],sign:'the local government\u2019s plain pennant is on display',tone:'The locals run their own affairs here, and outsiders are watched.',sp:[],hook:'the local authority wants offworld help with a problem they can\u2019t admit to',estab:['permit office']},
+  mercs:{name:'Mercenary company',who:['professional mercenaries lounging with expensive weapons','a merc company\u2019s sentries, bored and very competent'],sign:'a mercenary company\u2019s insignia marks their turf',tone:'This place is held by hired guns \u2014 polite, professional, and for sale.',sp:[['Human',2],['Rodian',1],['Zabrak',1]],hook:'a merc captain has a contract that needs a few more bodies',estab:['armour shop','weapons dealer']},
+  bounty:{name:'Bounty Brokers\u2019 Assoc.',who:['hard-bitten bounty hunters comparing pucks and prices','a bounty broker holding court among the trophy-takers'],sign:'a Bounty Brokers\u2019 Association sign hangs over the place',tone:'Half the people here are hunting someone \u2014 maybe each other.',sp:[['Trandoshan',2],['Devaronian',2],['Weequay',1]],hook:'there\u2019s a fresh bounty on the board that hits a little close to home',estab:['bounty office','weapons dealer']},
+  spacers:{name:'Independent spacers',who:['a loose crowd of independent spacers minding their own','free-traders and haulers who answer to no one but their captains'],sign:'no single flag flies here \u2014 it\u2019s independent spacer ground',tone:'It\u2019s free-trader territory: no bosses, no rules but the deal.',sp:[['Duros',2],['Sullustan',1],['Human',2]],hook:'a spacer captain needs a job done quietly and off the manifest',estab:['cargo broker','cantina']},
+  swoop:{name:'Swoop gang',who:['a swoop gang sprawled over their bikes, sizing you up','swoop-riders revving and posturing over their territory'],sign:'a swoop gang\u2019s colours are sprayed across the walls',tone:'A swoop gang runs these streets \u2014 bored, fast, and looking for trouble.',sp:[['Human',2],['Rodian',1],['Nikto',1]],hook:'the swoop gang wants a race, a favour, or a fight',estab:['swoop garage','chop-shop']}
+ };
+ const FLIST=[['republic','Galactic Republic'],['jedi','Jedi presence'],['exchange','The Exchange'],['hutt','Hutt Cartel'],['mando','Mandalorian clans'],['czerka','Czerka Corporation'],['pirates','Pirate band'],['militia','Local government / militia'],['mercs','Mercenary company'],['bounty','Bounty hunters'],['spacers','Independent spacers'],['swoop','Swoop gang']];
+
+ /* ============================ WEALTH / CRIME / MOOD ============================ */
  const WEALTH={
-  destitute:{mat:['rusted scrap and rotting salvage','whatever could be scavenged and lashed together','crumbling, half-derelict materials'],light:['failing, half-dead lighting','what little light leaks in from elsewhere'],clean:['filth and refuse underfoot','everything stained, cracked and broken'],crowd:['ragged, hollow-eyed and underfed','dressed in patched castoffs','visibly going without'],goods:['nothing of value that isn\u2019t already broken','only scraps and the desperate dregs of trade']},
-  poor:{mat:['patched, rust-streaked durasteel','cheap, hard-used materials','battered prefab gone shabby'],light:['dim, buzzing strip-light','uneven, flickering illumination'],clean:['grime worked into every surface','worn, and none too clean'],crowd:['working poor in faded, mended clothes','tired, watchful and lean','dressed plainly, sparing nothing'],goods:['cheap necessities and second-hand wares','functional goods and nothing more']},
-  working:{mat:['plain, serviceable plasteel and ferrocrete','honest, workaday construction','sturdy if unlovely materials'],light:['steady, ordinary lighting','plain functional light'],clean:['lived-in but kept up','ordinary wear, regularly cleaned'],crowd:['ordinary folk in practical dress','busy, unremarkable, getting on with it','workmanlike and unbothered by you'],goods:['solid everyday goods at fair trade','practical wares at honest prices']},
-  comfortable:{mat:['clean lines of well-kept plasteel and trim','tidy, decently-finished construction','quality materials, well maintained'],light:['warm, even, well-placed lighting','pleasant, considered illumination'],clean:['clean, orderly and cared-for','neat and freshly maintained'],crowd:['comfortably dressed and unhurried','prosperous enough to be relaxed','well turned-out and quietly confident'],goods:['quality goods and reputable trade','fine wares displayed with some pride']},
-  affluent:{mat:['polished stone, chrome and rich finishes','expensive materials, immaculately kept','sleek, costly construction'],light:['flattering, expensive lighting','soft golden light, artfully arranged'],clean:['spotless and discreetly attended','immaculate, every detail seen to'],crowd:['richly dressed and used to deference','draped in wealth and faint disdain','elegant, manicured, and watchful of rank'],goods:['luxury goods and rarefied trade','exquisite, costly wares for the few']},
-  opulent:{mat:['gilded excess, rare stone and gleaming alloy','obscene wealth poured into every surface','treasures casually used as decoration'],light:['lavish, jewel-toned, theatrical light','glittering illumination designed to dazzle'],clean:['flawless, untouchably pristine','perfect to the point of the unreal'],crowd:['dripping with wealth and absolute entitlement','impossibly fine, and quietly dangerous for it','swathed in riches that could buy a ship apiece'],goods:['priceless rarities and impossible luxuries','wares whose prices are never spoken aloud']}
+  destitute:{mat:['rusted scrap and rotting salvage','whatever could be scavenged and lashed together','crumbling, half-derelict materials'],light:['failing, half-dead lighting','what little light leaks in from elsewhere'],clean:['filth and refuse underfoot','everything stained, cracked and broken'],crowd:['ragged, hollow-eyed and underfed','dressed in patched castoffs','visibly going without'],goods:['nothing of value that isn\u2019t already broken','only scraps and the desperate dregs of trade'],adj:['run-down','desperate']},
+  poor:{mat:['patched, rust-streaked durasteel','cheap, hard-used materials','battered prefab gone shabby'],light:['dim, buzzing strip-light','uneven, flickering illumination'],clean:['grime worked into every surface','worn, and none too clean'],crowd:['working poor in faded, mended clothes','tired, watchful and lean','dressed plainly, sparing nothing'],goods:['cheap necessities and second-hand wares','functional goods and nothing more'],adj:['shabby','hard-up']},
+  working:{mat:['plain, serviceable plasteel and ferrocrete','honest, workaday construction','sturdy if unlovely materials'],light:['steady, ordinary lighting','plain functional light'],clean:['lived-in but kept up','ordinary wear, regularly cleaned'],crowd:['ordinary folk in practical dress','busy, unremarkable, getting on with it','workmanlike and unbothered by you'],goods:['solid everyday goods at fair trade','practical wares at honest prices'],adj:['workaday','no-frills']},
+  comfortable:{mat:['clean lines of well-kept plasteel and trim','tidy, decently-finished construction','quality materials, well maintained'],light:['warm, even, well-placed lighting','pleasant, considered illumination'],clean:['clean, orderly and cared-for','neat and freshly maintained'],crowd:['comfortably dressed and unhurried','prosperous enough to be relaxed','well turned-out and quietly confident'],goods:['quality goods and reputable trade','fine wares displayed with some pride'],adj:['tidy','well-kept']},
+  affluent:{mat:['polished stone, chrome and rich finishes','expensive materials, immaculately kept','sleek, costly construction'],light:['flattering, expensive lighting','soft golden light, artfully arranged'],clean:['spotless and discreetly attended','immaculate, every detail seen to'],crowd:['richly dressed and used to deference','draped in wealth and faint disdain','elegant, manicured, and watchful of rank'],goods:['luxury goods and rarefied trade','exquisite, costly wares for the few'],adj:['upscale','well-heeled']},
+  opulent:{mat:['gilded excess, rare stone and gleaming alloy','obscene wealth poured into every surface','treasures casually used as decoration'],light:['lavish, jewel-toned, theatrical light','glittering illumination designed to dazzle'],clean:['flawless, untouchably pristine','perfect to the point of the unreal'],crowd:['dripping with wealth and absolute entitlement','impossibly fine, and quietly dangerous for it','swathed in riches that could buy a ship apiece'],goods:['priceless rarities and impossible luxuries','wares whose prices are never spoken aloud'],adj:['gilded','lavish']}
  };
  const WLIST=[['any','\u2014 Any (roll) \u2014'],['destitute','Destitute'],['poor','Poor'],['working','Working'],['comfortable','Comfortable'],['affluent','Affluent'],['opulent','Opulent']];
-
  const CRIME={
-  safe:{sec:['a visible, confident security presence','patrols that actually patrol','an order that feels genuine, not enforced'],tension:['easy and untroubled','calm \u2014 nobody is watching their back'],lurk:['nothing more sinister than a busybody or two','only the ordinary press of honest folk'],event:['a guard nods the party through without a second look','a minor dispute is calmly, quickly settled nearby']},
-  watched:{sec:['cameras, checkpoints and watchful eyes','heavy, deliberate security everywhere you look','a presence that wants you to know you\u2019re seen'],tension:['orderly but watchful, eyes on everyone','quiet and careful, people minding themselves'],lurk:['an informant or two, quietly noting faces','plainclothes watchers trying hard not to be obvious'],event:['a patrol stops someone for a pointed \u201cconversation\u201d','a scanner sweep makes the whole crowd go still for a beat']},
-  uneasy:{sec:['thin, nervous security that looks the other way','the odd guard who clearly won\u2019t intervene','no real law \u2014 just whoever\u2019s strongest nearby'],tension:['wary and on-edge','tense, like a held breath'],lurk:['cutpurses and hard cases working the margins','watchers you can\u2019t quite place, clocking the party'],event:['a shout and a scuffle flare up and just as fast die away','someone is hustled off by people who certainly aren\u2019t guards']},
-  lawless:{sec:['no law here but the gangs that run it','enforcers who answer only to their boss','open weapons and the rule of whoever\u2019s armed'],tension:['hard and predatory','one spark away from sudden violence'],lurk:['gang muscle, hard-eyed and territorial','thieves, thugs and worse working openly'],event:['a beating is happening in plain view and no one lifts a finger','a gang collects \u201ctribute\u201d from someone too scared to refuse']},
-  cutthroat:{sec:['nothing but the knife and whoever holds it','predators at every level, no protection at all','a place where the only law is don\u2019t get caught'],tension:['openly menacing','every-being-for-themselves vicious'],lurk:['killers, slavers and sharks circling for weakness','professionals who price a life at spare change'],event:['a body is being looted before it has even cooled','a deal goes wrong nearby and ends in sudden blood']}
+  safe:{sec:['a visible, confident security presence','patrols that actually patrol'],tension:['easy and untroubled','calm \u2014 nobody is watching their back'],lurk:['nothing more sinister than a busybody or two','only the ordinary press of honest folk'],event:['a guard nods the party through without a second look','a minor dispute is calmly, quickly settled nearby']},
+  watched:{sec:['cameras, checkpoints and watchful eyes','heavy, deliberate security everywhere you look'],tension:['orderly but watchful, eyes on everyone','quiet and careful, people minding themselves'],lurk:['an informant or two, quietly noting faces','plainclothes watchers trying hard not to be obvious'],event:['a patrol stops someone for a pointed \u201cconversation\u201d','a scanner sweep makes the whole crowd go still for a beat']},
+  uneasy:{sec:['thin, nervous security that looks the other way','no real law \u2014 just whoever\u2019s strongest nearby'],tension:['wary and on-edge','tense, like a held breath'],lurk:['cutpurses and hard cases working the margins','watchers you can\u2019t quite place, clocking the party'],event:['a shout and a scuffle flare up and just as fast die away','someone is hustled off by people who certainly aren\u2019t guards']},
+  lawless:{sec:['no law here but the gangs that run it','open weapons and the rule of whoever\u2019s armed'],tension:['hard and predatory','one spark away from sudden violence'],lurk:['gang muscle, hard-eyed and territorial','thieves, thugs and worse working openly'],event:['a beating is happening in plain view and no one lifts a finger','a gang collects \u201ctribute\u201d from someone too scared to refuse']},
+  cutthroat:{sec:['nothing but the knife and whoever holds it','a place where the only law is don\u2019t get caught'],tension:['openly menacing','every-being-for-themselves vicious'],lurk:['killers, slavers and sharks circling for weakness','professionals who price a life at spare change'],event:['a body is being looted before it has even cooled','a deal goes wrong nearby and ends in sudden blood']}
  };
  const CLIST=[['any','\u2014 Any (roll) \u2014'],['safe','Safe'],['watched','Watched'],['uneasy','Uneasy'],['lawless','Lawless'],['cutthroat','Cutthroat']];
-
  const MOOD={
-  bustling:{adj:['crowded','loud','restless','teeming'],air:['The whole place churns with noise and motion, bodies and business pressing in from every side.','Energy crackles through it \u2014 a hundred conversations, a hundred small urgencies, all at once.']},
-  tense:{adj:['taut','wary','brittle','watchful'],air:['Something is wound tight under the surface here; every laugh is a half-beat too short.','The air has an edge to it, like everyone is just waiting for something to go wrong.']},
-  festive:{adj:['raucous','bright','heady','celebratory'],air:['There\u2019s a wild, careless joy to the place \u2014 music, colour, drink, and nobody thinking about tomorrow.','It hums with celebration, the kind that could tip into a brawl or a romance with equal ease.']},
-  derelict:{adj:['decaying','hollow','forsaken','silent'],air:['Most of the life has drained out of this place, leaving echoes, dust and the things people left behind.','It has the stillness of somewhere the galaxy forgot \u2014 abandoned, and not entirely empty.']},
-  oppressive:{adj:['heavy','grim','suffocating','cowed'],air:['A weight hangs over everything here; people move small and quiet, as if hoping not to be noticed.','The place presses down on you \u2014 watched, controlled, the joy long since pressed flat out of it.']},
-  sacred:{adj:['hushed','solemn','reverent','still'],air:['A deliberate stillness fills the space, the kind that makes you lower your voice without deciding to.','There\u2019s a weight of old meaning here, quiet and patient, that asks for respect whether you believe or not.']},
-  seedy:{adj:['sleazy','grimy','furtive','disreputable'],air:['Everything here is for sale and most of it shouldn\u2019t be; the place wears its vices openly.','It has the sticky, low-lit feel of somewhere decent people leave before dark.']},
-  eerie:{adj:['uncanny','cold','wrong','haunted'],air:['Something is subtly off about this place \u2014 a wrongness you feel before you can name it.','A cold prickle walks up your spine; the quiet here feels like it is listening back.']},
-  frontier:{adj:['rough','hardscrabble','untamed','lawless'],air:['This is the ragged edge of things, where comfort is thin and self-reliance is the only currency.','It has the raw, improvised feel of a place built fast, held hard, and one bad day from collapse.']},
-  languid:{adj:['drowsy','slow','heat-heavy','idle'],air:['Time moves like syrup here; the heat and the hour have drained any urgency clean out of the place.','Everything is slow and half-asleep \u2014 the kind of quiet that makes a sudden disturbance feel enormous.']}
+  bustling:{adj:['crowded','loud','restless'],air:['The whole place churns with noise and motion, bodies and business pressing in from every side.','Energy crackles through it \u2014 a hundred conversations, a hundred small urgencies, all at once.']},
+  tense:{adj:['taut','wary','brittle'],air:['Something is wound tight under the surface here; every laugh is a half-beat too short.','The air has an edge to it, like everyone is just waiting for something to go wrong.']},
+  festive:{adj:['raucous','bright','heady'],air:['There\u2019s a wild, careless joy to the place \u2014 music, colour, drink, and nobody thinking about tomorrow.','It hums with celebration, the kind that could tip into a brawl or a romance with equal ease.']},
+  derelict:{adj:['decaying','hollow','forsaken'],air:['Most of the life has drained out of this place, leaving echoes, dust and the things people left behind.','It has the stillness of somewhere the galaxy forgot \u2014 abandoned, and not entirely empty.']},
+  oppressive:{adj:['heavy','grim','cowed'],air:['A weight hangs over everything here; people move small and quiet, as if hoping not to be noticed.','The place presses down on you \u2014 watched, controlled, the joy long since pressed flat out of it.']},
+  sacred:{adj:['hushed','solemn','still'],air:['A deliberate stillness fills the space, the kind that makes you lower your voice without deciding to.','There\u2019s a weight of old meaning here, quiet and patient, that asks for respect whether you believe or not.']},
+  seedy:{adj:['sleazy','grimy','furtive'],air:['Everything here is for sale and most of it shouldn\u2019t be; the place wears its vices openly.','It has the sticky, low-lit feel of somewhere decent people leave before dark.']},
+  eerie:{adj:['uncanny','cold','wrong'],air:['Something is subtly off about this place \u2014 a wrongness you feel before you can name it.','A cold prickle walks up your spine; the quiet here feels like it is listening back.']},
+  frontier:{adj:['rough','hardscrabble','untamed'],air:['This is the ragged edge of things, where comfort is thin and self-reliance is the only currency.','It has the raw, improvised feel of a place built fast, held hard, and one bad day from collapse.']},
+  languid:{adj:['drowsy','slow','heat-heavy'],air:['Time moves like syrup here; the heat and the hour have drained any urgency clean out of the place.','Everything is slow and half-asleep \u2014 the kind of quiet that makes a sudden disturbance feel enormous.']}
  };
  const MLIST=[['any','\u2014 Any (roll) \u2014'],['bustling','Bustling'],['tense','Tense'],['festive','Festive'],['derelict','Derelict'],['oppressive','Oppressive'],['sacred','Sacred'],['seedy','Seedy'],['eerie','Eerie'],['frontier','Frontier'],['languid','Languid / sleepy']];
 
+ /* ============================ ESTABLISHMENTS ============================ */
+ const ESTAB=[
+  {id:'bar',nm:['Cantina','Bar','Taphouse','Lounge','Sabacc Den','Watering-hole'],desc:['a cantina doing brisk, noisy trade','a dim bar where the regulars don\u2019t look up','a cantina that\u2019s half watering-hole, half rumour-mill'],areas:['cantina','market','shops','docks','slum','den','outpost','residential']},
+  {id:'market',nm:['General Store','Trading Post','Sundries','Provisioner','Market Stall'],desc:['a general store crammed with everything and nothing useful','a trading post that buys and sells just about anything','a provisioner stocked for spacers passing through'],areas:['market','shops','docks','outpost','residential','slum']},
+  {id:'armour',nm:['Armour Shop','Plating','Ironmongery','Armoury','Outfitters'],desc:['a cramped armour shop, racks of plate and mesh on the walls','an armoursmith\u2019s where everything\u2019s a little too expensive','an outfitter selling armour from patched mesh to milspec plate'],areas:['market','shops','docks','outpost','industrial','den']},
+  {id:'weapons',nm:['Arms Dealer','Blasters','Gunworks','Munitions','Armaments'],desc:['a weapons dealer whose stock may or may not be legal here','a blaster shop with the good hardware kept well out of reach','a gun-dealer who asks no questions and remembers no faces'],areas:['market','shops','docks','outpost','den','slum']},
+  {id:'clinic',nm:['Clinic','Kolto Bay','Surgery','Medward','Patch-house'],desc:['a kolto clinic that takes credits or favours, no questions','a back-street surgery that doesn\u2019t report its patients','a patch-house where the medic has seen far worse than you'],areas:['market','shops','slum','docks','residential','clinic']},
+  {id:'droid',nm:['Droid Shop','Repairs','Tech-works','Tinker\u2019s','Salvage Tech'],desc:['a droid-repair shop with half-built units hanging from hooks','a tech-works that fixes anything for the right price','a tinker\u2019s den of salvaged parts and chittering droids'],areas:['market','shops','docks','industrial','outpost','slum']},
+  {id:'pawn',nm:['Pawnshop','Curios','Hock-shop','Oddments','Resale'],desc:['a pawnshop whose stock has clearly changed hands in a hurry','a fence\u2019s front, buying low and asking nothing','a hock-shop full of other people\u2019s misfortunes'],areas:['slum','market','shops','docks','den']},
+  {id:'spice',nm:['Spice Den','Smoke-house','Haze','Glitterstim','The Veil'],desc:['a curtained spice den exhaling sweet, dangerous smoke','a smoke-house where the patrons stare at nothing','a spice parlour the law pretends not to see'],areas:['slum','den','docks','cantina']},
+  {id:'swoop',nm:['Swoop Garage','Speed-shop','Chop-shop','Grease-pit','Velocity'],desc:['a swoop garage loud with revving engines and louder boasts','a speed-shop full of stripped bikes and stripped tempers','a chop-shop that doesn\u2019t look too hard at a vehicle\u2019s history'],areas:['docks','industrial','slum','outpost','shops']},
+  {id:'cargo',nm:['Cargo Broker','Freight Office','Shipping','Haulage','Consignment'],desc:['a cargo broker\u2019s office stacked with manifests, half of them lies','a freight office arranging shipments best not inspected','a haulage desk that moves anything, anywhere, for a cut'],areas:['docks','market','shops','industrial']},
+  {id:'bounty',nm:['Bounty Office','Hunters\u2019 Post','The Board','Brokerage','Reckoning'],desc:['a bounty-posting board ringed by hard-eyed hopefuls','a hunters\u2019 post where the day\u2019s prices are chalked up fresh','a brokerage trading in faces, names and last-known-locations'],areas:['cantina','docks','den','outpost','shops']},
+  {id:'food',nm:['Noodle Stall','Cook-shop','Grub-stand','Steamer','The Pot'],desc:['a noodle stall steaming up the lane with something fragrant','a cook-shop frying things best not examined too closely','a grub-stand feeding the hungry for a few credits'],areas:['market','shops','docks','slum','residential','outpost','cantina']},
+  {id:'cyber',nm:['Cybernetics','Implants','Augmentry','The Graft','Chromeworks'],desc:['a cybernetics shop with chrome limbs displayed in the window','an implant clinic that doesn\u2019t ask where the parts came from','an augmentry den blurring the line between repair and butchery'],areas:['market','shops','slum','clinic','den']},
+  {id:'gamble',nm:['Gambling Den','Pazaak Hall','The Wheel','Stakes','Fortune\u2019s'],desc:['a gambling den where the house always wins, eventually','a pazaak hall thick with bluff and bad decisions','a betting parlour taking action on anything that moves'],areas:['den','cantina','market','shops']},
+  {id:'info',nm:['Info Broker','Slicer\u2019s','Listening Post','Whispers','Datasift'],desc:['an info-broker\u2019s nook where secrets are the only currency','a slicer-for-hire behind an unmarked door','a listening-post trading in rumour, records and ruin'],areas:['cantina','den','market','shops','admin']},
+  {id:'tailor',nm:['Outfitter','Tailor','Threadworks','Habiliment','The Wardrobe'],desc:['an outfitter\u2019s of offworld fashions and practical travelwear','a tailor who can dress you for a ball or a funeral','a threadworks turning out everything from rags to finery'],areas:['market','shops','residential','admin']}
+ ];
+ const ESTAB_BY_ID={}; ESTAB.forEach(e=>ESTAB_BY_ID[e.id]=e);
+
+ /* ============================ FLAVOUR BANKS ============================ */
  const LABOR=['Gamorrean','Nikto','Weequay','Wookiee','Trandoshan','Aqualish','Ugnaught','Teedo','Jawa'];
  const TOUGH=['Trandoshan','Weequay','Nikto','Gamorrean','Rodian','Devaronian','Aqualish','Houk'];
  const ELITE=['Human','Twi\u2019lek','Bith','Bothan','Echani','Mirialan'];
  const RARE=['Chiss','Kel Dor','Nautolan','Echani','Chagrian','Arcona','Snivvian','Gotal'];
  const NAMEADJ=['Rusted','Crooked','Gilded','Broken','Lucky','Last','Hollow','Smoky','Drowned','Iron','Velvet','Sunken','Painted','Whispering','Bleeding','Silent','Twin','Burning','Forgotten','Brazen','Red','Blind'];
  const NUM=['Seven','Nine','Twelve','Forty','Gamma','Delta','Sixteen','Three','Five','Twenty-Two'];
+ const PROP=['Vossk','Dable','Greeta','Sornn','Mott','Yulia','Kr-tann','Relc','Hessa','Dorn','Wlen','Aphra','Gizz','Tobb','Suun','Veers','Nokk','Lessik','Hux','Tann','Vree','Oola','Jate','Sed','Koro','Murn','Bex','Praal','Wymo','Teska'];
  const SMELL=['engine-oil and ozone','spice-smoke and old sweat','frying street-food and rot','antiseptic laid over old blood','damp stone and burning incense','dust, sweat and recycled air','cheap perfume and spilled drink','hot metal and a chemical tang','sea-salt and kolto','smoke, grease and unwashed bodies','rust, mildew and standing water'];
  const SOUND=['a low churn of voices in a dozen tongues','distant machinery pounding like a slow heart','tinny music from a failing speaker','the hiss and clank of cargo loaders','wind moaning through gaps in the walls','someone shouting, somewhere, about money','the soft bubbling drone of a kolto tank','blaster-fire, faint and far enough to ignore \u2014 for now','laughter with a hard edge underneath it','the constant hum of too many lives packed too close'];
  const RUMOR=['Word is the local boss is about to move on a rival \u2014 and needs deniable hands.','Someone is paying, quietly, for anyone asking the wrong questions to simply vanish.','A ship came in last night carrying something the whole quarter is suddenly nervous about.','There\u2019s a price on a face that looks an awful lot like one of the party\u2019s.','A debt is owed here, and the wrong person is about to be made to pay it.','Something valuable changed hands here recently, and several parties want it back.','A stranger was asking after the party by name not an hour ago.'];
  const ACT=['watches the door a beat too closely','nurses a drink and a grudge','is arguing in low, urgent tones','clocks the party the moment they walk in','is trying very hard to look unremarkable','keeps glancing at every exit','is working up the nerve to approach someone','has clearly been waiting here far too long','is quietly counting credits they shouldn\u2019t have','goes suddenly still as the party passes'];
+ const SPOT=['off in a corner','over by the bar','near the door','at the back','to one side','by a window','in the thick of it'];
+ const EWHERE=['right across from you','just down the way','off to your left','tucked in the back','a few doors along','over in the corner','first thing on your right','if you keep walking'];
+ const OPENERS=['Alright \u2014 ','Okay, so \u2014 ','Right. ','So, ','',''];
+ const ENTRIES=['as you come in,','as you step into it,','the moment you arrive,','as you make your way in,','as you cross the threshold,','first impression \u2014'];
+ const CLOSERS=['So \u2014 what do you do?','Take it in. Where do you want to start?','That\u2019s the room. Your move.','So. What\u2019s the play?'];
 
  /* ============================ HELPERS ============================ */
  const R=a=>a[Math.floor(Math.random()*a.length)];
  const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+ const aan=w=>('aeiouAEIOU'.indexOf((w||'x').charAt(0))>=0?'an ':'a ')+w;
+ const sentenceCase=s=>s.replace(/(^\s*[a-z])|([.!?]\s+[a-z])/g,m=>m.toUpperCase());
  function RN(a,n){const c=a.slice();const o=[];while(o.length<n&&c.length){o.push(c.splice(Math.floor(Math.random()*c.length),1)[0]);}return o;}
- function pickKey(map,sel){return (sel&&sel!=='any')?sel:R(Object.keys(map));}
  function weightedDistinct(pairs,n){const pool=pairs.map(p=>[p[0],p[1]]);const out=[];while(out.length<n&&pool.length){let tot=0;pool.forEach(p=>tot+=p[1]);let r=Math.random()*tot,idx=0;for(let i=0;i<pool.length;i++){r-=pool[i][1];if(r<=0){idx=i;break;}}out.push(pool[idx][0]);pool.splice(idx,1);}return out;}
- function speciesMix(P,wk,ck){
-  const pool=P.sp.map(p=>[p[0],p[1]]);
+ function speciesMix(P,F,wk,ck){
+  const map={};P.sp.forEach(p=>{map[p[0]]=(map[p[0]]||0)+p[1];});
+  if(F&&F.sp)F.sp.forEach(p=>{map[p[0]]=(map[p[0]]||0)+p[1];});
+  let pool=Object.keys(map).map(k=>[k,map[k]]);
   const bump=(list,f)=>pool.forEach(p=>{if(list.indexOf(p[0])>=0)p[1]=Math.max(1,Math.round(p[1]*f));});
   if(wk==='opulent'||wk==='affluent'){bump(ELITE,1.8);bump(LABOR,0.4);}
   if(wk==='poor'||wk==='destitute'){bump(LABOR,1.7);bump(ELITE,0.6);}
@@ -912,102 +1044,156 @@ function buildScene(sec){
  }
  function whoSentence(mix){
   if(mix.length===1)return 'almost entirely '+mix[0];
-  const head='mostly '+mix[0]+' and '+mix[1];
-  const rest=mix.slice(2);
+  const head='mostly '+mix[0]+' and '+mix[1];const rest=mix.slice(2);
   if(rest.length===0)return head;
   if(rest.length===1)return head+', with a scattering of '+rest[0];
   return head+', with '+rest.slice(0,-1).join(', ')+', and the odd '+rest[rest.length-1];
  }
- function makeName(A){
-  const nn=A.nn;const s=Math.floor(Math.random()*4);
+ function makeName(A){const nn=A.nn;const s=Math.floor(Math.random()*4);
   if(s===0)return 'The '+R(NAMEADJ)+' '+R(nn);
   if(s===1)return R(nn)+' '+R(NUM);
   if(s===2)return 'The '+R(nn);
-  return R(['Old','Low','High','Far','Dead','Red','Blind','New'])+' '+R(nn);
+  return R(['Old','Low','High','Far','Dead','Red','Blind','New'])+' '+R(nn);}
+ function makeEstab(type,wk){
+  const noun=R(type.nm);let name;const s=Math.random();
+  if(s<0.5)name=R(PROP)+'\u2019s '+noun;
+  else if(s<0.8)name='The '+R(NAMEADJ)+' '+noun;
+  else name='The '+noun;
+  let line=R(type.desc);
+  if((wk==='opulent'||wk==='affluent')&&Math.random()<0.5)line='an upscale take on '+line;
+  if((wk==='poor'||wk==='destitute')&&Math.random()<0.5)line='a run-down '+line.replace(/^an? /,'');
+  return {name:name,line:line};
+ }
+ function pickEstabs(area,wk,F){
+  const aff=ESTAB.filter(e=>e.areas.indexOf(area)>=0);
+  const pool=(aff.length>=4?aff:ESTAB).slice();
+  const want=3+Math.floor(Math.random()*2); // 3-4
+  const chosenTypes=[];
+  if(F&&F.estab){const fid=R(F.estab);if(ESTAB_BY_ID[fid]&&pool.indexOf(ESTAB_BY_ID[fid])<0)pool.push(ESTAB_BY_ID[fid]);if(ESTAB_BY_ID[fid])chosenTypes.push(ESTAB_BY_ID[fid]);}
+  const rest=pool.filter(e=>chosenTypes.indexOf(e)<0);
+  RN(rest,want-chosenTypes.length).forEach(e=>chosenTypes.push(e));
+  return chosenTypes.slice(0,want).map(t=>makeEstab(t,wk));
  }
 
  /* ============================ GENERATE ============================ */
+ function resolveField(val,LIST){
+  const v=(val||'').trim().toLowerCase();if(!v)return '';
+  let f=LIST.find(o=>o[1].toLowerCase()===v);if(f)return f[0];
+  f=LIST.find(o=>o[0].toLowerCase()===v);if(f)return f[0];
+  f=LIST.find(o=>o[1].toLowerCase().indexOf(v)>=0);if(f)return f[0];
+  return '__none__';
+ }
+ function lbl(LIST,k){const f=LIST.find(x=>x[0]===k);return f?f[1]:k;}
+
  function generate(){
-  const pk=pickKey(PLANETS,$('scnP').value), ak=pickKey(AREAS,$('scnA').value),
-        wk=pickKey(WEALTH,$('scnW').value), ck=pickKey(CRIME,$('scnC').value), mk=pickKey(MOOD,$('scnM').value);
-  const P=PLANETS[pk],A=AREAS[ak],W=WEALTH[wk],CR=CRIME[ck],M=MOOD[mk];
-  const lbl=(list,k)=>{const f=list.find(x=>x[0]===k);return f?f[1]:k;};
+  const realPlanets=PLIST.filter(o=>o[0]!=='custom').map(o=>o[0]);
+  const areaKeys=Object.keys(AREAS);
+  let pin=$('scnP').value, customName=null;
+  let pk=resolveField(pin,PLIST);
+  if(pk===''){pk=R(realPlanets);}
+  else if(pk==='__none__'){if(pin.trim()){customName=pin.trim();pk='custom';}else pk=R(realPlanets);}
+  let ak=resolveField($('scnA').value,ALIST); if(ak===''||ak==='__none__')ak=R(areaKeys);
+  let fk=resolveField($('scnF').value,FLIST); if(fk===''||fk==='__none__')fk=null;
+  const sel=(id,map)=>{const v=$(id).value;return (v&&v!=='any')?v:R(Object.keys(map));};
+  const wk=sel('scnW',WEALTH), ck=sel('scnC',CRIME), mk=sel('scnM',MOOD);
+
+  const P=PLANETS[pk]||PLANETS.custom, A=AREAS[ak], W=WEALTH[wk], CR=CRIME[ck], M=MOOD[mk], F=fk?FACTIONS[fk]:null;
+  const loc = (pk==='custom'&&customName) ? ('in a rough settlement on '+customName) : R(P.loc);
   const name=makeName(A);
-  const tagline=[lbl(WLIST,wk),lbl(ALIST,ak),'\u00b7',lbl(PLIST,pk),'\u00b7',lbl(CLIST,ck),'\u00b7',lbl(MLIST,mk)].join(' ');
+  const ptag = (pk==='custom'&&customName)?customName:lbl(PLIST,pk);
+  const tag=[lbl(WLIST,wk),lbl(ALIST,ak)].join(' ')+(F?(' \u00b7 '+F.name):'')+' \u00b7 '+ptag+' \u00b7 '+lbl(CLIST,ck)+' \u00b7 '+lbl(MLIST,mk);
 
-  // LOOK
-  const verb=R(['sits','squats','sprawls','clings','hunkers down','is tucked away']);
-  const look=[
-   name+' '+verb+' '+R(P.loc)+'. ',
-   'Built of '+R(P.arch)+' and '+R(W.mat)+', the place is '+R(W.clean)+'. ',
-   'Inside, '+R(A.feat)+' '+R(['fills the space','greets you first','dominates everything','sets the whole scene'])+'. ',
-   cap(R(P.env))+', and '+R(W.light)+' '+R(['washes over it all','picks out the details','leaves the corners in shadow'])+'.'
-  ].join('');
+  const mix=speciesMix(P,F,wk,ck);
+  const estabs=pickEstabs(ak,wk,F);
 
-  // FEEL
-  const feel=R(M.air)+' The air is '+R(['close','cool','hot','stale','thick','dry'])+' and carries '+R(SMELL)+'; under the talk runs '+R(SOUND)+'. The mood is '+R(CR.tension)+', and security is '+R(CR.sec)+'.';
+  // standouts (one may be a faction figure)
+  const roles=RN(A.role,2), acts=RN(ACT,2), spots=RN(SPOT,2);
+  const sp2=RN(mix.length>=2?mix:mix.concat(mix),2);
+  const stand1=(F&&Math.random()<0.6)?(R(F.who)) : (aan(sp2[0])+' '+roles[0]+' who '+acts[0]);
+  const stand2=aan(sp2[1])+' '+roles[1]+' who '+acts[1];
 
-  // WHO
-  const mix=speciesMix(P,wk,ck);
-  const standN=2;
-  const sp2=RN(mix.length>=2?mix:mix.concat(mix),standN);
-  const roles=RN(A.role,standN);
-  const acts=RN(ACT,standN);
-  let who='The crowd is '+whoSentence(mix)+', '+R(W.crowd)+'. ';
-  who+='Among them: a '+sp2[0]+' '+roles[0]+' who '+acts[0]+', and a '+sp2[1]+' '+roles[1]+' who '+acts[1]+'. ';
-  who+='Lurking at the edges, '+R(CR.lurk)+'.';
+  // ---- READ-ALOUD narration (two paragraphs, spoken pacing) ----
+  let p1=R(OPENERS)+R(ENTRIES)+' you\u2019re '+loc+'. ';
+  p1+='First thing that hits you is '+R(A.feat)+' \u2014 '+R(W.mat)+', '+R(W.clean)+'. ';
+  if(Math.random()<0.6)p1+='It\u2019s all '+R(P.arch)+'. ';
+  p1+='There\u2019s '+R(SMELL)+' in the air, and somewhere '+R(SPOT)+', '+R(SOUND)+'. ';
+  p1+=(Math.random()<0.5?R(M.air):('The whole place feels '+R(M.adj)+'.'))+' ';
+  p1+=cap(R(P.env))+'.';
+  if(F){p1+=' '+F.tone+(Math.random()<0.6?(' You can\u2019t miss it \u2014 '+F.sign+'.'):'');}
+  p1=sentenceCase(p1);
 
-  // HOOKS
+  let p2='Looking around, the crowd\u2019s '+whoSentence(mix)+' \u2014 '+R(W.crowd)+'. ';
+  p2+=cap(stand1)+' '+spots[0]+', and '+stand2+' '+spots[1]+'. ';
+  // weave 2-3 establishments
+  const woven=estabs.slice(0,Math.min(3,estabs.length));
+  const ew=RN(EWHERE,woven.length);
+  p2+='As for what\u2019s actually here \u2014 ';
+  p2+=woven.map((e,i)=>ew[i]+', '+e.line+(Math.random()<0.5?(' \u2014 that\u2019d be '+e.name):'')).join('; ')+'. ';
+  if(Math.random()<0.6)p2+=R(CLOSERS);
+  p2=sentenceCase(p2);
+
+  // ---- GM reference ----
   const hookPool=[A.seed[0],A.seed[1],A.seed[2]||A.seed[0],cap(R(CR.event))+'.',R(RUMOR),cap(R(P.col))+'.'];
+  if(F)hookPool.push(cap(F.hook)+'.');
   const hooks=RN(hookPool,2+Math.floor(Math.random()*2));
+  const senses='Smell: '+cap(R(SMELL))+'. Sound: '+cap(R(SOUND))+'. On offer: '+R(W.goods)+'. Security: '+R(CR.sec)+'.';
+  const whoRef='The crowd is '+whoSentence(mix)+'. Standouts: '+stand1+'; '+stand2+'.';
 
-  // SENSES
-  const senses='Smell: '+cap(R(SMELL))+'. Sound: '+cap(R(SOUND))+'. On offer: '+R(W.goods)+'.';
+  render({name:name,tag:tag,p1:p1.trim(),p2:p2.trim(),estabs:estabs,hooks:hooks,senses:senses,whoRef:whoRef});
 
-  render({name,tagline,look,feel,who,hooks,senses});
-  STORE.scene={p:$('scnP').value,a:$('scnA').value,w:$('scnW').value,c:$('scnC').value,m:$('scnM').value};
-  STORE.scene._last={name,tagline,look,feel,who,hooks,senses};
+  STORE.scene={P:$('scnP').value,A:$('scnA').value,F:$('scnF').value,W:$('scnW').value,C:$('scnC').value,M:$('scnM').value};
+  STORE.scene._last={name:name,tag:tag,p1:p1.trim(),p2:p2.trim(),estabs:estabs,hooks:hooks,senses:senses,whoRef:whoRef};
   if(typeof saveStore==='function')saveStore();
  }
 
  function render(s){
-  const blk=(label,color,body)=>'<div style="margin-top:15px"><div style="font-family:var(--mono);font-size:10.5px;letter-spacing:.10em;text-transform:uppercase;color:'+color+';margin-bottom:4px">'+label+'</div><div style="color:var(--ink);line-height:1.6">'+body+'</div></div>';
-  let html='<div style="font-size:19px;font-weight:700;color:var(--amber);letter-spacing:.01em">'+s.name+'</div>';
-  html+='<div style="font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--dim);margin-top:3px">'+s.tagline+'</div>';
-  html+=blk('What it looks like','var(--acc)',s.look);
-  html+=blk('What it feels like','var(--acc)',s.feel);
-  html+=blk('Who\u2019s here','var(--amber)',s.who);
-  html+='<div style="margin-top:15px"><div style="font-family:var(--mono);font-size:10.5px;letter-spacing:.10em;text-transform:uppercase;color:var(--vio);margin-bottom:4px">Hooks to run with</div><ul style="margin:0;padding-left:18px;color:var(--ink);line-height:1.6">'+s.hooks.map(h=>'<li style="margin-bottom:3px">'+h+'</li>').join('')+'</ul></div>';
-  html+='<div style="margin-top:15px;border-top:1px solid var(--line);padding-top:9px;font-size:12.5px;color:var(--dim)">'+s.senses+'</div>';
-  $('scnOut').innerHTML=html;
-  // plaintext for copy
-  const tx=s.name+'\n'+s.tagline+'\n\nWHAT IT LOOKS LIKE\n'+s.look+'\n\nWHAT IT FEELS LIKE\n'+s.feel+'\n\nWHO\u2019S HERE\n'+s.who+'\n\nHOOKS TO RUN WITH\n'+s.hooks.map(h=>'- '+h).join('\n')+'\n\n'+s.senses+'\n';
+  const lab=(t,c)=>'<div style="font-family:var(--mono);font-size:10.5px;letter-spacing:.10em;text-transform:uppercase;color:'+c+';margin:0 0 5px">'+t+'</div>';
+  let h='<div style="font-size:19px;font-weight:700;color:var(--amber);letter-spacing:.01em">'+s.name+'</div>';
+  h+='<div style="font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--dim);margin-top:3px">'+s.tag+'</div>';
+  // read-aloud
+  h+='<div style="margin-top:15px;border-left:2px solid var(--amber);padding:2px 0 2px 13px">';
+  h+=lab('\u25b8 Read aloud','var(--amber)');
+  h+='<p style="margin:0 0 9px;color:var(--ink);line-height:1.72">'+s.p1+'</p>';
+  h+='<p style="margin:0;color:var(--ink);line-height:1.72">'+s.p2+'</p></div>';
+  // gm reference
+  h+='<div style="margin-top:16px;border-top:1px solid var(--line);padding-top:13px">';
+  h+=lab('Places of note','var(--acc)');
+  h+='<ul style="margin:0 0 13px;padding-left:18px;color:var(--ink);line-height:1.6">'+s.estabs.map(e=>'<li style="margin-bottom:3px"><b style="color:var(--ink)">'+e.name+'</b> \u2014 '+e.line+'</li>').join('')+'</ul>';
+  h+=lab('Who\u2019s here','var(--acc)')+'<div style="color:var(--ink);line-height:1.6;margin-bottom:13px">'+s.whoRef+'</div>';
+  h+=lab('Hooks (GM)','var(--vio)')+'<ul style="margin:0 0 13px;padding-left:18px;color:var(--ink);line-height:1.6">'+s.hooks.map(x=>'<li style="margin-bottom:3px">'+x+'</li>').join('')+'</ul>';
+  h+='<div style="font-size:12.5px;color:var(--dim);border-top:1px solid var(--line);padding-top:9px">'+s.senses+'</div></div>';
+  $('scnOut').innerHTML=h;
+  const tx=s.name+'\n'+s.tag+'\n\nREAD ALOUD\n'+s.p1+'\n\n'+s.p2+'\n\nPLACES OF NOTE\n'+s.estabs.map(e=>'- '+e.name+' \u2014 '+e.line).join('\n')+'\n\nWHO\u2019S HERE\n'+s.whoRef+'\n\nHOOKS (GM)\n'+s.hooks.map(x=>'- '+x).join('\n')+'\n\n'+s.senses+'\n';
   $('scnOut').dataset.txt=tx;
  }
 
- function surprise(){['scnP','scnA','scnW','scnC','scnM'].forEach(id=>{$(id).value='any';});generate();}
- function copyOut(){
-  const tx=$('scnOut').dataset.txt||'';if(!tx)return;
-  const done=()=>{if(typeof toast==='function')toast('Scene copied');};
-  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(tx).then(done,()=>fallback(tx,done));}
-  else fallback(tx,done);
+ function surprise(){
+  $('scnP').value='';$('scnA').value='';$('scnW').value='any';$('scnC').value='any';$('scnM').value='any';
+  $('scnF').value=Math.random()<0.55?lbl(FLIST,R(FLIST.map(o=>o[0]))):'';
+  generate();
  }
- function fallback(tx,done){try{const ta=document.createElement('textarea');ta.value=tx;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);done();}catch(e){}}
+ function copyOut(){const tx=$('scnOut').dataset.txt||'';if(!tx)return;const done=()=>{if(typeof toast==='function')toast('Scene copied');};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(tx).then(done,()=>fb(tx,done));}else fb(tx,done);}
+ function fb(tx,done){try{const ta=document.createElement('textarea');ta.value=tx;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);done();}catch(e){}}
 
  /* ============================ UI ============================ */
- const opt=(list,sel)=>list.map(o=>'<option value="'+o[0]+'"'+(o[0]===sel?' selected':'')+'>'+o[1]+'</option>').join('');
+ const dl=(id,list)=>'<datalist id="'+id+'">'+list.map(o=>'<option value="'+o[1]+'"></option>').join('')+'</datalist>';
+ const search=(lab2,id,list,ph,val)=>'<label style="display:flex;flex-direction:column;gap:3px;font-size:11px;color:var(--dim);font-family:var(--mono);letter-spacing:.04em;text-transform:uppercase">'+lab2+'<input id="'+id+'" list="'+id+'L" placeholder="'+ph+'" value="'+(val||'').replace(/"/g,'&quot;')+'" autocomplete="off" style="min-width:172px">'+dl(id+'L',list)+'</label>';
+ const optsel=(list,sel)=>list.map(o=>'<option value="'+o[0]+'"'+(o[0]===sel?' selected':'')+'>'+o[1]+'</option>').join('');
+ const field=(lab2,id,list,sel)=>'<label style="display:flex;flex-direction:column;gap:3px;font-size:11px;color:var(--dim);font-family:var(--mono);letter-spacing:.04em;text-transform:uppercase">'+lab2+'<select id="'+id+'" style="min-width:120px">'+optsel(list,sel)+'</select></label>';
  const sv=(STORE&&STORE.scene)||{};
- const field=(lab,id,list,sel)=>'<label style="display:flex;flex-direction:column;gap:3px;font-size:11px;color:var(--dim);font-family:var(--mono);letter-spacing:.04em;text-transform:uppercase">'+lab+'<select id="'+id+'" style="min-width:150px">'+opt(list,sel)+'</select></label>';
+ const pv=sv.P!==undefined?sv.P:'', av=sv.A!==undefined?sv.A:'', fvv=sv.F!==undefined?sv.F:'';
  sec.innerHTML=
   '<div class="card">'
-  +'<div class="chead"><h2 style="margin:0">\u2726 Scene Describer</h2><span style="font-size:12px;color:var(--dim);margin-left:auto">Set the dials \u2014 or leave them on <i>Any</i> and roll \u2014 then improvise from what comes back.</span></div>'
+  +'<div class="chead"><h2 style="margin:0">\u2726 Scene Describer</h2><span style="font-size:12px;color:var(--dim);margin-left:auto">Type to search a world or faction, or leave blank to roll. Reads as GM narration \u2014 then your behind-the-screen notes.</span></div>'
   +'<div style="padding:15px">'
   +'<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">'
-  +field('Planet','scnP',PLIST,sv.p||'any')
-  +field('Area','scnA',ALIST,sv.a||'any')
-  +field('Wealth','scnW',WLIST,sv.w||'any')
-  +field('Crime','scnC',CLIST,sv.c||'any')
-  +field('Setting','scnM',MLIST,sv.m||'any')
+  +search('World / search','scnP',PLIST,'Any world (roll)\u2026',pv)
+  +search('Faction','scnF',FLIST,'No particular faction\u2026',fvv)
+  +search('Area','scnA',ALIST,'Any area (roll)\u2026',av)
+  +field('Wealth','scnW',WLIST,sv.W||'any')
+  +field('Crime','scnC',CLIST,sv.C||'any')
+  +field('Setting','scnM',MLIST,sv.M||'any')
   +'</div>'
   +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">'
   +'<button class="btn primary" id="scnGen">\u21bb Generate scene</button>'
@@ -1019,8 +1205,9 @@ function buildScene(sec){
  $('scnGen').addEventListener('click',generate);
  $('scnSurprise').addEventListener('click',surprise);
  $('scnCopy').addEventListener('click',copyOut);
+ ['scnP','scnF','scnA'].forEach(id=>$(id).addEventListener('keydown',e=>{if(e.key==='Enter')generate();}));
  if(sv._last)render(sv._last);
- else $('scnOut').innerHTML='<div class="empty">No scene yet. Pick a planet and an area (or just hit <b>Surprise me</b>) to conjure one.</div>';
+ else $('scnOut').innerHTML='<div class="empty">No scene yet. Type a world (or leave it blank), pick an area, and hit <b>Generate</b> \u2014 or just <b>Surprise me</b>.</div>';
 }
 
 function buildFlags(sec){
