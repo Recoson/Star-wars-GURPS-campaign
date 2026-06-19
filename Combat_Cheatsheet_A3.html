@@ -205,7 +205,7 @@ table.flow th{font-size:4.45pt; padding:.26mm .88mm;}
     <div class="subtitle">
       Quick-reference battle screen · A3 · reads left → right by phase of play<br>
       Reconciled to <b>Star Wars the Old Republic — GURPS 4E Conversion</b><br>
-      <span class="flag">REV 2</span> Ion-class skills · metric (1 m = 1 hex) · damage chain &amp; armour divisor · <b>Side B: ship &amp; droid component combat</b>
+      <span class="flag">REV 3</span> Saber &amp; Lightning Lock · Tight-Beam Burning row · Ion-class skills · metric (1 m = 1 hex) · damage chain &amp; armour divisor · <b>Side B: ship &amp; droid component combat</b>
     </div>
   </div>
 
@@ -441,7 +441,7 @@ table.flow th{font-size:4.45pt; padding:.26mm .88mm;}
             <tr><td class="k" style="width:22%">Dodge</td><td>Basic Speed + 3, drop fractions; −encumbrance; +1 Combat Reflexes; +Enhanced Dodge; +DB (shield).</td></tr>
             <tr><td class="k">Parry</td><td>Skill ÷ 2 + 3, drop fractions; weapon mod; +CR; +Enh Parry; retreat bonus. Off-hand −4 without Ambidexterity.</td></tr>
             <tr><td class="k">Block</td><td>Block skill ÷ 2 + 3, drop fractions; +CR; +Enh Block; +DB. Needs ready shield, buckler, or cloak.</td></tr>
-            <tr><td class="k upd">Parry vs Ranged <span class="ho">HOUSE</span></td><td class="upd">Lightsaber Parry can parry ranged attacks (blaster bolts, slug rounds) as a <b>normal Parry</b> — same skill, no special modes. Other weapons cannot parry ranged.</td></tr>
+            <tr><td class="k upd">Parry vs Ranged <span class="ho">HOUSE</span></td><td class="upd">Lightsaber Parry parries ranged attacks (blaster bolts, slug rounds) as a <b>normal Parry</b> — same skill, no special modes. It also <b>always parries Force Lightning</b>, but a successful parry forms a <b>Lightning Lock</b> (see Saber Lock box) instead of simply scattering it. Other weapons cannot parry ranged.</td></tr>
             <tr><td class="k">Multi-def <span class="dim">RAW</span></td><td><b>−4 cumulative</b> per defence after the first (−4, −8, −12…). Hard ceiling.</td></tr>
             <tr><td class="k">Multi-def <span class="ho">TbaM/WM</span></td><td><b>−2 cumulative</b> per defence after first — ONLY for the trained weapon/skill. Others use RAW −4.</td></tr>
             <tr><td class="k">Side facing</td><td>−2 to all active defences.</td></tr>
@@ -471,7 +471,8 @@ table.flow th{font-size:4.45pt; padding:.26mm .88mm;}
         <table>
           <thead><tr><th>Type</th><th class="c">Liv</th><th class="c">Un-l</th><th class="c">Hom</th><th>Notes</th></tr></thead>
           <tbody>
-            <tr><td class="k">Burning <span class="dim">burn</span></td><td class="c">×1</td><td class="c">×1</td><td class="c">×1</td><td>Ignites flammables. Tight-beam burn (lasers) reaches eye/vitals; some AD 2.</td></tr>
+            <tr><td class="k">Burning <span class="dim">burn</span></td><td class="c">×1</td><td class="c">×1</td><td class="c">×1</td><td>Ignites flammables. Surface hits only — can't target Eye/Vitals (see Tight-Beam). Flamethrowers, fire fields, explosions.</td></tr>
+            <tr><td class="k">Tight-Beam <span class="dim">tib-burn</span></td><td class="c">×1</td><td class="c">×1</td><td class="c">×1</td><td><span class="sw">SW</span> <b>Blaster bolts</b> &amp; lasers. Focused beam qualifies as a penetration type — reaches Eye (×4) / Vitals / Heart like imp/pi. Standard <b>AD 1</b>; heavy / military AD 2. Cauterises (half-rate bleed).</td></tr>
             <tr><td class="k">Corrosion <span class="dim">cor</span></td><td class="c">×1</td><td class="c">×1</td><td class="c">×1</td><td>Acid. Erodes DR −1 per 5 dmg (permanent).</td></tr>
             <tr><td class="k">Crushing <span class="dim">cr</span></td><td class="c">×1</td><td class="c">×1</td><td class="c">×1</td><td>Blunt trauma. ×2 vs neck (snap/strangle). Easier knockback (full).</td></tr>
             <tr><td class="k">Cutting <span class="dim">cut</span></td><td class="c">×1.5</td><td class="c">×1</td><td class="c">×1.5</td><td>Severs limbs on a crippling injury. Knockback at half.</td></tr>
@@ -551,26 +552,38 @@ table.flow th{font-size:4.45pt; padding:.26mm .88mm;}
     <span class="lh">KEY</span><span class="legend" style="padding:0; display:inline;"><b>AoA</b> All-Out Attack · <b>AoD</b> All-Out Defence · <b>M&amp;A</b> Move and Attack · <b>QC</b> Quick Contest · <b>QA</b> Quick Action · <b>SR</b> Special Reaction · <b>AD</b> Armour Divisor · <b>DR</b> Damage Resistance · <b>TbaM</b> Trained by a Master · <b>WM</b> Weapon Master · <b>CR</b> Combat Reflexes · <b>FP</b> Fatigue Points · <b>HP</b> Hit Points · <b>SM</b> Size Modifier · <b>BL</b> Basic Lift (ST²÷5 kg) · <b>DB</b> Defence Bonus · <b>Rcl</b> Recoil · <b>RoF</b> Rate of Fire · <b>Acc</b> weapon Accuracy (Aim bonus) · <b>ST/DX/IQ/HT</b> the four attributes · <span class="sw">SW</span> Star Wars rule · <span class="ho">HOUSE</span> campaign house rule · <span class="ma">MA</span> Martial Arts technique.</span>
   </div>
 
-          <div class="subhead">How Powers Are Defended</div>
-        <table><tbody>
-          <tr><td style="width:24%"><b>Dodge</b></td><td class="upd">Open-ground bolt/area powers — Force Lightning, Electric Judgment, Force Push/Whirlwind. Two rolls in the open; full cover often = immune.</td></tr>
-          <tr><td><b>Parry / Block</b></td><td class="upd">Lightsaber Parry stops bolts &amp; (always) Force Lightning → <b>Lightning Lock</b>. Tutaminis (bare hand) catches energy. Block = shield/cloak.</td></tr>
-          <tr><td><b>Resist (contest)</b></td><td class="upd"><b>Will or Mind Block</b> vs fear/mind (Fear, Insanity, Force Horror, Dominance); <b>HT</b> vs pain/shock (Force Pain, Hex of Agony, Force Jolt — High Pain Threshold halves); Force-on-Force adds "or Force skill if higher" (Drain Force, Sever Feeding).</td></tr>
-          <tr><td><b>No defence</b></td><td class="upd">Many drains/intrusions are <b>never dodged</b> — only the listed resistance applies. Each power's Defence line is on the sheet.</td></tr>
-        </tbody></table>
+      <div class="sec">
+        <h2><span class="n">SW</span> How Force Powers Are Defended</h2>
+        <p class="note">Every power card lists its <b>Defence</b>. The buckets:</p>
+        <table>
+          <tbody>
+            <tr><td class="k" style="width:24%">Dodge / Parry / Block</td><td>Physical Force attacks — telekinetic throws, hurled objects, Force-thrown sabers, and Force Lightning (lit saber → Lightning Lock). Normal active defences apply.</td></tr>
+            <tr><td class="k">Resist — contest</td><td>Mind &amp; body intrusions, never dodged: QC vs <b>Will</b> (fear, domination, illusion, mental horror), <b>HT</b> (bodily pain/agony, stun, drain), or <b>ST</b> (telekinetic grapple). <b>Mind Block / Mind Shield always apply</b> vs any mind-affecting power.</td></tr>
+            <tr><td class="k">Force-on-Force</td><td>Powers attacking the Force connection (Drain Force, Sever, etc.): resist with Will <i>or your Force skill if higher</i> — that option is Force-on-Force only.</td></tr>
+            <tr><td class="k">No defence</td><td>Self/ally buffs, senses, and powers stating "none" simply take effect.</td></tr>
+          </tbody>
+        </table>
+      </div>
 
-        <div class="subhead">Saber Lock &amp; Lightning Lock <span class="dim">House</span></div>
-        <table><tbody>
-          <tr><td style="width:24%"><b>Trigger</b></td><td class="upd"><b>Declared</b> (Attack, after a parry/Beat) or <b>accidental</b> — two sabers / saber-resistant blades clash, roll 1d, on a <b>6</b> they catch. Lightning: a lit blade always parries Force Lightning → lock.</td></tr>
-          <tr><td><b>Contest</b></td><td class="upd">Quick Contest of your <b>Force attribute</b> (ST/DX/Will/HT), <b>not</b> saber skill. +1 per 2 ST over foe · +1 two-handed · ±footing. Lightning: attacker's Force Lightning skill vs your Force attribute; you pay 1 FP per 4 dmg held.</td></tr>
-          <tr><td><b>Each turn</b></td><td class="upd">Contest · break away · <b>bear down</b> (+2 but no defence until your next turn).</td></tr>
-          <tr><td><b>Outcome</b></td><td class="upd">Win 1–2 bend guard (−2 their def); 3–5 break guard (free Atk +2 / shove / disarm +2); 6+ overpower (knockback prone). Tie = stay locked (−2 vs others). Lightning: 3–5 ground it (1d back), 6+ redirect; lose 1–2 half dmg, 3+ full.</td></tr>
-        </tbody></table>
+      <div class="sec steel">
+        <h2><span class="n">HOUSE</span> Saber Lock &amp; Lightning Lock</h2>
+        <p class="note"><b>Forms two ways:</b> <b>(1) On purpose</b> — declare as your Attack if you parried them (or they parried you) last turn; the foe may break away by retreating a hex unless walled / pinned. <b>(2) By accident</b> — when two sabers clash (or a saber &amp; a saber-resistant blade: beskar / cortosis / phrik / songsteel), <b>roll 1d; on a 6 the blades catch.</b> Ordinary blades are sheared — they never lock.</p>
+        <table>
+          <thead><tr><th style="width:22%">Each turn, pick one</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td class="k">Force / sword contest</td><td><b>QC of your Force attribute</b> (ST Torrent · DX Velocity · Will Vessel · HT Tempered) — non-Force: higher of ST/DX. <b>+1 per 2 ST over foe</b>; +1 two-handed; +1/pt SM; −2 bad footing. <span class="dim">Not Lightsaber skill — the saber's up-to-+20 would auto-win.</span></td></tr>
+            <tr><td class="k">Break away</td><td>Spend your turn, step out, end the lock. If the foe did <b>not</b> also break, they get the <i>Bend-the-guard</i> result on you as you turn aside.</td></tr>
+            <tr><td class="k">Bear down</td><td>All-Out push: <b>+2 to the contest</b> this turn, but no active defence until your next turn.</td></tr>
+          </tbody>
+        </table>
+        <p class="note" style="padding-top:0;"><b>Win by 1–2</b> bend guard (foe −2 defences vs you / shove 1 m) · <b>3–5</b> break guard (free attack +2 / shove + knockdown / disarm +2) · <b>6+</b> overpower (knockback + prone, or free attack +4) · <b>tie</b> blades stay locked, both −2 vs everyone else. Crit fail: fall prone, foe gets the 6+ result.</p>
+        <p class="note upd" style="padding-top:0;"><span class="sw">SW</span> <b>Lightning Lock:</b> a lit saber <b>always</b> parries Force Lightning; a successful parry forms a lock instead of scattering it. Sustained QC each turn — attacker rolls Force Lightning skill, defender rolls <b>their Force attribute</b> (+1 Tempered Blade, or Tutaminis if trained). Both pay FP (defender 1 FP per 4 dmg held). Defender wins by 6+ → <b>redirect the storm at the caster</b> (−2 their defence); loses by 3+ → full damage. Either may break off (defender Dodges clear).</p>
+      </div>
 
 
   <div class="foot">
     <div>Source of truth: <b>Star Wars the Old Republic — GURPS 4E Conversion</b> (KOTOR campaign). Where this sheet and the compendium differ, the compendium governs.</div>
-    <div><span class="flag">REV 2</span> Ion-class skills added · all units metric (1 m = 1 hex) · Side B: component-health ship &amp; droid combat, defence &amp; repair. Hit-location plate preserved unchanged.</div>
+    <div><span class="flag">REV 3</span> Saber Lock &amp; Lightning Lock (house) · Tight-Beam Burning given its own damage-type row · Force Lightning always saber-parryable → Lightning Lock · "How Powers Are Defended" box · Ion-class skills · metric (1 m = 1 hex) · Side B ship/droid combat. Hit-location plate preserved.</div>
   </div>
 
 </div>
