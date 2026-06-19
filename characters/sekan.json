@@ -36,18 +36,18 @@
   },
   "skills": [
     {
-      "name": "Blaster (Rifle)",
+      "name": "Blasters",
       "attr": "DX",
       "diff": "E",
       "pts": 48,
-      "spec": ""
+      "spec": "Rifle"
     },
     {
-      "name": "Blaster (Pistol)",
+      "name": "Blasters",
       "attr": "DX",
       "diff": "E",
       "pts": 28,
-      "spec": ""
+      "spec": "Pistol"
     },
     {
       "name": "Blasters",

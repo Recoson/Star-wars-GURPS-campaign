@@ -317,8 +317,7 @@
       "name": "Brawling",
       "attr": "DX",
       "diff": "E",
-      "pts": 1,
-      "bonus": 20
+      "pts": 1
     },
     {
       "name": "Computer Programming",
@@ -1027,7 +1026,7 @@
     },
     "inits": []
   },
-  "notes": "Imported from SW Zoe (1).xlsm — 250-pt start, 640 exp, ~910 spent.\n• Force Sword → equipped as the dual-mode Lightsaber (Ghost-fire crystal). Toggle 'Silent / invisible mode' on its Equipment card: silent = foe −3 to Parry at 6d+6; audible = full 8d+8 with sound/light. Lightsaber & Brawling skills carry +20 (Weapon Master + Force deflection) so they read 37 / 30 as on the original.\n• Heavy Cloak (defensive): Block DB 2, DR 1/5 — no catalogue equivalent on this sheet, tracked here.\n• Detect Lies gets +3 vs others via Empathy (Full).\n• Skill specialties (Sith, Pike, lightsaber-crafting, droids, etc.) preserved as notes on each skill.\n• 'Navigation' → Astrogation convention applied; 'Guns (blaster pistols)' → Blasters (Pistol).\nThanks Claude",
+  "notes": "Imported from SW Zoe (1).xlsm — 250-pt start, 640 exp, ~910 spent.\n• Force Sword → equipped as the dual-mode Lightsaber (Ghost-fire crystal). Toggle 'Silent / invisible mode' on its Equipment card: silent = foe −3 to Parry at 6d+6; audible = full 8d+8 with sound/light. Lightsaber skill carries +20 (Weapon Master + Force-attribute scaling) so it reads 37 as on the original. Brawling's old +20 was a bare-hand Tutaminis stand-in — dropped now that Tutaminis (Energy Absorption) is its own skill.\n• Heavy Cloak (defensive): Block DB 2, DR 1/5 — no catalogue equivalent on this sheet, tracked here.\n• Detect Lies gets +3 vs others via Empathy (Full).\n• Skill specialties (Sith, Pike, lightsaber-crafting, droids, etc.) preserved as notes on each skill.\n• 'Navigation' → Astrogation convention applied; 'Guns (blaster pistols)' → Blasters (Pistol).\nThanks Claude",
   "trainRate": 200,
   "study": [],
   "ptTarget": 1150,
