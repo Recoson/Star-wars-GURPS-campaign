@@ -174,7 +174,7 @@ import { getFirestore, doc, onSnapshot, setDoc, serverTimestamp } from "https://
     if (!getChar()) return setTimeout(start, 300);
     onAuthStateChanged(auth, function (user) {
       if (user) { gate(false); ready = false; lastJSON = ''; subscribe(); }
-      else { ready = false; pill('sign in for live sync'); gate(true); }
+      else { ready = false; pill('sign in for live sync'); }  // pill is clickable to open sign-in; no forced modal on load
     });
   })();
 })();

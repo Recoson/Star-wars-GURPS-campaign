@@ -200,10 +200,10 @@
       <div class="eyebrow">Party credits</div>
       <div class="credits-big" id="creditsBig">0<small>cr</small></div>
       <div class="adjustrow">
-        <input type="number" id="credAmt" placeholder="0" step="1">
+        <input type="number" id="credAmt" placeholder="0" step="1" aria-label="Credit amount">
         <button class="btn-holo" id="credAdd" title="Add credits">+ Add</button>
         <button class="minighost" id="credSpend" title="Spend credits">&minus; Spend</button>
-        <input type="text" id="credNote" placeholder="reason (optional)">
+        <input type="text" id="credNote" placeholder="reason (optional)" aria-label="Reason for credit change">
       </div>
       <button class="loglink" id="credLogToggle">show ledger</button>
       <div class="logline" id="credLog"></div>
@@ -217,10 +217,10 @@
       </div>
       <div class="gauge" id="fuelGauge"><div class="fill" id="fuelFill"></div></div>
       <div class="fuel-ctl">
-        <input type="number" id="fuelAmt2" placeholder="units" step="1">
+        <input type="number" id="fuelAmt2" placeholder="units" step="1" aria-label="Fuel units">
         <button class="btn-holo" id="fuelAdd" title="Add fuel units">+ Refuel</button>
         <button class="minighost" id="fuelBurn" title="Burn fuel units">&minus; Burn</button>
-        <span class="cap">cap <input type="number" id="fuelCap" step="1" title="Tank capacity (units)"></span>
+        <span class="cap">cap <input type="number" id="fuelCap" step="1" title="Tank capacity (units)" aria-label="Tank capacity (units)"></span>
       </div>
       <div style="margin-top:8px"><a class="steplink" href="galaxy-map.html" title="Plan a jump and read its fuel burn">&#8599; plan a jump on the galaxy map</a></div>
     </div>
@@ -228,12 +228,12 @@
 
   <!-- ADD ITEM -->
   <div class="libhead">
-    <input type="text" id="addName" class="addname" placeholder="Add an item (e.g. Medpac, Thermal detonator, Datapad)&hellip;" autocomplete="off">
-    <input type="number" id="addQty" class="qty" value="1" min="0" step="1" title="Quantity">
+    <input type="text" id="addName" class="addname" placeholder="Add an item (e.g. Medpac, Thermal detonator, Datapad)&hellip;" autocomplete="off" aria-label="Item name">
+    <input type="number" id="addQty" class="qty" value="1" min="0" step="1" title="Quantity" aria-label="Quantity">
     <select id="addCat" aria-label="Category"></select>
     <button id="addBtn" class="btn-gold">+ Add</button>
     <div class="searchwrap">
-      <input type="search" id="search" placeholder="Search hold&hellip;" autocomplete="off">
+      <input type="search" id="search" placeholder="Search hold&hellip;" autocomplete="off" aria-label="Search hold">
       <button id="newCatBtn" title="New category">+ Cat</button>
     </div>
   </div>
@@ -439,7 +439,8 @@ async function cloudPush(silent, force){
       }
     }
     STATE._meta={ savedAt:nowISO(), savedBy:getWho()||'' };
-    var body={ message:'Update group storage'+(getWho()?(' ('+getWho()+')'):''), branch:GH_BRANCH, content:b64u(JSON.stringify(STATE,null,2)) };
+    var sentJSON=JSON.stringify(STATE,null,2);
+    var body={ message:'Update group storage'+(getWho()?(' ('+getWho()+')'):''), branch:GH_BRANCH, content:b64u(sentJSON) };
     if(existing && existing.sha) body.sha=existing.sha;
     var r=await fetch('https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/'+DATA_PATH,{
       method:'PUT',
@@ -449,12 +450,18 @@ async function cloudPush(silent, force){
     if(r.status===401||r.status===403){ try{localStorage.removeItem(TOKEN_KEY);}catch(e){} throw new Error('token rejected ('+r.status+') and cleared \u2014 Push again with a valid Contents:R/W token.'); }
     if(r.status===409){ throw new Error('conflict \u2014 someone saved meanwhile. Pull, then push again.'); }
     if(!r.ok) throw new Error('GitHub '+r.status+': '+(await r.text()).slice(0,160));
-    LOADED_AT=STATE._meta.savedAt; dirty=false; conflictPending=false; hideConflict();
+    LOADED_AT=STATE._meta.savedAt; conflictPending=false; hideConflict();
     saveLocal();
     _pushBusy=false;
-    setSync('ok','Shared \u2022 saved '+shortTime(LOADED_AT));
+    // edits made while the push was in flight leave STATE different from what we sent
+    dirty=(JSON.stringify(STATE,null,2)!==sentJSON);
+    if(dirty){
+      setSync('dirty', LOADED_AT?('Unsynced \u2022 last shared '+shortTime(LOADED_AT)):'Unsynced changes');
+      if(autoOn() && ghTokenStored()) scheduleAuto();
+    } else {
+      setSync('ok','Shared \u2022 saved '+shortTime(LOADED_AT));
+    }
     if(!silent) toast('Pushed to shared storage.','ok');
-    if(dirty) scheduleAuto();
     return true;
   }catch(e){
     _pushBusy=false; setSync('err','Push failed');

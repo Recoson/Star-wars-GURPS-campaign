@@ -744,7 +744,8 @@ function blankChar(){
  };
 }
 
-let C = load() || blankChar();
+var C = load() || blankChar();
+window.C = C;   // 'var' + window.C so firebase-sync.js (ES module) can find the live character for cloud sync
 /* Free-canvas layout is stored per character in C.layout. Just clear any
    legacy GLOBAL layout keys from much older versions (unrelated to C.layout). */
 (function(){ try{ localStorage.removeItem('kotorLayoutV1'); localStorage.removeItem('kotorFreeLayoutV1'); }catch(e){} })();
@@ -6322,8 +6323,8 @@ function reactionRollSection(){
  return `<div class="section" style="margin-top:14px" data-size="lg">
   <h3>Reaction Rolls <span class="dim" style="font-weight:400;font-size:10px">— GURPS B560: 3d6 + mod = NPC attitude</span></h3>
   <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px">
-   <label style="font-size:11px">Modifier <input class="cell" id="reactMod" type="number" value="0" style="width:54px"></label>
-   <button class="btn-add" onclick="rollReaction(parseInt(document.getElementById('reactMod').value)||0)">🎲 Roll Reaction</button>
+   <label style="font-size:11px">Modifier <input class="cell" id="reactModBg" type="number" value="0" style="width:54px"></label>
+   <button class="btn-add" onclick="rollReaction(parseInt(document.getElementById('reactModBg').value)||0)">🎲 Roll Reaction</button>
    <span class="dim" style="font-size:10px">Common mods: +1 to +4 Appearance/Charisma · −2 to −4 Repute/Disad</span>
   </div>
   <table class="g" style="font-size:10.5px">
