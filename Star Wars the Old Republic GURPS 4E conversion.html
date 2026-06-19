@@ -1793,6 +1793,14 @@ html { scroll-behavior: auto; }
 
 /* --- Perf: skip layout/paint of offscreen books (find-in-page & #anchors still work) --- */
 @media screen { .book { content-visibility: auto; contain-intrinsic-size: auto 4000px; } }
+/* --- Perf: also skip offscreen power cards & reference tables *within* a visible book.
+   ~194 power cards (the Force book) + 285 wrapped reference tables are the bulk of the DOM;
+   this keeps only the on-screen ones laid out/painted while scrolling. #anchors &
+   find-in-page still reach them. --- */
+@media screen {
+  .power      { content-visibility: auto; contain-intrinsic-size: auto 260px; }
+  .tbl-scroll { content-visibility: auto; contain-intrinsic-size: auto 240px; }
+}
 </style>
 
 <style id="contrast-patch">
