@@ -739,7 +739,7 @@ function blankChar(){
   conditions:{},
   credits:0,creditLog:[],
   combat:{hp:null,fp:null,statuses:[],concentrations:[],charges:[],turn:0,log:[]},
-  notes:'',trainRate:200,study:[],ptTarget:150,languages:'',languages2:null,
+  notes:'',trainRate:200,trainHoursTotal:0,study:[],ptTarget:150,languages:'',languages2:null,
   layout:{}
  };
 }
@@ -2225,7 +2225,7 @@ function renderSkills(){
      <td><input class="cell" value="${esc(p.label||'')}" placeholder="auto-fills when linked" onchange="C.study[${i}].label=this.value;touch()" style="width:100%"></td>
      <td><input class="cell" type="number" value="${p.target==null?10:p.target}" onchange="C.study[${i}].target=+this.value;touch()" style="width:36px"></td>
      <td><input class="cell" type="number" min="0" value="${p.req||0}" onchange="C.study[${i}].req=+this.value;touch();renderSkills()" style="width:44px"></td>
-     <td><input class="cell" type="number" min="0" value="${p.done||0}" onchange="C.study[${i}].done=+this.value;touch();renderSkills()" style="width:46px"></td>
+     <td><input class="cell" type="number" min="0" value="${p.done||0}" onchange="setStudyDone(${i},this.value)" style="width:46px"></td>
      <td><input class="cell" type="number" min="1" value="${p.hpm==null?10:p.hpm}" onchange="C.study[${i}].hpm=+this.value;touch()" style="width:36px"></td>
      <td class="ctr"><input type="checkbox" ${p.teacher?'checked':''} title="Teacher present (-25%)" onchange="C.study[${i}].teacher=this.checked;syncStudyHours(${i})"></td>
      <td class="ctr"><input type="checkbox" ${p.selfTeach?'checked':''} title="Self-teaching (+50%)" onchange="C.study[${i}].selfTeach=this.checked;syncStudyHours(${i})"></td>
@@ -2234,7 +2234,8 @@ function renderSkills(){
      <td><button class="btn-add" style="margin:0;padding:2px 6px;font-size:10px" onclick="rollStudy(${i})" title="Roll a study session">⚄ Roll</button> ${p.linkedSkill?`<button class="btn-add" style="margin:0;padding:2px 6px;font-size:10px" onclick="syncStudyHours(${i})" title="Recompute hours from canon">↻</button>`:''}${complete&&p.linkedSkill?` <button class="btn-add" style="margin:0;padding:2px 6px;font-size:10px;background:var(--green)" onclick="grantStudyPoint(${i})" title="Grant the earned point to your linked skill">+ Grant pt</button>`:''} <button class="btn-del" onclick="C.study.splice(${i},1);touch();renderSkills()">✕</button></td>
     </tr>${p.lastSync?`<tr><td colspan="11" style="font-size:10px;padding:0 8px 2px;color:var(--text2);font-style:italic">↻ ${esc(p.lastSync)}</td></tr>`:''}${p.last?`<tr><td colspan="11" style="font-size:10.5px;padding:1px 8px 6px;color:${col}">${esc(p.last)}</td></tr>`:''}`;
   }).join('')||'<tr><td colspan="11" class="dim" style="padding:8px">No study projects yet — add one and link it to a skill to begin earning study-hours.</td></tr>'}
- </table>${customSkillsSection()}`;
+ </table> ${(function(){var th=(+C.trainHoursTotal||0);var inprog=(C.study||[]).reduce(function(s,p){return s+(+p.done||0);},0);var pts=Math.floor(th/200);return '<div class="dim" style="font-size:11px;margin:6px 0 2px">⏱ <b style="color:var(--text)">Total hours logged: '+th+' hrs</b>'+(pts?(' · ≈ '+pts+' pt'+(pts>1?'s':'')+' earned'):'')+(inprog?(' &nbsp;·&nbsp; '+inprog+' hrs toward current projects'):'')+' <span style="opacity:.6">(200 hrs = 1 pt)</span></div>';})()}
+ ${customSkillsSection()}`;
 
  if(_skillFilter)filterSkillRows(_skillFilter);
 }
@@ -2307,6 +2308,7 @@ function grantStudyPoint(i){
  touch();renderSkills();
 }
 
+function setStudyDone(i,v){var p=(C.study||[])[i];if(!p)return;var nv=Math.max(0,+v||0);var d=nv-(+p.done||0);if(d>0)C.trainHoursTotal=(+C.trainHoursTotal||0)+d;p.done=nv;touch();renderSkills();}
 function addStudyProject(){C.study=C.study||[];C.study.push({label:'',linkedSkill:'',target:10,req:200,done:0,hpm:10,monumental:false,teacher:false,selfTeach:false});touch();renderSkills()}
 function rollStudy(i){
  const p=(C.study||[])[i]; if(!p)return;
@@ -2326,7 +2328,7 @@ function rollStudy(i){
  else { kind='fail'; msg=`✗ Failed (${dice} vs ${t}). No progress this session.`; }
  if(req>0&&done>=req&&kind!=='critfail') msg+=' Training complete!';
  if(typeof _rollLog!=='undefined'){ (_rollCount++,_rollLog).unshift({label:'Study'+(p.linkedSkill?': '+p.linkedSkill:''),target:t,dice:[a,b,c],sum:roll,outcome:(kind==='crit'?'CRIT':kind==='critfail'?'CRIT FAIL':(roll<=t?'Success':'Failure')),cls:(kind==='crit'?'crit-s':kind==='critfail'?'crit-f':(roll<=t?'succ':'fail')),margin:Math.abs(t-roll)}); if(_rollLog.length>14)_rollLog.pop(); if(typeof _renderRollPanel==='function')_renderRollPanel(); }
- p.done=done; p.last=msg; p.lastKind=kind;
+ if(done-(+p.done||0)>0)C.trainHoursTotal=(+C.trainHoursTotal||0)+(done-(+p.done||0));p.done=done; p.last=msg; p.lastKind=kind;
  // Auto-grant point if linked skill present and complete
  if(p.linkedSkill && req>0 && done>=req && kind!=='critfail'){grantStudyPoint(i);return;}
  touch(); renderSkills();
