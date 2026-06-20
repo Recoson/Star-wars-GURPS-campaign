@@ -739,7 +739,7 @@ function blankChar(){
   conditions:{},
   credits:0,creditLog:[],
   combat:{hp:null,fp:null,statuses:[],concentrations:[],charges:[],turn:0,log:[]},
-  notes:'',trainRate:200,trainHoursTotal:0,study:[],ptTarget:150,languages:'',languages2:null,
+  notes:'',trainRate:200,trainHoursTotal:0,trainHoursAvail:0,study:[],ptTarget:150,languages:'',languages2:null,
   layout:{}
  };
 }
@@ -2211,6 +2211,7 @@ function renderSkills(){
  <div class="sec-head" style="margin-top:18px">Study &amp; Training Sessions <button class="btn-add" onclick="addStudyProject()">+ Add Project</button>
   <span class="dim" style="float:right;font-size:10px;font-weight:400">Canon: 200 hrs = 1 pt &middot; Doc&nbsp;IX &sect;3.2</span></div>
  <div class="dim" style="font-size:11px;margin:2px 0 8px">Link a project to a <b>character skill</b> to auto-compute hours (cost-to-next-level &times; 200) with attribute/teacher modifiers. Each session, roll 3d6 vs <b>Target</b>: success shaves <b>Hrs/Marg</b> per point of margin; a <span style="color:var(--green)">critical</span> learns it outright; a <span style="color:var(--red)">critical failure</span> is a setback. <b>Complete!</b> &rarr; click <b>Grant pt</b> to apply.</div>
+ <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 8px;font-size:12px"><b>⏳ Hours available to train:</b><input class="cell" type="number" style="width:84px" value="${+C.trainHoursAvail||0}" onchange="setTrainAvail(this.value)"><button class="btn-sm" onclick="addTrainAvail(8)">+8h</button><button class="btn-sm" onclick="addTrainAvail(40)">+40h</button><button class="btn-sm" onclick="addTrainAvail(200)">+200h</button><span class="dim" style="font-size:10.5px">downtime adds hours; logging study below spends them</span></div>
  <table class="g">
   <tr><th style="width:170px">Linked skill</th><th>Study label</th><th style="width:42px" title="Roll target — your current skill level">Tgt</th><th style="width:50px" title="Required hours">Req</th><th style="width:50px">Done</th><th style="width:42px" title="Hrs off per margin point">/Marg</th><th style="width:32px" title="Teacher: -25% hrs"><span style="color:var(--cyan)">T</span></th><th style="width:32px" title="Self-teach: +50% hrs"><span style="color:var(--amber)">S</span></th><th style="width:30px" title="Monumental">Mon</th><th style="width:90px">Progress</th><th style="width:180px"></th></tr>
   ${(C.study||[]).map((p,i)=>{
@@ -2234,7 +2235,7 @@ function renderSkills(){
      <td><button class="btn-add" style="margin:0;padding:2px 6px;font-size:10px" onclick="rollStudy(${i})" title="Roll a study session">⚄ Roll</button> ${p.linkedSkill?`<button class="btn-add" style="margin:0;padding:2px 6px;font-size:10px" onclick="syncStudyHours(${i})" title="Recompute hours from canon">↻</button>`:''}${complete&&p.linkedSkill?` <button class="btn-add" style="margin:0;padding:2px 6px;font-size:10px;background:var(--green)" onclick="grantStudyPoint(${i})" title="Grant the earned point to your linked skill">+ Grant pt</button>`:''} <button class="btn-del" onclick="C.study.splice(${i},1);touch();renderSkills()">✕</button></td>
     </tr>${p.lastSync?`<tr><td colspan="11" style="font-size:10px;padding:0 8px 2px;color:var(--text2);font-style:italic">↻ ${esc(p.lastSync)}</td></tr>`:''}${p.last?`<tr><td colspan="11" style="font-size:10.5px;padding:1px 8px 6px;color:${col}">${esc(p.last)}</td></tr>`:''}`;
   }).join('')||'<tr><td colspan="11" class="dim" style="padding:8px">No study projects yet — add one and link it to a skill to begin earning study-hours.</td></tr>'}
- </table> ${(function(){var th=(+C.trainHoursTotal||0);var inprog=(C.study||[]).reduce(function(s,p){return s+(+p.done||0);},0);var pts=Math.floor(th/200);return '<div class="dim" style="font-size:11px;margin:6px 0 2px">⏱ <b style="color:var(--text)">Total hours logged: '+th+' hrs</b>'+(pts?(' · ≈ '+pts+' pt'+(pts>1?'s':'')+' earned'):'')+(inprog?(' &nbsp;·&nbsp; '+inprog+' hrs toward current projects'):'')+' <span style="opacity:.6">(200 hrs = 1 pt)</span></div>';})()}
+ </table> ${(function(){var av=(+C.trainHoursAvail||0);var th=(+C.trainHoursTotal||0);var inprog=(C.study||[]).reduce(function(s,p){return s+(+p.done||0);},0);var pts=Math.floor(th/200);return '<div class="dim" style="font-size:11px;margin:6px 0 2px">⏳ <b style="color:'+(av>0?'var(--cyan,#39b6c8)':'var(--red,#e5544b)')+'">'+av+' hrs available</b> &nbsp;·&nbsp; ⏱ Total logged <b style="color:var(--text)">'+th+' hrs</b>'+(pts?(' · ≈ '+pts+' pt'+(pts>1?'s':'')+' earned'):'')+(inprog?(' &nbsp;·&nbsp; '+inprog+' hrs toward current projects'):'')+' <span style="opacity:.6">(200 hrs = 1 pt)</span></div>';})()}
  ${customSkillsSection()}`;
 
  if(_skillFilter)filterSkillRows(_skillFilter);
@@ -2308,7 +2309,9 @@ function grantStudyPoint(i){
  touch();renderSkills();
 }
 
-function setStudyDone(i,v){var p=(C.study||[])[i];if(!p)return;var nv=Math.max(0,+v||0);var d=nv-(+p.done||0);if(d>0)C.trainHoursTotal=(+C.trainHoursTotal||0)+d;p.done=nv;touch();renderSkills();}
+function setTrainAvail(v){C.trainHoursAvail=Math.round(+v||0);touch();renderSkills();}
+function addTrainAvail(n){C.trainHoursAvail=Math.round((+C.trainHoursAvail||0)+(+n||0));touch();renderSkills();}
+function setStudyDone(i,v){var p=(C.study||[])[i];if(!p)return;var nv=Math.max(0,+v||0);var d=nv-(+p.done||0);if(d>0){C.trainHoursTotal=(+C.trainHoursTotal||0)+d;C.trainHoursAvail=(+C.trainHoursAvail||0)-d;}p.done=nv;touch();renderSkills();}
 function addStudyProject(){C.study=C.study||[];C.study.push({label:'',linkedSkill:'',target:10,req:200,done:0,hpm:10,monumental:false,teacher:false,selfTeach:false});touch();renderSkills()}
 function rollStudy(i){
  const p=(C.study||[])[i]; if(!p)return;
@@ -2328,7 +2331,7 @@ function rollStudy(i){
  else { kind='fail'; msg=`✗ Failed (${dice} vs ${t}). No progress this session.`; }
  if(req>0&&done>=req&&kind!=='critfail') msg+=' Training complete!';
  if(typeof _rollLog!=='undefined'){ (_rollCount++,_rollLog).unshift({label:'Study'+(p.linkedSkill?': '+p.linkedSkill:''),target:t,dice:[a,b,c],sum:roll,outcome:(kind==='crit'?'CRIT':kind==='critfail'?'CRIT FAIL':(roll<=t?'Success':'Failure')),cls:(kind==='crit'?'crit-s':kind==='critfail'?'crit-f':(roll<=t?'succ':'fail')),margin:Math.abs(t-roll)}); if(_rollLog.length>14)_rollLog.pop(); if(typeof _renderRollPanel==='function')_renderRollPanel(); }
- if(done-(+p.done||0)>0)C.trainHoursTotal=(+C.trainHoursTotal||0)+(done-(+p.done||0));p.done=done; p.last=msg; p.lastKind=kind;
+ var _gd=done-(+p.done||0);if(_gd>0){C.trainHoursTotal=(+C.trainHoursTotal||0)+_gd;C.trainHoursAvail=(+C.trainHoursAvail||0)-_gd;}p.done=done; p.last=msg; p.lastKind=kind;
  // Auto-grant point if linked skill present and complete
  if(p.linkedSkill && req>0 && done>=req && kind!=='critfail'){grantStudyPoint(i);return;}
  touch(); renderSkills();
