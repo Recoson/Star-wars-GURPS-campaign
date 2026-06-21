@@ -237,6 +237,19 @@
   .toast.err{border-color:rgba(200,84,63,0.6);color:#f0b6ab}
   .toast.ok{border-color:rgba(201,162,58,0.5)}
 
+  /* ---------- cloud sync bar ---------- */
+  .syncbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 12px;border-top:1px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--ink-dim)}
+  .syncbar .grow{flex:1}
+  .syncdot{width:8px;height:8px;border-radius:50%;background:var(--ink-faint);flex:none}
+  .syncdot.busy{background:var(--holo);animation:sbpulse 1s ease-in-out infinite}
+  .syncdot.ok{background:#5fcf7a}
+  .syncdot.dirty{background:var(--gold-bright)}
+  .syncdot.err{background:#e0664f}
+  @keyframes sbpulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .synctext{letter-spacing:.02em;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .syncauto{display:flex;align-items:center;gap:5px;cursor:pointer;color:var(--ink-dim);letter-spacing:.02em;user-select:none}
+  .syncbtn{font-family:var(--sans);font-size:13px;padding:5px 11px}
+
   @media (prefers-reduced-motion:reduce){
     *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.05ms !important}
   }
@@ -325,6 +338,14 @@
         <input type="file" id="importFile" accept="application/json,.json" hidden>
         <span class="count" id="totalCount"></span>
       </div>
+      <div class="syncbar" id="syncbar">
+        <span class="syncdot" id="syncDot"></span>
+        <span class="synctext" id="syncText">Local only</span>
+        <label class="syncauto" title="Save the library to your campaign repo after each change so it survives across sessions and devices"><input type="checkbox" id="autoSync"> cloud sync</label>
+        <span class="grow"></span>
+        <button class="syncbtn" id="pullBtn" title="Load the latest saved library from the repo">&#8635; Pull</button>
+        <button class="syncbtn btn-gold" id="pushBtn" title="Save the current library to the repo now">&#8593; Push</button>
+      </div>
     </section>
   </main>
 </div>
@@ -356,7 +377,8 @@ function defaultState(){
       {id: uid(), name: 'Ambient / Misc',   collapsed:false}
     ],
     tracks: [],
-    settings: { volume:70, muted:false, loopMode:'one', hideVideo:false, lastTrackId:null, lastCategoryId:null }
+    settings: { volume:70, muted:false, loopMode:'one', hideVideo:false, lastTrackId:null, lastCategoryId:null },
+    _meta: { savedAt:'' }
   };
 }
 
@@ -384,7 +406,7 @@ function loadState(){
     var s = Object.assign({}, d.settings, (p.settings||{}));
     if(['off','one','list'].indexOf(s.loopMode) === -1) s.loopMode = 'one';
     s.volume = Math.max(0, Math.min(100, parseInt(s.volume,10) || 70));
-    return { version:1, categories:cats, tracks:tracks, settings:s };
+    return { version:1, categories:cats, tracks:tracks, settings:s, _meta:{ savedAt:(p._meta&&p._meta.savedAt)?String(p._meta.savedAt):'' } };
   }catch(e){
     console.warn('Ambience: load failed, starting fresh.', e);
     return defaultState();
@@ -392,7 +414,12 @@ function loadState(){
 }
 
 function save(){
-  try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+  try{
+    state._meta = state._meta || { savedAt:'' };
+    state._meta.savedAt = (typeof nowISO==='function') ? nowISO() : new Date().toISOString();
+    localStorage.setItem(STORE_KEY, JSON.stringify(state));
+    if(typeof scheduleAuto==='function') scheduleAuto();
+  }
   catch(e){ console.warn('Ambience: save failed', e); toast('Couldn\u2019t save — storage may be full or blocked.', 'err'); }
 }
 
@@ -886,6 +913,7 @@ function importLibrary(file){
       if(player && player.stopVideo) player.stopVideo();
       projector.classList.remove('playing'); screenEmpty.style.display='flex'; setPlayIcon(false);
       renderLibrary(); renderNowPlaying(); updateTransport();
+      if(typeof scheduleAuto==='function'){ lastSyncedLib=''; scheduleAuto(); }
       toast('Library imported.', 'ok');
     }catch(e){ toast('That file isn\u2019t a valid library export.', 'err'); }
   };
@@ -967,10 +995,173 @@ document.addEventListener('keydown', function(e){
   else if(e.code === 'ArrowLeft' && player && currentId){ e.preventDefault(); player.seekTo(Math.max(0,(player.getCurrentTime()||0)-5), true); }
 });
 
+/* ============================================================
+   Cloud sync — keep the library across sessions / devices.
+
+   The library is stored as JSON in the campaign repo via the
+   GitHub Contents API, reusing the same token the rest of the
+   toolset uses (kotor_gh_token). Reads are tokenless — the file
+   is public on Pages — so a library wiped by Safari's storage
+   eviction is restored automatically on the next load with no
+   token needed. Only writing the library back needs the token.
+   ============================================================ */
+var GH_OWNER='Recoson', GH_REPO='Star-wars-GURPS-campaign', GH_BRANCH='main';
+var CLOUD_PATH='ambience-library.json';
+var TOKEN_KEY='kotor_gh_token';              // shared across the toolset
+var AUTO_KEY='kotor_ambience_autosync';
+var AUTOSYNC_MS=4000;
+var loadedAt=(state._meta&&state._meta.savedAt)||'';
+var lastSyncedLib='', _autoTimer=null, _pushBusy=false;
+
+function nowISO(){ return new Date().toISOString(); }
+function b64u(str){ var b=new TextEncoder().encode(str), s=''; for(var i=0;i<b.length;i++) s+=String.fromCharCode(b[i]); return btoa(s); }
+function shortTime(iso){ if(!iso) return ''; try{ return new Date(iso).toLocaleString(undefined,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}); }catch(e){ return iso; } }
+
+/* Signature of only the library-relevant content, so transient
+   settings (volume, current track, collapse state) never trigger
+   a cloud write — only adding/removing/renaming/moving tracks or
+   categories does. */
+function libSig(){
+  return JSON.stringify({
+    c:(state.categories||[]).map(function(c){ return {i:c.id,n:c.name}; }),
+    t:(state.tracks||[]).map(function(t){ return {i:t.id,v:t.videoId,n:t.title,g:t.categoryId}; })
+  });
+}
+function ghToken(){ try{ return localStorage.getItem(TOKEN_KEY)||null; }catch(e){ return null; } }
+function autoOn(){ return $('autoSync') && $('autoSync').checked; }
+
+function setSync(kind,text){
+  var d=$('syncDot'), t=$('syncText');
+  if(d) d.className='syncdot'+(kind&&kind!=='idle'?(' '+kind):'');
+  if(t){
+    if(text!=null) t.textContent=text;
+    else if(kind==='idle') t.textContent=ghToken()?(loadedAt?('Synced \u00b7 '+shortTime(loadedAt)):'Ready to sync'):'Local only';
+  }
+}
+
+async function ghGetFile(path,raw){
+  var url='https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/'+path+'?ref='+GH_BRANCH+'&_='+Date.now();
+  var headers={'Accept':raw?'application/vnd.github.raw':'application/vnd.github+json'};
+  var tk=ghToken(); if(tk) headers['Authorization']='Bearer '+tk;
+  var r=await fetch(url,{headers:headers});
+  if(r.status===404) return null;
+  if(!r.ok) throw new Error('GitHub '+r.status);
+  return raw?await r.text():await r.json();
+}
+
+/* Restore the saved library on load. Read-only and tokenless: tries
+   the API, then the copy served beside this page. Adopts the remote
+   only when local is empty or the remote is newer, so it never
+   clobbers newer local edits. Failures (e.g. genuinely offline at the
+   table) are silent and the tool keeps its localStorage copy. */
+async function cloudPull(silent){
+  setSync('busy','Checking cloud\u2026');
+  var obj=null;
+  try{
+    var txt=await ghGetFile(CLOUD_PATH,true);
+    if(txt!=null) obj=JSON.parse(txt);
+  }catch(e){
+    try{ var r=await fetch(CLOUD_PATH+'?_='+Date.now()); if(r.ok) obj=JSON.parse(await r.text()); }catch(_){}
+  }
+  if(obj==null){ setSync('idle'); if(!silent) toast('Nothing saved to the cloud yet \u2014 Push to create it.'); return false; }
+  var rAt=(obj._meta&&obj._meta.savedAt)||'';
+  var localEmpty=!state.tracks.length;
+  if(localEmpty || (rAt && rAt>loadedAt)){
+    localStorage.setItem(STORE_KEY, JSON.stringify(obj));
+    state=loadState();
+    loadedAt=(state._meta&&state._meta.savedAt)||rAt;
+    lastSyncedLib=libSig();
+    currentId=null;
+    if(player && player.stopVideo) player.stopVideo();
+    projector.classList.remove('playing'); screenEmpty.style.display='flex'; setPlayIcon(false);
+    renderLibrary(); renderNowPlaying(); updateTransport();
+    setSync('ok','Synced \u00b7 '+shortTime(loadedAt));
+    if(!silent) toast('Library restored from the cloud.','ok');
+    return true;
+  }
+  lastSyncedLib=libSig();
+  setSync('idle');
+  if(!silent) toast('Your library is already up to date.');
+  return false;
+}
+
+async function cloudPush(silent){
+  var tk=ghToken();
+  if(!tk){
+    tk=(prompt('GitHub token to save your library to the campaign repo.\n\n(Fine-grained PAT with Contents read/write on '+GH_OWNER+'/'+GH_REPO+'. Stored only in this browser \u2014 the same token the character sheet uses.)')||'').trim();
+    if(tk){ try{ localStorage.setItem(TOKEN_KEY,tk); }catch(e){} }
+    else { if(!silent) toast('No token set \u2014 use Export for a manual backup instead.','err'); return false; }
+  }
+  if(_pushBusy) return false;
+  _pushBusy=true; setSync('busy','Saving\u2026');
+  try{
+    var existing=null;
+    try{ existing=await ghGetFile(CLOUD_PATH,false); }catch(e){}
+    state._meta={ savedAt:nowISO() };
+    var sent=JSON.stringify(state,null,2);
+    var body={ message:'Update ambience library', branch:GH_BRANCH, content:b64u(sent) };
+    if(existing && existing.sha) body.sha=existing.sha;
+    var r=await fetch('https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/'+CLOUD_PATH,{
+      method:'PUT',
+      headers:{'Accept':'application/vnd.github+json','Authorization':'Bearer '+tk,'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    if(r.status===401||r.status===403){ try{ localStorage.removeItem(TOKEN_KEY); }catch(e){} throw new Error('token rejected ('+r.status+') and cleared \u2014 Push again with a valid Contents:R/W token'); }
+    if(r.status===409){ _pushBusy=false; setSync('busy','Cloud changed \u2014 pulling\u2026'); return cloudPull(silent); }
+    if(!r.ok) throw new Error('GitHub '+r.status);
+    loadedAt=state._meta.savedAt;
+    lastSyncedLib=libSig();
+    localStorage.setItem(STORE_KEY, JSON.stringify(state));
+    _pushBusy=false;
+    setSync('ok','Saved \u00b7 '+shortTime(loadedAt));
+    if(!silent) toast('Library saved to the cloud.','ok');
+    return true;
+  }catch(e){
+    _pushBusy=false; setSync('err','Save failed');
+    if(!silent) toast('Couldn\u2019t save: '+e.message,'err');
+    return false;
+  }
+}
+
+/* debounced auto-push after a library change; only when sync is on
+   and a token exists. Settings-only changes are ignored via libSig. */
+function scheduleAuto(){
+  if(!autoOn() || !ghToken()) return;
+  if(libSig()===lastSyncedLib) return;
+  setSync('dirty','Unsynced changes');
+  if(_autoTimer) return;
+  _autoTimer=setTimeout(function(){ _autoTimer=null; cloudPush(true); }, AUTOSYNC_MS);
+}
+
+/* flush a pending change when the tab is hidden (iPad app-switch / lock) */
+document.addEventListener('visibilitychange', function(){
+  if(document.visibilityState==='hidden' && autoOn() && ghToken() && libSig()!==lastSyncedLib){
+    if(_autoTimer){ clearTimeout(_autoTimer); _autoTimer=null; }
+    cloudPush(true);
+  }
+});
+
+function wireSync(){
+  var auto=$('autoSync');
+  var saved=null; try{ saved=localStorage.getItem(AUTO_KEY); }catch(e){}
+  auto.checked=(saved===null || saved==='1');        // default on
+  auto.addEventListener('change', function(){
+    try{ localStorage.setItem(AUTO_KEY, auto.checked?'1':'0'); }catch(e){}
+    if(auto.checked){ setSync('idle'); scheduleAuto(); }
+    else setSync('idle','Cloud sync off');
+  });
+  $('pullBtn').addEventListener('click', function(){ cloudPull(false); });
+  $('pushBtn').addEventListener('click', function(){ cloudPush(false); });
+  lastSyncedLib=libSig();
+  setSync('idle');
+}
+
 /* ---------- first paint ---------- */
 renderLibrary();
 renderNowPlaying();
 updateTransport();
+wireSync();
+cloudPull(true);
 </script>
 </body>
 </html>
