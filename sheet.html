@@ -2168,12 +2168,12 @@ function renderSkills(){
    if(spec){
     const dlid='spec'+i;
     specCell=`<input class="cell" list="${dlid}" value="${esc(sk.spec||'')}" placeholder="${needs?'required — pick/type':'optional'}"
-      onchange="C.skills[${i}].spec=this.value;touch();renderSkills()"
+      onchange="C.skills[${i}].spec=this.value;touch()"
       style="${needs&&!sk.spec?'border-color:var(--amber)':''}">
       <datalist id="${dlid}">${spec.list.map(o=>`<option value="${esc(o)}">`).join('')}</datalist>`;
    } else {
     specCell=`<input class="cell" value="${esc(sk.spec||'')}" placeholder="—"
-      onchange="C.skills[${i}].spec=this.value;touch();renderSkills()">`;
+      onchange="C.skills[${i}].spec=this.value;touch()">`;
    }
    return `<tr data-skname="${esc(((sk.name||'')+' '+(sk.spec||'')).toLowerCase())}">
     <td class="num dim sk-ord"><span>${i+1}</span><span class="ordbtns"><button title="Move up" ${i===0?'disabled':''} onclick="moveSkill(${i},-1)">▲</button><button title="Move down" ${i===(C.skills||[]).length-1?'disabled':''} onclick="moveSkill(${i},1)">▼</button></span></td>
