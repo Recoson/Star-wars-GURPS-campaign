@@ -177,4 +177,9 @@ import { getFirestore, doc, onSnapshot, setDoc, serverTimestamp } from "https://
       else { ready = false; pill('sign in for live sync'); }  // pill is clickable to open sign-in; no forced modal on load
     });
   })();
+  try { window.daraCloud = {
+    signIn:   function(){ try{ gate(true); }catch(e){} },
+    signOut:  function(){ try{ signOut(auth); }catch(e){} },
+    signedIn: function(){ return !!(auth && auth.currentUser); }
+  }; } catch (e) {}
 })();

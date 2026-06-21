@@ -622,7 +622,7 @@ html{scroll-behavior:smooth}
   <button onclick="document.getElementById('importFile').click()">Import</button>
   <input type="file" id="importFile" accept=".json" style="display:none" onchange="importChar(event)">
   <button onclick="openCharPicker()" title="Browse campaign characters stored in the cloud">☁ Characters</button>
-  <button onclick="cloudSave()" title="Save this character to the campaign cloud (GitHub)">☁ Save</button>
+  <button onclick="(window.daraCloud&&daraCloud.signIn())" title="Sign in for live cloud sync (auto-saves across all your devices)">☁ Live Sync</button>
   <button onclick="location.href='index.html'" title="Open the campaign database hub">⌂ Hub</button>
   <button onclick="printSheet()">Print</button>
   <button id="themeBtn" class="primary" onclick="toggleTheme()" title="Toggle paper / datapad theme">☾ Dark</button>
@@ -753,7 +753,7 @@ window.C = C;   // 'var' + window.C so firebase-sync.js (ES module) can find the
 // ─────────────────────────────────────────────────────
 // PERSISTENCE
 // ─────────────────────────────────────────────────────
-function save(){try{localStorage.setItem(ACTIVE_STORE_KEY,JSON.stringify(C));flashSave()}catch(e){};try{cloudTouch()}catch(e){}}
+function save(){try{localStorage.setItem(ACTIVE_STORE_KEY,JSON.stringify(C));flashSave()}catch(e){}}
 function load(){try{const s=localStorage.getItem(ACTIVE_STORE_KEY);return s?JSON.parse(s):null}catch(e){return null}}
 function touch(){clearTimeout(saveTimer);saveTimer=setTimeout(save,400)}
 function flashSave(){const el=document.getElementById('saveIndicator');if(!el)return;el.textContent='● SAVED';el.style.color='var(--green)';setTimeout(()=>{el.textContent='● AUTO'},900)}
@@ -784,19 +784,9 @@ function mergeChar(data){
 }
 function charSlug(n){return (n||'character').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'character'}
 function b64u(str){const b=new TextEncoder().encode(str);let s='';for(const c of b)s+=String.fromCharCode(c);return btoa(s)}
-function ghToken(force){
- let t=null; try{t=localStorage.getItem('kotor_gh_token')}catch(e){}
- if(!t||force){
-  t=prompt('GitHub token for cloud saves.\n(Fine-grained PAT with Contents read/write on '+GH_OWNER+'/'+GH_REPO+'. Stored only in this browser.)');
-  if(t){t=t.trim();try{localStorage.setItem('kotor_gh_token',t)}catch(e){}}
- }
- return t||null;
-}
 async function ghGetFile(path,raw){
  const url='https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/'+path+'?ref='+GH_BRANCH+'&_='+Date.now();
  const headers={'Accept':raw?'application/vnd.github.raw':'application/vnd.github+json'};
- let t=null; try{t=localStorage.getItem('kotor_gh_token')}catch(e){}
- if(t)headers['Authorization']='Bearer '+t;
  const r=await fetch(url,{headers});
  if(r.status===404)return null;
  if(!r.ok)throw new Error('GitHub '+r.status+': '+(await r.text()).slice(0,180));
@@ -830,88 +820,7 @@ async function cloudInit(){
   C=mergeChar(cloud);save();renderAll();
  }
 }
-// Cloud autosave: any edit schedules a push CLOUD_AUTOSAVE_MS after the
-// last change (per burst); closing/hiding the tab pushes immediately.
-// Runs only when a character is open (?char=) and a token is stored.
-var CLOUD_AUTOSAVE_MS=60000;
-let _cloudDirty=false,_cloudTimer=null,_cloudBusy=false;
-function cloudTouch(){
- if(!CHAR_ID)return;
- let t=null;try{t=localStorage.getItem('kotor_gh_token')}catch(e){}
- if(!t)return;
- _cloudDirty=true;
- if(_cloudTimer)return;
- _cloudTimer=setTimeout(()=>{_cloudTimer=null;
-  let tk=null;try{tk=localStorage.getItem('kotor_gh_token')}catch(e){}
-  if(_cloudDirty&&tk)_cloudWrite(CHAR_ID,tk,true);
- },CLOUD_AUTOSAVE_MS);
-}
-function cloudBanner(msg){
- var b=document.getElementById('cloudBanner');
- if(!msg){ if(b)b.style.display='none'; return; }
- if(!b){
-  b=document.createElement('div'); b.id='cloudBanner';
-  b.style.cssText='position:fixed;left:10px;bottom:8px;max-width:min(560px,calc(100vw - 150px));z-index:9997;font:12px/1.45 system-ui,sans-serif;padding:9px 30px 9px 12px;border-radius:9px;cursor:pointer;background:var(--bg2);color:var(--red);border:1px solid var(--red);box-shadow:0 6px 22px rgba(0,0,0,.45)';
-  b.title='Click to reconnect / retry cloud save';
-  var lead=document.createElement('span'); lead.style.cssText='color:var(--amber);font-weight:600'; lead.textContent='☁ cloud not saving — '; b.appendChild(lead);
-  var body=document.createElement('span'); body.id='cloudBannerMsg'; b.appendChild(body);
-  var x=document.createElement('span'); x.textContent='×'; x.style.cssText='position:absolute;top:6px;right:10px;opacity:.6;font-size:15px;line-height:1'; x.onclick=function(e){ e.stopPropagation(); b.style.display='none'; }; b.appendChild(x);
-  b.onclick=function(){ try{cloudSave();}catch(e){} };
-  document.body.appendChild(b);
- }
- b.querySelector('#cloudBannerMsg').textContent=msg;
- b.style.display='block';
-}
-async function _cloudWrite(id,t,silent){
- if(_cloudBusy){_cloudDirty=true;return false}
- _cloudBusy=true;
- const el=document.getElementById('saveIndicator'); if(el)el.textContent='● CLOUD…';
- try{
-  _cloudDirty=false;
-  C._meta=Object.assign({},C._meta,{savedAt:new Date().toISOString(),savedBy:C.player||C.name||''});
-  const existing=await ghGetFile('characters/'+id+'.json');
-  const body={message:'Update character: '+(C.name||id),branch:GH_BRANCH,content:b64u(JSON.stringify(C,null,2))};
-  if(existing&&existing.sha)body.sha=existing.sha;
-  const r=await fetch('https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/characters/'+id+'.json',{
-   method:'PUT',
-   headers:{'Accept':'application/vnd.github+json','Authorization':'Bearer '+t,'Content-Type':'application/json'},
-   body:JSON.stringify(body)});
-  if(r.status===401||r.status===403){try{localStorage.removeItem('kotor_gh_token')}catch(e){};throw new Error('token rejected ('+r.status+'). It was cleared — click ☁ Save and enter a valid token.')}
-  if(r.status===409)throw new Error('conflict — someone saved this character meanwhile. Reload the page (your local copy is safe) and save again.');
-  if(!r.ok)throw new Error('GitHub '+r.status+': '+(await r.text()).slice(0,180));
-  try{localStorage.setItem(ACTIVE_STORE_KEY,JSON.stringify(C))}catch(e){}
-  if(el){el.textContent='● CLOUD ✓';el.style.color='var(--green)';setTimeout(()=>{el.textContent='● AUTO'},1600)}
-  cloudBanner(null);
-  _cloudBusy=false;
-  if(_cloudDirty)cloudTouch();
-  return true;
- }catch(e){
-  _cloudBusy=false;_cloudDirty=true;
-  if(el){el.textContent='● CLOUD ✗';el.style.color='var(--red)';setTimeout(()=>{el.textContent='● AUTO'},2600)}
-  cloudBanner(e.message||'save failed')
-  if(!silent)alert('Cloud save failed: '+e.message);
-  return false;
- }
-}
-async function cloudSave(){
- let id=CHAR_ID;
- if(!id){
-  id=prompt('Save to cloud as (character id):',charSlug(C.name));
-  if(!id)return; id=charSlug(id);
- }
- const t=ghToken(); if(!t)return;
- const ok=await _cloudWrite(id,t,false);
- if(ok&&!CHAR_ID){
-  // first cloud save of a new character: reopen under its cloud identity
-  try{const u=new URL(location.href);u.searchParams.set('char',id);location.href=u.toString()}catch(e){}
- }
-}
-document.addEventListener('visibilitychange',()=>{
- if(document.visibilityState==='hidden'&&_cloudDirty&&CHAR_ID){
-  let t=null;try{t=localStorage.getItem('kotor_gh_token')}catch(e){}
-  if(t){if(_cloudTimer){clearTimeout(_cloudTimer);_cloudTimer=null}_cloudWrite(CHAR_ID,t,true)}
- }
-});
+
 async function openCharPicker(){
  let list=[];
  try{
@@ -933,8 +842,8 @@ async function openCharPicker(){
   +(list.length?list.map(id=>{const m=meta[id]||{n:id,p:'',c:''};
     return '<a href="?char='+id+'" style="display:block;padding:6px 2px;text-decoration:none;color:inherit;border-bottom:1px solid var(--line,#ddd)">'
     +(id===CHAR_ID?'\u25b6 ':'')+'<b>'+esc(m.n)+'</b>'+(m.p?' <span style="opacity:.65">\u00b7 '+esc(m.p)+'</span>':'')
-    +(m.c?'<div style="opacity:.55;font-size:10px">'+esc(m.c)+'</div>':'')+'</a>';}).join(''):'<div style="opacity:.7">No characters in the cloud yet — use ☁ Save to add this one.</div>')
-  +'<div style="margin-top:10px;opacity:.7;font-size:11px">Each link opens that character (its own local autosave). ☁ Save writes back to the campaign database.</div>';
+    +(m.c?'<div style="opacity:.55;font-size:10px">'+esc(m.c)+'</div>':'')+'</a>';}).join(''):'<div style="opacity:.7">No characters seeded yet — sign in with ☁ Live Sync and edits sync automatically.</div>')
+  +'<div style="margin-top:10px;opacity:.7;font-size:11px">Each link opens that character. Edits auto-sync live via ☁ Live Sync when signed in.</div>';
  ov.appendChild(box);document.body.appendChild(ov);
 }
 window.addEventListener('load',()=>{cloudInit()});
