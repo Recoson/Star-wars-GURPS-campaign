@@ -3857,6 +3857,7 @@ function renderEquipment(){
     if(!eqArr.length && !carried.length && !stored.length) html+='<div class="dim" style="font-size:11px;padding:4px">None yet — use <b>+ Add</b> above.</div>';
     html+='</div>';
   });
+  html+=(typeof vaultSection==='function'?vaultSection():'');
   html+=(typeof manualInvSection==='function'?manualInvSection():'');
   el.innerHTML=html;
 }
@@ -8288,7 +8289,7 @@ if(typeof DATA!=='undefined'&&DATA.weapons){
  /* v38.4 — extra sabers: Sith Empire synth-crystal + Chatni's dual-mode ghost-fire crystal */
  const EXTRA_SABERS=[
   {cat:'Lightsaber',cls:'Melee',name:'Lightsaber (Sith Empire, synth-crystal)',tl:10,sw:{fixed:'8d+8',ad:5,dtype:'burn'},th:{fixed:'4d+4',ad:10,dtype:'imp+burn'},dtype:'burn',ad:5,reach:'1',parry:'0F',cost:0,wt:2,st:9,acc:'',r12:'',rmax:'',rof:'',shots:'',notes:'Sith Empire saber with a forged, bled synthetic crystal (classic crimson). Same output as a standard saber; favoured for aggressive, unstable blades.'},
-  {cat:'Lightsaber',cls:'Melee',name:"Lightsaber (Ghost-fire crystal)",tl:10,sw:{fixed:'8d+8',ad:5,dtype:'burn'},th:{fixed:'4d+4',ad:10,dtype:'imp+burn'},dtype:'burn',ad:5,reach:'1',parry:'0F',cost:0,wt:2,st:9,acc:'',r12:'',rmax:'',rof:'',shots:'',altProfile:{label:'Silent / invisible mode — foe \u22123 to Parry, 6d+6',sw:{fixed:'6d+6',ad:5,dtype:'burn'},th:{fixed:'3d+3',ad:10,dtype:'imp+burn'},foeParry:-3,note:'Ghost-fire engaged: blade is unseen and soundless, so opponents are at \u22123 to Parry it \u2014 but output drops to 6d+6. Toggle off to restore normal sound/visibility and full 8d+8.'},notes:'Ghost-fire kyber crystal: toggle the blade invisible & silent (foe \u22123 Parry) at 6d+6, or burn normally at full 8d+8 with sound and light.'}
+  {cat:'Lightsaber',cls:'Melee',name:"Lightsaber (Ghost-fire crystal)",tl:10,fixed:'8d+8',dtype:'imp+burn',ad:5,reach:'1,2',parry:'0F',cost:'build',wt:0.5,st:'-',acc:'',r12:'',rmax:'',rof:'',shots:'',altProfile:{label:'Silent / invisible mode \u2014 foe \u22123 to Parry, 6d+6',sw:{fixed:'6d+6',ad:5,dtype:'imp+burn'},foeParry:-3,note:'Ghost-fire engaged: blade is unseen and soundless, so opponents are at \u22123 to Parry it \u2014 but output drops to 6d+6. Toggle off to restore sound, visibility and full 8d+8.'},notes:'Ghost-fire crystal. Audible: full 8d+8 with sound/light. Silent mode: 6d+6, blade invisible & silent \u2014 foes \u22123 to Parry.'}
  ];
  EXTRA_SABERS.forEach(s=>{if(!DATA.weapons.find(x=>x.name===s.name))DATA.weapons.push(s);});
 }
