@@ -2058,6 +2058,23 @@ function forcePrimaryAttr(){const fp=(C.force&&C.force.primary);return ({ST:1,DX
 // Label for a skill's governing attribute. "Force" resolves to the Force-tab Primary,
 // shown as e.g. "Force→Will" so the scaling source is visible.
 function skillAttrLabel(attr){return attr==='Force'?('Force→'+forcePrimaryAttr()):(attr||'-');}
+function skillLvlCellHTML(sk){
+ let h=String(skillLevel(sk));
+ if(+sk.bonus) h+=` <span style="color:var(--cyan);font-size:9px">(${(+sk.bonus)>0?'+':''}${+sk.bonus})</span>`;
+ const fc=forceSkillCap(sk);
+ if(fc&&fc.capped) h+=` <span style="color:var(--amber);font-size:9px" title="Force cap: attribute contributes at most ${fc.baseAttr}+${FORCE_ATTR_CAP} (${fc.attrVal}→capped to ${fc.cap}); higher levels need invested points">▣cap</span>`;
+ return h;
+}
+/* Targeted update: a skill's level is independent of every other row, so a pts/attr/diff/bonus
+   edit only needs to rewrite that row's Lvl cell + the header total — not re-render the whole
+   (~944KB) tab. Structural changes (add/delete/move/name/sort) still call renderSkills(). */
+function updateSkillRow(i){
+ const sk=(C.skills||[])[i]; if(!sk)return;
+ const cell=document.getElementById('sklvl'+i);
+ if(cell)cell.innerHTML=skillLvlCellHTML(sk);
+ const tot=document.getElementById('skTotPts');
+ if(tot)tot.textContent=skillPts();
+}
 function renderSkills(){
  const el=document.getElementById('tab-skills');
  const allNames=DATA.skills.map(s=>s[0]).sort();
@@ -2068,7 +2085,7 @@ function renderSkills(){
   <button class="btn-sm" onclick="sortSkillsAZ()" title="Sort all skills alphabetically — you can still hand-order afterwards with the ▲▼ arrows" style="margin-left:6px">A–Z</button>
   <input id="skillSearch" placeholder="🔍 filter skills…" value="${esc(_skillFilter)}" oninput="filterSkillRows(this.value)" autocomplete="off">
   <span id="skillShown" class="dim" style="font-size:10px;margin-left:6px"></span>
-  <span style="float:right;color:var(--text2);font-weight:400;font-size:11px">Total skill pts: <b style="color:var(--amber)">${skillPts()}</b></span></div>
+  <span style="float:right;color:var(--text2);font-weight:400;font-size:11px">Total skill pts: <b style="color:var(--amber)" id="skTotPts">${skillPts()}</b></span></div>
  <table class="g" id="skillTable">
   <tr><th style="width:46px">#</th><th style="width:170px">Skill Name</th><th style="width:300px">Use · Cadence · Result</th><th style="width:120px">Specialty</th><th style="width:64px">Attr</th><th style="width:54px">Diff</th>
       <th style="width:44px">Pts</th><th style="width:50px" title="Flat level bonus — gear, talents, racial. Each point = +1 to the skill level; costs no character points.">Bonus</th><th style="width:42px">Lvl</th><th style="width:26px"></th></tr>
@@ -2101,23 +2118,23 @@ function renderSkills(){
      const effAttr=sk.attr||autoAttr||'IQ';
      const opts=['ST','DX','IQ','HT','Will','Per','Force'];
      const fnote=(effAttr==='Force')?`<span class="dim" style="font-size:9px"> →${forcePrimaryAttr()}</span>`:'';
-     return `<select class="cell" title="Override the governing attribute. Auto = catalogue default (${autoAttr||'IQ'}). 'Force' scales off your Force-tab Primary." onchange="if(this.value){C.skills[${i}].attr=this.value}else{delete C.skills[${i}].attr}; touch(); renderSkills()" style="width:58px;${sk.attr?'color:var(--cyan)':''}">
+     return `<select class="cell" title="Override the governing attribute. Auto = catalogue default (${autoAttr||'IQ'}). 'Force' scales off your Force-tab Primary." onchange="if(this.value){C.skills[${i}].attr=this.value}else{delete C.skills[${i}].attr}; touch(); this.style.color=this.value?'var(--cyan)':''; updateSkillRow(${i})" style="width:58px;${sk.attr?'color:var(--cyan)':''}">
       <option value=""${!sk.attr?' selected':''}>Auto</option>
       ${opts.map(o=>`<option value="${o}"${sk.attr===o?' selected':''}>${o}</option>`).join('')}
      </select>${fnote}`;
     })()}</td>
     <td class="ctr">${(()=>{
      const opts=[['E','E'],['A','A'],['H','H'],['VH','VH']];
-     return `<select class="cell" title="Override the difficulty. Auto = catalogue default (${autoDiff||'A'})." onchange="if(this.value){C.skills[${i}].diff=this.value}else{delete C.skills[${i}].diff}; touch(); renderSkills()" style="width:50px;${sk.diff?'color:var(--cyan)':''}">
+     return `<select class="cell" title="Override the difficulty. Auto = catalogue default (${autoDiff||'A'})." onchange="if(this.value){C.skills[${i}].diff=this.value}else{delete C.skills[${i}].diff}; touch(); this.style.color=this.value?'var(--cyan)':''; updateSkillRow(${i})" style="width:50px;${sk.diff?'color:var(--cyan)':''}">
       <option value=""${!sk.diff?' selected':''}>Auto</option>
       ${opts.map(([v,l])=>`<option value="${v}"${sk.diff===v?' selected':''}>${l}</option>`).join('')}
      </select>`;
     })()}</td>
     <td><input class="cell" type="number" value="${sk.pts||0}" min="0"
-     onchange="C.skills[${i}].pts=+this.value;touch();renderSkills()" style="width:45px"></td>
+     onchange="C.skills[${i}].pts=+this.value;touch();updateSkillRow(${i})" style="width:45px"></td>
     <td><input class="cell" type="number" value="${sk.bonus||0}" title="+1 level per point; no point cost"
-     onchange="C.skills[${i}].bonus=+this.value;touch();renderSkills()" style="width:46px;color:var(--cyan)"></td>
-    <td class="num calc">${skillLevel(sk)}${(+sk.bonus)?` <span style="color:var(--cyan);font-size:9px">(${(+sk.bonus)>0?'+':''}${+sk.bonus})</span>`:''}${(()=>{const fc=forceSkillCap(sk);return (fc&&fc.capped)?` <span style="color:var(--amber);font-size:9px" title="Force cap: attribute contributes at most ${fc.baseAttr}+${FORCE_ATTR_CAP} (${fc.attrVal}→capped to ${fc.cap}); higher levels need invested points">▣cap</span>`:'';})()}</td>
+     onchange="C.skills[${i}].bonus=+this.value;touch();updateSkillRow(${i})" style="width:46px;color:var(--cyan)"></td>
+    <td class="num calc" id="sklvl${i}">${skillLvlCellHTML(sk)}</td>
     <td><button class="btn-del" onclick="C.skills.splice(${i},1);touch();renderSkills()">✕</button></td>
    </tr>`}).join('')}
  </table>
