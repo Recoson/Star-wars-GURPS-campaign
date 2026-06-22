@@ -814,8 +814,6 @@ function mergeChar(data){
  for(const k in data){ if(data[k]!==undefined) base[k]=data[k]; }
  return base;
 }
-function charSlug(n){return (n||'character').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'character'}
-function b64u(str){const b=new TextEncoder().encode(str);let s='';for(const c of b)s+=String.fromCharCode(c);return btoa(s)}
 async function ghGetFile(path,raw){
  const url='https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/'+path+'?ref='+GH_BRANCH+'&_='+Date.now();
  const headers={'Accept':raw?'application/vnd.github.raw':'application/vnd.github+json'};
@@ -1043,7 +1041,6 @@ function effMove(){const m=encMove();return(isReeling()||isTired())?Math.ceil(m/
 // at its catalogue coverage weighs its listed weight; trim its coverage (via the
 // Coverage chips on the card) and the weight scales down proportionally — so a
 // single beskar plate is far lighter than a full beskar suit.
-function armourBaseCover(a){const ld=(a&&a.locDR)||{};const n=LOC6.map(x=>x[0]).filter(k=>ld[k]).length;return n||6;}
 /* Body-mass distribution of armour weight by location — a torso plate is far
    heavier than a glove. Fractions sum to 1.0 across a full suit. */
 const LOC_WEIGHT={head:0.12,torso:0.34,arms:0.16,hands:0.06,legs:0.24,feet:0.08};
@@ -1486,16 +1483,6 @@ function weaponSkillBinding(wName){
  return {skill:sn.skill,spec:sn.spec||'',label,status,lvl:weaponSkillLevel(wName)};
 }
 // Small "Uses: <skill>" line shown under a weapon picker on the Equipment tab.
-function bindLine(name){
- const b=weaponSkillBinding(name);
- if(!b||!b.skill)return'';
- const col=b.status==='exact'?'var(--green)':b.status==='sibling'?'var(--amber)':'var(--text2)';
- let tail;
- if(b.status==='exact')      tail=`<span style="color:var(--green)">✓ have it · lvl ${b.lvl}</span>`;
- else if(b.status==='sibling')tail=`<span style="color:var(--amber)">≈ sibling specialty · lvl ${b.lvl}</span>`;
- else tail=`<button class="bind-add" title="Add this skill to your Skills tab" onclick="addSkillForWeapon('${esc(name).replace(/'/g,"\\'")}')">+ add skill</button>`;
- return `<div class="eq-bind">Uses <b style="color:${col}">${esc(b.label)}</b> ${tail}</div>`;
-}
 // add an integer modifier to a GURPS dice string, e.g. ("2d", +1) -> "2d+1", ("1d-1", +2) -> "1d+1"
 function addDiceMod(dice,mod){
  mod=+mod||0;
@@ -1525,20 +1512,6 @@ function addDiceMod(dice,mod){
  if(!m)return str+(mod?(mod>0?'+':'')+mod:'');
  const tot=(m[2]?parseInt(m[2],10):0)+mod;
  return m[1]+'d'+(tot?(tot>0?'+':'')+tot:'');
-}
-function _resolveMode(modeObj,bonus){
- if(!modeObj)return '';
- let dmg;
- if(modeObj.fixed){dmg=addDiceMod(modeObj.fixed,bonus);}
- else{
-  // mod is added to the character's ST-based swing()/thrust()
-  // (we pass null base — caller knows whether sw or th)
-  return '';
- }
- const ad=+modeObj.ad;
- const adStr=(ad&&ad!==1)?(' ('+ad+')'):'';
- const dt=(modeObj.dtype||'').trim();
- return dmg+adStr+(dt?' '+dt:'');
 }
 function addTwoDice(a,b){
  const A=String(a).match(/^(\d+)d([+-]\d+)?$/),B=String(b).match(/^(\d+)d([+-]\d+)?$/);
@@ -2459,15 +2432,12 @@ function setCyber(i,v){
 /* ═══ EQUIPMENT: QUALITY · MATERIAL · OVERRIDES · MODIFICATIONS · CATEGORISED PICKERS ═══ */
 function modSum(item,key){return (item&&item.mods||[]).reduce((s,m)=>s+(+m[key]||0),0);}
 
-function modDeltaStr(it,key){const d=modSum(it,key);if(!d)return'';const sign=d>0?'+':'';const col=d>0?'var(--cyan)':'var(--amber)';return ` <span style="color:${col};font-size:9px">${sign}${d}</span>`;}
 function intOrStr(v){const n=parseInt(v);return isNaN(n)?v:n;}
-function applyMelMod(base,delta){const n=intOrStr(base);if(typeof n==='number')return String(n+delta);return base;}
 function _eqArr(cat){C[cat]=C[cat]||[];return C[cat];}
 function effItem(obj,it){return (it&&it.ovr&&Object.keys(it.ovr).length)?Object.assign({},obj,it.ovr):obj;}
 function effWeapon(it){const w0=DATA.weapons.find(x=>x.name===it.name);if(!w0)return null;let base=w0;if(it&&it.useST&&w0.stMode){base=Object.assign({},w0,{fixed:'',sw:w0.stMode.sw||null,th:w0.stMode.th||null,swMod:null,thMod:null});}else if(it&&it.altOn&&w0.altProfile){base=Object.assign({},w0,{fixed:'',sw:w0.altProfile.sw||null,th:w0.altProfile.th||null,swMod:null,thMod:null});}return applyModFx(effItem(base,it),it);}
 // quality/material -> bonuses. melee: +1 dmg per Q & per M. ranged: +1 dmg per M, +1 Acc per Q. armour: +1 DR per Q & per M.
 function wDmgBonus(it,w){const q=+it.quality||0,m=+it.material||0;return ((w&&w.cls==='Melee')?(q+m):m)+modSum(it,'dmg');}
-function wAccBonus(it,w){return ((w&&w.cls==='Ranged')?(+it.quality||0):0)+modSum(it,'acc');}
 function wParryBonus(it){return modSum(it,'parry');}
 function setWeaponST(cat,i,on){const a=_eqArr(cat);if(!a[i])return;if(on)a[i].useST=true;else delete a[i].useST;touch();renderEquipment();}
 function setWeaponAlt(cat,i,on){const a=_eqArr(cat);if(!a[i])return;if(on)a[i].altOn=true;else delete a[i].altOn;touch();renderEquipment();}
@@ -3861,11 +3831,6 @@ function renderEquipment(){
   html+=(typeof manualInvSection==='function'?manualInvSection():'');
   el.innerHTML=html;
 }
-function addWpn(cls){C.weapons=C.weapons||[];C.weapons.push({name:'',cls:cls});touch();renderEquipment()}
-function addArmour(){C.armour=C.armour||[];C.armour.push({name:''});touch();renderEquipment()}
-function addShield(){C.shields=C.shields||[];C.shields.push({name:'',equipped:false});touch();renderEquipment()}
-function addExplosive(){C.explosives=C.explosives||[];C.explosives.push({name:'',qty:1});touch();renderEquipment()}
-function addGearItem(){C.gear=C.gear||[];C.gear.push({name:'',qty:1});touch();renderEquipment()}
 
 /* ======================================================================
    INVENTORY SYSTEM (Phase 8.1) — carried-but-not-equipped store
@@ -4397,14 +4362,7 @@ function renderForce(){ migratePowerSkills();
  ${aBook==='Inscribed Voice'?holocronSection():''}`:`<div class="dim" style="padding:10px 2px">Tick a book under <b>Active Books</b> above and its powers — grouped by tier — will appear here to select.</div>`}
  <div class="dim" style="font-size:11px;margin-top:10px">Lightsaber Forms &amp; form-neutral Techniques are managed on the <b style="color:var(--cyan)">Stances &amp; Forms</b> tab — learn them, set their tier, and activate them there. Active modifiers flow into your sheet automatically.</div>${forceTrainingSection()}${customForcePowersSection()}`;
 }
-function addForcePower(book){C.force.powers=C.force.powers||[];C.force.powers.push({name:'',tier:1,pts:5,book:book||C.force.viewBook||C.force.activeBook||''});touch();renderForce()}
 function setForceBook(b){C.force.viewBook=b;touch();renderForce();}
-function setForcePower(i,name){
- const db=FORCE_POWERS.find(x=>x.name===name);
- const prev=(C.force.powers[i]||{});
- C.force.powers[i]={name,skill:db?db.skill:'',aff:db?db.aff:undefined,fp:db?db.fp:'0',tier:db?db.tier:1,pts:db?db.pts:5,book:db?db.book:(prev.book||'')};
- touch();renderForce();
-}
 
 // ─────────────────────────────────────────────────────
 // COMBAT DATA — conditions + handlers (combat UI lives on the Character Sheet)
@@ -4429,18 +4387,6 @@ function toggleCond(k){C.conditions=C.conditions||{};C.conditions[k]=!C.conditio
 /* Aggregate the automatic to-hit / DX-IQ penalty from active conditions + Shock.
    Used by the Skill Roller so condition penalties are applied, not just displayed.
    These are the common GURPS combat modifiers; the player can still override via Mod. */
-function conditionRollMod(){
-  const c=C.conditions||{}; let m=0; const parts=[];
-  const add=(n,lbl)=>{ if(n){ m+=n; parts.push(lbl+' '+(n>0?'+':'')+n); } };
-  if(+c._shock){ add(-Math.min(4,+c._shock),'Shock'); }
-  if(c.stunned)   add(-4,'Stunned');
-  if(c.grappled)  add(-4,'Grappled');
-  if(c.restrained)add(-4,'Restrained');
-  if(c.prone)     add(-4,'Prone (melee)');
-  if(c.kneel)     add(-2,'Kneeling');
-  if(c.blinded)   add(-10,'Blinded');
-  return {mod:m, parts};
-}
 function setShock(d){C.conditions=C.conditions||{};let s=((+C.conditions._shock)||0)+d;s=Math.max(0,Math.min(4,s));C.conditions._shock=s;touch();renderSheet();}
 
 // ─────────────────────────────────────────────────────
@@ -5528,16 +5474,6 @@ function _degrade(p,steps){
  p.status=order[Math.min(2,cur+steps)];
  return p.status;
 }
-function _pickPartWeighted(parts,effMap){
- const pool=[];
- parts.forEach((p,j)=>{
-  if(p.status==='dest')return;
-  const cover=(effMap[p.cat]||{}).cover||'internal';
-  const w=cover==='surface'?3:cover==='exposed'?2:1;
-  for(let k=0;k<w;k++)pool.push(j);
- });
- return pool.length?pool[Math.floor(Math.random()*pool.length)]:-1;
-}
 function applyVehicleHit(i){
  const v=C.vehicles[i]; if(!v)return;
  let dmg=Math.max(0,parseInt((document.getElementById('vhDmg'+i)||{}).value)||0);
@@ -6061,14 +5997,6 @@ function addCustom(type){const cdb=_cdb();const blanks={
 }
 function setCustom(type,i,field,val){const cdb=_cdb();if(!cdb[type][i])return;cdb[type][i][field]=val;syncCustomDB();touch();renderEquipment();}
 function delCustom(type,i){const cdb=_cdb();cdb[type].splice(i,1);syncCustomDB();touch();renderEquipment();}
-function inventoryCost(){let c=0;
- (C.weapons||[]).forEach(it=>{const d=DATA.weapons.find(x=>x.name===it.name);if(d)c+=(+d.cost||0)+modSum(it,'cost');});
- (C.armour||[]).forEach(it=>{const d=DATA.armour.find(x=>x.name===it.name);if(d)c+=(+d.cost||0)+modSum(it,'cost');});
- (C.shields||[]).forEach(it=>{const d=DATA.shields.find(x=>x.name===it.name);if(d)c+=(+d.cost||0)+modSum(it,'cost');});
- (C.explosives||[]).forEach(it=>{const d=EXPLOSIVES.find(x=>x.name===it.name);if(d)c+=((+d.cost||0)+modSum(it,'cost'))*(+it.qty||1);});
- (C.gear||[]).forEach(it=>{const d=UTILITY_GEAR.find(x=>x.name===it.name);if(d)c+=((+d.cost||0)+modSum(it,'cost'))*(+it.qty||1);});
- return c.toLocaleString();
-}
 function addCustomSkill(){_cdb().skills.push({name:'New Skill',attr:'IQ',diff:'A',notes:''});syncCustomDB();touch();renderSkills();}
 function setCustomSkill(i,f,v){const s=_cdb().skills[i];if(!s)return;s[f]=v;syncCustomDB();touch();renderSkills();}
 function delCustomSkill(i){_cdb().skills.splice(i,1);syncCustomDB();touch();renderSkills();}
@@ -6669,29 +6597,6 @@ function customDroidPartsSection(){
   <div class="legend-body"><div class="dim" style="font-size:10.5px">Build your own droid parts. They appear in the Droid Builder dropdowns alongside canon parts.</div>${rows}<button class="btn-add" onclick="addCustomDroidPart()">+ Custom Droid Part</button></details>`;
 }
 
-function customItemsSection(){
- const cdb=_cdb();
- const cats=['Knife','Shortsword','Broadsword','Two-Handed Sword','Saber','Lightsaber','Staff','Polearm','Spear','Two-Handed Axe/Mace','Brawling','Beam (Pistol)','Beam (Rifle)','Guns (Pistol)','Guns (Rifle)','Guns (Shotgun)','Guns (LAW)','Gunner','Liquid Projector','Crossbow','Thrown','Custom'];
- const I=(t,i,f,w,ph)=>`<label class="ci">${ph||f}<input class="cell" style="width:${w}px" value="${esc(cdb[t][i][f]??'')}" onchange="setCustom('${t}',${i},'${f}',this.value)"></label>`;
- const S=(t,i,f,opts,w)=>`<label class="ci">${f}<select class="cell" style="width:${w}px" onchange="setCustom('${t}',${i},'${f}',this.value)">${opts.map(o=>`<option${String(cdb[t][i][f])===String(o)?' selected':''}>${o}</option>`).join('')}</select></label>`;
- const del=(t,i)=>`<button class="btn-del" title="Delete" onclick="delCustom('${t}',${i})">✕</button>`;
- const wpn=cdb.weapons.map((w,i)=>`<div class="cust-card">${I('weapons',i,'name',130,'Name')}${S('weapons',i,'cls',['Melee','Ranged'],66)}${S('weapons',i,'cat',cats,118)}${I('weapons',i,'fixed',56,'Dmg')}${I('weapons',i,'dtype',64,'Type')}${I('weapons',i,'ad',30,'AD')}${I('weapons',i,'reach',40,'Reach')}${I('weapons',i,'parry',38,'Parry')}${I('weapons',i,'st',30,'ST')}${I('weapons',i,'wt',38,'Wt')}${I('weapons',i,'acc',30,'Acc')}${I('weapons',i,'r12',40,'Rng½')}${I('weapons',i,'rmax',46,'RngMax')}${I('weapons',i,'rof',30,'RoF')}${I('weapons',i,'shots',40,'Shots')}${I('weapons',i,'cost',54,'Cost')}${del('weapons',i)}</div>`).join('');
- const arm=cdb.armour.map((a,i)=>`<div class="cust-card">${I('armour',i,'name',150,'Name')}${I('armour',i,'drE',46,'DR(E)')}${I('armour',i,'drK',46,'DR(K)')}${I('armour',i,'loc',90,'Locations')}${I('armour',i,'wt',40,'Wt')}${I('armour',i,'cost',60,'Cost')}${del('armour',i)}</div>`).join('');
- const shl=cdb.shields.map((s,i)=>`<div class="cust-card">${I('shields',i,'name',160,'Name')}${I('shields',i,'dr',44,'DR')}${S('shields',i,'vs',['energy','kinetic','both'],74)}${I('shields',i,'cost',60,'Cost')}${del('shields',i)}</div>`).join('');
- const exp=cdb.explosives.map((e,i)=>{
-   const isGas=/gas/i.test(''+(e.gas||''));
-   const gasRow=isGas?`${I('explosives',i,'radius',64,'Cloud radius (m)')}${I('explosives',i,'onset',96,'Onset (e.g. 1 turn)')}${S('explosives',i,'odourless',['Detectable odour','Odourless'],132)}${S('explosives',i,'visible',['Visible cloud','Invisible (no cloud)'],140)}`:'';
-   return `<div class="cust-card">${I('explosives',i,'name',150,'Name')}${I('explosives',i,'dmg',110,'Damage')}${I('explosives',i,'wt',38,'Wt')}${I('explosives',i,'cost',54,'Cost')}${S('explosives',i,'gas',['Standard','Gas grenade'],122)}${gasRow}${del('explosives',i)}</div>`;
- }).join('');
- const ger=cdb.gear.map((g,i)=>`<div class="cust-card">${I('gear',i,'name',150,'Name')}${I('gear',i,'effect',240,'Effect')}${I('gear',i,'wt',40,'Wt')}${I('gear',i,'cost',60,'Cost')}${del('gear',i)}</div>`).join('');
- return `<div class="sec-head" style="margin-top:18px">Homebrew / Custom Items</div>
-  <div class="dim" style="font-size:11px;margin-bottom:6px">Anything you add here appears in the dropdowns above and feeds every automation — damage, parry, weight, DR by hit location, encumbrance and cost.</div>
-  <details open><summary>Custom Weapons (${cdb.weapons.length})</summary>${wpn}<button class="btn-add" onclick="addCustom('weapons')">+ Custom Weapon</button></details>
-  <details><summary>Custom Armour (${cdb.armour.length})</summary>${arm}<button class="btn-add" onclick="addCustom('armour')">+ Custom Armour</button></details>
-  <details><summary>Custom Shields (${cdb.shields.length})</summary>${shl}<button class="btn-add" onclick="addCustom('shields')">+ Custom Shield</button></details>
-  <details><summary>Custom Explosives (${cdb.explosives.length})</summary><div class="dim" style="font-size:10px;margin:2px 0 4px">Set <b>Gas grenade</b> to reveal cloud radius, onset delay, odour and visibility — these feed the equipped-card notes &amp; blast read-out.</div>${exp}<button class="btn-add" onclick="addCustom('explosives')">+ Custom Explosive</button></details>
-  <details><summary>Custom Gear (${cdb.gear.length})</summary>${ger}<button class="btn-add" onclick="addCustom('gear')">+ Custom Gear</button></details>`;
-}
 
 
 
@@ -6740,31 +6645,7 @@ function charDRAt(loc){
   return {e:drE, k:drK};
 }
 // Largest applicable armour Damage Divisor at a location for a given damage type
-function charArmourDD(loc,dtype){
-  const fKey=locFine(loc), cKey=fineBucket(fKey);
-  const d=(''+(dtype||'')).toLowerCase(); let best=1;
-  (C.armour||[]).forEach(it=>{
-    const a=DATA.armour.find(x=>x.name===it.name); if(!a||!a.dd||a.dd<=1)return;
-    if(armCover(it,a).indexOf(fKey)<0)return;
-    const vs=(''+(a.ddVs||'all')).toLowerCase(); let applies=false;
-    if(vs.indexOf('all')>=0) applies=true;
-    else if(vs.indexOf('cut')>=0 && d.indexOf('cut')>=0) applies=true;
-    else if(vs.indexOf('saber')>=0 && d==='saber') applies=true;
-    else if(vs.indexOf('disruptor')>=0 && d==='disruptor') applies=true;
-    if(applies && a.dd>best) best=a.dd;
-  });
-  return best;
-}
 // Does any covering armour have an energy-dispersing weave (halves energy AD)?
-function charArmourHalfEnergyAD(loc){
-  const fKey=locFine(loc), cKey=fineBucket(fKey);
-  let f=false;
-  (C.armour||[]).forEach(it=>{
-    const a=DATA.armour.find(x=>x.name===it.name); if(!a||!a.halfEnergyAD)return;
-    if(armCover(it,a).indexOf(fKey)<0)return; f=true;
-  });
-  return f;
-}
 
 function _charWeapons(){ return (C.weapons||[]).map((it,i)=>({it,i,w:effWeapon(it)})).filter(o=>o.w); }
 
@@ -6804,17 +6685,8 @@ function locPenalty(loc){
 }
 // energy DR (burn/ion/sonic/laser) vs kinetic DR (everything else)
 function weaponPhase(dtype){ const d=(''+(dtype||'')).toLowerCase(); return /burn|ion|son|laser|fire|plasma/.test(d)?'energy':'kinetic'; }
-function resolvePhase(sel,dtype){ if(sel==='energy'||sel==='kinetic')return sel; return weaponPhase(dtype); }
 // range penalty from the speed/range table
-function rangePenalty(yds){ if(yds==null||isNaN(yds))return 0; for(const pair of RANGE_MOD){ if(yds<=pair[0])return pair[1]; } return -17; }
 // location-adjusted wounding multiplier (vitals imp/pi ×3; skull ×4)
-function locWoundMult(loc,dtype,baseWM){
-  const d=(''+(dtype||'')).toLowerCase();
-  if(loc==='Vitals'&&/imp|pi/.test(d))return 3;
-  if(loc==='Skull'&&!/tox/.test(d))return Math.max(baseWM,4);
-  if(loc==='Eye'&&/imp|pi|burn|tib/.test(d))return Math.max(baseWM,4);
-  return baseWM;
-}
 // roll a weapon's damage (mirrors combatRollDamage but returns the result)
 function _acInt(x){ const n=parseInt((''+(x==null?'':x)).replace(/[^0-9-]/g,'')); return isNaN(n)?0:n; }
 function _acWeapons(){
@@ -8003,7 +7875,6 @@ function brandFamily(b){
  if(/field-craft/.test(lc)) return 'Field-Crafted';
  return 'Other';
 }
-function armourBrandFamily(a){ return brandFamily(a&&a.brand); }
 
 function brandColor(brand){
  if(!brand) return 'var(--text2)';
@@ -8125,80 +7996,6 @@ function applyBalancePatch(){
 }
 
 /* ═══ Auto-apply armour special bonuses to relevant skill rolls ═══ */
-function armourStealthBonus(){
- let total=0;
- (C.armour||[]).forEach(it=>{
-  const a=DATA.armour.find(x=>x.name===it.name);
-  if(a&&a.special&&a.special.stealthBonus)total+=+a.special.stealthBonus||0;
- });
- return total;
-}
-function armourForceMuffle(){
- let total=0;
- (C.armour||[]).forEach(it=>{
-  const a=DATA.armour.find(x=>x.name===it.name);
-  if(a&&a.special&&a.special.forceMuffle)total+=+a.special.forceMuffle||0;
- });
- return total;
-}
-function armourSensorDefeat(){
- let total=0;
- (C.armour||[]).forEach(it=>{
-  const a=DATA.armour.find(x=>x.name===it.name);
-  if(a&&a.special&&a.special.sensorDefeat)total+=+a.special.sensorDefeat||0;
- });
- return total;
-}
-function armourParryBonus(){
- let total=0;
- (C.armour||[]).forEach(it=>{
-  const a=DATA.armour.find(x=>x.name===it.name);
-  if(a&&a.special&&a.special.parryBonus)total+=+a.special.parryBonus||0;
- });
- return total;
-}
-function armourSTBonus(){
- let total=0;
- (C.armour||[]).forEach(it=>{
-  const a=DATA.armour.find(x=>x.name===it.name);
-  if(a&&a.special&&a.special.stBonus)total+=+a.special.stBonus||0;
- });
- return total;
-}
-function armourSealedLife(){
- let max=0;
- (C.armour||[]).forEach(it=>{
-  const a=DATA.armour.find(x=>x.name===it.name);
-  if(a&&a.special&&a.special.sealedLife)max=Math.max(max,+a.special.sealedLife||0);
- });
- return max;
-}
-function armourSelfRepair(){
- let max=0;
- (C.armour||[]).forEach(it=>{
-  const a=DATA.armour.find(x=>x.name===it.name);
-  if(a&&a.special&&a.special.selfRepair)max=Math.max(max,+a.special.selfRepair||0);
- });
- return max;
-}
-function armourHasTag(tag){
- return (C.armour||[]).some(it=>{
-  const a=DATA.armour.find(x=>x.name===it.name);
-  return a&&a.special&&a.special.tags&&a.special.tags.indexOf(tag)>=0;
- });
-}
-function armourCortosisShort(){
- return (C.armour||[]).some(it=>{
-  const a=DATA.armour.find(x=>x.name===it.name);
-  return a&&a.special&&a.special.cortosisShort;
- });
-}
-function armourSaberResistant(){
- return (C.armour||[]).some(it=>{
-  const a=DATA.armour.find(x=>x.name===it.name);
-  return a&&a.special&&a.special.saberResistant;
- });
-}
 function armourSpecialSummary(a){
  if(!a||!a.special)return '';
  const sp=a.special;const bits=[];
@@ -8385,61 +8182,15 @@ function _defResultHTML(){
 
 
 
-function _rollLogHTML(){
-  if(_rollLog.length<2) return '<div class="dim" style="padding:4px 0">No earlier rolls yet.</div>';
-  return _rollLog.slice(1).map(x=>`<div class="roll-line"><span class="rl-lbl">${esc(x.label)}</span><span class="rl-val ${x.cls}">${x.target!=null?x.sum+' '+x.outcome+(x.margin!=null?' ('+x.margin+')':''):x.sum}</span></div>`).join('');
-}
 
 function _refTable(title,head,rows){
   const hd=head?('<tr>'+head.map(x=>'<th>'+x+'</th>').join('')+'</tr>'):'';
   return `<details class="refsec" open><summary>${title}</summary><table class="reftbl">${hd}${rows}</table></details>`;
 }
-function _combatRefHTML(){
-  let h='';
-  h+=_refTable('Success &amp; Critical — 3d6 vs effective skill',null,
-    `<tr><td>Roll \u2264 skill</td><td>Success \u00b7 margin = skill \u2212 roll</td></tr>
-     <tr><td>Roll &gt; skill</td><td>Failure \u00b7 by roll \u2212 skill</td></tr>
-     <tr><td class="cs">3\u20134</td><td>Always critical success</td></tr>
-     <tr><td class="cs">5 / 6</td><td>Crit success if skill \u2265 15 / \u2265 16</td></tr>
-     <tr><td class="cf">17</td><td>Crit fail if skill \u2264 15 (else miss)</td></tr>
-     <tr><td class="cf">18 \u00b7 miss by 10+</td><td>Always critical failure</td></tr>`);
-  const man=[['Move','Up to full Move; no attack.'],['Change Posture','Stand / kneel / sit / lie / crouch.'],
-    ['Aim','Gain weapon Acc next turn; +1 if braced.'],['Evaluate','+1/turn to hit one foe (max +3), melee.'],
-    ['Attack','One attack, melee or ranged.'],['Feint','Quick Contest; win \u2192 foe \u2212margin to defend.'],
-    ['AoA (Determined)','+4 to hit (or +2 Acc ranged); no defense.'],['AoA (Strong)','+2 dmg (or +1/die); no defense.'],
-    ['AoA (Double)','Two attacks; no defense.'],['Move &amp; Attack','Move + attack at \u22124, max skill 9.'],
-    ['Committed Attack','+1\u20132 hit/reach; \u22122 defense, no retreat.'],['AoD (Increased)','+2 to one active defense.'],
-    ['AoD (Double)','Two different defenses each attack.'],['Concentrate','Maintain mental task / Force power.'],
-    ['Ready','Ready or reload a weapon / item.'],['Wait','Act on a chosen trigger.'],['Do Nothing','Recover from stun (HT roll).']];
-  h+=_refTable('Maneuvers',['Maneuver','Effect'], man.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join(''));
-  const def=[['Dodge','Basic Speed + 3 (+ dodge mods).'],['Parry','3 + weapon/unarmed skill \u00f7 2.'],
-    ['Block','3 + Shield/Cloak skill \u00f7 2.'],['Retreat','+3 Dodge / Boxing / Judo / Karate / fencing; +1 other.'],
-    ['Multiple parries','\u22121 cumulative each after the first (same hand).'],['Deceptive attack','\u22122 you = \u22121 foe defense.'],
-    ['Stunned','No active defense (or \u22124).']];
-  h+=_refTable('Active Defenses',['Defense','Value'], def.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join(''));
-  const post=[['Standing','0','0','full'],['Crouching','\u22122','0','full'],['Kneeling / Sitting','\u22122','\u22122','\u22122'],['Crawling / Lying','\u22124','\u22122','\u22123']];
-  h+=_refTable('Posture',['Posture','Melee','Ranged','Defense'], post.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join(''));
-  const note={'Skull':'\u00d74 wound; +2 DR','Face':'crit \u2192 knockout','Vitals':'\u00d73 imp/pi','Neck':'\u00d71.5\u20132; choke','Groin':'extra shock','Arm':'cripple at \u2153 HP','Leg':'cripple at \u2153 HP','Hand':'cripple','Foot':'cripple'};
-  h+=_refTable('Hit Location (to-hit)',['Location','Mod','Notes'], HIT_LOCS.map(l=>{let n='';Object.keys(note).forEach(k=>{if(l.indexOf(k)>=0)n=note[k];});return `<tr><td>${l}</td><td>${locPenalty(l)>=0?'+':''}${locPenalty(l)}</td><td>${n}</td></tr>`;}).join(''));
-  h+=_refTable('Range / Speed (m \u2192 to-hit)',['\u2264 m','Mod'], RANGE_MOD.map(pp=>`<tr><td>${pp[0]}</td><td>${pp[1]}</td></tr>`).join(''));
-  const rof=[['1\u20134','+0'],['5\u20138','+1'],['9\u201312','+2'],['13\u201316','+3'],['17\u201324','+4'],['25\u201349','+5'],['50\u201399','+6'],['100+','+7']];
-  h+=_refTable('Rate of Fire bonus',['RoF','Bonus'], rof.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join(''));
-  h+=_refTable('Wounding multipliers',['Type','\u00d7'], Object.keys(WOUND_MULT).map(k=>`<tr><td>${k}</td><td>${WOUND_MULT[k]}</td></tr>`).join(''));
-  const mods=[['Telegraphic attack','+4 hit \u00b7 foe +2 defense'],['Deceptive attack','\u22122 hit per \u22121 foe defense'],
-    ['Rapid Strike','\u22126 each (\u22123 with Weapon Master)'],['Targeted attack','\u2212 by hit location'],
-    ['Darkness / blind','\u221210 (see Blind Fighting)'],['Shock (per HP of a wound)','\u22121 to \u22124 next turn'],
-    ['Bad footing','\u22122 attack / \u22121 defense'],['Off-hand','\u22124 unless Ambidextrous']];
-  h+=_refTable('Common modifiers',['Situation','Mod'], mods.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join(''));
-  h+=_refTable('Reaction (3d6 + mod)',['Roll','Result'], REACTION_TABLE.map(r=>`<tr><td>${r.min<=0?'\u22640':r.min+'\u2013'+r.max}</td><td style="color:${r.col};font-weight:600">${r.name}</td></tr>`).join(''));
-  return h;
-}
 function _renderRollPanel(){ if(typeof renderRollDock==='function')renderRollDock(); }
 
 function toggleTheme(){ const on=document.body.classList.toggle('light'); try{localStorage.setItem('kotorTheme',on?'light':'dark');}catch(e){} const b=document.getElementById('themeBtn'); if(b)b.textContent=on?'☀ Light':'🌙 Dark'; }
-function _initTheme(){ try{ if(localStorage.getItem('kotorTheme')==='light'){document.body.classList.add('light'); const b=document.getElementById('themeBtn'); if(b)b.textContent='☀ Light';} }catch(e){} }
 
-function toggleRoller(){ /* removed */ }
-function initDiceRoller(){ /* dice & combat floating widget removed */ }
 /* dice & combat floating widget removed */
 
 /* ═══ TYPEABLE COMBOBOXES — input + custom filtered dropdown (substring match, keeps list open) ═══ */
@@ -8574,8 +8325,6 @@ function applyLayout(){
   }catch(e){}
   applyLayout._d=true;
 }
-function toggleArrange(){ /* free-canvas arrange removed */ }
-function resetLayout(){ try{ C.layout={}; if(typeof touch==='function')touch(); }catch(e){} }
 /* ── re-apply after every render (observer, loop-guarded) ── */
 function initLayoutEngine(){ /* free-canvas arrange removed (observer disabled) */ }
 
