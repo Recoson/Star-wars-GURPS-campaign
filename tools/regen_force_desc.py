@@ -26,6 +26,14 @@ def bounded(s, start):
             return s[start:start + m.end()]
     return s[start:start + 6000]
 
+def bounded_str(t, start):
+    depth = 0
+    for m in re.finditer(r'<(/?)div\b[^>]*>', t[start:]):
+        depth += -1 if m.group(1) == '/' else 1
+        if depth == 0:
+            return t[start:start + m.end()]
+    return ''
+
 def main():
     if not os.path.exists(COMP) or not os.path.exists(SH):
         sys.exit("Run from the repo root (compendium + sheet.html must be present).")
@@ -41,12 +49,19 @@ def main():
         if not nm:
             continue
         key = nm.group(1).strip().replace('&amp;', '&').replace('&rsquo;', '\u2019').replace('&lsquo;', '\u2018')
+        # compendium left-side stat block (FP, range, action/timing, defence, reaction, etc.)
+        sg = ''
+        sgi = blk.find('<div class="statgrid">')
+        if sgi >= 0:
+            sg = bounded_str(blk, sgi)
+        # prose body
         body = re.search(r'<div class="power-body">(.*?)</div>\s*</div>\s*$', blk, re.S)
         if body:
             h = body.group(1)
         else:
             parts = re.split(r'</div>\s*</div>', blk, maxsplit=1)
             h = re.sub(r'</div>\s*$', '', parts[1]).strip() if len(parts) > 1 else ''
+        h = (sg + h)
         h = drop_attr.sub('', h)
         h = re.sub(r'>\s+<', '><', h)
         h = re.sub(r'[ \t]{2,}', ' ', h).strip()
