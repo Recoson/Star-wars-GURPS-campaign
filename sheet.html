@@ -2452,6 +2452,10 @@ function eqOpts(list,sel){
  const groups=new Map();
  list.forEach(o=>{const g=o.grp;if(!groups.has(g))groups.set(g,[]);groups.get(g).push(o.name);});
  let out='<option value="">—</option>';
+ if(groups.size>1){
+  const _all=list.map(o=>o.name).sort((a,b)=>a.localeCompare(b));
+  out+=`<optgroup label="◆ All · A–Z">`+_all.map(n=>`<option value="${esc(n)}"${n===sel?' selected':''}>${esc(n)}</option>`).join('')+'</optgroup>';
+ }
  for(const [g,names] of groups){out+=`<optgroup label="${esc(g)}">`+names.slice().sort((a,b)=>a.localeCompare(b)).map(n=>`<option value="${esc(n)}"${n===sel?' selected':''}>${esc(n)}</option>`).join('')+'</optgroup>';}
  return out;
 }
@@ -3515,6 +3519,10 @@ function _catList(kind){
 function _grpOpts(list,placeholder){
   var groups={}; list.forEach(function(o){(groups[o.grp]=groups[o.grp]||[]).push(o.name);});
   var opts='<option value="">'+placeholder+'</option>';
+  if(Object.keys(groups).length>1){
+    var _all=list.map(function(o){return o.name;}).sort(function(a,b){return a.localeCompare(b);});
+    opts+='<optgroup label="◆ All · A–Z">'+_all.map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>';}).join('')+'</optgroup>';
+  }
   Object.keys(groups).sort().forEach(function(g){
     opts+='<optgroup label="'+esc(g)+'">'+groups[g].slice().sort(function(a,b){return a.localeCompare(b);}).map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>';}).join('')+'</optgroup>';
   });
