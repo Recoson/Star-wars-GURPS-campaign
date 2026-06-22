@@ -3547,12 +3547,15 @@ function _catList(kind){
   if(kind==='gear')return UTILITY_GEAR.map(function(g){return {name:g.name,grp:eqGrpForRec('gear',g)};});
   return [];
 }
-function _grpOpts(list,placeholder){
+var _eqCat={};
+function setEqCat(kind,c){_eqCat[kind]=c;_eqRerender();}
+// One view at a time: "All" shows every item once (grouped); a specific group shows only its items. No item is ever listed twice.
+function _grpOpts(list,placeholder,active){
   var groups={}; list.forEach(function(o){(groups[o.grp]=groups[o.grp]||[]).push(o.name);});
   var opts='<option value="">'+placeholder+'</option>';
-  if(Object.keys(groups).length>1){
-    var _all=list.map(function(o){return o.name;}).sort(function(a,b){return a.localeCompare(b);});
-    opts+='<optgroup label="◆ All · A–Z">'+_all.map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>';}).join('')+'</optgroup>';
+  if(active&&active!=='◆ All'&&groups[active]){
+    opts+=groups[active].slice().sort(function(a,b){return a.localeCompare(b);}).map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>';}).join('');
+    return opts;
   }
   Object.keys(groups).sort().forEach(function(g){
     opts+='<optgroup label="'+esc(g)+'">'+groups[g].slice().sort(function(a,b){return a.localeCompare(b);}).map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>';}).join('')+'</optgroup>';
@@ -3561,7 +3564,20 @@ function _grpOpts(list,placeholder){
 }
 function _addPick(kind){
   var noun=({weapons:'weapon',armour:'armour',shields:'shield',gear:'gear',explosives:'explosive'})[kind]||'item';
-  return '<select class="cell" style="min-width:210px" onchange="if(this.value){addGearDirect(\''+kind+'\',this.value);this.value=\'\'}">'+_grpOpts(_catList(kind),'+ Add '+noun+'…')+'</select>';
+  var list=_catList(kind);
+  var gs={}; list.forEach(function(o){if(o.grp)gs[o.grp]=1;});
+  var grps=Object.keys(gs).sort();
+  var active=_eqCat[kind]||'◆ All';
+  if(active!=='◆ All'&&!gs[active])active='◆ All';
+  var filt='';
+  if(grps.length>1){
+    filt='<select class="cell" title="Filter the list by faction / family" style="min-width:150px;margin-right:6px" onchange="setEqCat(\''+kind+'\',this.value)">';
+    filt+='<option value="◆ All"'+(active==='◆ All'?' selected':'')+'>◆ All '+kind+'</option>';
+    filt+=grps.map(function(g){return '<option value="'+esc(g)+'"'+(g===active?' selected':'')+'>'+esc(g)+'</option>';}).join('');
+    filt+='</select>';
+  }
+  var pick='<select class="cell" style="min-width:210px" onchange="if(this.value){addGearDirect(\''+kind+'\',this.value);this.value=\'\'}">'+_grpOpts(list,'+ Add '+noun+'…',active)+'</select>';
+  return filt+pick;
 }
 function addGearDirect(kind,name){
   if(!name)return;
@@ -5979,11 +5995,11 @@ function syncCustomDB(){
  function strip(arr){for(let i=arr.length-1;i>=0;i--)if(arr[i]&&arr[i]._custom)arr.splice(i,1);}
  // Equipment (existing)
  strip(DATA.weapons);strip(DATA.armour);strip(DATA.shields);strip(EXPLOSIVES);strip(UTILITY_GEAR);
- cdb.weapons.forEach(w=>DATA.weapons.push(Object.assign({cat:'Custom',cls:'Melee',swMod:null,thMod:null,fixed:'',dtype:'',ad:1,reach:'',parry:'0',st:'-',wt:0,acc:'',r12:'',rmax:'',rof:'',shots:'',rcl:'',cost:0,notes:'(homebrew)'},w,{_custom:true})));
- cdb.armour.forEach(a=>{const drE=+a.drE||0,drK=+a.drK||0;const ld={};['head','torso','arms','hands','legs','feet'].forEach(L=>ld[L]={e:drE,k:drK});DATA.armour.push(Object.assign({cat:'Custom',loc:'body',wt:0,cost:0,notes:'(homebrew)'},a,{drE,drK,locDR:ld,_custom:true}));});
- cdb.shields.forEach(s=>DATA.shields.push(Object.assign({dr:0,vs:'energy',cost:0,notes:'(homebrew)'},s,{_custom:true})));
- cdb.explosives.forEach(e=>{const rec=Object.assign({dmg:'',wt:0,cost:0},e,{_custom:true});if(/gas/i.test(''+(e.gas||''))){rec.type='Gas';const extra=(e.notes&&!/gas grenade/i.test(e.notes))?' '+e.notes:'';rec.notes=(_gasNotes(e)+extra).trim();}EXPLOSIVES.push(rec);});
- cdb.gear.forEach(g=>UTILITY_GEAR.push(Object.assign({effect:'',wt:0,cost:0},g,{_custom:true})));
+ cdb.weapons.filter(w=>!DATA.weapons.find(x=>x.name===w.name)).forEach(w=>DATA.weapons.push(Object.assign({cat:'Custom',cls:'Melee',swMod:null,thMod:null,fixed:'',dtype:'',ad:1,reach:'',parry:'0',st:'-',wt:0,acc:'',r12:'',rmax:'',rof:'',shots:'',rcl:'',cost:0,notes:'(homebrew)'},w,{_custom:true})));
+ cdb.armour.filter(a=>!DATA.armour.find(x=>x.name===a.name)).forEach(a=>{const drE=+a.drE||0,drK=+a.drK||0;const ld={};['head','torso','arms','hands','legs','feet'].forEach(L=>ld[L]={e:drE,k:drK});DATA.armour.push(Object.assign({cat:'Custom',loc:'body',wt:0,cost:0,notes:'(homebrew)'},a,{drE,drK,locDR:ld,_custom:true}));});
+ cdb.shields.filter(s=>!DATA.shields.find(x=>x.name===s.name)).forEach(s=>DATA.shields.push(Object.assign({dr:0,vs:'energy',cost:0,notes:'(homebrew)'},s,{_custom:true})));
+ cdb.explosives.filter(e=>!EXPLOSIVES.find(x=>x.name===e.name)).forEach(e=>{const rec=Object.assign({dmg:'',wt:0,cost:0},e,{_custom:true});if(/gas/i.test(''+(e.gas||''))){rec.type='Gas';const extra=(e.notes&&!/gas grenade/i.test(e.notes))?' '+e.notes:'';rec.notes=(_gasNotes(e)+extra).trim();}EXPLOSIVES.push(rec);});
+ cdb.gear.filter(g=>!UTILITY_GEAR.find(x=>x.name===g.name)).forEach(g=>UTILITY_GEAR.push(Object.assign({effect:'',wt:0,cost:0},g,{_custom:true})));
  // NEW: Skills
  stripSkills();
  cdb.skills.forEach(s=>{
