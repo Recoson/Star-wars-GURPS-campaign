@@ -816,6 +816,10 @@ html { scroll-behavior: auto; }
   .sidenav__parts li{ margin:0; }
   .sidenav__parts a{ display:block; padding:6px 16px 6px 30px; font-size:8.4pt; letter-spacing:.02em; color:#c3b8a2; text-decoration:none; line-height:1.3; }
   .sidenav__parts a:hover{ background:var(--acc,#7a1818); color:#fff; }
+  .sidenav__filterwrap{ padding:9px 12px 11px; background:#000; border-bottom:1px solid rgba(255,255,255,.10); }
+  .sidenav__filter{ width:100%; box-sizing:border-box; padding:7px 10px; font-family:'EB Garamond',Georgia,'Times New Roman',serif; font-size:10pt; color:#f4ede0; background:#161210; border:1px solid rgba(255,255,255,.16); border-radius:5px; outline:none; -webkit-appearance:none; appearance:none; }
+  .sidenav__filter::placeholder{ color:#8a8073; }
+  .sidenav__filter:focus{ border-color:#c9a44e; box-shadow:0 0 0 2px rgba(201,164,78,.25); }
 
 /* ===================== MASTER COVER ===================== */
 .master-cover {
@@ -2268,6 +2272,7 @@ window.addEventListener('DOMContentLoaded',function(){var b=document.getElementB
 <div class="sidenav-backdrop"></div>
 <nav class="sidenav" aria-label="Compendium navigation">
   <div class="sidenav__head"><a class="sidenav__title" href="#toc">☰ Contents</a><button class="sidenav__close" aria-label="Close navigation">×</button></div>
+  <div class="sidenav__filterwrap"><input id="sidenavFilter" class="sidenav__filter" type="search" inputmode="search" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Filter sections…" aria-label="Filter navigation sections"></div>
   <a class="sidenav__title" href="#sec-how-to-use" style="font-size:11pt;padding:2mm 0;display:block;">How to Use This Compendium</a>
   <details class="sidenav__book" style="--acc:#2e6f4f">
     <summary><span class="sidenav__booknum">Primer A</span> Creating a Character</summary>
@@ -20827,6 +20832,18 @@ Crew Surrender.</span> Often the cleanest outcome. Once boarders have secured th
   var cl=document.querySelector('.sidenav__close'); if(cl) cl.addEventListener('click',close);
   nav.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',close); });
   document.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
+  // --- section filter ---
+  var fbox=nav.querySelector('#sidenavFilter');
+  if(fbox){
+    var fbooks=[].slice.call(nav.querySelectorAll('.sidenav__book'));
+    var fopen=fbooks.map(function(b){return b.open;});
+    var fhow=nav.querySelector('a.sidenav__title[href="#sec-how-to-use"]');
+    var fn=function(s){return (s||'').toLowerCase();};
+    var fclear=function(){fbooks.forEach(function(b,i){b.style.display='';b.open=fopen[i];[].forEach.call(b.querySelectorAll('.sidenav__parts li'),function(li){li.style.display='';});});if(fhow)fhow.style.display='';};
+    var fapply=function(){var q=fn(fbox.value).trim();if(!q){fclear();return;}fbooks.forEach(function(b){var su=b.querySelector('summary');var tm=!!(su&&fn(su.textContent).indexOf(q)!==-1);var any=false;[].forEach.call(b.querySelectorAll('.sidenav__parts li'),function(li){var a=li.querySelector('a');var hit=tm||!!(a&&fn(a.textContent).indexOf(q)!==-1);li.style.display=hit?'':'none';if(hit)any=true;});if(any){b.style.display='';b.open=true;}else{b.style.display='none';}});if(fhow)fhow.style.display=(fn(fhow.textContent).indexOf(q)!==-1)?'':'none';};
+    fbox.addEventListener('input',fapply);
+    fbox.addEventListener('keydown',function(e){if(e.key==='Escape'){if(fbox.value){fbox.value='';fapply();e.stopPropagation();e.preventDefault();}}});
+  }
 })();
 </script>
 
