@@ -1729,40 +1729,6 @@ function buildLoot(el){
 function uid(){return 'x'+Math.random().toString(36).slice(2,9);}
 if(!STORE.party)STORE.party={size:4,blaster:true,melee:true,heavy:false,saber:false,disruptor:false,terrain:'mixed'};
 
-/* ---------- the honest swing read (replaces a fake threat number) ---------- */
-function capList(P){const c=[];if(P.heavy)c.push('heavy weapons');if(P.saber)c.push('a saber');if(P.disruptor)c.push('disruptors');if(P.melee)c.push('vibro/melee');return c.length?c.join(' / '):'limited tools';}
-function swingRead(units,P){
- const out=[];const ref=stdBlasterRef();
- const drs=units.map(u=>+u.block.attrs.DR||0);
- const immune=drs.filter(d=>d>=ref.max).length;
- const heavy=drs.filter(d=>d>=ref.avg&&d<ref.max).length;
- const canPierce=P.heavy||P.saber||P.disruptor||P.melee;
- // armour vs the party's tools, under AD(1)
- if(immune>0){
-  if(!P.heavy&&!P.saber&&!P.disruptor&&!P.melee)out.push({kind:'red',k:immune+(immune>1?' enemies are':' enemy is')+' blaster-proof.',t:'At DR \u2265'+ref.max+', standard blasters cannot wound them at all under your AD(1) rule (a '+ref.name+' tops out at '+ref.max+'). With nothing but blasters, your party literally cannot hurt these \u2014 they need a heavy weapon, a saber, or to close to vibro/melee.'});
-  else out.push({kind:'amber',k:immune+' blaster-proof enemy'+(immune>1?'ies':''),t:'DR \u2265'+ref.max+' shrugs standard blasters entirely; only your '+capList(P)+' can bite. Point those at the armoured ones and don\u2019t waste blaster fire on them.'});
- }else if(heavy>0){
-  out.push({kind:'amber',k:heavy+' heavily-armoured enemy'+(heavy>1?'ies':''),t:'DR ~'+ref.avg+'+ means standard blasters mostly bounce (a '+ref.name+' averages '+ref.avg+'); only strong rolls land. '+(canPierce?'Lead with your '+capList(P)+'.':'Concentrate fire, use grenades, or close to melee.')});
- }
- // enemy offence vs an armoured party
- const saberFoes=units.filter(u=>/saber/i.test(u.block.weapons||'')).length;
- const darkCasters=units.filter(u=>u.block.force==='dark').length;
- const heavyFoes=units.filter(u=>/disruptor|cannon|repeating|heavy blaster rifle|missile|rocket|lance|plasma/i.test(u.block.weapons||'')).length;
- if(saberFoes)out.push({kind:'red',k:saberFoes+' lightsaber'+(saberFoes>1?'s':'')+' on the field',t:'They parry and deflect blaster bolts \u2014 ranged fire into them is unreliable. Flank, swarm, use grenades or area effects, or force a melee where deflection won\u2019t save them.'});
- if(darkCasters)out.push({kind:'red',k:darkCasters+' dark-side caster'+(darkCasters>1?'s':''),t:'Lightning and drains ignore armour DR and hit Will/HT. Your ruleset drops morality, so nothing throttles them \u2014 expect them spent freely. Break line of sight and close the gap fast.'});
- if(heavyFoes&&!saberFoes)out.push({kind:'amber',k:heavyFoes+' enemy with armour-piercing / heavy weapons',t:'Disruptors, heavy blasters and the like punch through plate \u2014 these threaten even an armoured PC. Use hard cover, don\u2019t trust DR alone.'});
- if(!saberFoes&&!darkCasters&&!heavyFoes)out.push({kind:'note',k:'Enemy fire is standard.',t:'If your party wears DR \u2265'+ref.avg+', the same AD(1) rule blunts them right back \u2014 their blasters mostly bounce off your plate. Their edge here is numbers, not penetration.'});
- // action economy
- const n=units.length;
- if(P.size){const ratio=n/P.size;
-  if(ratio>=2)out.push({kind:'amber',k:'Outnumbered \u2014 '+n+' vs '+P.size,t:'Action economy favours them at about '+(Math.round(ratio*10)/10)+'\u00d7 the attacks per round. Funnel them through doorways or cover, lean on area effects, and stay out of the open.'});
-  else if(ratio<=0.5)out.push({kind:'note',k:'You outnumber them \u2014 '+P.size+' vs '+n,t:'Focus-fire to drop attackers early and tilt the action economy further your way.'});
- }
- // terrain
- if(P.terrain==='open')out.push({kind:'note',k:'Open ground.',t:'Range and numbers dominate \u2014 blasters and grenades shine, and melee/saber foes must cross the killing field to reach you.'});
- else if(P.terrain==='tight')out.push({kind:'note',k:'Tight quarters.',t:'Corridors negate ranged advantage and favour melee, sabers and ambush. A blaster line gets a shot or two before contact.'});
- return out;
-}
 
 /* ---------- encounter composer ---------- */
 let lastEncounter=null, encLines=[];
@@ -1774,11 +1740,10 @@ function genEncounter(){if(!encLines.length){toast('Add at least one group first
  const units=[];encLines.forEach(L=>{for(let i=0;i<L.count;i++){const arch=L.archKey==='surprise'?pick(ARCHE_KEYS):L.archKey;const cp=TIER_CP[L.tier]||500;const block=genBlock(arch,cp);const species=speciesForArch(arch);const nm=npcName(species);block.desc=npcLook(block,species,nm);units.push({name:nm,species,block});}});
  lastEncounter={units};renderEncounter();}
 function renderEncounter(){const host=$('encOut');if(!host)return;if(!lastEncounter||!lastEncounter.units.length){host.innerHTML='';return;}
- const units=lastEncounter.units;const reads=swingRead(units,STORE.party);
+ const units=lastEncounter.units;
  const actions='<div class="fg-actions"><button class="btn mini" id="encCombat">\u2192 Send to Combat</button><button class="btn mini" id="encKeep">\uD83D\uDCCC Keep all</button><button class="btn ghost mini" id="encReroll">\u27F3 Reroll</button></div>';
- const swing='<div class="swing"><div class="sw-hd">What makes this fight swing</div>'+(reads.length?reads.map(r=>flagHTML(r)).join(''):'<div class="muted" style="padding-bottom:8px">A straightforward fight \u2014 no special swing factors. It comes down to dice and positioning.</div>')+'</div>';
  const grid='<div class="enc-units">'+units.map(u=>{const b=u.block;const w=(b.weapons||'').split('\n')[0]||'';const f=b.force==='dark'?' \u00b7 <span style="color:var(--red)">dark</span>':b.force==='light'?' \u00b7 <span style="color:var(--grn)">light</span>':'';return '<div class="enc-unit"><div class="eu-name">'+(u.role==='leader'?'\u2605 ':'')+esc(u.name)+'</div><div class="eu-meta">'+esc(b.archetype)+' \u00b7 '+esc(b.tier)+' \u00b7 '+esc(u.species)+' \u00b7 DR '+b.attrs.DR+f+'</div><div class="eu-line">'+esc(w)+'</div>'+(b.signature?'<div class="eu-desc" style="color:#caa24a">carries '+esc(b.signature)+'</div>':'')+'<div class="eu-desc">'+esc(b.desc||npcLook(b,u.species,u.name))+'</div></div>';}).join('')+'</div>';
- host.innerHTML=(lastEncounter.banner||'')+actions+swing+grid;
+ host.innerHTML=(lastEncounter.banner||'')+actions+grid;
  $('encCombat').onclick=encToCombat;$('encKeep').onclick=encKeepAll;$('encReroll').onclick=genEncounter;}
 function encKeepAll(){if(!lastEncounter||!lastEncounter.units.length){toast('Generate an encounter first');return;}
  lastEncounter.units.forEach(u=>{const b=u.block;STORE.kept.unshift({id:'k'+uid(),name:u.name,species:u.species,arch:b.archetype,tier:b.tier,cp:b.cp,force:b.force,block:b});});
