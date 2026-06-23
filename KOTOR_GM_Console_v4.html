@@ -1727,7 +1727,6 @@ function buildLoot(el){
    Encounter composer · honest "what makes this fight swing" read · tracker
    =================================================================== */
 function uid(){return 'x'+Math.random().toString(36).slice(2,9);}
-if(!STORE.party)STORE.party={size:4,blaster:true,melee:true,heavy:false,saber:false,disruptor:false,terrain:'mixed'};
 
 
 /* ---------- encounter composer ---------- */
@@ -2088,9 +2087,7 @@ function switchCombatSub(sub){const wrap=$('cbSub');if(!wrap)return;[...wrap.chi
 
 /* ---------- build the space ---------- */
 function buildCombat(el){
- const P=STORE.party;
- const cap=(k,label,on)=>'<label class="cap'+(on?' on':'')+'" data-cap="'+k+'"><input type="checkbox" '+(on?'checked':'')+'>'+label+'</label>';
- el.innerHTML='<div class="space-head"><h2>Encounter &amp; Combat</h2><div class="lede">Compose a group, get an honest read on what makes the fight swing under your house rules, then run it on the initiative tracker with real defences. No fake threat score \u2014 GURPS doesn\u2019t have one.</div></div>'
+ el.innerHTML='<div class="space-head"><h2>Encounter &amp; Combat</h2><div class="lede">Roll a warband or hand-build an encounter, then run it on the initiative tracker with real defences.</div></div>'
  +'<div class="subnav" id="cbSub"><button class="on" data-sub="encounter">Encounter</button><button data-sub="combat">Combat tracker</button></div>'
  // ---- encounter panel ----
  +'<div class="subpanel on" id="cs-encounter">'
@@ -2104,11 +2101,6 @@ function buildCombat(el){
   +'</div>'
   +'<div class="row"><button class="btn primary" id="wbGo">\u2692 Generate warband</button><span class="muted" style="font-size:11px;align-self:center;padding-left:6px">Gear cap drives armour \u2014 the lever that decides jackets vs beskar.</span></div>'
  +'</div>'
-  +'<div class="party-box"><div class="pb-hd">Your party \u2014 feeds the swing read</div><div class="party-row">'
-   +'<div class="field"><span class="lab">Party size</span><input type="number" id="pSize" value="'+(P.size||4)+'" style="width:74px"></div>'
-   +'<div class="cap-toggles">'+cap('blaster','Standard blasters',P.blaster)+cap('melee','Vibro / melee',P.melee)+cap('heavy','Heavy weapons',P.heavy)+cap('saber','Lightsaber',P.saber)+cap('disruptor','Disruptor',P.disruptor)+'</div>'
-   +'<div class="field"><span class="lab">Terrain</span><select id="pTerrain"><option value="open">Open ground</option><option value="mixed">Mixed</option><option value="tight">Tight quarters</option></select></div>'
-  +'</div></div>'
   +'<div class="controls">'
    +'<div class="field"><span class="lab">Count</span><select id="encCount">'+[1,2,3,4,5,6,8,10].map(n=>'<option value="'+n+'"'+(n===3?' selected':'')+'>'+n+(n===1?' foe':' foes')+'</option>').join('')+'</select></div>'
    +'<div class="field"><span class="lab">Archetype</span><select id="encArch"><option value="surprise">\u2014 random \u2014</option>'+ARCHE_KEYS.map(k=>'<option>'+esc(k)+'</option>').join('')+'</select></div>'
@@ -2128,11 +2120,6 @@ function buildCombat(el){
    +'<button class="btn ghost mini" id="cbClear">clear</button>'
   +'</div><div id="cbRows"></div>'
  +'</div>';
- // wire party profile
- $('pSize').onchange=e=>{STORE.party.size=+e.target.value||0;saveStore();if(lastEncounter)renderEncounter();};
- $('pTerrain').value=P.terrain||'mixed';
- $('pTerrain').onchange=e=>{STORE.party.terrain=e.target.value;saveStore();if(lastEncounter)renderEncounter();};
- el.querySelectorAll('.party-box .cap').forEach(l=>{l.querySelector('input').onchange=ev=>{STORE.party[l.dataset.cap]=ev.target.checked;l.classList.toggle('on',ev.target.checked);saveStore();if(lastEncounter)renderEncounter();};});
  // wire encounter
  $('encAdd').onclick=()=>{const c=+$('encCount').value||1;const ak=$('encArch').value;const tier=$('encTier').value;encLines.push({count:c,arch:ak==='surprise'?'(random)':ak,archKey:ak,tier:tier});renderEncLines();};
  $('encGen').onclick=genEncounter;$('encClear').onclick=()=>{encLines=[];renderEncLines();}; if($('wbGo'))$('wbGo').onclick=wbGen;
