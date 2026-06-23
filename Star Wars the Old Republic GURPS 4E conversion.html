@@ -1793,7 +1793,7 @@ html { scroll-behavior: auto; }
 .statgrid .stat-sum{grid-column:1/-1;font-style:italic;font-size:8.4pt;line-height:1.32;color:inherit;opacity:.9;margin:0 0 1.8mm;padding-bottom:1.5mm;border-bottom:1px solid rgba(128,120,100,.35);}
 
 /* --- Perf: skip layout/paint of offscreen books (find-in-page & #anchors still work) --- */
-@media screen { .book { content-visibility: auto; contain-intrinsic-size: auto 4000px; } }
+@media screen { .book { content-visibility: visible; } } /* was content-visibility:auto w/ 4000px intrinsic estimate. Each book is ~10-80k px tall, so the estimate was off by 5-20x; jumping to a #anchor computed scroll pos from those wrong estimates, then corrected as books rendered -> the nav-click lag. Books now always laid out, so anchor offsets are exact. Heavy .power/.tbl-scroll cards below STAY deferred (good estimates). */
 /* --- Perf: also skip offscreen power cards & reference tables *within* a visible book.
    ~194 power cards (the Force book) + 285 wrapped reference tables are the bulk of the DOM;
    this keeps only the on-screen ones laid out/painted while scrolling. #anchors &
