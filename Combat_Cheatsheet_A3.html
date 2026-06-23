@@ -77,11 +77,11 @@
   .lead{font-size:5.45pt; line-height:1.24; color:var(--soft); padding:.6mm 1.4mm;}
   .lead b{color:var(--ink);}
   p.note{font-size:5.4pt; line-height:1.24; color:var(--soft); padding:.55mm 1.4mm;}
-  .sw{display:inline-block; font-family:"Oswald"; font-weight:600; font-size:4.9pt; letter-spacing:.06em;
+  .sw{display:inline-block; font-family:"Oswald"; font-weight:600; font-size:5.5pt; letter-spacing:.06em;
     background:var(--steel); color:#fff; padding:.1mm .6mm; border-radius:.4mm; vertical-align:.4mm;}
-  .ho{display:inline-block; font-family:"Oswald"; font-weight:600; font-size:4.9pt; letter-spacing:.06em;
+  .ho{display:inline-block; font-family:"Oswald"; font-weight:600; font-size:5.5pt; letter-spacing:.06em;
     background:var(--house); color:#fff; padding:.1mm .6mm; border-radius:.4mm; vertical-align:.4mm;}
-  .ma{display:inline-block; font-family:"Oswald"; font-weight:600; font-size:4.9pt; letter-spacing:.04em;
+  .ma{display:inline-block; font-family:"Oswald"; font-weight:600; font-size:5.5pt; letter-spacing:.04em;
     background:#6a6358; color:#fff; padding:.1mm .5mm; border-radius:.4mm; vertical-align:.4mm;}
   .upd{background:#fff6c9; box-shadow:inset 0 0 0 .25mm var(--gold);}
   .flag{display:inline-block; font-family:"Oswald"; font-weight:600; font-size:4.9pt; letter-spacing:.05em;
@@ -146,12 +146,12 @@
 
   /* damage-resolution pipeline */
   .pipe{padding:.7mm 1.4mm .9mm; counter-reset:step;}
-  .pipe .step{position:relative; padding:.46mm 0 .46mm 5.2mm; font-size:5.32pt; line-height:1.2;
+  .pipe .step{position:relative; padding:.52mm 0 .52mm 6.7mm; font-size:6.05pt; line-height:1.26;
     border-bottom:.2mm solid var(--line2);}
   .pipe .step:last-child{border-bottom:none;}
   .pipe .step:before{counter-increment:step; content:counter(step);
-    position:absolute; left:0; top:.45mm; width:3.6mm; height:3.6mm; line-height:3.6mm; text-align:center;
-    font-family:"Oswald"; font-weight:600; font-size:4.9pt; color:#fff; background:var(--crimson); border-radius:50%;}
+    position:absolute; left:0; top:.5mm; width:4.8mm; height:4.8mm; line-height:4.8mm; text-align:center;
+    font-family:"Oswald"; font-weight:700; font-size:6.8pt; color:#fff; background:var(--crimson); border-radius:50%;}
   .pipe .step b{color:var(--crimson-d);}
   .pipe .step .f{font-family:"Oswald"; font-weight:600; color:var(--ink); letter-spacing:.01em;}
   .pipe .formula{font-family:"Oswald"; font-weight:500; color:var(--steel); white-space:nowrap;}
@@ -217,9 +217,9 @@ table.flow th{font-size:4.45pt; padding:.26mm .88mm;}
 .seqbar .sh{font-family:"Oswald",sans-serif;font-weight:700;text-transform:uppercase;font-size:5.6pt;
   letter-spacing:.06em;color:#fff;background:linear-gradient(160deg,var(--crimson-d),var(--crimson));
   padding:1mm 2.2mm;display:flex;align-items:center;text-align:center;line-height:1.05;}
-.seqbar .sx{flex:1;padding:.8mm 1.5mm;font-size:5.15pt;line-height:1.16;color:var(--soft);
-  border-left:.25mm solid var(--line2);display:flex;flex-direction:column;justify-content:center;}
-.seqbar .sx .num{font-family:"Oswald",sans-serif;font-weight:700;color:var(--crimson-d);font-size:6.6pt;margin-bottom:.3mm;}
+.seqbar .sx{flex:1;padding:.9mm 1.7mm;font-size:6pt;line-height:1.22;color:var(--soft);
+  border-left:.25mm solid var(--line2);display:block;}
+.seqbar .sx .num{font-family:"Oswald",sans-serif;font-weight:700;color:var(--crimson-d);font-size:12pt;line-height:.9;float:left;margin:.1mm 1.5mm 0 0;}
 .seqbar .sx b{color:var(--ink);}
 .aoe{display:grid;grid-template-columns:1.02fr 1fr;gap:1.4mm;padding:1mm 1.4mm .8mm;align-items:start;}
 .aoe svg{width:100%;height:auto;display:block;}
@@ -229,6 +229,9 @@ table.flow th{font-size:4.45pt; padding:.26mm .88mm;}
 <style>.page img{max-height:64mm!important;}.col{gap:.9mm;} .grid{gap:1.5mm;}p.note{padding:.42mm 1.4mm;}.aoe{padding:.7mm 1.2mm .5mm;} .aoe svg{max-height:62mm;margin:0 auto;}.subhead{padding:.32mm 1.4mm .25mm;}</style>
 <style>/* REV7 — bigger hit-location plate, slimmer borders */.sec{border-width:.18mm;}.figwrap{border:.1mm solid var(--line)!important;padding:.35mm!important;box-shadow:none!important;border-radius:.5mm;}.figwrap .cap{margin-bottom:.3mm;font-size:5pt;}.figwrap .cap span{font-size:4.5pt;}.figwrap img{max-height:126mm!important;}</style>
 <style>/* P3 runs lighter — give it bigger, more readable type + a large blast diagram */.p3big table:not(.flow){font-size:6pt;}.p3big table:not(.flow) td{padding:.6mm 1.25mm;}.p3big .note{font-size:5.95pt;line-height:1.32;}.p3big .subhead{font-size:5.6pt;padding:.5mm 1.4mm .4mm;}.p3big h2{font-size:7.8pt;}.p3big .aoe{padding:1.2mm 1.6mm 1mm;}.p3big .aoe svg{max-height:120mm!important;}</style>
+<style>/* readability pass: page 2 had ~264px dead space; page-1 reference cols had slack */
+.p2big table:not(.flow){font-size:6.4pt;}.p2big table:not(.flow) td,.p2big table:not(.flow) th{padding:.5mm 1.1mm;line-height:1.18;}.p2big .note{font-size:6.3pt;line-height:1.3;padding:.55mm 1.5mm .42mm;}.p2big .sec>h2{font-size:7.7pt;padding:.6mm 1.7mm .5mm;}.p2big .subhead{font-size:6pt;}.p2big .pipe .step{font-size:6.3pt;}
+.page:first-of-type .grid>.col:nth-child(3) table:not(.flow),.page:first-of-type .grid>.col:nth-child(4) table:not(.flow){font-size:5.75pt;}.page:first-of-type .grid>.col:nth-child(3) table:not(.flow) td,.page:first-of-type .grid>.col:nth-child(4) table:not(.flow) td{padding:.33mm 1mm;line-height:1.14;}.page:first-of-type .grid>.col:nth-child(3) .note,.page:first-of-type .grid>.col:nth-child(4) .note{font-size:5.72pt;}</style>
 <style>/* REV8 — condense page 1 after REACT joined the turn-economy stack (readability kept) */
 .page:first-of-type .col{gap:.8mm;}
 .page:first-of-type .sec > h2{padding:.45mm 1.55mm .4mm; font-size:7.15pt;}
@@ -465,7 +468,7 @@ table.flow th{font-size:4.45pt; padding:.26mm .88mm;}
         </table>
       </div></div></div><div class="foot"><div>Source of truth: <b>Star Wars the Old Republic — GURPS 4E Conversion</b> (KOTOR). Where this sheet and the compendium differ, the compendium wins.</div><div><span class="flag">PAGE 1 / 3</span> REV 5 · condensed combat-flow layout · ranged+thrown · damage+area+velocity</div></div>
 </div>
-<div class="page">
+<div class="page p2big">
 <div class="masthead"><div class="title">Ranged Combat &amp; Quick Reference<small>GURPS 4E · KNIGHTS OF THE OLD REPUBLIC · SIDE A · PAGE 2 OF 3</small></div><div class="subtitle">Everything you fire — plus the personal-combat quick-reference that didn’t fit Page 1.<br>Effective skill = weapon skill + size + speed − range − cover / posture / light<br><span class="flag">REV 4</span> Shooting + weapon stats · combinations, Force defence, saber lock &amp; status effects</div></div><div class="seqbar"><div class="sh">ONE<br>SHOT</div><div class="sx"><span class="num">①</span><b>Aim (optional).</b> Adds +Acc to next turn’s shot.</div><div class="sx"><span class="num">②</span><b>Effective skill =</b> weapon skill <b>+ size + speed − range</b> − cover/posture/light.</div><div class="sx"><span class="num">③</span><b>Roll 3d6 ≤ skill.</b></div><div class="sx"><span class="num">④</span><b>Target reacts:</b> Dodge, dive or take cover. No Parry/Block vs bolts (except saber Deflect).</div><div class="sx"><span class="num">⑤</span><b>Burst hits =</b> 1 + ⌊margin ÷ Rcl⌋ bolts (cap RoF).</div><div class="sx"><span class="num">⑥</span><b>Each bolt:</b> −cover DR, then armour DR ÷ AD.</div></div><div class="grid"><div class="col"><div class="sec steel">
         <h2><span class="n">REACT</span> Reactions &mdash; Everything You Can Do on Someone Else&rsquo;s Turn</h2>
         <p class="note">These happen <b>out of turn</b>, triggered by an attack, at <b>no maneuver cost</b>. First your <b>active defence</b> &mdash; <b>one per attack you can perceive</b> (none vs a rear / surprise hit); each <i>extra</i> defence that turn is <b>&minus;4 cumulative</b> (&minus;2 with a Trained-by-a-Master / Weapon-Master skill). You also get <b>1 Special Reaction</b> (Force) that does <b>not</b> spend the defence slot.</p>
