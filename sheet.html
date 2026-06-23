@@ -4920,7 +4920,7 @@ function renderVehicles(){ migrateVehicleStats();
    <details style="margin-top:6px"><summary style="font-size:11px;color:var(--cyan);cursor:pointer">stats &amp; notes</summary>
    <table class="g" style="margin-top:4px;font-size:10.5px">
     <tr><td class="label" style="width:78px">Hull DR</td><td><input class="cell" value="${esc(v.hullDR||'')}" onchange="setVehicleField(${i},'hullDR',this.value)"></td>
-        <td class="label" style="width:78px">Shield DR</td><td><input class="cell" value="${esc(v.shieldDR||'')}" onchange="setVehicleField(${i},'shieldDR',this.value)"></td></tr>
+        <td class="label" style="width:78px">Shield SP</td><td><input class="cell" value="${esc(v.shieldDR||'')}" onchange="setVehicleField(${i},'shieldDR',this.value)"></td></tr>
     <tr><td class="label" title="Handling: maneuver & Dodge modifier. Blank = class default.">Hnd</td><td><input class="cell" value="${v.hnd==null?'':esc(''+v.hnd)}" placeholder="${vehicleHnd(v)}" onchange="setVehicleField(${i},'hnd',this.value)"></td></tr>
     <tr><td class="label">Crew + Pax</td><td><input class="cell" value="${esc(v.crew||'')}" onchange="setVehicleField(${i},'crew',this.value)"></td>
         <td class="label">Fuel (RF/HF)</td><td><input class="cell" value="${esc(v.fuel||'')}" onchange="setVehicleField(${i},'fuel',this.value)"></td></tr>
