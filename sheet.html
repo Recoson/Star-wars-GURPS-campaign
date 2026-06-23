@@ -5292,26 +5292,26 @@ function charBestPilot(){
  return best;
 }
 const SHIP_WEAPONS=[
- {name:'Light laser cannon',dmg:'6dx2',ap:0,kind:'laser',acc:6,band:'Knife/Close',rof:3,rcl:1,mount:'S'},
- {name:'Laser cannon',dmg:'6dx3',ap:0,kind:'laser',acc:6,band:'Close',rof:2,rcl:1,mount:'M'},
- {name:'Heavy laser cannon',dmg:'6dx4',ap:5,kind:'laser',acc:7,band:'Close/Med',rof:1,rcl:1,mount:'L'},
- {name:'Quad laser cannon',dmg:'6dx3',ap:0,kind:'laser',rof:4,acc:5,band:'Knife/Close',rcl:1,mount:'M'},
- {name:'Rapid-fire burst laser',dmg:'6dx2',ap:0,kind:'laser',rof:8,acc:5,band:'Knife',rcl:2,mount:'S'},
- {name:'Ion cannon',dmg:'6dx2',ap:0,kind:'ion',acc:6,band:'Close',rof:2,rcl:1,mount:'M'},
- {name:'Concussion missile',dmg:'6dx4',ap:10,kind:'missile',acc:5,band:'Close/Med',guided:1,rof:1,rcl:1,mount:'M',speed:'fast'},
- {name:'Proton torpedo',dmg:'6dx6',ap:20,kind:'missile',acc:6,band:'Med/Long',guided:1,rof:1,rcl:1,mount:'L',speed:'slow'},
- {name:'Cluster missile',dmg:'3dx3',ap:0,kind:'missile',rof:4,acc:4,band:'Close/Med',guided:1,rcl:1,mount:'M',speed:'fast'},
- {name:'Ion missile',dmg:'6dx2',ap:0,kind:'ion',acc:5,band:'Close/Med',guided:1,warhead:1,rof:1,rcl:1,mount:'M',speed:'fast'},
+ {name:'Light laser cannon',flat:40,dmg:'6dx2',ap:0,kind:'laser',acc:6,band:'Knife/Close',rof:3,rcl:1,mount:'S'},
+ {name:'Laser cannon',flat:50,dmg:'6dx3',ap:0,kind:'laser',acc:6,band:'Close',rof:2,rcl:1,mount:'M'},
+ {name:'Heavy laser cannon',flat:60,dmg:'6dx4',ap:5,kind:'laser',acc:7,band:'Close/Med',rof:1,rcl:1,mount:'L'},
+ {name:'Quad laser cannon',flat:50,dmg:'6dx3',ap:0,kind:'laser',rof:4,acc:5,band:'Knife/Close',rcl:1,mount:'M'},
+ {name:'Rapid-fire burst laser',flat:40,dmg:'6dx2',ap:0,kind:'laser',rof:8,acc:5,band:'Knife',rcl:2,mount:'S'},
+ {name:'Ion cannon',flat:40,dmg:'6dx2',ap:0,kind:'ion',acc:6,band:'Close',rof:2,rcl:1,mount:'M'},
+ {name:'Concussion missile',flat:80,dmg:'6dx4',ap:10,kind:'missile',acc:5,band:'Close/Med',guided:1,rof:1,rcl:1,mount:'M',speed:'fast'},
+ {name:'Proton torpedo',flat:100,dmg:'6dx6',ap:20,kind:'missile',acc:6,band:'Med/Long',guided:1,rof:1,rcl:1,mount:'L',speed:'slow'},
+ {name:'Cluster missile',flat:50,dmg:'3dx3',ap:0,kind:'missile',rof:4,acc:4,band:'Close/Med',guided:1,rcl:1,mount:'M',speed:'fast'},
+ {name:'Ion missile',flat:40,dmg:'6dx2',ap:0,kind:'ion',acc:5,band:'Close/Med',guided:1,warhead:1,rof:1,rcl:1,mount:'M',speed:'fast'},
  {name:'EMP missile',dmg:'',ap:0,kind:'emp',acc:5,band:'Close/Med',guided:1,fx:'Area systems-kill — shields, drones, mines and unshielded systems in the burst go dark (no hull damage). Droids in the volume roll HT or shut down; shielded military systems resist on HT+2.',rof:1,rcl:1,mount:'M',speed:'fast'},
- {name:'Seismic charge / mine',dmg:'6dx6',ap:10,kind:'missile',acc:3,band:'Knife',rof:1,rcl:1,mount:'L',speed:'mine'},
- {name:'Thermite torpedo',dmg:'6dx4',ap:80,kind:'missile',acc:6,band:'Med',guided:1,rof:1,rcl:1,mount:'L',speed:'slow'},
+ {name:'Seismic charge / mine',flat:120,dmg:'6dx6',ap:10,kind:'missile',acc:3,band:'Knife',rof:1,rcl:1,mount:'L',speed:'mine'},
+ {name:'Thermite torpedo',flat:80,dmg:'6dx4',ap:80,kind:'missile',acc:6,band:'Med',guided:1,rof:1,rcl:1,mount:'L',speed:'slow'},
  {name:'Sabotage probe',dmg:'',ap:0,kind:'probe',acc:4,band:'Knife',fx:'Latches on — cumulative −1 per turn to the target&#39;s Gunnery and Sensor rolls (max −4) until pried off (Mechanics or EVA crew, 2 turns).',rof:1,rcl:1,mount:'M',speed:'fast'},
- {name:'Slug railgun',dmg:'6dx6',ap:20,kind:'rail',acc:8,band:'Long',rof:1,rcl:4,mount:'L'},
- {name:'Ion railgun',dmg:'6dx3',ap:5,kind:'ion',acc:8,band:'Long',rof:1,rcl:1,mount:'L'},
- {name:'Plasma railgun',dmg:'6dx4',ap:10,kind:'rail',acc:7,band:'Med/Long',rof:1,rcl:4,mount:'L'},
- {name:'Point-defence laser',dmg:'6dx2',ap:0,kind:'pd',acc:4,band:'Knife',rof:3,rcl:2,mount:'S'},
- {name:'Turbolaser (light)',dmg:'6dx10',ap:0,kind:'capital',acc:8,band:'Med/Long',rof:2,rcl:4,mount:'C'},
- {name:'Turbolaser (heavy)',dmg:'6dx20',ap:0,kind:'capital',acc:9,band:'Long/Extreme',rof:2,rcl:4,mount:'C'},
+ {name:'Slug railgun',flat:120,dmg:'6dx6',ap:20,kind:'rail',acc:8,band:'Long',rof:1,rcl:4,mount:'L'},
+ {name:'Ion railgun',flat:50,dmg:'6dx3',ap:5,kind:'ion',acc:8,band:'Long',rof:1,rcl:1,mount:'L'},
+ {name:'Plasma railgun',flat:80,dmg:'6dx4',ap:10,kind:'rail',acc:7,band:'Med/Long',rof:1,rcl:4,mount:'L'},
+ {name:'Point-defence laser',flat:30,dmg:'6dx2',ap:0,kind:'pd',acc:4,band:'Knife',rof:3,rcl:2,mount:'S'},
+ {name:'Turbolaser (light)',flat:200,dmg:'6dx10',ap:0,kind:'capital',acc:8,band:'Med/Long',rof:2,rcl:4,mount:'C'},
+ {name:'Turbolaser (heavy)',flat:400,dmg:'6dx20',ap:0,kind:'capital',acc:9,band:'Long/Extreme',rof:2,rcl:4,mount:'C'},
  {name:'Neuralyzer array',dmg:'',ap:0,kind:'neural',acc:0,band:'Close',rof:1,rcl:1,mount:'M'}
 ];
 const TGT_CLASSES=[['Speeder / walker',2],['Starfighter',4],['Gunship / shuttle',5],['Freighter',6],['Corvette',8],['Frigate',9],['Cruiser / capital',10]];
@@ -5447,10 +5447,10 @@ function fireShipWeapon(i,mIdx){
  if(!hit){ msg+=critMiss?'\u2620 CRITICAL MISS':'MISS'; }
  else if(W.fx){ msg+=(crit?'\u2605 CRITICAL HIT':'HIT')+' \u2014 '+W.fx; }
  else{
-  const dd=rollDmgSpec(parseDmg(W.dmg));
-  msg+=(crit?'\u2605 CRITICAL HIT':'HIT')+' \u2014 <b>'+dd.total+'</b> damage'+(W.ap?', AP '+W.ap:'')+(W.kind==='ion'?' \u00b7 ION (\u00d72 vs shields, no structure)':'')+(W.kind==='missile'?' \u00b7 warhead (target dodges at \u22122)':'')+(crit?' \u00b7 crit: ignore cover DR or +1 damage step \u2014 GM call':'')+'. Feed it to the target\u2019s \u2694 Incoming hit.';
+  const _flat=(+W.flat||0), _dice=W.dmg||'';
+  msg+=(crit?'\u2605 CRITICAL HIT':'HIT')+' \u2014 <b>'+_flat+'</b> damage'+(_dice?' (personal scale: '+_dice+')':'')+(W.ap?', AP '+W.ap:'')+(W.kind==='ion'?' \u00b7 ION (\u00d72 vs shields, no structure)':'')+(W.kind==='missile'?' \u00b7 warhead (target dodges at \u22122)':'')+(crit?' \u00b7 crit: ignore cover DR or +1 damage step \u2014 GM call':'')+'. Feed it to the target\u2019s \u2694 Incoming hit.';
   if(W.rof>1&&W.rcl){const _mgn=eff-r.total;const _eh=Math.max(0,Math.min((+W.rof||1)-1,Math.floor(_mgn/(+W.rcl||1))));if(_eh>0)msg+=' \u00b7 +'+_eh+' extra hit'+(_eh>1?'s':'')+' (RoF '+W.rof+', margin '+_mgn+'/Rcl '+W.rcl+')';}
-  if(typeof _rollLog!=='undefined'){(_rollCount++,_rollLog).unshift({label:W.name+' dmg',target:null,dice:dd.rolls||[],sum:dd.total,outcome:String(dd.total),cls:'ok',margin:null});if(_rollLog.length>14)_rollLog.pop();}
+  if(typeof _rollLog!=='undefined'){(_rollCount++,_rollLog).unshift({label:W.name+' dmg',target:null,dice:[],sum:_flat,outcome:String(_flat),cls:'ok',margin:null});if(_rollLog.length>14)_rollLog.pop();}
  }
  if(W.speed && W.speed!=='mine' && hit){ const _tt=travelTurns(band,W.speed); msg+= _tt>0 ? ' \u00b7 \u27f6 in flight: impacts in '+_tt+' turn'+(_tt>1?'s':'')+' \u2014 the target keeps its Dodge and point-defence may intercept before it lands' : ' \u00b7 \u27f6 reaches the target this turn'; }
  if(mount&&mount.shots!=null) msg+=' <span class="dim">['+mount.shotsNow+'/'+mount.shots+' left]</span>';
