@@ -231,14 +231,14 @@ table.flow th{font-size:4.45pt; padding:.26mm .88mm;}
 <style>/* P3 runs lighter — give it bigger, more readable type + a large blast diagram */.p3big table:not(.flow){font-size:6pt;}.p3big table:not(.flow) td{padding:.6mm 1.25mm;}.p3big .note{font-size:5.95pt;line-height:1.32;}.p3big .subhead{font-size:5.6pt;padding:.5mm 1.4mm .4mm;}.p3big h2{font-size:7.8pt;}.p3big .aoe{padding:1.2mm 1.6mm 1mm;}.p3big .aoe svg{max-height:120mm!important;}</style>
 <style>/* readability pass: page 2 had ~264px dead space; page-1 reference cols had slack */
 .p2big table:not(.flow){font-size:6.4pt;}.p2big table:not(.flow) td,.p2big table:not(.flow) th{padding:.5mm 1.1mm;line-height:1.18;}.p2big .note{font-size:6.3pt;line-height:1.3;padding:.55mm 1.5mm .42mm;}.p2big .sec>h2{font-size:7.7pt;padding:.6mm 1.7mm .5mm;}.p2big .subhead{font-size:6pt;}.p2big .pipe .step{font-size:6.3pt;}
-.page:first-of-type .grid>.col:nth-child(3) table:not(.flow),.page:first-of-type .grid>.col:nth-child(4) table:not(.flow){font-size:5.75pt;}.page:first-of-type .grid>.col:nth-child(3) table:not(.flow) td,.page:first-of-type .grid>.col:nth-child(4) table:not(.flow) td{padding:.33mm 1mm;line-height:1.14;}.page:first-of-type .grid>.col:nth-child(3) .note,.page:first-of-type .grid>.col:nth-child(4) .note{font-size:5.72pt;}</style>
+</style>
 <style>/* REV8 — condense page 1 after REACT joined the turn-economy stack (readability kept) */
 .page:first-of-type .col{gap:.8mm;}
 .page:first-of-type .sec > h2{padding:.45mm 1.55mm .4mm; font-size:7.15pt;}
-.page:first-of-type table:not(.flow){font-size:5.1pt;}
+.page:first-of-type table:not(.flow){font-size:5.5pt;}
 .page:first-of-type table:not(.flow) td,
-.page:first-of-type table:not(.flow) th{padding:.26mm .9mm; line-height:1.07;}
-.page:first-of-type .note{font-size:5.2pt; line-height:1.15; padding:.36mm 1.4mm .28mm;}
+.page:first-of-type table:not(.flow) th{padding:.28mm .92mm; line-height:1.12;}
+.page:first-of-type .note{font-size:5.45pt; line-height:1.2; padding:.4mm 1.4mm .3mm;}
 /* REV9 — page 1 packs to full height; its footer rule sat 2px under col-1's last row, reading as a stray line across the page bottom. Drop the rule on page 1 only (pages 2-3 keep it — they have clear whitespace above it). */
 .page:first-of-type .foot{border-top:none;}
 </style>
@@ -351,19 +351,6 @@ table.flow th{font-size:4.45pt; padding:.26mm .88mm;}
             <tr><td class="k">Strike / Break Free</td><td>Strike −4; Break Free QC ST vs theirs</td><td>Strike: dmg only, grapple persists. Break Free: win = escape + free step; costs full turn.</td></tr>
           </tbody>
         </table>
-      </div>      <div class="sec steel">
-        <h2><span class="n">POS</span> Posture</h2>
-        <table>
-          <thead><tr><th style="width:24%">Posture</th><th class="c" style="width:14%">Atk/Def</th><th>To hit you · Move</th></tr></thead>
-          <tbody>
-            <tr><td class="k">Standing</td><td class="c">0 / 0</td><td>Normal · Full Move</td></tr>
-            <tr><td class="k">Crouching</td><td class="c"><span class="pen">−2</span>/0</td><td>−2 ranged to hit you (from outside C) · Move ×⅔</td></tr>
-            <tr><td class="k">Kneeling</td><td class="c pen">−2/−2</td><td>−2 to hit you · Move ×⅓</td></tr>
-            <tr><td class="k">Sitting</td><td class="c pen">−2/−2</td><td>−2 to hit you · Move 0 (M&amp;A 1 hex)</td></tr>
-            <tr><td class="k">Crawling</td><td class="c pen">−4/−3</td><td>+2 close / −2 ranged to hit you · Move 1 hex</td></tr>
-            <tr><td class="k">Prone / Supine</td><td class="c pen">−4/−3</td><td>+3 close / −2 ranged to hit you · no Move</td></tr>
-          </tbody>
-        </table>
       </div>      <div class="sec">
         <h2><span class="n">HOUSE</span> Turn Economy — Quick Action &amp; Special Reaction</h2>
         <p class="note"><b>Your turn =</b> ONE maneuver · a <b>free active defence</b> vs each attack you can perceive (out of turn — no maneuver cost) · any number of <b>Free Actions</b> · <b>1 Quick Action</b> · <b>1 Special Reaction</b> (Force). <b>Quick Action</b> rides alongside your maneuver: Force Push/Pull (full FP), Fast-Draw, or a single-touch device activation — defensive QA is forbidden during All-Out Attack, offensive QA &amp; Fast-Draw stay legal. <b>Special Reaction</b> (Force-only, full FP) is a triggered Force Push/Pull layered on an active defence and does <b>not</b> spend the defence slot — defensive use (redirect a threat) is forbidden during AoA, offensive use (shove/pull a foe) is legal.</p>
@@ -464,6 +451,19 @@ table.flow th{font-size:4.45pt; padding:.26mm .88mm;}
             <tr><td class="roll">17–18</td><td class="k">Neck</td><td class="c pen">−5</td><td>All; cr ×1.5, cut ×2</td><td>Severance ends combat. Major → HT or stun. Miss by 1 → Torso.</td></tr>
             <tr><td class="dim">—</td><td class="k">Vitals <span class="dim">(target)</span></td><td class="c pen">−3</td><td>imp/pi/tib-burn</td><td>×3 wound mult. Penetrating = major wound → HT or stun. Can't be crippled but can kill.</td></tr>
             <tr><td class="dim">—</td><td class="k">Heart <span class="dim">(target)</span></td><td class="c pen">−5</td><td>imp/pi/tib-burn</td><td>As Vitals (×3) + auto major wound on any penetration. Death very likely.</td></tr>
+          </tbody>
+        </table>
+      </div>      <div class="sec steel">
+        <h2><span class="n">POS</span> Posture</h2>
+        <table>
+          <thead><tr><th style="width:24%">Posture</th><th class="c" style="width:14%">Atk/Def</th><th>To hit you · Move</th></tr></thead>
+          <tbody>
+            <tr><td class="k">Standing</td><td class="c">0 / 0</td><td>Normal · Full Move</td></tr>
+            <tr><td class="k">Crouching</td><td class="c"><span class="pen">−2</span>/0</td><td>−2 ranged to hit you (from outside C) · Move ×⅔</td></tr>
+            <tr><td class="k">Kneeling</td><td class="c pen">−2/−2</td><td>−2 to hit you · Move ×⅓</td></tr>
+            <tr><td class="k">Sitting</td><td class="c pen">−2/−2</td><td>−2 to hit you · Move 0 (M&amp;A 1 hex)</td></tr>
+            <tr><td class="k">Crawling</td><td class="c pen">−4/−3</td><td>+2 close / −2 ranged to hit you · Move 1 hex</td></tr>
+            <tr><td class="k">Prone / Supine</td><td class="c pen">−4/−3</td><td>+3 close / −2 ranged to hit you · no Move</td></tr>
           </tbody>
         </table>
       </div></div></div><div class="foot"><div>Source of truth: <b>Star Wars the Old Republic — GURPS 4E Conversion</b> (KOTOR). Where this sheet and the compendium differ, the compendium wins.</div><div><span class="flag">PAGE 1 / 3</span> REV 5 · condensed combat-flow layout · ranged+thrown · damage+area+velocity</div></div>
