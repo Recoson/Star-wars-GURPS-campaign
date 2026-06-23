@@ -520,7 +520,7 @@ function pickWeapon(weap,L){const W=GD.weapons;
  if(weap==="heavy")return W.find(w=>w.name==="Mandalorian repeating blaster")||W.find(w=>w.name==="Heavy blaster rifle");
  if(weap==="vibro"){const pool=W.filter(w=>/Vibro|Saber|Shortsword|Broadsword/.test(w.cat||'')&&w.cls==="Melee");return pool.length?pick(pool):W.find(w=>w.cat==="Vibro Blade");}
  return W.find(w=>/Beam \(Pistol\)/.test(w.cat||''))||W[0];}
-function pickArmour(arch,L){const A=GD.armour;let pool;if(/Mandalorian|Neo-Crusader|Soldier|Sith Warrior/.test(arch))pool=A.filter(a=>num(a.cost)>=(L>=4?9000:3000));else if(/Jedi|Consular|Sorcerer/.test(arch))pool=A.filter(a=>/robe|flight|jumpsuit|jacket|weave|mesh/i.test(a.name));else pool=A.filter(a=>num(a.cost)<=(L>=4?12000:6000));if(!pool||!pool.length)pool=A;return pick(pool);}
+function pickArmour(arch,L,budget){const A=GD.armour;let pool;if(/Mandalorian|Neo-Crusader|Soldier|Sith Warrior/.test(arch))pool=A.filter(a=>num(a.cost)>=(L>=4?9000:3000));else if(/Jedi|Consular|Sorcerer/.test(arch))pool=A.filter(a=>/robe|flight|jumpsuit|jacket|weave|mesh/i.test(a.name));else pool=A.filter(a=>num(a.cost)<=(L>=4?12000:6000));if(budget){const aff=pool.filter(a=>num(a.cost)<=budget);if(aff.length)pool=aff;else{const allAff=A.filter(a=>num(a.cost)<=budget);if(allAff.length)pool=[allAff.sort((x,y)=>num(y.cost)-num(x.cost))[0]];}}if(!pool||!pool.length)pool=A;return pick(pool);}
 function utilityFor(arch){const tags=/Mandalorian|Soldier|Neo|Hunter|Merc/.test(arch)?["Medical","Comms","Sensor","Survival","Gear"]:/Jedi|Sith|Consular|Sorcerer|Dark/.test(arch)?["Medical","Comms","Tech","Survival"]:["Medical","Comms","Tech","Stealth","Gear"];const pool=GD.utility.filter(u=>tags.includes(u.cat));return picks(pool,Math.min(ri(3,4),pool.length));}
 function pickStyle(arch,weap){
  if(weap==='saber'&&GD.saberForms&&GD.saberForms.length){const f=pick(GD.saberForms);return f.name+(f.sub?' — '+f.sub:'');}
@@ -538,7 +538,7 @@ function speciesForArch(arch){const has=n=>(GD.species||[]).some(s=>s.name===n);
  if(/Echani/.test(arch))return has('Echani')?'Echani':'Human';
  return GD.species.length?pick(GD.species).name:'Human';}
 
-function genBlock(arch,cp){
+function genBlock(arch,cp,budget){
  const A=ARCHE[arch]||ARCHE["Mercenary / Thug"];const L=levelFor(cp);
  const a=Object.assign({},CURVE[L]);a.FP=a.HT;
  if(A.mod)["ST","DX","IQ","HT","Per"].forEach(k=>{if(typeof A.mod[k]==="number")a[k]+=A.mod[k];});
@@ -547,7 +547,7 @@ function genBlock(arch,cp){
  a.Speed=Math.round(((a.DX+a.HT)/4+(L>=4?0.25:0))*4)/4;
  a.Move=Math.floor(a.Speed)+(/(Echani|Guardian|Hunter)/.test(arch)?1:0);
  a.Dodge=Math.floor(a.Speed)+3+1;
- const w=pickWeapon(A.weap,L);const arm=pickArmour(arch,L);
+ const w=pickWeapon(A.weap,L);const arm=pickArmour(arch,L,budget);
  let DR=arm?Math.max(arm.drE||0,arm.drK||0):0;if(/beskar|heavy/i.test(A.adv))DR+=2;a.DR=DR;
  const weapBits=[];if(w)weapBits.push(weaponLineText(w,a.ST));
  if(/Mandalorian|Hunter|Soldier|Neo/.test(arch)){const s=GD.weapons.find(x=>x.name==="Heavy blaster pistol");if(s)weapBits.push(weaponLineText(s,a.ST));}
@@ -1055,7 +1055,23 @@ function buildScene(sec){
  const PROP=['Vossk','Dable','Greeta','Sornn','Mott','Yulia','Kr-tann','Relc','Hessa','Dorn','Wlen','Aphra','Gizz','Tobb','Suun','Veers','Nokk','Lessik','Hux','Tann','Vree','Oola','Jate','Sed','Koro','Murn','Bex','Praal','Wymo','Teska','Motta','Zelka','Forn','Yurt','Larrim','Lavin','Holdan','Matrik','Zax','Habat','Chano','Hudrow','Niklos','Yortal','Garn','Dalan','Odis','Pottle','Suuv','Igear','Gorton','Selven','Rowad','Dendis','Gerlon','Lurze','Bendak','Twitch'];
  const SMELL=['engine-oil and ozone','spice-smoke and old sweat','frying street-food and rot','antiseptic laid over old blood','damp stone and burning incense','dust, sweat and recycled air','cheap perfume and spilled drink','hot metal and a chemical tang','sea-salt and kolto','smoke, grease and unwashed bodies','rust, mildew and standing water','ozone and scorched insulation','spilled caf and blaster-smoke','wet fur and woodsmoke','incense over something gone bad','recycled air and machine-coolant'];
  const SOUND=['a low churn of voices in a dozen tongues','distant machinery pounding like a slow heart','tinny music from a failing speaker','the hiss and clank of cargo loaders','wind moaning through gaps in the walls','someone shouting, somewhere, about money','the soft bubbling drone of a kolto tank','blaster-fire, faint and far enough to ignore \u2014 for now','laughter with a hard edge underneath it','the constant hum of too many lives packed too close','a swoop engine being gunned somewhere close','a pazaak dealer calling the next hand','the slow gurgle of a kolto tank','a Hutt’s laughter rolling out of a back room','the clack of a protocol droid crossing the floor'];
- const RUMOR=['Word is the local boss is about to move on a rival \u2014 and needs deniable hands.','Someone is paying, quietly, for anyone asking the wrong questions to simply vanish.','A ship came in last night carrying something the whole quarter is suddenly nervous about.','There\u2019s a price on a face that looks an awful lot like one of the party\u2019s.','A debt is owed here, and the wrong person is about to be made to pay it.','Something valuable changed hands here recently, and several parties want it back.','A stranger was asking after the party by name not an hour ago.','A Czerka survey team went out past the perimeter days ago and hasn’t checked in.','Word is a Jedi came through in plain clothes, asking after old ruins.','A kolto shipment bound for the Republic line never left Manaan — and someone got paid for that.','They say a Sith relic changed hands two streets over, and everyone who touched it is dead.','Mandalorians were seen casing the spaceport last night, and nobody thinks it’s nothing.','The Exchange put a quiet price on a runaway who took something they want back more than the runaway.','A swoop gang lifted a strongbox they can’t open and don’t dare sell.','A freighter crew came back from the Outer Rim short three hands and unwilling to say why.','Someone’s buying up charts of the old hyperspace routes and paying far too much for them.','A bounty hunter checked in two days ago and hasn’t left their room — waiting on someone.','They found a Republic deserter in the undercity, and the wrong people heard first.','A Hutt’s pet project just lost its lead slicer, and the work’s open to anyone who won’t talk.'];
+ const RUMOR=['A Telos resupply convoy went dark three days out and no wreck has been found',
+  'Someone is quietly selling a Sith holocron in the Taris undercity markets',
+  'A Mandalorian clan is buying up every ingot of beskar the brokers can move',
+  'Czerka pulled its survey teams off-world overnight and left the gear behind',
+  'Jedi investigators have been asking dock crews about old Rakatan vault charts',
+  'Kolto shipments out of Manaan have dried up and the price has tripled',
+  'A bounty broker is offering hazard rates for a courier nobody will name',
+  'Comm traffic keeps jamming on the night cycle and two freighters never checked in',
+  'A swoop crew is bragging about a sealed Sith reliquary they cannot open',
+  'The Exchange has put a standing price on a runner who skipped with a datacron',
+  'A derelict cruiser drifted into the lane with running lights on and no crew aboard',
+  'Tombs on Dxun have been disturbed and the hunters who went in have not come back',
+  'A spice run through Nar Shaddaa is short two hands and paying triple for silence',
+  'Old charts of the Unknown Regions surfaced and every faction wants them at once',
+  'Shrine sigils across the quarter have been defaced with the same scored mark',
+  'The garrison commander missed three check-ins and the relief officer is stalling',
+  'Word is the local boss is about to move on a rival \u2014 and needs deniable hands.','Someone is paying, quietly, for anyone asking the wrong questions to simply vanish.','A ship came in last night carrying something the whole quarter is suddenly nervous about.','There\u2019s a price on a face that looks an awful lot like one of the party\u2019s.','A debt is owed here, and the wrong person is about to be made to pay it.','Something valuable changed hands here recently, and several parties want it back.','A stranger was asking after the party by name not an hour ago.','A Czerka survey team went out past the perimeter days ago and hasn’t checked in.','Word is a Jedi came through in plain clothes, asking after old ruins.','A kolto shipment bound for the Republic line never left Manaan — and someone got paid for that.','They say a Sith relic changed hands two streets over, and everyone who touched it is dead.','Mandalorians were seen casing the spaceport last night, and nobody thinks it’s nothing.','The Exchange put a quiet price on a runaway who took something they want back more than the runaway.','A swoop gang lifted a strongbox they can’t open and don’t dare sell.','A freighter crew came back from the Outer Rim short three hands and unwilling to say why.','Someone’s buying up charts of the old hyperspace routes and paying far too much for them.','A bounty hunter checked in two days ago and hasn’t left their room — waiting on someone.','They found a Republic deserter in the undercity, and the wrong people heard first.','A Hutt’s pet project just lost its lead slicer, and the work’s open to anyone who won’t talk.'];
  const ACT=['watches the door a beat too closely','nurses a drink and a grudge','is arguing in low, urgent tones','clocks the party the moment they walk in','is trying very hard to look unremarkable','keeps glancing at every exit','is working up the nerve to approach someone','has clearly been waiting here far too long','is quietly counting credits they shouldn\u2019t have','goes suddenly still as the party passes','rests a hand near a holstered blaster','keeps one eye on the door and one on a comm','has the unmistakable bearing of ex-military','wears armour a shade too good for this place','keeps not-quite-reading the same datapad','flinches at every raised voice','sizes up the party’s gear like a fence'];
  const SPOT=['off in a corner','over by the bar','near the door','at the back','to one side','by a window','in the thick of it','half in shadow','up on a mezzanine','behind the gaming tables','near the back exit','wedged into a booth'];
  const EWHERE=['right across from you','just down the way','off to your left','tucked in the back','a few doors along','over in the corner','first thing on your right','if you keep walking'];
@@ -1675,7 +1691,7 @@ function benchCard(name,baseLine,moddedLine,mods,notes,baseCost,addCost,suffix){
 /* ---------- the Loot & Gear space ---------- */
 function buildLoot(el){
  el.innerHTML='<div class="space-head"><h2>Loot &amp; Gear</h2><div class="lede">Roll rewards, stock a shop, or bolt upgrades onto a weapon or suit \u2014 all priced and rules-backed off the compendium. Lightsabers are excluded from the loot pool by design.</div></div>'
- +'<div class="subnav" id="lootSub"><button class="on" data-sub="reward">Reward roller</button><button data-sub="shop">Shop</button><button data-sub="bench">Workbench</button></div>'
+ +'<div class="subnav" id="lootSub"><button class="on" data-sub="reward">Reward roller</button><button data-sub="shop">Shop</button><button data-sub="bench">Workbench</button><button data-sub="forge">Weapon forge</button></div>'
  +'<div class="subpanel on" id="lp-reward"><div class="controls">'
    +'<div class="field"><span class="lab">Category</span><select id="rwCat"><option value="">\u2014 any \u2014</option>'+REWARD_CATS.map(c=>'<option>'+esc(c)+'</option>').join('')+'</select></div>'
    +'<div class="field"><span class="lab">Tier</span><select id="rwTier"><option value="">\u2014 any \u2014</option><option value="0">Civilian</option><option value="1">Working</option><option value="2">Professional</option><option value="3">Wealthy</option><option value="4">Legendary</option></select></div>'
@@ -1691,13 +1707,18 @@ function buildLoot(el){
  +'<div class="subpanel" id="lp-bench"><div class="controls">'
    +'<div class="field"><span class="lab">Base item</span><select id="benchType"><option value="weapon">Weapon</option><option value="armour">Armour</option></select></div>'
    +'<div class="field"><span class="lab">Item</span><select id="benchItem"></select></div>'
-   +'</div><div class="bench-mods" id="benchMods"></div><div id="benchOut"></div></div>';
+   +'</div><div class="bench-mods" id="benchMods"></div><div id="benchOut"></div></div>'+'<div class="subpanel" id="lp-forge"><div class="controls">'
+   +'<div class="field"><span class="lab">Class</span><select id="wfCat"><option value="auto">\u2014 surprise \u2014</option><option value="lightsaber">Lightsaber</option><option value="pistol">Blaster pistol</option><option value="rifle">Blaster rifle</option><option value="vibro">Vibro / melee</option><option value="heavy">Heavy weapon</option><option value="exotic">Exotic (ion / sonic / disruptor)</option></select></div>'
+   +'<div class="field"><span class="lab">Rarity</span><select id="wfRar"><option value="">\u2014 roll \u2014</option>'+WF_RARITY.map(r=>'<option value="'+r.key+'">'+esc(r.label)+'</option>').join('')+'</select></div>'
+   +'<div class="field"><span class="lab">Budget cap</span><input id="wfBudget" type="number" placeholder="0 = none"></div>'
+   +'<button class="btn primary" id="wfGo">\u2692 Forge weapon</button><button class="btn" id="wfGo3">Forge 3</button><button class="btn ghost mini" id="wfClear">clear</button>'
+  +'</div><div id="forgeOut"></div></div>';
  $('rwGo').onclick=rollReward;$('rwHaul').onclick=rollHaul;$('rwClear').onclick=()=>{$('rwOut').innerHTML='';};
  $('shopGo').onclick=rollShop;$('shopClear').onclick=()=>{$('shopOut').innerHTML='';};
  $('benchType').onchange=benchPopItems;$('benchItem').onchange=benchPopMods;
- $('benchMods').addEventListener('change',e=>{if(e.target.classList&&e.target.classList.contains('benchchk'))benchRender();});
+ $('benchMods').addEventListener('change',e=>{if(e.target.classList&&e.target.classList.contains('benchchk'))benchRender();});if($('wfGo')){$('wfGo').onclick=function(){forgeGo(1);};$('wfGo3').onclick=function(){forgeGo(3);};$('wfClear').onclick=function(){$('forgeOut').innerHTML='';};$('forgeOut').addEventListener('click',function(e){var b=e.target.closest('[data-forgecopy]');if(b)copyText(b.getAttribute('data-forgecopy'));});}
  benchPopItems();
- $('lootSub').onclick=e=>{const btn=e.target.closest('button');if(!btn)return;const sub=btn.dataset.sub;[...$('lootSub').children].forEach(b=>b.classList.toggle('on',b===btn));['reward','shop','bench'].forEach(s=>$('lp-'+s).classList.toggle('on',s===sub));};
+ $('lootSub').onclick=e=>{const btn=e.target.closest('button');if(!btn)return;const sub=btn.dataset.sub;[...$('lootSub').children].forEach(b=>b.classList.toggle('on',b===btn));['reward','shop','bench','forge'].forEach(s=>$('lp-'+s).classList.toggle('on',s===sub));};
 }
 
 
@@ -1756,8 +1777,8 @@ function renderEncounter(){const host=$('encOut');if(!host)return;if(!lastEncoun
  const units=lastEncounter.units;const reads=swingRead(units,STORE.party);
  const actions='<div class="fg-actions"><button class="btn mini" id="encCombat">\u2192 Send to Combat</button><button class="btn mini" id="encKeep">\uD83D\uDCCC Keep all</button><button class="btn ghost mini" id="encReroll">\u27F3 Reroll</button></div>';
  const swing='<div class="swing"><div class="sw-hd">What makes this fight swing</div>'+(reads.length?reads.map(r=>flagHTML(r)).join(''):'<div class="muted" style="padding-bottom:8px">A straightforward fight \u2014 no special swing factors. It comes down to dice and positioning.</div>')+'</div>';
- const grid='<div class="enc-units">'+units.map(u=>{const b=u.block;const w=(b.weapons||'').split('\n')[0]||'';const f=b.force==='dark'?' \u00b7 <span style="color:var(--red)">dark</span>':b.force==='light'?' \u00b7 <span style="color:var(--grn)">light</span>':'';return '<div class="enc-unit"><div class="eu-name">'+esc(u.name)+'</div><div class="eu-meta">'+esc(b.archetype)+' \u00b7 '+esc(b.tier)+' \u00b7 '+esc(u.species)+' \u00b7 DR '+b.attrs.DR+f+'</div><div class="eu-line">'+esc(w)+'</div><div class="eu-desc">'+esc(b.desc||npcLook(b,u.species,u.name))+'</div></div>';}).join('')+'</div>';
- host.innerHTML=actions+swing+grid;
+ const grid='<div class="enc-units">'+units.map(u=>{const b=u.block;const w=(b.weapons||'').split('\n')[0]||'';const f=b.force==='dark'?' \u00b7 <span style="color:var(--red)">dark</span>':b.force==='light'?' \u00b7 <span style="color:var(--grn)">light</span>':'';return '<div class="enc-unit"><div class="eu-name">'+(u.role==='leader'?'\u2605 ':'')+esc(u.name)+'</div><div class="eu-meta">'+esc(b.archetype)+' \u00b7 '+esc(b.tier)+' \u00b7 '+esc(u.species)+' \u00b7 DR '+b.attrs.DR+f+'</div><div class="eu-line">'+esc(w)+'</div>'+(b.signature?'<div class="eu-desc" style="color:#caa24a">carries '+esc(b.signature)+'</div>':'')+'<div class="eu-desc">'+esc(b.desc||npcLook(b,u.species,u.name))+'</div></div>';}).join('')+'</div>';
+ host.innerHTML=(lastEncounter.banner||'')+actions+swing+grid;
  $('encCombat').onclick=encToCombat;$('encKeep').onclick=encKeepAll;$('encReroll').onclick=genEncounter;}
 function encKeepAll(){if(!lastEncounter||!lastEncounter.units.length){toast('Generate an encounter first');return;}
  lastEncounter.units.forEach(u=>{const b=u.block;STORE.kept.unshift({id:'k'+uid(),name:u.name,species:u.species,arch:b.archetype,tier:b.tier,cp:b.cp,force:b.force,block:b});});
@@ -1765,12 +1786,314 @@ function encKeepAll(){if(!lastEncounter||!lastEncounter.units.length){toast('Gen
 function encToCombat(){if(!lastEncounter||!lastEncounter.units.length){toast('Generate an encounter first');return;}
  cbAddRows(lastEncounter.units.map(u=>rowFromBlock(u.name,'enemy',u.block)));switchCombatSub('combat');toast('Sent '+lastEncounter.units.length+' to Combat');}
 
+/* ===================================================================
+   PASS 4b — WARBAND GENERATOR + PROCEDURAL WEAPON FORGE
+   One-shot "give me N enemies of type X at ~Y points with Z gear" + a
+   rarity/crystal/mod-driven random weapon roller. Compendium-backed:
+   everything draws from GD and the existing genBlock pipeline.
+   =================================================================== */
+
+/* weighted pick with replacement; pairs are [value, weight] */
+function wpick(pairs){let tot=0;pairs.forEach(p=>tot+=p[1]);let r=Math.random()*tot;for(let i=0;i<pairs.length;i++){r-=pairs[i][1];if(r<=0)return pairs[i][0];}return pairs[pairs.length-1][0];}
+
+/* ---------- faction → archetype / species / gear profiles ---------- */
+/* arche/sp are [ARCHE-or-species-name, weight]; gear sets the default
+   armour budget band; lead names the archetype the leader is built from. */
+const FACTION_FORGE={
+ mando:{label:"Mandalorian clans",arche:[["Mandalorian",5],["Neo-Crusader",2],["Bounty Hunter",1]],sp:[["Human",6],["Zabrak",1],["Togruta",1],["Rodian",1]],gear:"mil",lead:"Neo-Crusader"},
+ neocru:{label:"Neo-Crusader host",arche:[["Neo-Crusader",5],["Mandalorian",2]],sp:[["Human",7],["Zabrak",1]],gear:"heavy",lead:"Neo-Crusader"},
+ deathwatch:{label:"Death Watch splinter",arche:[["Mandalorian",4],["Bounty Hunter",2],["Mercenary / Thug",1]],sp:[["Human",6],["Zabrak",1],["Rattataki",1]],gear:"mil",lead:"Mandalorian"},
+ sith:{label:"Sith Empire warband",arche:[["Sith Warrior",3],["Sith Sorcerer",2],["Dark Jedi",2],["Republic Soldier",2]],sp:[["Human",4],["Sith Pureblood",2],["Rattataki",1],["Zabrak",1]],gear:"mil",lead:"Sith Warrior"},
+ darkjedi:{label:"Dark Jedi cabal",arche:[["Dark Jedi",4],["Sith Sorcerer",2],["Sith Warrior",1]],sp:[["Human",4],["Rattataki",1],["Zabrak",1],["Echani",1],["Kissai",1]],gear:"mid",lead:"Dark Jedi"},
+ cult:{label:"Dark-side cult",arche:[["Mercenary / Thug",3],["Dark Jedi",2],["Sith Sorcerer",1]],sp:[["Human",4],["Rattataki",1],["Nikto",1],["Weequay",1]],gear:"low",lead:"Sith Sorcerer"},
+ jedi:{label:"Jedi strike team",arche:[["Jedi Guardian",3],["Jedi Consular",2],["Republic Soldier",2]],sp:[["Human",4],["Twi'lek",1],["Cathar",1],["Mirialan",1],["Zabrak",1],["Nautolan",1]],gear:"mid",lead:"Jedi Guardian"},
+ republic:{label:"Republic military",arche:[["Republic Soldier",6],["Bounty Hunter",1]],sp:[["Human",7],["Duros",1],["Sullustan",1],["Zabrak",1]],gear:"mil",lead:"Republic Soldier"},
+ echani:{label:"Echani duelists",arche:[["Echani Duelist",5],["Mercenary / Thug",1]],sp:[["Echani",7],["Human",1]],gear:"mid",lead:"Echani Duelist"},
+ exchange:{label:"The Exchange",arche:[["Mercenary / Thug",4],["Bounty Hunter",2],["Smuggler / Scoundrel",1]],sp:[["Human",3],["Rodian",2],["Devaronian",1],["Twi'lek",1],["Nikto",1]],gear:"low",lead:"Bounty Hunter"},
+ hutt:{label:"Hutt cartel muscle",arche:[["Mercenary / Thug",5],["Bounty Hunter",1]],sp:[["Gamorrean",3],["Nikto",2],["Weequay",2],["Trandoshan",1],["Rodian",1]],gear:"low",lead:"Bounty Hunter"},
+ pirates:{label:"Pirate band",arche:[["Mercenary / Thug",3],["Smuggler / Scoundrel",2],["Bounty Hunter",1]],sp:[["Weequay",3],["Nikto",2],["Rodian",2],["Trandoshan",2],["Human",2]],gear:"low",lead:"Smuggler / Scoundrel"},
+ slavers:{label:"Slaver ring",arche:[["Mercenary / Thug",4],["Bounty Hunter",1]],sp:[["Trandoshan",3],["Weequay",2],["Rodian",1],["Human",1]],gear:"low",lead:"Bounty Hunter"},
+ mercs:{label:"Mercenary company",arche:[["Mercenary / Thug",3],["Bounty Hunter",2],["Republic Soldier",1]],sp:[["Human",3],["Zabrak",1],["Rodian",1],["Trandoshan",1],["Devaronian",1]],gear:"mid",lead:"Bounty Hunter"},
+ bounty:{label:"Bounty hunter crew",arche:[["Bounty Hunter",4],["Mercenary / Thug",1]],sp:[["Human",2],["Trandoshan",2],["Devaronian",1],["Rodian",1],["Zabrak",1],["Weequay",1]],gear:"mid",lead:"Bounty Hunter"},
+ swoop:{label:"Swoop gang",arche:[["Mercenary / Thug",4],["Smuggler / Scoundrel",1]],sp:[["Human",3],["Rodian",1],["Nikto",1],["Twi'lek",1]],gear:"low",lead:"Mercenary / Thug"},
+ czerka:{label:"Czerka security",arche:[["Mercenary / Thug",3],["Republic Soldier",2]],sp:[["Human",6],["Rodian",1]],gear:"mid",lead:"Republic Soldier"},
+ thugs:{label:"Street thugs",arche:[["Mercenary / Thug",6]],sp:[["Human",4],["Rodian",1],["Nikto",1],["Twi'lek",1]],gear:"low",lead:"Mercenary / Thug"}
+};
+const FAC_LIST=Object.keys(FACTION_FORGE).map(k=>[k,FACTION_FORGE[k].label]).sort((a,b)=>a[1].toLowerCase()<b[1].toLowerCase()?-1:1);
+/* curated two-faction mash-ups James asked for */
+const FAC_COMBO={
+ mercsith:{label:"Mercenaries + Sith",parts:["mercs","sith"]},
+ mandosith:{label:"Mandalorians + Sith",parts:["mando","sith"]},
+ exchbounty:{label:"Exchange + bounty hunters",parts:["exchange","bounty"]},
+ piratesslavers:{label:"Pirates + slavers",parts:["pirates","slavers"]},
+ cultmercs:{label:"Dark cult + hired guns",parts:["cult","mercs"]},
+ jedirep:{label:"Jedi + Republic",parts:["jedi","republic"]},
+ huttbounty:{label:"Hutt cartel + bounty hunters",parts:["hutt","bounty"]},
+ sithtroopers:{label:"Sith + Dark Jedi",parts:["sith","darkjedi"]}
+};
+const FAC_COMBO_LIST=Object.keys(FAC_COMBO).map(k=>[k,FAC_COMBO[k].label]);
+
+function mergeFac(a,b){const A=FACTION_FORGE[a],B=FACTION_FORGE[b];const arche=A.arche.concat(B.arche);const sp=A.sp.concat(B.sp);const order={low:0,mid:1,mil:2,heavy:3},inv=["low","mid","mil","heavy"];const gear=inv[Math.max(order[A.gear],order[B.gear])];return{label:A.label+" + "+B.label,arche,sp,gear,lead:Math.random()<0.5?A.lead:B.lead};}
+function resolveFaction(key){
+ if(key==='surprise'||!key){const all=Object.keys(FACTION_FORGE);return FACTION_FORGE[pick(all)];}
+ if(FACTION_FORGE[key])return FACTION_FORGE[key];
+ if(FAC_COMBO[key]){const p=FAC_COMBO[key].parts;return mergeFac(p[0],p[1]);}
+ return FACTION_FORGE.mercs;
+}
+/* armour-cost cap per gear band & level — the lever that decides whether a
+   mook is in a jacket or in beskar (and thus how the fight swings) */
+function gearBudget(style,cp){const L=levelFor(cp);
+ const tbl={low:[1500,2700,4800,11000,15000],mid:[3600,6600,15000,45000,90000],mil:[6600,15000,45000,150000,290000],heavy:[11000,39000,120000,290000,540000]}[style]||[3600,11000,30000,90000,150000];
+ return tbl[L-1];}
+
+/* ---------- the warband composer ---------- */
+function composeWarband(opts){
+ opts=opts||{};
+ const cpAvg=opts.cp||pick([125,250,250,500,500,500,900,900,1400]);
+ const facKey=opts.fac||'surprise';
+ const fac=resolveFaction(facKey);
+ let count=opts.count||ri(3,8); count=Math.max(1,Math.min(24,count));
+ const Lavg=levelFor(cpAvg);
+ const userBudget=opts.budget||0;
+ const defBudget=gearBudget(fac.gear,cpAvg);
+ const budget=userBudget||defBudget;
+ const units=[];
+ const hasLeader=count>=3;
+ const nGrunts=hasLeader?count-1:count;
+ for(let i=0;i<nGrunts;i++){
+  let cp=cpAvg;
+  // jitter: a chunk of the rank-and-file are a tier below the average
+  if(nGrunts>=3){const r=Math.random();if(r<0.40&&Lavg>1)cp=TIER_CP[BAND[Lavg-2]];else if(r>0.92&&Lavg<5)cp=TIER_CP[BAND[Lavg]];}
+  const arch=wpick(fac.arche),sp=wpick(fac.sp);
+  const b=genBlock(arch,cp,userBudget||gearBudget(fac.gear,cp));
+  const nm=npcName(sp);b.desc=npcLook(b,sp,nm);
+  units.push({name:nm,species:sp,block:b,role:'grunt'});
+ }
+ if(hasLeader){
+  const leadCp=Lavg<5?TIER_CP[BAND[Lavg]]:TIER_CP[BAND[4]];
+  const leadArch=fac.lead;
+  const sp=wpick(fac.sp);
+  const b=genBlock(leadArch,leadCp,userBudget||gearBudget(fac.gear,leadCp));
+  // ~55% of leaders carry a rolled signature weapon
+  if(Math.random()<0.55){
+   const cls=({saber:'lightsaber',blasterRifle:'rifle',pistol:'pistol',heavy:'heavy',vibro:'vibro'})[(ARCHE[leadArch]||{}).weap]||'auto';
+   const f=forgeWeapon({cat:cls,minRarity:'masterwork'});
+   const rest=(b.weapons||'').split('\n').slice(1);
+   b.weapons=[f.line].concat(rest).join('\n');
+   b.signature=f.name;b.sigCard=f;
+  }
+  const nm=npcName(sp);b.desc=npcLook(b,sp,nm);
+  units.push({name:nm,species:sp,block:b,role:'leader'});
+ }
+ // leader first for display
+ units.sort((a,b)=>(b.role==='leader'?1:0)-(a.role==='leader'?1:0));
+ const flav=pick(["They are already here when the party arrives — there is no avoiding this.","The fight finds the party before they are ready for it.","They have the high ground, the numbers, or the nerve — pick your poison.","This is a deliberate ambush; they chose the ground.","Word travelled faster than the party did. They were expected."]);
+ const banner='<div class="swing" style="margin-bottom:14px"><div class="sw-hd">'+esc(fac.label)+' \u00b7 '+count+(count===1?' enemy':' enemies')+' \u00b7 avg '+BAND[Lavg-1]+' ('+cpAvg+' pts) \u00b7 gear \u2264 '+cr(budget)+'</div><div class="muted" style="padding:0 0 8px">'+esc(flav)+(hasLeader?' One of them leads \u2014 marked below.':'')+'</div></div>';
+ lastEncounter={units,banner};
+ renderEncounter();
+}
+
+/* ===================================================================
+   PROCEDURAL WEAPON FORGE
+   =================================================================== */
+const WF_RARITY=[
+ {key:'standard',label:'Standard',mods:0,mult:1,unique:false,w:30,tag:''},
+ {key:'fine',label:'Fine',mods:1,mult:1.6,unique:false,w:26,tag:'fine craftsmanship'},
+ {key:'refined',label:'Refined',mods:2,mult:2.6,unique:false,w:20,tag:'reworked by a real artisan'},
+ {key:'masterwork',label:'Masterwork',mods:3,mult:4.2,unique:true,w:12,tag:'a master\u2019s piece'},
+ {key:'prototype',label:'Prototype',mods:3,mult:6,unique:true,w:7,tag:'experimental, one of a kind'},
+ {key:'unique',label:'Unique',mods:4,mult:10,unique:true,w:4,tag:'a named weapon with a history'},
+ {key:'legendary',label:'Legendary',mods:5,mult:20,unique:true,w:1,tag:'a relic; beyond price'}
+];
+const WF_RANK=WF_RARITY.map(r=>r.key);
+function rarityByKey(k){return WF_RARITY.find(r=>r.key===k)||WF_RARITY[0];}
+function rollRarity(min){const floor=min?WF_RANK.indexOf(min):0;const pool=WF_RARITY.filter((r,i)=>i>=Math.max(0,floor));return wpick(pool.map(r=>[r,r.w]));}
+
+/* crystals — the heart of the "unique lightsaber". die/flat shift the fixed
+   saber damage; tag colours/flavours it; rider is a play-note. */
+const WF_CRYSTALS=[
+ {n:"flawless blue Adegan crystal",col:"blue",die:0,flat:0,w:8,cost:0},
+ {n:"flawless green Adegan crystal",col:"green",die:0,flat:0,w:8,cost:0},
+ {n:"yellow Adegan crystal",col:"gold",die:0,flat:0,w:6,cost:0},
+ {n:"cyan focusing crystal",col:"cyan",die:0,flat:0,w:5,cost:0},
+ {n:"violet crystal",col:"violet",die:0,flat:0,w:4,cost:0},
+ {n:"orange durindfire crystal",col:"amber",die:0,flat:1,w:5,cost:2000,rider:"shimmering durindfire blade"},
+ {n:"silver Solari crystal",col:"silver",die:0,flat:2,w:3,cost:9000,rider:"light-attuned \u2014 a dark-sider grips it at \u22122"},
+ {n:"Krayt dragon pearl",col:"white-gold",die:1,flat:0,w:3,cost:14000,rider:"+1 damage die from the pearl"},
+ {n:"Kaiburr shard",col:"radiant",die:1,flat:2,w:2,cost:30000,rider:"sings in the Force; +1 to the wielder\u2019s Force rolls"},
+ {n:"Lorrdian gemstone",col:"pale",die:0,flat:0,w:3,cost:6000,rider:"+1 to Deflect and saber Parry"},
+ {n:"dual-phase mantle crystal",col:"shifting",die:0,flat:0,w:3,cost:8000,rider:"adjustable blade length \u2014 reach 1 or 1,2 at will"},
+ {n:"synthetic red Sith crystal",col:"red",die:0,flat:2,w:5,cost:5000,rider:"bleeding crystal \u2014 dark-side attuned; +1 to dark Force rolls"},
+ {n:"corrupted Sith war-crystal",col:"crimson",die:1,flat:0,w:2,cost:18000,rider:"feeds on the wielder; 1 FP/scene, dark-side pull"},
+ {n:"unstable ghost-fire crystal",col:"violet-white",die:2,flat:0,w:1,cost:24000,rider:"GHOST-FIRE: +2 dmg dice but the wielder rolls Will each fight or takes 1 fatigue; blade flickers"},
+ {n:"cracked, flawed crystal",col:"guttering",die:0,flat:-2,w:3,cost:0,rider:"unstable \u2014 \u22122 damage; sputters on a roll of 17\u201318"}
+];
+
+/* generic mods (reuse the bench mod schema so the math is identical) */
+const WF_MODS_RANGED=[
+ {n:"Verpine precision bore",mod:{acc:1},cost:1500},
+ {n:"Aratech targeting array",mod:{acc:2},cost:3000},
+ {n:"hair-trigger sear",mod:{note:"+1 Acc when you Aim"},cost:1200},
+ {n:"Mandalorian gas-charge",mod:{dmg:2},cost:1800},
+ {n:"tibanna-rich cell",mod:{dmg:1},cost:900},
+ {n:"overcharged emitter",mod:{dmgDie:1,note:"runs hot \u2014 malfunctions on a 17\u201318"},cost:5000},
+ {n:"extended power pack",mod:{shotsPct:50},cost:600},
+ {n:"rapid-recharge cell",mod:{rof:1},cost:4000},
+ {n:"gyro-stabiliser",mod:{rcl:-1},cost:700},
+ {n:"recoil dampener",mod:{rcl:-1},cost:700},
+ {n:"pulse-tuned barrel",mod:{adMul:2,note:"armour divisor doubled"},cost:6000},
+ {n:"ion conversion module",mod:{note:"ion rider vs droids & powered armour"},cost:1500},
+ {n:"stun cell",mod:{note:"on a hit, target rolls HT\u22123 or is stunned"},cost:1200},
+ {n:"concealing frame",mod:{note:"+2 to Holdout; counts as one size smaller"},cost:1000}
+];
+const WF_MODS_MELEE=[
+ {n:"monomolecular edge",mod:{dmgDie:1},cost:5000},
+ {n:"vibro-edge upgrade",mod:{dmg:2},cost:1500},
+ {n:"Echani balance",mod:{parry:1,note:"+1 to the wielder\u2019s weapon skill"},cost:3000},
+ {n:"phrik alloy core",mod:{parry:1,note:"resists lightsabers"},cost:9000},
+ {n:"cortosis weave edge",mod:{note:"shorts a lightsaber on a successful parry"},cost:6000},
+ {n:"beskar-laced edge",mod:{adMul:2,note:"resists lightsabers; bites heavy plate"},cost:14000},
+ {n:"shock-coil winding",mod:{note:"+1d burn rider; stun option"},cost:2200},
+ {n:"weighted pommel",mod:{dmg:2,note:"needs ST +1 to wield well"},cost:800},
+ {n:"serrated war-edge",mod:{dmg:2,note:"follow-up bleed on a major wound"},cost:1800}
+];
+const WF_MODS_SABER=[
+ {n:"dual-phase length emitter",mod:{note:"switch reach 1 \u2194 1,2 as a Ready"},cost:6000},
+ {n:"curved Makashi hilt",mod:{parry:1,note:"Form II contention hilt"},cost:4000},
+ {n:"dueling focus lens",mod:{note:"+1 to saber Parry"},cost:5000},
+ {n:"power-cycling cell",mod:{note:"never short-circuits in water/rain"},cost:3000},
+ {n:"Lorrdian secondary crystal",mod:{note:"+1 to Deflect blaster bolts"},cost:6000},
+ {n:"overcharged primary crystal",mod:{dmg:2,note:"hotter blade; cuts a touch deeper"},cost:7000}
+];
+
+const WF_NAME_A=["Dusk","Vex","Kael","Morn","Ash","Vor","Cinder","Hush","Grave","Storm","Wraith","Ember","Riven","Shadow","Gleam","Frost","Scour","Pyre","Vael","Thorn","Karn","Sable","Wyrd","Brand","Gloam","Sear","Cael","Vesk","Drael","Mourn","Talon","Rend","Vire","Skarn","Onyx","Verge","Solace","Lumen","Nyx","Drift"];
+const WF_NAME_B=["fang","edge","song","bane","light","claw","fire","thorn","weep","shard","brand","maw","vow","ash","rend","wake","bite","gleam","scar","sliver","reaver","kiss","sorrow","oath","whisper","ruin","vein","mark","howl","sigh","blight"];
+const WF_EPITHET=["the Unbroken","the Hollow Star","the Quiet Death","the Last Word","the Bleeding Edge","the Pale Oath","the Verge","the Gravemaker","the Singing Wound","the Cold Mercy","the Hand of Dusk","the Final Argument","the Sunless Blade","the Long Silence","the Widow\u2019s Gift","the Ember of an Old War","the Mercy You Don\u2019t Get","the Patient Thing","the Sorrow of Manaan","the Vow Kept"];
+const WF_MAKER=["Verpine","Mandalorian","Echani","Czerka","Arakyd","Merr-Sonn","BlasTech","Sith-forged","Jedi-wrought","Krath","Aratech","SoroSuub","Tapani","Locris","Bothan-tuned"];
+const WF_ORIGIN=["recovered from a sealed Sith tomb","looted off a dead Mandalorian","won in a sabacc pot on Nar Shaddaa","pried from a Rakatan vault on Lehon","carried by a Jedi who never came home","bought from a Verpine artisan at a ruinous price","stripped from a Czerka armoury","taken from a duelist who lost on Iridonia","found in the wreck of a lost cruiser","traded for, no questions, in the markets of Taris","passed down a clan line until the line ended","cut from the hand of its last owner","unearthed in the ruins of Malachor","handed over as the price of a debt","pulled from a frozen hold on Hoth"];
+
+const LC_RANK=["\u2014","","Lic","Res","Mil","Rare","Illegal"];
+function lcWorse(a,b){const ia=LC_RANK.indexOf(a||""),ib=LC_RANK.indexOf(b||"");return (ia>=ib?a:b)||"";}
+
+function forgeBase(cat){const W=GD.weapons;const isM=w=>w.cls==='Melee',isR=w=>w.cls==='Ranged';
+ const byCat=re=>W.filter(w=>re.test(w.cat||''));
+ const notTrain=w=>!/training/i.test(w.name);
+ if(cat==='lightsaber')return pick(byCat(/Lightsaber/).filter(notTrain));
+ if(cat==='rifle')return pick(byCat(/Beam \(Rifle\)|Guns \(Rifle\)/));
+ if(cat==='pistol')return pick(byCat(/Beam \(Pistol\)|Guns \(Pistol\)/));
+ if(cat==='vibro')return pick(W.filter(w=>isM(w)&&/Vibro|Sword|Staff|Polearm|Spear|Axe|Saber|Shortsword|Broadsword/.test(w.cat||'')&&!/Lightsaber/.test(w.cat||'')));
+ if(cat==='heavy')return pick(byCat(/Gunner|LAW/));
+ if(cat==='exotic')return pick(W.filter(w=>/son|ion|cor|disint/i.test(w.dtype||'')||/Crossbow|Liquid|Thrown/.test(w.cat||'')));
+ // auto — weighted across the common classes
+ const r=Math.random();
+ if(r<0.30)return forgeBase('rifle');
+ if(r<0.52)return forgeBase('pistol');
+ if(r<0.74)return forgeBase('vibro');
+ if(r<0.86)return forgeBase('lightsaber');
+ if(r<0.95)return forgeBase('exotic');
+ return forgeBase('heavy');
+}
+
+function forgeApply(w,mods,crystal){const ST=12;const c=clone(w);
+ let dDie=crystal?(crystal.die||0):0,dFlat=crystal?(crystal.flat||0):0,adMul=1,addCost=0;const riders=[];let lc=w.lc||"";
+ if(crystal&&crystal.rider)riders.push(crystal.rider);
+ mods.forEach(m=>{const d=m.mod||{};addCost+=num(m.cost)||0;if(m.lc)lc=lcWorse(lc,m.lc);
+  if(d.acc)c.acc=(num(c.acc)||0)+d.acc;
+  if(d.rof)c.rof=(num(c.rof)||0)+d.rof;
+  if(d.rcl!=null)c.rcl=Math.max(1,(num(c.rcl)||1)+d.rcl);
+  if(d.shotsPct&&c.shots)c.shots=scaleShots(c.shots,d.shotsPct);
+  if(d.parry!=null&&c.parry!==''&&c.parry!=null)c.parry=(num(c.parry)||0)+d.parry;
+  if(d.dmgDie)dDie+=d.dmgDie;
+  if(d.dmg)dFlat+=d.dmg;
+  if(d.adMul)adMul*=d.adMul;
+  if(d.wt)c.wt=(num(c.wt)||0)+d.wt;
+  if(d.note)riders.push(d.note);});
+ if(adMul!==1)c.ad=(num(c.ad)||1)*adMul;
+ const dmg=adjustDamage(dmgOf(c,ST),dDie,dFlat);
+ const xtra=weaponXtra(c);
+ return {c,dmg,xtra,riders,addCost,lc};
+}
+
+function forgeName(base,rar,cat){
+ const noun=cat==='lightsaber'?pick(['lightsaber','blade','saber']):(base.cls==='Melee'?pick(['blade','weapon']):pick(['blaster','weapon','gun']));
+ if(rar.key==='standard')return base.name;
+ if(rar.key==='fine')return Math.random()<0.5?(pick(WF_MAKER)+'-tuned '+base.name):('fine '+base.name);
+ if(rar.key==='refined')return pick(WF_MAKER)+' '+base.name;
+ if(rar.key==='masterwork')return Math.random()<0.5?(base.name+', a masterwork of '+pick(WF_MAKER)+' make'):(pick(WF_NAME_A)+pick(WF_NAME_B));
+ // prototype / unique / legendary — a proper name + epithet
+ const pn=pick(WF_NAME_A)+pick(WF_NAME_B);
+ const ep=pick(WF_EPITHET);
+ return pn+', '+ep+' \u2014 '+(rar.key==='legendary'?'a legendary ':rar.key==='prototype'?'a prototype ':'a unique ')+(base.name.toLowerCase());
+}
+
+function forgeWeapon(opts){opts=opts||{};
+ const base=opts.base||forgeBase(opts.cat||'auto');
+ const isSaber=/Lightsaber/.test(base.cat||'');
+ const ranged=isRanged(base);
+ let rar=opts.rarity?rarityByKey(opts.rarity):rollRarity(opts.minRarity);
+ // pick crystal (sabers always) + mods up to rarity.mods
+ let crystal=null;
+ if(isSaber){
+  // higher rarity → richer crystal pool weighting
+  let pool=WF_CRYSTALS.slice();
+  if(rar.mods>=3)pool=pool.filter(x=>x.cost>0||Math.random()<0.4);
+  crystal=wpick((pool.length?pool:WF_CRYSTALS).map(x=>[x,x.w]));
+ }
+ const modPool=isSaber?WF_MODS_SABER:(ranged?WF_MODS_RANGED:WF_MODS_MELEE);
+ const nMods=Math.max(0,rar.mods-(isSaber?1:0)); // the crystal counts as one "mod slot" for sabers
+ const mods=picks(modPool,Math.min(nMods,modPool.length));
+ const ap=forgeApply(base,mods,crystal);
+ const name=forgeName(base,rar,isSaber?'lightsaber':(ranged?'ranged':'melee'));
+ const line=name+' \u2014 '+ap.dmg+(ap.xtra?' \u00b7 '+ap.xtra:'');
+ // cost
+ const baseCost=(base.cost==='build'||!base.cost)?14000:(num(base.cost)||0);
+ let cost=Math.round(baseCost*rar.mult+ap.addCost+(crystal?crystal.cost:0));
+ cost=roundVal(cost);
+ // budget downgrade: shed mods until it fits (leaders use this)
+ let outMods=mods.slice(),outAp=ap;
+ if(opts.budget){let guard=0;while(cost>opts.budget&&outMods.length>0&&guard++<10){outMods=outMods.slice(0,-1);outAp=forgeApply(base,outMods,crystal);cost=roundVal(Math.round(baseCost*rar.mult+outAp.addCost+(crystal?crystal.cost:0)));}}
+ const finalLine=name+' \u2014 '+outAp.dmg+(outAp.xtra?' \u00b7 '+outAp.xtra:'');
+ return {name,base,rarity:rar,crystal,mods:outMods,riders:outAp.riders,line:finalLine,dmg:outAp.dmg,xtra:outAp.xtra,cost,lc:outAp.lc,origin:pick(WF_ORIGIN)};
+}
+
+function forgeCard(f){
+ const rpill=f.rarity.key==='standard'?'pill':(f.rarity.unique?'pill vio':'pill acc');
+ const crystalRow=f.crystal?'<div class="kvline"><span class="kvk">Crystal</span><span class="kvv">'+esc(f.crystal.n)+' \u00b7 '+esc(f.crystal.col)+' blade</span></div>':'';
+ const modRow=(f.mods&&f.mods.length)?'<div class="kvline"><span class="kvk">Worked with</span><span class="kvv">'+esc(f.mods.map(m=>m.n).join(' \u00b7 '))+'</span></div>':'';
+ const riders=(f.riders&&f.riders.length)?'<div class="bench-riders">Riders: '+esc(f.riders.join(' \u00b7 '))+'</div>':'';
+ return '<div class="card"><div class="chead"><span class="ctitle">'+esc(f.name)+'</span><span class="cmeta">'
+  +'<span class="'+rpill+'">'+esc(f.rarity.label)+'</span>'
+  +(f.lc?'<span class="pill">LC '+esc(f.lc)+'</span>':'')
+  +'<span class="pill">'+(f.cost?cr(f.cost):'beyond price')+'</span></span></div>'
+  +'<div class="cbody">'+sec('Stats',esc(f.line))+crystalRow+modRow+riders
+  +'<div class="kvline"><span class="kvk">Found</span><span class="kvv">'+esc(f.origin)+'</span></div>'
+  +'<div class="fg-actions" style="margin-top:8px"><button class="btn mini ghost" data-forgecopy="'+esc(f.line.replace(/"/g,'&quot;'))+'">copy line</button></div>'
+  +'</div></div>';
+}
+
+/* ---------- UI hooks (wired from buildCombat / buildLoot) ---------- */
+function wbGen(){
+ const cpRaw=($('wbCp')&&$('wbCp').value||'').trim();
+ const cntRaw=($('wbCount')&&$('wbCount').value||'').trim();
+ const budRaw=($('wbBudget')&&$('wbBudget').value||'').trim();
+ const fac=($('wbFac')&&$('wbFac').value)||'surprise';
+ composeWarband({cp:cpRaw?Math.max(25,+cpRaw||0):0,count:cntRaw?+cntRaw:0,budget:budRaw?+budRaw:0,fac:fac});
+}
+function forgeGo(n){
+ const cat=($('wfCat')&&$('wfCat').value)||'auto';
+ const rar=($('wfRar')&&$('wfRar').value)||'';
+ const budRaw=($('wfBudget')&&$('wfBudget').value||'').trim();
+ const out=$('forgeOut');if(!out)return;
+ const cards=[];for(let i=0;i<(n||1);i++){cards.push(forgeCard(forgeWeapon({cat:cat,rarity:rar,budget:budRaw?+budRaw:0})));}
+ out.insertAdjacentHTML('afterbegin',cards.join(''));
+}
+
 /* ---------- combat tracker (persistent) ---------- */
 const COMMON_CONDS=['Stunned','Reeling','Prone','Shock-1','Shock-2','Grappled','Unconscious','Bleeding','Aiming','Defending'];
 function cbState(){if(!STORE.combat)STORE.combat={round:1,activeId:null,rows:[]};return STORE.combat;}
 function cbSave(){saveStore();}
 function cbSorted(){return cbState().rows.slice().sort((a,b)=>b.spd-a.spd);}
-function rowFromBlock(name,side,block){const a=block.attrs||{};return{id:uid(),name:name,side:side,arch:block.archetype||'',spd:+a.Speed||5,hp:+a.HP||10,hpmax:+a.HP||10,dodge:+a.Dodge||8,parry:(a.Parry==='\u2014'||a.Parry==null?null:+a.Parry),blk:(a.Block==='\u2014'||a.Block==null?null:+a.Block),dr:+a.DR||0,conds:[]};}
+function rowFromBlock(name,side,block){const a=block.attrs||{};return{id:uid(),name:name,side:side,arch:block.archetype||'',atk:(block.weapons||'').split('\n')[0]||'',spd:+a.Speed||5,hp:+a.HP||10,hpmax:+a.HP||10,dodge:+a.Dodge||8,parry:(a.Parry==='\u2014'||a.Parry==null?null:+a.Parry),blk:(a.Block==='\u2014'||a.Block==null?null:+a.Block),dr:+a.DR||0,conds:[]};}
 function cbAddRows(rows){const S=cbState();rows.forEach(r=>S.rows.push(r));if(!S.activeId&&S.rows.length)S.activeId=cbSorted()[0].id;cbSave();renderCombat();}
 function cbRemove(id){const S=cbState();S.rows=S.rows.filter(r=>r.id!==id);if(S.activeId===id){const o=cbSorted();S.activeId=o.length?o[0].id:null;}cbSave();renderCombat();}
 function cbNextTurn(){const S=cbState();const ord=cbSorted();if(!ord.length)return;let i=ord.findIndex(r=>r.id===S.activeId);i++;if(i>=ord.length){i=0;S.round++;}S.activeId=ord[i].id;cbSave();renderCombat();}
@@ -1787,7 +2110,7 @@ function renderCombat(){
   const def='Dodge '+r.dodge+(r.parry!=null?' \u00b7 Parry '+r.parry:'')+(r.blk!=null?' \u00b7 Block '+r.blk:'')+' \u00b7 DR '+r.dr;
   return '<div class="cbrow'+(active?' active':'')+'" data-id="'+r.id+'">'
    +'<div class="cb-init"><span class="il">SPD</span>'+r.spd+'</div>'
-   +'<div class="cb-id"><input class="cb-name-in" data-id="'+r.id+'" data-field="name" value="'+esc(r.name)+'"><span class="cb-arch">'+esc(r.arch||'\u2014')+'</span></div>'
+   +'<div class="cb-id"><input class="cb-name-in" data-id="'+r.id+'" data-field="name" value="'+esc(r.name)+'"><span class="cb-arch">'+esc(r.arch||'\u2014')+(r.atk?' \u00b7 '+esc(r.atk):'')+'</span></div>'
    +'<select class="cb-side-in" data-id="'+r.id+'" data-field="side"><option value="enemy"'+(r.side==='enemy'?' selected':'')+'>enemy</option><option value="pc"'+(r.side==='pc'?' selected':'')+'>PC</option><option value="ally"'+(r.side==='ally'?' selected':'')+'>ally</option></select>'
    +'<div class="cb-hp"><input type="number" class="dmgin" value="1" aria-label="damage / healing amount"><button class="btn mini" data-act="hit">Hit</button><button class="btn mini ghost" data-act="heal">Heal</button><span class="hpv '+hpcls+'">'+r.hp+' / '+r.hpmax+'</span></div>'
    +'<div class="cb-def">'+def+'</div>'
@@ -1807,6 +2130,16 @@ function buildCombat(el){
  +'<div class="subnav" id="cbSub"><button class="on" data-sub="encounter">Encounter</button><button data-sub="combat">Combat tracker</button></div>'
  // ---- encounter panel ----
  +'<div class="subpanel on" id="cs-encounter">'
+  +'<div class="warband-box" style="border:1px solid var(--line);border-radius:var(--r);padding:12px 14px 14px;margin-bottom:16px;background:var(--panel)">'
+  +'<div class="pb-hd" style="margin-bottom:10px">\u2692 Warband generator \u2014 fill any field, or leave blank to roll it</div>'
+  +'<div class="party-row" style="margin-bottom:10px">'
+   +'<div class="field"><span class="lab">Point avg</span><input id="wbCp" type="number" placeholder="roll" style="width:86px"></div>'
+   +'<div class="field"><span class="lab">Enemy type</span><select id="wbFac"><option value="surprise">\u2014 surprise me \u2014</option>'+FAC_LIST.map(f=>'<option value="'+f[0]+'">'+esc(f[1])+'</option>').join('')+'<option disabled>\u2500\u2500\u2500 combos \u2500\u2500\u2500</option>'+FAC_COMBO_LIST.map(f=>'<option value="'+f[0]+'">'+esc(f[1])+'</option>').join('')+'</select></div>'
+   +'<div class="field"><span class="lab">How many</span><input id="wbCount" type="number" placeholder="roll" style="width:86px"></div>'
+   +'<div class="field"><span class="lab">Gear cap (cr/head)</span><input id="wbBudget" type="number" placeholder="auto" style="width:120px"></div>'
+  +'</div>'
+  +'<div class="row"><button class="btn primary" id="wbGo">\u2692 Generate warband</button><span class="muted" style="font-size:11px;align-self:center;padding-left:6px">Gear cap drives armour \u2014 the lever that decides jackets vs beskar.</span></div>'
+ +'</div>'
   +'<div class="party-box"><div class="pb-hd">Your party \u2014 feeds the swing read</div><div class="party-row">'
    +'<div class="field"><span class="lab">Party size</span><input type="number" id="pSize" value="'+(P.size||4)+'" style="width:74px"></div>'
    +'<div class="cap-toggles">'+cap('blaster','Standard blasters',P.blaster)+cap('melee','Vibro / melee',P.melee)+cap('heavy','Heavy weapons',P.heavy)+cap('saber','Lightsaber',P.saber)+cap('disruptor','Disruptor',P.disruptor)+'</div>'
@@ -1838,7 +2171,7 @@ function buildCombat(el){
  el.querySelectorAll('.party-box .cap').forEach(l=>{l.querySelector('input').onchange=ev=>{STORE.party[l.dataset.cap]=ev.target.checked;l.classList.toggle('on',ev.target.checked);saveStore();if(lastEncounter)renderEncounter();};});
  // wire encounter
  $('encAdd').onclick=()=>{const c=+$('encCount').value||1;const ak=$('encArch').value;const tier=$('encTier').value;encLines.push({count:c,arch:ak==='surprise'?'(random)':ak,archKey:ak,tier:tier});renderEncLines();};
- $('encGen').onclick=genEncounter;$('encClear').onclick=()=>{encLines=[];renderEncLines();};
+ $('encGen').onclick=genEncounter;$('encClear').onclick=()=>{encLines=[];renderEncLines();}; if($('wbGo'))$('wbGo').onclick=wbGen;
  renderEncLines();
  // wire combat
  $('cbSub').onclick=e=>{const b=e.target.closest('button');if(b)switchCombatSub(b.dataset.sub);};
