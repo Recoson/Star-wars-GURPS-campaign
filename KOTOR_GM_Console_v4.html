@@ -1730,20 +1730,13 @@ function uid(){return 'x'+Math.random().toString(36).slice(2,9);}
 
 
 /* ---------- encounter composer ---------- */
-let lastEncounter=null, encLines=[];
-function renderEncLines(){const host=$('encLines');if(!host)return;
- if(!encLines.length){host.innerHTML='<div class="empty">No groups yet. Add a line above (count \u00d7 archetype \u00d7 tier), then generate.</div>';return;}
- host.innerHTML=encLines.map((L,i)=>'<div class="enc-line"><span class="el-count">'+L.count+'\u00d7</span><span>'+esc(L.arch)+'</span><span class="muted">'+esc(L.tier)+'</span><button class="btn mini danger el-rm" data-i="'+i+'">remove</button></div>').join('');
- host.querySelectorAll('.el-rm').forEach(b=>b.onclick=()=>{encLines.splice(+b.dataset.i,1);renderEncLines();});}
-function genEncounter(){if(!encLines.length){toast('Add at least one group first');return;}
- const units=[];encLines.forEach(L=>{for(let i=0;i<L.count;i++){const arch=L.archKey==='surprise'?pick(ARCHE_KEYS):L.archKey;const cp=TIER_CP[L.tier]||500;const block=genBlock(arch,cp);const species=speciesForArch(arch);const nm=npcName(species);block.desc=npcLook(block,species,nm);units.push({name:nm,species,block});}});
- lastEncounter={units};renderEncounter();}
+let lastEncounter=null;
 function renderEncounter(){const host=$('encOut');if(!host)return;if(!lastEncounter||!lastEncounter.units.length){host.innerHTML='';return;}
  const units=lastEncounter.units;
  const actions='<div class="fg-actions"><button class="btn mini" id="encCombat">\u2192 Send to Combat</button><button class="btn mini" id="encKeep">\uD83D\uDCCC Keep all</button><button class="btn ghost mini" id="encReroll">\u27F3 Reroll</button></div>';
  const grid='<div class="enc-units">'+units.map(u=>{const b=u.block;const w=(b.weapons||'').split('\n')[0]||'';const f=b.force==='dark'?' \u00b7 <span style="color:var(--red)">dark</span>':b.force==='light'?' \u00b7 <span style="color:var(--grn)">light</span>':'';return '<div class="enc-unit"><div class="eu-name">'+(u.role==='leader'?'\u2605 ':'')+esc(u.name)+'</div><div class="eu-meta">'+esc(b.archetype)+' \u00b7 '+esc(b.tier)+' \u00b7 '+esc(u.species)+' \u00b7 DR '+b.attrs.DR+f+'</div><div class="eu-line">'+esc(w)+'</div>'+(b.signature?'<div class="eu-desc" style="color:#caa24a">carries '+esc(b.signature)+'</div>':'')+'<div class="eu-desc">'+esc(b.desc||npcLook(b,u.species,u.name))+'</div></div>';}).join('')+'</div>';
  host.innerHTML=(lastEncounter.banner||'')+actions+grid;
- $('encCombat').onclick=encToCombat;$('encKeep').onclick=encKeepAll;$('encReroll').onclick=genEncounter;}
+ $('encCombat').onclick=encToCombat;$('encKeep').onclick=encKeepAll;$('encReroll').onclick=wbGen;}
 function encKeepAll(){if(!lastEncounter||!lastEncounter.units.length){toast('Generate an encounter first');return;}
  lastEncounter.units.forEach(u=>{const b=u.block;STORE.kept.unshift({id:'k'+uid(),name:u.name,species:u.species,arch:b.archetype,tier:b.tier,cp:b.cp,force:b.force,block:b});});
  saveStore();if($('keptWrap'))renderKept();toast('Kept '+lastEncounter.units.length+' NPCs');}
@@ -2101,14 +2094,6 @@ function buildCombat(el){
   +'</div>'
   +'<div class="row"><button class="btn primary" id="wbGo">\u2692 Generate warband</button><span class="muted" style="font-size:11px;align-self:center;padding-left:6px">Gear cap drives armour \u2014 the lever that decides jackets vs beskar.</span></div>'
  +'</div>'
-  +'<div class="controls">'
-   +'<div class="field"><span class="lab">Count</span><select id="encCount">'+[1,2,3,4,5,6,8,10].map(n=>'<option value="'+n+'"'+(n===3?' selected':'')+'>'+n+(n===1?' foe':' foes')+'</option>').join('')+'</select></div>'
-   +'<div class="field"><span class="lab">Archetype</span><select id="encArch"><option value="surprise">\u2014 random \u2014</option>'+ARCHE_KEYS.map(k=>'<option>'+esc(k)+'</option>').join('')+'</select></div>'
-   +'<div class="field"><span class="lab">Tier</span><select id="encTier">'+BAND.map((t,i)=>'<option'+(i===0?' selected':'')+'>'+t+'</option>').join('')+'</select></div>'
-   +'<button class="btn" id="encAdd">+ Add group</button>'
-  +'</div>'
-  +'<div id="encLines" style="margin-bottom:14px"></div>'
-  +'<div class="row" style="margin-bottom:6px"><button class="btn primary" id="encGen">\u2692 Generate encounter</button><button class="btn ghost mini" id="encClear">clear groups</button></div>'
   +'<div id="encOut"></div>'
  +'</div>'
  // ---- combat panel ----
@@ -2120,10 +2105,7 @@ function buildCombat(el){
    +'<button class="btn ghost mini" id="cbClear">clear</button>'
   +'</div><div id="cbRows"></div>'
  +'</div>';
- // wire encounter
- $('encAdd').onclick=()=>{const c=+$('encCount').value||1;const ak=$('encArch').value;const tier=$('encTier').value;encLines.push({count:c,arch:ak==='surprise'?'(random)':ak,archKey:ak,tier:tier});renderEncLines();};
- $('encGen').onclick=genEncounter;$('encClear').onclick=()=>{encLines=[];renderEncLines();}; if($('wbGo'))$('wbGo').onclick=wbGen;
- renderEncLines();
+ if($('wbGo'))$('wbGo').onclick=wbGen;
  // wire combat
  $('cbSub').onclick=e=>{const b=e.target.closest('button');if(b)switchCombatSub(b.dataset.sub);};
  $('cbNext').onclick=cbNextTurn;$('cbBlank').onclick=cbAddBlank;$('cbClear').onclick=cbReset;
