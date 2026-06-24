@@ -1578,6 +1578,18 @@ function wpnDamage(w,dmgBonus){
  const _fu2=_fuLine(w); if(_fu2)dmg=dmg?(dmg+'<br>'+_fu2):_fu2;
  return dmg||'';
 }
+function dmgKindTag(w){
+ if(!w)return'';
+ var dt=((w.dtype||(w.sw&&w.sw.dtype)||(w.th&&w.th.dtype)||'')+'').toLowerCase();
+ var kind,col;
+ if(/burn/.test(dt)){kind='energy';col='--amber';}
+ else if(/son/.test(dt)){kind='sonic';col='--cyan';}
+ else if(/ion/.test(dt)){kind='ion';col='--cyan';}
+ else if(/cor/.test(dt)){kind='disruptor';col='--red';}
+ else if(/(cr|pi|imp|cut)/.test(dt)){kind='kinetic';col='--blue';}
+ else return'';
+ return ' <span style="color:var('+col+');font-weight:600" title="hits the '+kind+' DR column on armour">['+kind+']</span>';
+}
 function weaponParry(w,parryBonus){
  parryBonus=+parryBonus||0;
  if(!w||w.cls==='Ranged')return'-';
@@ -3148,7 +3160,7 @@ function eqStatLine(kind,i,rec){
  }
  if(kind==='armour'){ if(!rec)return''; const a=effItem(rec,it); const qm=(+it.quality||0)+(+it.material||0); const bE=qm+modSum(it,'drE'),bK=qm+modSum(it,'drK');
    const _ewt=armourEffWeight(it,a);const _full=(+a.wt||0)+modSum(it,'wt');const _partial=Array.isArray(it.cover)&&Math.abs(_ewt-_full)>0.05;
-   return `<div class="eq-stat"><b>DR</b> e${(+a.drE||0)+bE}/k${(+a.drK||0)+bK}${a.dd?` &nbsp; <span style="color:var(--amber)">÷${a.dd} ${esc(a.ddVs||'')}</span>`:''} &nbsp; <b>Wt</b> ${_ewt}${_partial?` <span class="dim" style="font-size:10px">of ${_full} (partial)</span>`:''}${a.halfEnergyAD?' &nbsp; <span style="color:var(--cyan)">½eAD</span>':''} &nbsp; <b>Covers</b> ${coverLbl(it,rec)} &nbsp; <b>Wt</b> ${armourEffWeight(it,a)}${a.special?`<div class="dim" style="color:var(--green);font-size:9px;margin-top:2px">${esc(armourSpecialSummary(a))}</div>`:''}</div>`;
+   return `<div class="eq-stat"><b>DR</b> <span style="color:var(--amber)" title="energy DR — blasters, sonic, ion">E ${(+a.drE||0)+bE}</span><span class="dim"> / </span><span style="color:var(--blue)" title="kinetic DR — slugthrowers, melee">K ${(+a.drK||0)+bK}</span>${a.dd?` &nbsp; <span style="color:var(--amber)">÷${a.dd} vs ${esc(a.ddVs||'')}</span>`:''} &nbsp; <b>Wt</b> ${_ewt}${_partial?` <span class="dim" style="font-size:10px">of ${_full} (partial)</span>`:''}${a.halfEnergyAD?' &nbsp; <span style="color:var(--cyan)">½eAD</span>':''} &nbsp; <b>Covers</b> ${coverLbl(it,rec)} &nbsp; <b>Wt</b> ${armourEffWeight(it,a)}${a.special?`<div class="dim" style="color:var(--green);font-size:9px;margin-top:2px">${esc(armourSpecialSummary(a))}</div>`:''}</div>`;
  }
  if(kind==='shields'){ if(!rec)return''; const sh=effItem(rec,it); const md=modSum(it,'dr'); return `<div class="eq-stat"><b>DR</b> ${(+sh.dr||0)+md} &nbsp; <b>vs</b> ${sh.vs||'-'}</div>`; }
  if(kind==='explosives'){ const e=rec?effItem(rec,it):null; return `<div class="eq-stat">${e?`<b>Dmg</b> ${esc(e.dmg)} &nbsp; `:''}${e?`<b>Wt</b> ${(+e.wt||0)} ea &nbsp; `:''}<b>Qty</b> <input class="cell" type="number" min="1" value="${it.qty||1}" onchange="setQty('explosives',${i},this.value)" style="width:42px">${e&&e.notes?`<div class="dim" style="font-size:10px;line-height:1.35;margin-top:3px;white-space:normal">${esc(e.notes)}</div>`:''}${e?explosiveBlast(e):''}</div>`; }
@@ -4021,7 +4033,7 @@ function renderInventorySection(){
      :(isBagItem?'<div class="dim" style="font-size:9px;margin-top:2px">equip to use as a bag</div>':'');
    const invQty=((k==='gear'||k==='explosives')&&e.name)?`<div style="margin-top:2px"><span class="dim" style="font-size:10px">Qty </span><input class="cell" type="number" min="1" value="${+e.qty||1}" onchange="setInvQty(${idx},this.value)" style="width:40px"></div>`:'';
    const wtCell=e.name?`<div class="dim" style="font-size:10px">${wt} kg</div>${invQty}${bagSel}`:'';
-   const statLine=(k==='weapons'&&e.name)?(()=>{const w=effWeapon(e);if(!w)return'';const isR=w.cls==='Ranged';const dmg=wpnDamage(w,wDmgBonus(e,w))||'-';return `<div class="dim" style="font-size:10px;margin-top:2px">${isR?`Dmg ${dmg} · Acc ${w.acc||'-'} · RoF ${w.rof||'-'} · Shots ${w.shots||'-'} · Rcl ${w.rcl||'-'} · Bulk ${w.bulk!=null?w.bulk:'—'}`:`Dmg ${dmg} · Reach ${w.reach||'-'} · Parry ${weaponParry(w,wParryBonus(e))} · ST ${w.st||'-'}`}</div>`;})():'';
+   const statLine=(k==='weapons'&&e.name)?(()=>{const w=effWeapon(e);if(!w)return'';const isR=w.cls==='Ranged';const dmg=wpnDamage(w,wDmgBonus(e,w))||'-';return `<div class="dim" style="font-size:10px;margin-top:2px">${isR?`Dmg ${dmg}${dmgKindTag(w)} · Acc ${w.acc||'-'} · RoF ${w.rof||'-'} · Shots ${w.shots||'-'} · Rcl ${w.rcl||'-'} · Bulk ${w.bulk!=null?w.bulk:'—'}`:`Dmg ${dmg}${dmgKindTag(w)} · Reach ${w.reach||'-'} · Parry ${weaponParry(w,wParryBonus(e))} · ST ${w.st||'-'}`}</div>`;})():'';
    return `<tr><td><div class="eq-pick">${picker}${invBrandPill(k,e.name)}${upBadge(e)}</div>${statLine}</td>
      <td style="vertical-align:top">${wtCell}</td>
      <td style="white-space:nowrap;text-align:right;vertical-align:top">
