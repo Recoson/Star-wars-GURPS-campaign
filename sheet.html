@@ -1542,14 +1542,14 @@ function wpnDamage(w,dmgBonus){
   if(w.sw){
    let dmg=w.sw.fixed?addDiceMod(w.sw.fixed,dmgBonus):addDiceMod(swing(),(+w.sw.mod||0)+dmgBonus);
    if(_torrST&&w.sw.fixed)dmg=addTwoDice(dmg,swing());
-   const ad=+w.sw.ad;const adS=(ad&&ad!==1)?(' ('+ad+')'):'';
+   const ad=+w.sw.ad;const adS=ad?(' ('+ad+')'):'';
    const dt=(w.sw.dtype||'').trim();
    lines.push('<span style="color:var(--cyan);font-weight:600">Sw</span> '+dmg+adS+(dt?' '+esc(dt):''));
   }
   if(w.th){
    let dmg=w.th.fixed?addDiceMod(w.th.fixed,dmgBonus):addDiceMod(thrust(),(+w.th.mod||0)+dmgBonus);
    if(_torrST&&w.th.fixed)dmg=addTwoDice(dmg,thrust());
-   const ad=+w.th.ad;const adS=(ad&&ad!==1)?(' ('+ad+')'):'';
+   const ad=+w.th.ad;const adS=ad?(' ('+ad+')'):'';
    const dt=(w.th.dtype||'').trim();
    lines.push('<span style="color:var(--cyan);font-weight:600">Th</span> '+dmg+adS+(dt?' '+esc(dt):''));
   }
@@ -1569,7 +1569,7 @@ function wpnDamage(w,dmgBonus){
   dmg=parts.join('<br>');
  }
  const ad=+w.ad;
- if(ad&&ad!==1)dmg=dmg?(dmg+' ('+w.ad+')'):'('+w.ad+')';
+ if(ad)dmg=dmg?(dmg+' ('+w.ad+')'):'('+w.ad+')';
  const dt=(w.dtype||'').trim();
  if(dt && !dmg.toLowerCase().includes(dt.toLowerCase())){
   dmg = dmg ? (dmg+' '+esc(dt)) : esc(dt);
