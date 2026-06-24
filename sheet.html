@@ -981,7 +981,7 @@ function ownedTraitLevels(frag){
 function ownsTrait(frag){const f=frag.toLowerCase();return (C.traits||[]).some(tr=>tr.name&&tr.name.toLowerCase().includes(f));}
 function liftingSTbonus(){return ownedTraitLevels('Lifting ST');}
 function strikingSTbonus(){return ownedTraitLevels('Striking ST');}
-function fitHTbonus(){let b=0;(C.traits||[]).forEach(tr=>{if(!tr||!tr.name)return;const n=(''+tr.name).trim();if(n==='Very Fit')b+=2;else if(n==='Fit')b+=1;else if(n==='Unfit')b-=1;});return b;}
+function fitHTbonus(){let b=0;(C.traits||[]).forEach(tr=>{if(!tr||!tr.name)return;const n=(''+tr.name).trim();if(n==='Very Fit')b+=2;else if(n==='Fit')b+=1;else if(n==='Very Unfit')b-=2;else if(n==='Unfit')b-=1;});return b;}
 
 // Appearance reaction modifier (GURPS B21): map owned Appearance trait to its reaction bonus
 function appearanceMod(){
@@ -995,6 +995,8 @@ function reactionMod(){
  if(C.react!=null&&C.react!=='') return +C.react||0;
  let r=appearanceMod()+ownedTraitLevels('Charisma');
  if(ownsTrait('Voice')) r+=2;
+ if(ownsTrait('Bad Smell')) r-=2;
+ r-=ownedTraitLevels('Odious Personal Habit');
  return r;
 }
 // Block = 3 + best Shield/Cloak skill /2 + Enhanced Block + stance block fx
@@ -1018,9 +1020,9 @@ function frightCheck(){
 }
 function sizeMod(){return +C.sm||0;}
 // Sense rolls (all default to Per; acute senses add their levels) — B358
-function visionRoll(){return Per()+ownedTraitLevels('Acute Vision');}
-function hearingRoll(){return Per()+ownedTraitLevels('Acute Hearing');}
-function tasteSmellRoll(){return Per()+ownedTraitLevels('Acute Taste and Smell');}
+function visionRoll(){if(ownsTrait('Blindness'))return '\u2014';return Per()+ownedTraitLevels('Acute Vision');}
+function hearingRoll(){if(ownsTrait('Deafness'))return '\u2014';let r=Per()+ownedTraitLevels('Acute Hearing');if(ownsTrait('Hard of Hearing'))r-=4;return r;}
+function tasteSmellRoll(){if(ownsTrait('No Sense of Smell'))return '\u2014';return Per()+ownedTraitLevels('Acute Taste and Smell');}
 function touchRoll(){return Per()+ownedTraitLevels('Acute Touch');}
 const ENC_NAME=['None','Light','Medium','Heavy','X-Heavy'];
 function encName(){return ENC_NAME[Math.max(0,Math.min(4,encLevel()))]||'—';}
@@ -1213,6 +1215,42 @@ function forceSkillCap(sk){
  return {baseAttr,cap,attrVal,capped:attrVal>cap};
 }
 
+// ── Named GURPS Talents (B89-90): each grants its level to a group of skills.
+// Skill lists are canonical GURPS; the compendium only references Talents by
+// name (in species templates), so it is not authoritative on coverage.
+const TALENT_SKILLS={
+ "Outdoorsman":["Camouflage","Fishing","Hiking","Mimicry","Naturalist","Navigation","Survival","Tracking","Weather Sense"],
+ "Smooth Operator":["Carousing","Detect Lies","Diplomacy","Fast-Talk","Intimidation","Leadership","Panhandling","Politics","Public Speaking","Savoir-Faire","Sex Appeal","Streetwise"],
+ "Mathematical Ability":["Astronomy","Cryptography","Engineer","Finance","Mathematics","Navigation","Physics"],
+ "Business Acumen":["Accounting","Economics","Finance","Market Analysis","Merchant","Propaganda"],
+ "Animal Friend":["Animal Handling","Packing","Teamster","Veterinary"],
+ "Artificer":["Armoury","Electronics Operation","Electronics Repair","Engineer","Machinist","Mechanic"],
+ "Green Thumb":["Farming","Gardening","Naturalist"],
+ "Musical Ability":["Group Performance","Musical Composition","Performance","Singing","Musical Instrument"],
+ "Gifted Artist":["Artist","Jeweler"]
+};
+function _talentCovers(list,skillName){
+ const base=String(skillName||"").replace(/\s*\(.*$/,"").trim().toLowerCase();
+ return list.some(x=>x.toLowerCase()===base);
+}
+function talentLevelOwned(talentBase){
+ const f=talentBase.toLowerCase();
+ const re=new RegExp("^"+f.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"(\\s*\\(talent\\))?(\\s+\\d+)?(\\s*\\(talent\\))?$");
+ let mx=0;
+ (C.traits||[]).forEach(tr=>{
+  if(!tr||!tr.name)return;
+  const n=String(tr.name).trim().toLowerCase();
+  if(re.test(n)){ const m=n.match(/\s(\d+)\s*(\(talent\))?$/); const lv=m?+m[1]:(+tr.levels||1); if(lv>mx)mx=lv; }
+ });
+ return mx;
+}
+// GURPS B90: overlapping Talents do NOT stack — a skill takes the BEST covering Talent.
+function talentBonus(skillName){
+ if(!skillName)return 0;
+ let best=0;
+ for(const tal in TALENT_SKILLS){ if(_talentCovers(TALENT_SKILLS[tal],skillName)){ const lv=talentLevelOwned(tal); if(lv>best)best=lv; } }
+ return best;
+}
 function skillLevel(sk){
  if(!sk||!sk.name)return'-';
  const pts=+sk.pts||0; if(pts<=0)return'-';
@@ -1235,7 +1273,7 @@ function skillLevel(sk){
  const DIFF_BASE={E:0,A:-1,H:-2,VH:-3};
  const steps=pts<=0?null:(pts===1?0:(pts<4?1:(pts<8?2:2+Math.floor((pts-8)/4)+1)));
  const bonus=steps==null?0:(DIFF_BASE[diff]!==undefined?DIFF_BASE[diff]:-1)+steps;
- return aval+bonus+(+sk.bonus||0);
+ return aval+bonus+(+sk.bonus||0)+talentBonus(sk.name);
 }
 
 // ─────────────────────────────────────────────────────
@@ -1768,7 +1806,7 @@ function renderSheet(){
     </tr>
     ${[['ST','HP','HP',HP()],['DX','Per','Per',Per()],['IQ','Will','Will',Will()],['HT','FP','FP',FP()]].map(([a,key,lbl,val])=>`<tr>
      <td class="label" title="${GTIP[a]||''}"><b style="color:var(--text)">${a}</b></td>
-     <td class="num calc">${attrLevel(a)}${sp[a.toLowerCase()]?` <span style="color:var(--dim)">(${sp[a.toLowerCase()]>0?'+':''}${sp[a.toLowerCase()]})</span>`:''}${a==='HT'&&fitHTbonus()?` <span style="color:var(--accent)" title="Fit / Very Fit \u2014 bonus to HT rolls only (not HP, FP or Basic Speed)">(${fitHTbonus()>0?'+':''}${fitHTbonus()} rolls)</span>`:''} <button class="btn-sm" style="padding:0 5px" title="Roll 3d6 vs ${a}" onclick="gurpsRoll(${attrLevel(a)+(a==='HT'?fitHTbonus():0)},'${a}')">🎲</button></td>
+     <td class="num calc">${attrLevel(a)}${sp[a.toLowerCase()]?` <span style="color:var(--dim)">(${sp[a.toLowerCase()]>0?'+':''}${sp[a.toLowerCase()]})</span>`:''}${a==='HT'&&fitHTbonus()?` <span style="color:var(--accent)" title="Fit / Unfit \u2014 bonus to HT rolls only (not HP, FP or Basic Speed)">(${fitHTbonus()>0?'+':''}${fitHTbonus()} rolls)</span>`:''} <button class="btn-sm" style="padding:0 5px" title="Roll 3d6 vs ${a}" onclick="gurpsRoll(${attrLevel(a)+(a==='HT'?fitHTbonus():0)},'${a}')">🎲</button></td>
      <td><div class="stepper"><button onclick="C.attr.${a}-=ATTR_COST.${a};touch();renderAll()">−</button><span class="sv">${attrLevel(a)}</span><button onclick="C.attr.${a}+=ATTR_COST.${a};touch();renderAll()">+</button></div></td>
      <td class="num val">${+C.attr[a]||0}</td>
      <td class="label" style="border-left:2px solid var(--border)" title="${GTIP[lbl]||''}">${lbl}</td>
@@ -2074,6 +2112,7 @@ function skillAttrLabel(attr){return attr==='Force'?('Force→'+forcePrimaryAttr
 function skillLvlCellHTML(sk){
  let h=String(skillLevel(sk));
  if(+sk.bonus) h+=` <span style="color:var(--cyan);font-size:9px">(${(+sk.bonus)>0?'+':''}${+sk.bonus})</span>`;
+ const _tb=talentBonus(sk.name); if(_tb>0) h+=` <span style="color:#6fcf97;font-size:9px" title="Talent bonus (+${_tb} to this skill group)">(T+${_tb})</span>`;
  const fc=forceSkillCap(sk);
  if(fc&&fc.capped) h+=` <span style="color:var(--amber);font-size:9px" title="Force cap: attribute contributes at most ${fc.baseAttr}+${FORCE_ATTR_CAP} (${fc.attrVal}→capped to ${fc.cap}); higher levels need invested points">▣cap</span>`;
  return h;
