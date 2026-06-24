@@ -967,7 +967,7 @@ function FP(){return HT()+Math.round((+C.sec.FP||0)/3)+traitAttrBonus("FP")}
 function basicSpeed(){return (HT()+DX())/4+(+C.sec.Speed||0)/20+traitAttrBonus("Speed")*0.25}
 function basicMove(){return Math.floor(basicSpeed())+Math.floor((+C.sec.Move||0)/5)+traitAttrBonus("Move")}
 function basicLift(){const s=ST()+liftingSTbonus();return Math.round(s*s/5)}
-function dodge(){return Math.max(0,Math.floor(basicSpeed())+3+stanceDef('dodge')-encLevel())}
+function dodge(){return Math.max(0,Math.floor(basicSpeed())+3+stanceDef('dodge')+(ownsTrait('Combat Reflexes')?1:0)+ownedTraitLevels('Enhanced Dodge')-encLevel())}
 
 /* ─── trait lookups for derived social/combat stats ─── */
 // total levels of a trait the character owns whose name contains `frag` (case-insensitive)
@@ -981,6 +981,7 @@ function ownedTraitLevels(frag){
 function ownsTrait(frag){const f=frag.toLowerCase();return (C.traits||[]).some(tr=>tr.name&&tr.name.toLowerCase().includes(f));}
 function liftingSTbonus(){return ownedTraitLevels('Lifting ST');}
 function strikingSTbonus(){return ownedTraitLevels('Striking ST');}
+function fitHTbonus(){let b=0;(C.traits||[]).forEach(tr=>{if(!tr||!tr.name)return;const n=(''+tr.name).trim();if(n==='Very Fit')b+=2;else if(n==='Fit')b+=1;else if(n==='Unfit')b-=1;});return b;}
 
 // Appearance reaction modifier (GURPS B21): map owned Appearance trait to its reaction bonus
 function appearanceMod(){
@@ -1001,7 +1002,7 @@ function block(){
  const sh=skillLevelByName('Shield');
  if((typeof sh!=='number'||sh<=0) && !ownsTrait('Enhanced Block')) return null; // no shield skill, no cloak → no Block
  const base=(typeof sh==='number'&&sh>0)?Math.floor(sh/2)+3:3;
- return Math.max(0, base + ownedTraitLevels('Enhanced Block') + stanceDef('block'));
+ return Math.max(0, base + ownedTraitLevels('Enhanced Block') + stanceDef('block') + (ownsTrait('Combat Reflexes')?1:0));
 }
 function skillLevelByName(nm){
  const sk=(C.skills||[]).find(s=>s.name===nm);
@@ -1586,7 +1587,7 @@ function weaponParry(w,parryBonus){
  const base=Math.floor(skLvl/2)+3;
  const mod=parseInt(p)||0;
  const suffix=String(p).replace(/[-+0-9]/g,'');
- return(base+mod+stanceDef('parry')+parryBonus)+suffix;
+ return(base+mod+stanceDef('parry')+parryBonus+(ownsTrait('Combat Reflexes')?1:0))+suffix;
 }
 
 // ─────────────────────────────────────────────────────
@@ -1755,7 +1756,7 @@ function renderSheet(){
     </tr>
     ${[['ST','HP','HP',HP()],['DX','Per','Per',Per()],['IQ','Will','Will',Will()],['HT','FP','FP',FP()]].map(([a,key,lbl,val])=>`<tr>
      <td class="label" title="${GTIP[a]||''}"><b style="color:var(--text)">${a}</b></td>
-     <td class="num calc">${attrLevel(a)}${sp[a.toLowerCase()]?` <span style="color:var(--dim)">(${sp[a.toLowerCase()]>0?'+':''}${sp[a.toLowerCase()]})</span>`:''} <button class="btn-sm" style="padding:0 5px" title="Roll 3d6 vs ${a}" onclick="gurpsRoll(${attrLevel(a)},'${a}')">🎲</button></td>
+     <td class="num calc">${attrLevel(a)}${sp[a.toLowerCase()]?` <span style="color:var(--dim)">(${sp[a.toLowerCase()]>0?'+':''}${sp[a.toLowerCase()]})</span>`:''}${a==='HT'&&fitHTbonus()?` <span style="color:var(--accent)" title="Fit / Very Fit \u2014 bonus to HT rolls only (not HP, FP or Basic Speed)">(${fitHTbonus()>0?'+':''}${fitHTbonus()} rolls)</span>`:''} <button class="btn-sm" style="padding:0 5px" title="Roll 3d6 vs ${a}" onclick="gurpsRoll(${attrLevel(a)+(a==='HT'?fitHTbonus():0)},'${a}')">🎲</button></td>
      <td><div class="stepper"><button onclick="C.attr.${a}-=ATTR_COST.${a};touch();renderAll()">−</button><span class="sv">${attrLevel(a)}</span><button onclick="C.attr.${a}+=ATTR_COST.${a};touch();renderAll()">+</button></div></td>
      <td class="num val">${+C.attr[a]||0}</td>
      <td class="label" style="border-left:2px solid var(--border)" title="${GTIP[lbl]||''}">${lbl}</td>
@@ -1793,10 +1794,10 @@ function renderSheet(){
    <h3>Active Defenses <span class="dim" style="font-weight:400;font-size:10px">— roll 3d6 ≤ value</span></h3>
    ${(()=>{const shieldSkill=(C.skills||[]).find(s=>s.name==='Shield');const hasShield=(C.shields||[]).some(s=>s.name);return `<table class="g">
     <tr><th>Defense</th><th style="width:42px">Value</th><th>Formula</th></tr>
-    <tr><td class="label" title="Basic Speed + 3, rounded down, then −1 per encumbrance level. Active defense vs attacks you can see.">Dodge</td><td class="num val">${effDodge()} <button class="btn-sm" style="padding:1px 6px" onclick="rollDef('Dodge',effDodge())" title="Roll 3d6">🎲</button></td><td class="dim" style="font-size:10px">⌊Basic Speed ${basicSpeed().toFixed(2)}⌋ + 3${(isReeling()||isTired())?' , then halved':''}${stanceDef('dodge')?` ${stanceDef('dodge')>=0?'+':''}${stanceDef('dodge')} stance`:''}</td></tr>
+    <tr><td class="label" title="Basic Speed + 3, rounded down, then −1 per encumbrance level. Active defense vs attacks you can see.">Dodge</td><td class="num val">${effDodge()} <button class="btn-sm" style="padding:1px 6px" onclick="rollDef('Dodge',effDodge())" title="Roll 3d6">🎲</button></td><td class="dim" style="font-size:10px">⌊Basic Speed ${basicSpeed().toFixed(2)}⌋ + 3${ownsTrait('Combat Reflexes')?' +1 Combat Reflexes':''}${ownedTraitLevels('Enhanced Dodge')?` +${ownedTraitLevels('Enhanced Dodge')} Enh. Dodge`:''}${(isReeling()||isTired())?' , then halved':''}${stanceDef('dodge')?` ${stanceDef('dodge')>=0?'+':''}${stanceDef('dodge')} stance`:''}</td></tr>
     ${(C.weapons||[]).filter(it=>{const w=DATA.weapons.find(x=>x.name===it.name);return w&&w.cls==='Melee'}).map(it=>{
      const w=effWeapon(it);const sk=(()=>{let _s=weaponSkillLevel(w.name);if(_s)_s+=modSum(it,'skill');return _s;})();
-     const _pv=weaponParry(w,wParryBonus(it));const _pn=("Parry: "+w.name).replace(/"/g,"&quot;").replace(/'/g,"&#39;");return `<tr><td class="label">Parry (${esc(w.name)})</td><td class="num val">${_pv} <button class="btn-sm" style="padding:1px 6px" onclick="rollDefAttr(this,${parseInt(_pv)||0})" data-def="${_pn}" title="Roll 3d6">🎲</button></td><td class="dim" style="font-size:10px">⌊Skill ${sk||0}÷2⌋ + 3${w.parry&&parseInt(w.parry)?` ${parseInt(w.parry)>=0?'+':''}${parseInt(w.parry)} weapon`:''}${stanceDef('parry')?` +${stanceDef('parry')} stance`:''}</td></tr>`;
+     const _pv=weaponParry(w,wParryBonus(it));const _pn=("Parry: "+w.name).replace(/"/g,"&quot;").replace(/'/g,"&#39;");return `<tr><td class="label">Parry (${esc(w.name)})</td><td class="num val">${_pv} <button class="btn-sm" style="padding:1px 6px" onclick="rollDefAttr(this,${parseInt(_pv)||0})" data-def="${_pn}" title="Roll 3d6">🎲</button></td><td class="dim" style="font-size:10px">⌊Skill ${sk||0}÷2⌋ + 3${ownsTrait('Combat Reflexes')?' +1 CR':''}${w.parry&&parseInt(w.parry)?` ${parseInt(w.parry)>=0?'+':''}${parseInt(w.parry)} weapon`:''}${stanceDef('parry')?` +${stanceDef('parry')} stance`:''}</td></tr>`;
     }).join('')}
     ${(()=>{
      // Unarmed parries — GURPS B376: Parry = 3 + ⌊skill÷2⌋. Brawling/Karate/Boxing/Judo/Wrestling/Sumo all parry.
