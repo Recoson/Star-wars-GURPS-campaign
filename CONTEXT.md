@@ -1,143 +1,368 @@
-# Dara Dara Campaign — Context & Pending Work
+# CONTEXT.md — Dara Dara Campaign Toolset · live working context
 
-*This file is the churny handoff layer. Update it at the end of each session.
-Durable conventions live in SKILL.md; durable project facts live in the Project
-custom instructions. Don't duplicate those here.*
-
----
-
-## Repo state
-
-Branch `main`, latest commit: **3e29e5c**
-"Ship per-cell recharge differentiation (+2 blaster ladder) + ion
-magnetic-explosion redefinition across compendium, sheet, console, cheatsheet"
-
-PAT at `~/.ghtoken` (chmod 600). Credential helper and git identity already
-configured if the sandbox still has the clone at `/home/claude/repo`. If not,
-re-clone with the PAT and `git remote set-url` to a clean URL, then mask all
-push output via `sed`.
-
-Stripped compendium text at `/tmp/comp.txt` — rebuild before grepping:
-```
-python3 -c "import re; s=open('Star Wars the Old Republic GURPS 4E conversion.html',encoding='utf-8',errors='ignore').read(); s=re.sub(r'<[^>]+>',' ',s); s=re.sub(r'\s+',' ',s); open('/tmp/comp.txt','w').write(s)"
-```
+**Read this top-to-bottom at the start of a fresh chat, then resume the grind with no further confirmation.**
+This file is the churny/volatile companion to the durable Project Instructions and to
+`/mnt/skills/user/kotor-toolset/SKILL.md` (engineering conventions, loads on code sessions).
+Refresh it at the end of each session. Don't duplicate facts that already live in those two; this
+file is *current task state + the exact mechanics of the job in flight*.
 
 ---
 
-## What shipped last session (do not re-do)
+## 0. THE JOB IN ONE LINE
 
-### Per-cell recharge differentiation
-- Replaced the old flat +4/turn trickle with a per-cell ladder across all four
-  files (compendium, sheet, console, cheatsheet):
-  - Standard & heavy blaster cores: **+2/turn**
-  - Sonic & crew/emplaced cores: **+1/turn**
-  - Ion cells: **+1 per 2 turns**
-  - Disruptor cells: **+1 per 4 turns**
-  - Slug/kinetic: no recharge (magazines; unchanged)
-- Added "Trickle by Cell" rule paragraph in the compendium and surfaced
-  Sonic, Ion, Disruptor cells as named items in the deep-charge roster table.
-- Sheet and console have **no live-ammo engine** — `shots` is display-only.
-  Recharge is rule-level only; no code was wired.
+Per-power **"full adjudication" pass** over every Force power in the compendium: add a 3-field
+statgrid extension (**Upkeep / Hands / Move**) plus an **"At the table."** ruling block to each of
+the **192** powers, authored against the canonical schema. **140 of 192 are done and pushed.**
+**52 remain.** Continue section-by-section to 192, then mirror the new fields into `sheet.html` (§7).
 
-### Ion magnetic-explosion redefinition
-Ion is now a **magnetic concussion** (not anti-machine/near-0 vs flesh):
-- **vs flesh/organics:** full listed dice as crushing, **AD 1** — it ruptures.
-- **vs droids/vehicles/cyborgs:** **AD 5 + HT/shutdown** (capture-intact
-  survives: droid takes system shock, not HP; disable still distinct from destroy).
-- **vs personal energy shields:** bypasses them entirely (recategorised
-  energy→kinetic; stops only kinetic deflectors).
-- **Ship-scale ion:** unchanged — ×2 vs shields, 0 hull.
-
-Changed across: jargon damage code, Master Damage matrix, "Anti-Machine Key"
-section, Part V weapon entries + header, droid book (glossary, shutdown, capture
-note, grenades), ion grenade / plasma mine, energy-shield family line, sheet
-`vsOrganic` flags (false→true ×4), sheet/console weapon notes, cheatsheet ion
-damage-type matrix row, cheatsheet ion-class skills line.
-
-All four files contradiction-swept (0 hits); medpack healing rates intact
-(2d+4/turn ×4, 3d+6/turn ×2, 1d+2/turn ×2); all inline JS node-checked clean.
+James's standing instruction is **"go nuts" / "keep going"** = grind continuously, batch after
+batch, no pausing for review, honest pushback wanted on any ruling that breaks balance or the
+action economy. Ship-then-correct.
 
 ---
 
-## Pending — immediate / agreed
+## 1. REPO, ENVIRONMENT, GIT/PAT WORKFLOW (reuse verbatim every session)
 
-### Etched Counter redesign *(agreed, not yet executed)*
-Approved model: banked counter inscribed in advance, FP paid upfront, fires
-free at trigger against any incoming Force power of Tier III or lower (not one
-named power). Needs a handoff doc authored before execution (per design-work
-discipline).
-
-### Sekan JSON skill rename
-`sekan.json`: two skill entries need renaming to canonical shape:
-- `Blasters (Rifle)` → `Blasters` / specialisation `Rifle`
-- `Blasters (Pistol)` → `Blasters` / specialisation `Pistol`
-Verify exact key names against compendium skills list before touching.
-
-### Sheet — SABER_FORMS Ataru entry
-`sheet.html` `SABER_FORMS` constant: Ataru entry needs updating to match
-current compendium Ataru prose (changed in a prior pass).
-
-### Compendium — Doc II §2.9 cross-ref fix
-"Combinations Reference" link in Doc II §2.9 points to Doc I's section —
-safe one-line anchor fix, awaiting go-ahead.
-
-### Cheatsheet page 2 readability
-Page 2 of `Combat_Cheatsheet_A3.html` cannot exceed 6.6pt font without
-restructuring layout. The only path to page-4-level readability is splitting
-page 2 into two pages (4→5 total). James has not yet said to proceed.
-
----
-
-## Pending — backlog / longer-horizon
-
-- **Galactic-record chronicle update** — off-chronicle events need adding,
-  broken galaxy-map link fix pending.
-- **Heading-level drift** in the Vehicles doc (Doc VI) from the SP-shield
-  rework — cosmetic but noticeable.
-- **Continued compendium review passes** — weapons/armour stat tables,
-  reworked ship stat blocks, droids, skills point-ledger, economy pricing.
-- **Battlemap generator** — procedural, in-repo, compendium-driven, top-down
-  Canvas-based, hex-native (flat-top, 1 m/hex). Prototype-one-room-first
-  approach agreed; not started.
+- Repo: **`Recoson/Star-wars-GURPS-campaign`**, branch **`main`**, cloned at **`/home/claude/repo`**.
+  The **repo is the source of truth**; **`git push origin main` is the default end step** of any
+  edit session, alongside copying the touched file to `/mnt/user-data/outputs/`.
+- **PAT** lives at `/home/claude/.ghtoken` (chmod 600); credential helper at `/home/claude/.gitcred`.
+  Identity: `git config user.name "Recoson"`, `user.email "recoson@users.noreply.github.com"`.
+  The **GitHub MCP connector is read-only (403)** — never use it for writes; all writes go through
+  git-over-HTTPS with the token-authed remote.
+- **NEVER echo the token.** Mask **all** git output through:
+  ```
+  sed -E 's/github_pat_[A-Za-z0-9_]+/***/g; s#x-access-token:[^@]*@#x-access-token:***@#g'
+  ```
+- **origin/main advances often (parallel sessions touch it concurrently).** Every push sequence:
+  ```
+  git fetch origin main
+  git rebase origin/main          # resolve, then continue
+  git push origin main            # masked
+  ```
+  If a rebase conflicts on the giant minified DATA line or a long HTML line:
+  `git rebase --abort` → `git reset --hard origin/main` → **re-apply the Python patch fresh** → push.
+  (Conflicts are not merge-able by hand on those lines; always re-derive from current origin.)
+- Sandbox resets between sessions: `/home/claude/batch*.py` scripts and `/tmp` scratch do **not**
+  persist. The repo clone, the schema doc, and this file **do** (they're committed). Re-clone if
+  `/home/claude/repo` is missing.
+- Optional fast-grep helper: stripped compendium text at `/tmp/comp.txt` — rebuild before grepping:
+  ```
+  python3 -c "import re; s=open('Star Wars the Old Republic GURPS 4E conversion.html',encoding='utf-8',errors='ignore').read(); s=re.sub(r'<[^>]+>',' ',s); s=re.sub(r'\s+',' ',s); open('/tmp/comp.txt','w').write(s)"
+  ```
 
 ---
 
-## Critical learnings from this session
+## 2. CONTEXT BUDGET — non-negotiable
 
-**Ion is load-bearing (~340 occurrences).** Before changing any damage-type
-rule: grep the stripped text for the type, map every occurrence by subsystem,
-then reconcile old-model phrases against the new model before touching anything.
-The sweep pattern that caught everything:
+Chat window ≈ 200K tokens. **The compendium is ≈700K tokens read whole and `sheet.html` ≈280K —
+reading either in full OVERFLOWS THE WINDOW AND ENDS THE CHAT.**
+
+- **NEVER `view`/`cat` a large file whole.** `grep`/`sed -n`/Python-slice to locate, then `view`
+  a tight line range. Targeted reads only.
+- Per-power recon (the read step of each batch) pulls *only* the statgrid + a few body `<p>`
+  excerpts for the powers in that batch, ASCII-cleaned, via a small Python script — never the
+  surrounding document.
+- Use **Python** (not `cut`/`fmt`/`head -c`) to slice UTF-8 so multibyte chars don't get severed.
+
+---
+
+## 3. THE COMPENDIUM FILE & POWER MARKUP
+
+- File: **`Star Wars the Old Republic GURPS 4E conversion.html`** (single-file HTML, vanilla JS,
+  offline-first, the SOURCE OF TRUTH for all mechanics).
+- Each power is:
+  ```
+  <h4 class="power-name">NAME</h4>
+  <div class="statgrid"> … <span class="stat-k">KEY</span><span class="stat-v">VAL</span> … </div>
+  <div class="power-body"> … <p>…</p> … </div>
+  ```
+- **Sections** are `<h1>`/`<h2>` headers. The witch tradition ("The Inscribed Voice") groups its
+  powers under a run of **H1 sub-banners** (The First Faces, The Hexing Hand, The Reach Beyond,
+  The Greater Workings, The Final Inscriptions) with intro prose between each banner and its first
+  power — *not* a single H2. The Dark Side lives under H1 "THE UNCHAINED" → H2 "The Dark Side".
+- **Minor Traditions, The Nine Forms, and Battle Master Signatures use different markup (not
+  `power-name` h4) and are OUT OF SCOPE for this pass.** Only the 192 `<h4 class="power-name">`
+  entries are adjudicated. The 8 **Form-Neutral Techniques** *are* power-name h4s (the last 8,
+  #185–192) and are in scope.
+
+### 3a. What we add to each power (output format, per schema §3)
+1. Into the statgrid, **before the statgrid's own closing `</div>`** (found by div-balance from
+   `<div class="statgrid">`), three new key/value pairs in this exact shape and order:
+   ```
+   <span class="stat-k">Upkeep</span><span class="stat-v">…</span>
+   <span class="stat-k">Hands</span><span class="stat-v">…</span>
+   <span class="stat-k">Move</span><span class="stat-v">…</span>
+   ```
+2. An **At-the-table** block appended as the **last `</p>` before the power's body boundary**:
+   ```
+   <p class="warn"><b>At the table.</b> …</p>
+   ```
+   Boundary = min position of {next `<h4 class="power-name">`, next `<h2`, next `<h1`} after the
+   statgrid. The block is inserted right after the final `</p>` inside that range.
+- **ASCII-safe text only** in injected strings: hyphen `-` for minus, `x` for ×, spell out "half",
+  avoid `÷` (write "divided by" or restructure). Curly apostrophes in power *names* must be matched
+  exactly when anchoring (e.g. `Mother's Calling`, `Crown's Compulsion` use the right glyph — copy
+  from the live file, don't retype).
+
+### 3b. KNOWN HAZARD — block placement around H1 sub-banners
+Commit **`ad900d0`** fixed 16 At-the-table blocks that landed in *trailing band-intro prose*: when a
+power is the **last in its sub-section** and is followed by an H1 sub-banner + intro `<p>`s, the
+naive "last `</p>` before boundary" can mis-place. After any batch that includes a section's final
+power, **verify each new block sits inside its own power-body**, not in the next banner's intro.
+(`git show ad900d0` for the fix pattern.)
+
+---
+
+## 4. THE SCHEMA — canonical rulings (authoritative doc in repo)
+
+Full spec: **`FORCE_POWER_RULING_SCHEMA.md`** in the repo root (≈12.9 KB). It is the gate the whole
+pass runs against. The load-bearing locked rulings, summarized so a fresh session needn't re-read
+the compendium to apply them:
+
+**Maneuver → advantages**
+- **Concentrate** → Compartmentalized Mind (CM grants a free 2nd Concentrate) **+** Altered Time
+  Sense. **NEVER** Extra Attack.
+- **Attack** → Extra Attack.
+- **Rapid Strike = MELEE only** (Force-empowered or saber-delivered strikes). Ranged/projected
+  powers do **not** get Rapid Strike.
+
+**Sustain models** — every sustained power MUST state a duration cap and/or an FP-refresh rule. Four
+canonical models:
+- (a) **FP/turn** — pay FP each turn to keep it up.
+- (b) **Concentrate-only, no-FP, time-capped** — holds a Concentrate each turn, ends at a stated cap.
+- (c) **free turn-to-turn but re-pay FP per interval** (e.g. re-drain every minute). Used for the
+  sensory powers (Force Sense, Force Sense (Grey), etc.): activate with a 1-second Concentrate, then
+  hold a Concentrate each turn **and** re-pay FP every minute. Holds your Concentrate (so CM is what
+  frees a 2nd power).
+- (d) **latched** — raise once with a Concentrate, then runs **free** (no maneuver, no FP, no
+  Will-roll-on-hit), **does NOT hold your Concentrate**, ends only on a stated trigger. Established
+  by Tempered Blade in The Bonded Blade.
+
+**Interruption roll = Will.** Damage/distraction forces a **Will** roll or the effect ends / steps
+down.
+
+**Range.** Every power states a default range. FP→range scales at **+1 hex/FP** where sensible.
+- **Force Push / Force Pull TK-reach extension** shipped as a **PROPOSED** falloff: **+2 FP and
+  −2 to hit per extra 8 hexes beyond the base 8.** **AWAITING JAMES CONFIRM** (see §6).
+
+**Hands.** Values are `0` / `1` / `2` / `the blade`.
+- **Saber-hand gate:** a hand-projected power may be used with a **lit saber in the same hand** if
+  Lightsaber/relevant-Form skill ≥ (Force attribute + 6), applied per-power. Where the source states
+  a flat threshold, use it verbatim: **Electric Judgment** = "skill 22+"; **Hollow the Wound** =
+  "skill 20+".
+
+**Movement axis (the "Move" field):** `Free` / `Step-only` / `Is-movement` / `Enhanced`.
+- Movement powers consume the **base maneuver** (Move/Instant), **not** a Concentrate — *except*
+  sustained movement buffs (e.g. **Force Speed** activates/sustains on a Concentrate).
+- **Force Speed:** Move cap is **+4 per FP/turn** (CONFIRMED, raised from +2); defense bonus stays
+  **+2**. Both the stat-sum and the effect text were edited to match.
+
+**1-second rule.** 1 combat turn = 1 second. Anything costing minutes+ is out-of-combat. Meditative
+/ ritual modes are time-gated, out-of-combat, and grant **no extra FP**.
+
+**The At-the-table block always closes** by stating: Extra-Attack / CM / Rapid-Strike applicability,
+the FP-to-range behaviour, and whether a meditative mode exists.
+
+**Bucket → Upkeep templates (schema §4).** Each power is classified to one bucket whose Upkeep
+template it follows: Concentrate-one-shot · Attack · Ritual · Concentrate-sustained · Reactive ·
+Free · Instant · Passive · Stored · Attack-or-channel.
+
+**Unique exceptions already locked (do not "regularize"):**
+- **Force Grip** and **Force Whirlwind**: hard-forbid running **any** other concentration power
+  simultaneously — **even with Compartmentalized Mind**. (The one place CM does *not* free a 2nd
+  concentration power.)
+- **Tutaminis** is its **own Energy Absorption skill** (reactive, bare-hand energy defence); the old
+  Brawling-bonus stand-in was dropped — never flag a Brawling entry as suspicious on that basis.
+- **Consume the Spark** = FP 0 (already corrected in source).
+- Death-rite powers (**Joining the Force**, **Becoming**) sit *outside* the action economy.
+
+---
+
+## 5. THE BATCH MACHINE
+
+Each batch = one cohesive group of powers (a sub-section or ~9–10 powers). Steps:
+
+**(1) Recon read** — small Python that, for the batch's power names only, prints the current
+statgrid (stat-k/stat-v) and a few body `<p>` excerpts, ASCII-cleaned. No surrounding document.
+
+**(2) Author** — write Upkeep/Hands/Move + At-the-table for each power per the schema. Classify to a
+bucket; apply the locked global rulings; surface any un-defaultable call to James inline.
+
+**(3) Inject** — the reused injection script (saved each time as `/home/claude/batchNN.py`). The
+mechanics are stable; only the `P={…}` dict changes. Exact mechanics:
 
 ```python
-import re
-s = open("/tmp/comp.txt", encoding="utf-8", errors="ignore").read()
-hits = [m.start() for m in re.finditer(r"\bion\b", s, re.I)]
+import io,re,sys
+FN="Star Wars the Old Republic GURPS 4E conversion.html"
+s=io.open(FN,encoding="utf-8").read()
+P={
+ # "Power Name": {"up":"…","hands":"…","move":"…","table":"…"}, …
+}
+inserts=[]
+for name,d in P.items():
+    h=s.find('<h4 class="power-name">%s</h4>'%name)
+    if h<0 or s.count('<h4 class="power-name">%s</h4>'%name)!=1: sys.exit("anchor: "+name)
+    sg=s.find('<div class="statgrid">',h); depth=0;i=sg;sgc=-1
+    while i<len(s):
+        if s.startswith('<div',i):depth+=1;i+=4;continue
+        if s.startswith('</div>',i):
+            depth-=1
+            if depth==0:sgc=i;break
+            i+=6;continue
+        i+=1
+    if sgc<0: sys.exit("sg: "+name)
+    inserts.append((sgc,f'<span class="stat-k">Upkeep</span><span class="stat-v">{d["up"]}</span><span class="stat-k">Hands</span><span class="stat-v">{d["hands"]}</span><span class="stat-k">Move</span><span class="stat-v">{d["move"]}</span>'))
+    cands=[s.find('<h4 class="power-name">',sgc+6)]
+    for tag in ['<h2','<h1']:
+        p=s.find(tag,sgc+6)
+        if p>=0: cands.append(p)
+    bound=min(c for c in cands if c>=0)
+    lastp=s[sgc:bound].rfind('</p>')
+    inserts.append((sgc+lastp+4,f'<p class="warn"><b>At the table.</b> {d["table"]}</p>'))
+for pos,text in sorted(inserts,key=lambda x:-x[0]): s=s[:pos]+text+s[pos:]
+io.open(FN,"w",encoding="utf-8").write(s)
+print(f"injected {len(P)} ({len(inserts)} insertions)")
 ```
 
-**Recharge system already existed.** Always grep for the mechanic before
-building it from scratch. The flat +4 trickle was in Part I "Blaster-Core
-Recharge" — the session work was differentiating it, not creating it.
+The script is **assertion-guarded** (anchor must exist exactly once; statgrid must div-balance) and
+**insertion-only** — it never rewrites existing prose. Run it from inside `/home/claude/repo`.
 
-**Medpack healing rates contain "+N/turn" patterns.** Any automated
-recharge-number sweep must exclude `2d+4/turn`, `3d+6/turn`, `1d+2/turn`.
-These are kolto medpack HP-over-time values, not recharge rates.
+**(4) Verify (scope to the change — this is an HTML edit, so):**
+- Every batch power gained the **3 new stat-k fields + 1 At-the-table block** (grep counts).
+- **Tag balance:** net change per batch is **0 unclosed divs**; the long-standing **Δ1 unclosed
+  `<p>` and `<span>` in the document HEAD is a PRE-EXISTING source quirk** (present before this work,
+  not from these edits, doesn't affect rendering). Confirm the delta is *unchanged*, not zero.
+- `node --check` on the **2 extracted inline `<script>` blocks** → 0 failures. Extract with
+  `re.findall(r'<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>', html, re.S)`.
+- For section-final powers, eyeball that the new block is **inside its power-body**, not a trailing
+  band-intro (the `ad900d0` hazard, §3b).
 
-**The +4 trickle survived in "Overcharge & Drain" paragraph** — a straggler
-the initial sweep missed. Always run the contradiction sweep before committing,
-and design the sweep patterns carefully enough to catch every site.
+**(5) Push** — `git fetch origin main` → `git rebase origin/main` → `git push origin main` (masked)
+→ `cp "<file>" /mnt/user-data/outputs/` (+ `present_files` when surfacing to chat).
+
+Commit message convention: `Power adjudication batch NN (<section> X/Y): N powers`.
 
 ---
 
-## Constraint reminders (non-exhaustive)
+## 6. OPEN FLAGS / PENDING JAMES DECISIONS (carry forward, surface when relevant)
 
-- Standard blaster AD 1 is **deliberate** — do not change.
-- `Damage Resistance_Absorbtion` misspelling is **deliberate** — do not fix.
-- `Damage Resistance_Absorbtion` misspelling is **deliberate** — do not fix.
-- Ship-scale ion (×2 vs shields, 0 hull) is **unchanged** by the ion redesign.
-- Ghost-fire crystal is **exclusive to Chatni** — not in forge/loot pool.
-- `C.morality` readers still exist in sheet code — leave `.morality` field.
-- `mergeChar` does shallow merge only.
-- Chatni's Tutaminis is its own Energy Absorption skill — Brawling entries
-  are not suspicious.
-- "Krysla" never "Kryze" in tool text.
+- **Force Push / Force Pull range-falloff rate** — shipped PROPOSED as **+2 FP and −2 to hit per
+  +8 hexes beyond base 8**. James has not confirmed. Flag for ratification, don't silently re-tune.
+- **Saber-hand-gate per-power eligibility** — default rule applied (ranged hand-projected powers
+  gate at skill ≥ Force attr + 6; flat thresholds where the source states one). James to confirm the
+  per-power eligibility list.
+- **Force Grip & Force Whirlwind** are the unique CM exception (no 2nd concentration power at all).
+  Flagged and locked.
+- **Project-instructions vs canon drift:** the durable instructions line says "standard blasters
+  **AD 1**", but canonical (folded through the compendium prose + both weapon stat tables in an
+  earlier phase) is **AD 1.5**. Heavy-blaster-vs-energy-weave was deliberately left at "3/2 → AD 1".
+  This is James's line to update; the tool layer is already on 1.5.
+- **Pre-existing HEAD quirk:** Δ1 unclosed `<p>` and `<span>` in the document head — not ours.
+
+---
+
+## 7. PROGRESS LEDGER — 140 / 192 DONE · 52 REMAINING
+
+**Done sections (all pushed):**
+The Bonded Blade (4) · The Light Side (28) · The Common Force (28) · The Concordance of Feathers
+(26) · The Hollowing (34) · The Inscribed Voice / witch tradition **partial** — The First Faces (7),
+The Hexing Hand (7), The Reach Beyond (5), and The Greater Workings **1/6 (Holocron Sentry only)**.
+
+**REMAINING 52, in document order, grouped by batch:**
+
+*The Inscribed Voice — The Greater Workings (finish, 5):* batch 18
+- Crystal Phantom · Bound Voice · Coffin Mist · The Borrowed Face · Mist-Fold
+
+*The Inscribed Voice — The Final Inscriptions (6):* batch 19  → completes the witch tradition
+- Ghostfire Horror · Soulforge · Curse of the Lingering · The Last Voice · Mother's Calling ·
+  Inscribed Future
+
+*THE UNCHAINED → The Dark Side (33):* ~3–4 batches
+- Force Jolt · Force Slow · Force Rage (Initiate) · Drain Life · Fear · Force Disrupt · Force Menace
+  · Force Pain · Force Choke · Force Affliction · Drain Force · Wound · Force Scream · Force Lightning
+  · Force Pressure · Force Dominance · Force Plague · Drain Knowledge · Insanity · Force Corruption ·
+  Force Rend · Force Storm (Barrage) · Death Field · Deadly Sight · Force Horror · Force Crush ·
+  Memory Walk · Force Storm · Transfer Essence · Thought Bomb · Dark Transfer · Ravage · Sith Sorcery
+
+*THE FORM-NEUTRAL → Form-Neutral Techniques (8, final powers #185–192):* 1 batch
+- Saber Throw · Blade Barrier · Saber Bind · Guided Strike · Sundering Strike · Saber Split ·
+  Force Cadence · Trakata
+- Note: these names render in the doc concatenated with a tag suffix (e.g. "Saber ThrowATTACK",
+  "Blade BarrierFULL·DEF") — the `power-name` h4 inner text **includes that suffix**, so **anchor on
+  the exact h4 inner text**, not the clean name. Pull the live h4 strings during recon.
+
+**After 192 → §7 SHEET-MIRROR (NOT STARTED):** mirror the new **Upkeep / Hands / Move** fields into
+the corresponding power entries in **`sheet.html`** (the minified `DATA` object), so the sheet's
+power cards match the compendium. Scope-check: that's a `sheet.html` edit → Python patch + `node
+--check` + a **DOM-driven Playwright/Chromium** smoke test (the sheet has live UI), then push.
+
+**Recompute progress any time** with:
+```
+grep -o '<span class="stat-k">Upkeep</span>' "Star Wars the Old Republic GURPS 4E conversion.html" | wc -l
+```
+(equals the number of completed powers; total power headers = `grep -o '<h4 class="power-name">' … | wc -l`).
+
+---
+
+## 8. HARD CAMPAIGN CONSTRAINTS (always in force)
+
+- **Compendium wins ALL data disputes.** Verify any trait/skill/stat against compendium prose before
+  editing the sheet or console; flag and explain any deliberate deviation.
+- Self-contained **offline-first HTML, vanilla JS only, no external deps**, localStorage
+  persistence, must run on **GitHub Pages + iPad**. Dark aesthetic: void bg, gold + holo-blue,
+  Cinzel + EB Garamond.
+- **1 metre = 1 hex.** Lightsaber / disruptor / ion are **distinct** damage types.
+- **Morality/alignment removed from the tool/UI layer**, but `C.morality` readers still exist in
+  code — **leave them**.
+- **Do NOT "fix" the deliberate misspelling `Damage Resistance_Absorbtion`** in the catalog.
+- **Ghost-fire / Ghostfire crystal** is exclusive to Chatni — must not enter the forge/loot pool.
+- Edits are **surgical / insertion-only**; prefer removal over layered workarounds; never rewrite
+  working code wholesale.
+
+---
+
+## 9. KEY FILES
+
+- `Star Wars the Old Republic GURPS 4E conversion.html` — compendium, SOURCE OF TRUTH (~3 MB; never
+  read whole). **Active edit target of this pass.**
+- `sheet.html` — character sheet (~1.49 MB; minified `DATA` object). **§7 target after the pass.**
+- `KOTOR_GM_Console_v4.html` — GM console; **script wrapped in an outer IIFE** (top-level
+  const/function are closure-private → verify by injecting a probe inside the IIFE or driving the
+  DOM, never `page.evaluate` free-var refs).
+- `Combat_Cheatsheet_A3.html` — A3 combat reference (per-section clip + per-`.col .sec` bottom-vs-`wpn`
+  collision checks required after any edit; page 2 can't exceed 6.6pt without a 4→5 page split).
+- supporting: `galaxy-map.html`, `galactic-record.html`, `Combat_Player_Briefs*`, `ambience-player.html`,
+  `group-storage.html`.
+- `characters/truman.json` (Tylo Dara) · `characters/chatni.json` (Chatni) · `characters/sekan.json`
+  (Sekan Nightfall). JSON edits = `json.loads` parse-check only, no Playwright.
+- `FORCE_POWER_RULING_SCHEMA.md` — the schema this pass runs against.
+- `/mnt/skills/user/kotor-toolset/SKILL.md` — engineering conventions (golden rules).
+
+---
+
+## 10. ALREADY-SHIPPED PRIOR PHASES (context only — in git history, do not redo)
+
+- **Armour variety expansion:** 7 new armours into sheet + compendium, Monte-Carlo balance-validated
+  (kinetic-strong/energy-weak vs energy-tough split).
+- **Blaster AD 1 → 1.5 fold-through** across compendium prose + both weapon stat tables (left
+  heavy-blaster-vs-energy-weave at 3/2 → AD 1). See §6 for the lingering instructions-line drift.
+- **Per-cell recharge differentiation** (+2 blaster ladder replacing the flat +4/turn trickle) and
+  **ion magnetic-explosion redefinition** across compendium, sheet, console, cheatsheet
+  (commit `3e29e5c` / handoff `08cc93f`).
+- **Vehicles hardpoint-budget enforcement** + budget recalibration (commit `a2df03a`, a parallel
+  session).
+
+---
+
+## 11. IMMEDIATE NEXT STEP
+
+Resume at **batch 18 — The Greater Workings (finish):** Crystal Phantom, Bound Voice, Coffin Mist,
+The Borrowed Face, Mist-Fold. Recon → author per schema → inject via the §5 script → verify (3
+fields + block each, tag-delta unchanged, `node --check` 2 scripts 0 fail, section-final placement
+sanity) → fetch/rebase/push masked → cp to outputs. Then **batch 19 — The Final Inscriptions** (6)
+to complete the witch tradition, then roll through **The Dark Side** (33, ~3–4 batches) and the
+**Form-Neutral Techniques** (8) to reach 192, then execute **§7 sheet-mirror**.
+
+No pausing for review between batches unless a ruling genuinely can't be defaulted — surface those
+inline and keep going.
