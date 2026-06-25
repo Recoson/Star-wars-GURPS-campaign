@@ -12,8 +12,10 @@ file is *current task state + the exact mechanics of the job in flight*.
 
 Per-power **"full adjudication" pass** over every Force power in the compendium: add a 3-field
 statgrid extension (**Upkeep / Hands / Move**) plus an **"At the table."** ruling block to each of
-the **192** powers, authored against the canonical schema. **140 of 192 are done and pushed.**
-**52 remain.** Continue section-by-section to 192, then mirror the new fields into `sheet.html` (§7).
+the **192** powers, authored against the canonical schema. **COMPLETE — all 192 done and pushed**
+(compendium commit `81d843a`), **and the fields are mirrored into `sheet.html`** for the 179 powers
+present in its `window.FORCE_DESC` object (commit `d0c54f3`). The pass is finished; §11 holds the
+only open items (James's flagged decisions + optional follow-ups).
 
 James's standing instruction is **"go nuts" / "keep going"** = grind continuously, batch after
 batch, no pausing for review, honest pushback wanted on any ruling that breaks balance or the
@@ -252,8 +254,10 @@ Commit message convention: `Power adjudication batch NN (<section> X/Y): N power
 - **Saber-hand-gate per-power eligibility** — default rule applied (ranged hand-projected powers
   gate at skill ≥ Force attr + 6; flat thresholds where the source states one). James to confirm the
   per-power eligibility list.
-- **Force Grip & Force Whirlwind** are the unique CM exception (no 2nd concentration power at all).
-  Flagged and locked.
+- **Force Grip & Force Whirlwind** are CM exceptions (no 2nd concentration power at all). Flagged and
+  locked. **Force Choke is a candidate third exception** — its source prose says flatly "Cannot use
+  other concentration powers simultaneously" (no CM qualifier), so it was written faithfully as a hard
+  exception. **Pending James:** codify in SCHEMA §2 + here, or treat as a generic restatement.
 - **Project-instructions vs canon drift:** the durable instructions line says "standard blasters
   **AD 1**", but canonical (folded through the compendium prose + both weapon stat tables in an
   earlier phase) is **AD 1.5**. Heavy-blaster-vs-energy-weave was deliberately left at "3/2 → AD 1".
@@ -262,40 +266,29 @@ Commit message convention: `Power adjudication batch NN (<section> X/Y): N power
 
 ---
 
-## 7. PROGRESS LEDGER — 140 / 192 DONE · 52 REMAINING
+## 7. PROGRESS LEDGER — 192 / 192 DONE · COMPENDIUM PASS COMPLETE · SHEET MIRROR COMPLETE
 
-**Done sections (all pushed):**
-The Bonded Blade (4) · The Light Side (28) · The Common Force (28) · The Concordance of Feathers
-(26) · The Hollowing (34) · The Inscribed Voice / witch tradition **partial** — The First Faces (7),
-The Hexing Hand (7), The Reach Beyond (5), and The Greater Workings **1/6 (Holocron Sentry only)**.
+**ALL SECTIONS COMPLETE (every batch pushed).** Final tally below; recompute command retained.
 
-**REMAINING 52, in document order, grouped by batch:**
+- The Bonded Blade (4) · The Light Side (28) · The Common Force (28) · The Concordance of Feathers (26)
+  · The Hollowing (34) · The Inscribed Voice / witch tradition — all four sub-books (The First Faces 7,
+  The Hexing Hand 7, The Reach Beyond 5, The Greater Workings 6, The Final Inscriptions 6) · **The Dark
+  Side (33)** · **Form-Neutral Techniques (8)**. Total = **192**.
 
-*The Inscribed Voice — The Greater Workings (finish, 5):* batch 18
-- Crystal Phantom · Bound Voice · Coffin Mist · The Borrowed Face · Mist-Fold
+- Final batches this run: 18 (Greater Workings finish), 19 (Final Inscriptions → witch tradition complete),
+  20–23 (The Dark Side 33/33), 24 (Form-Neutral 8/8 → 192/192, commit `81d843a`).
 
-*The Inscribed Voice — The Final Inscriptions (6):* batch 19  → completes the witch tradition
-- Ghostfire Horror · Soulforge · Curse of the Lingering · The Last Voice · Mother's Calling ·
-  Inscribed Future
+- **Whole-pass integrity check passed:** 192 `power-name` h4s, each with exactly one Upkeep field and one
+  At-the-table block; zero misses, zero duplicates.
 
-*THE UNCHAINED → The Dark Side (33):* ~3–4 batches
-- Force Jolt · Force Slow · Force Rage (Initiate) · Drain Life · Fear · Force Disrupt · Force Menace
-  · Force Pain · Force Choke · Force Affliction · Drain Force · Wound · Force Scream · Force Lightning
-  · Force Pressure · Force Dominance · Force Plague · Drain Knowledge · Insanity · Force Corruption ·
-  Force Rend · Force Storm (Barrage) · Death Field · Deadly Sight · Force Horror · Force Crush ·
-  Memory Walk · Force Storm · Transfer Essence · Thought Bomb · Dark Transfer · Ravage · Sith Sorcery
-
-*THE FORM-NEUTRAL → Form-Neutral Techniques (8, final powers #185–192):* 1 batch
-- Saber Throw · Blade Barrier · Saber Bind · Guided Strike · Sundering Strike · Saber Split ·
-  Force Cadence · Trakata
-- Note: these names render in the doc concatenated with a tag suffix (e.g. "Saber ThrowATTACK",
-  "Blade BarrierFULL·DEF") — the `power-name` h4 inner text **includes that suffix**, so **anchor on
-  the exact h4 inner text**, not the clean name. Pull the live h4 strings during recon.
-
-**After 192 → §7 SHEET-MIRROR (NOT STARTED):** mirror the new **Upkeep / Hands / Move** fields into
-the corresponding power entries in **`sheet.html`** (the minified `DATA` object), so the sheet's
-power cards match the compendium. Scope-check: that's a `sheet.html` edit → Python patch + `node
---check` + a **DOM-driven Playwright/Chromium** smoke test (the sheet has live UI), then push.
+**§7 SHEET-MIRROR — COMPLETE (commit `d0c54f3`).** The Upkeep/Hands/Move triple + At-the-table block were
+**extracted from the finished compendium** (source of truth) and injected into the matching entries of the
+sheet's `window.FORCE_DESC` data object, re-escaped (`"`→`\"`) for the JSON-string context. 179 of 192
+powers matched and were edited; the 13 absent from the sheet (the 8 saber techniques + Blade Velocity,
+Force Torrent, Force Vessel, Mist-Fold, Tempered Blade) are a deliberate curated-subset omission and live
+only in the compendium. Verified: 179 escaped Upkeep / 179 escaped At-the-table, `node --check` 0 fails,
+data object evals to 179 keys, and a **DOM-driven Playwright render** confirmed the fields appear in a
+rendered power card (only console noise was the expected `firebase-sync.js` CORS block under `file://`).
 
 **Recompute progress any time** with:
 ```
@@ -357,12 +350,16 @@ grep -o '<span class="stat-k">Upkeep</span>' "Star Wars the Old Republic GURPS 4
 
 ## 11. IMMEDIATE NEXT STEP
 
-Resume at **batch 18 — The Greater Workings (finish):** Crystal Phantom, Bound Voice, Coffin Mist,
-The Borrowed Face, Mist-Fold. Recon → author per schema → inject via the §5 script → verify (3
-fields + block each, tag-delta unchanged, `node --check` 2 scripts 0 fail, section-final placement
-sanity) → fetch/rebase/push masked → cp to outputs. Then **batch 19 — The Final Inscriptions** (6)
-to complete the witch tradition, then roll through **The Dark Side** (33, ~3–4 batches) and the
-**Form-Neutral Techniques** (8) to reach 192, then execute **§7 sheet-mirror**.
+**The adjudication pass and the sheet mirror are both COMPLETE and pushed** (compendium `81d843a`,
+sheet `d0c54f3`). No batch work remains. Open items, in priority order:
 
-No pausing for review between batches unless a ruling genuinely can't be defaulted — surface those
-inline and keep going.
+1. **PAT exposure (security).** A live `github_pat_…` was pasted in plaintext and proposed for the
+   durable Project Instructions. **Rotate it**, and keep the literal token out of any saved
+   instructions (paste per-session instead).
+2. **Force Choke CM-exception** — codify as a third hard exception in SCHEMA §2 + §6 here, or rule it a
+   generic restatement (see §6).
+3. **"AD 1" drift** in the proposed durable instructions vs the AD 1.5 tool layer (see §6).
+
+Optional follow-ups (not started, no urgency): spot-review a sample of At-the-table rulings for tone/
+consistency; consider whether the 13 sheet-absent powers should be added to `window.FORCE_DESC` at all
+(currently a deliberate subset). Otherwise the pass is done — resume only on James's direction.
