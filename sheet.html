@@ -4925,14 +4925,11 @@ function renderVehicles(){ migrateVehicleStats();
        +'<td><button class="btn-sm" '+(W?'':'disabled ')+'onclick="fireShipWeapon('+i+','+m+')" title="Fire this mount with the console settings below">🔫</button></td>'
        +'<td><button class="btn-del" onclick="delMount('+i+','+m+')">✕</button></td></tr>';
      }).join('');
-     const _bud=hardpointBudget(v);const _used={S:0,M:0,L:0,C:0};ms.forEach(mt=>{const _W=mt.w?SHIP_WEAPONS.find(x=>x.name===mt.w):null;if(_W&&_W.mount)_used[_W.mount]+=(+mt.n||1);});
-     const _over=!fitsBudget(_used,_bud);const _full=!fitsBudget({S:_used.S,M:_used.M+1,L:_used.L,C:_used.C},_bud);const _bc=function(k){const u=_used[k],a=_bud[k]||0;return '<span style="color:'+(u?'var(--text)':'var(--text2)')+'">'+k+' '+u+'/'+(a||'—')+'</span>';};
-     const _customTgl='<label style="font-size:10px;color:var(--text2);display:inline-flex;align-items:center;gap:3px;margin-left:8px;cursor:pointer" title="Custom hull — ignore the rated hardpoint budget (one-off or modified ships)."><input type="checkbox"'+(v.custom?' checked':'')+' onchange="toggleVehicleCustom('+i+')"> custom loadout</label>';
-     const budLine='<div class="dim" style="font-size:10px;margin-top:5px;padding-top:4px;border-top:1px solid var(--border)">⚙ Hardpoints — '+['S','M','L','C'].map(_bc).join(' · ')+(v.custom?' · <span style="color:var(--amber);font-weight:700">custom — hull limits off</span>':(_over?' · <span style="color:var(--red);font-weight:700">over budget</span>':' · <span style="color:var(--text2)">within budget</span>'))+_customTgl+'</div>';
+     const _econFull=!v.custom&&!!econWouldExceed(v,ms.concat([{w:SHIP_WEAPONS[1].name,n:1}]),null);
      const firingLegend='<div class="dim" style="font-size:9.5px;margin-top:3px;color:var(--text2)">🔒 needs a sensor lock — defeat with chaff / ECM / EMP-flare · ⏱ arm or charge a turn before firing · <span style="color:var(--amber)">ion / cap / exo</span> = special skill (Ion Gunner / capital fire-direction / exotic) · hover ⓘ for a weapon’s firing rules</div>';
      return '<div style="margin-top:7px"><table class="g" style="font-size:10.5px"><tr><th>Mount</th><th>Weapon</th><th title="Hardpoint size this weapon needs — S/M/L/Capital">Mt</th><th title="Damage dice">Dmg</th><th title="Armour Piercing: ignores this much hull DR (1:1 at ship scale)">AP</th><th title="Aim a turn to add Acc to one shot (fire-control computer)">Acc</th><th title="Rate of fire — RoF 5+ gives a to-hit bonus">RoF</th><th title="Recoil — extra hits on a hit = floor(margin ÷ Rcl), capped at RoF−1">Rcl</th><th title="Band where this weapon works best">Best band</th><th title="Remaining warheads (launchers only)">Ammo</th><th></th><th></th></tr>'
       +(rows||'<tr><td colspan="11" class="dim" style="padding:6px">No mounts — add one, or they auto-fill from the catalogue armament line.</td></tr>')
-      +'</table>'+budLine+firingLegend+'<button class="btn-add"'+((!v.custom&&_full)?' disabled title="Hardpoints full — turn on custom loadout to add more"':'')+' style="margin-top:4px" onclick="addMount('+i+')">+ mount</button></div>';
+      +'</table>'+firingLegend+'<button class="btn-add"'+(_econFull?' disabled title="No power/mass headroom — turn on custom loadout below to add more"':'')+' style="margin-top:4px" onclick="addMount('+i+')">+ mount</button></div>';
    })()}
    ${(()=>{const mods=vehicleModules(v);
      const optsFor=function(md){return '<option value=""'+(md.m?'':' selected')+'>\u2014 pick a module \u2014</option>'+SHIP_MODULES.map(function(x){return '<option value="'+esc(x.name)+'"'+(md.m===x.name?' selected':'')+'>'+esc(x.name)+' ('+x.size+')</option>';}).join('');};
@@ -4943,14 +4940,11 @@ function renderVehicles(){ migrateVehicleStats();
         +'<td class="dim" style="font-size:10px;max-width:340px">'+(M?esc(M.fx):'')+'</td>'
         +'<td><button class="btn-del" onclick="delVehicleModule('+i+','+j+')">\u2715</button></td></tr>';
      }).join('');
-     const bud=moduleBudget(v);const used={S:0,M:0,L:0,C:0};mods.forEach(function(md){const M=md.m?SHIP_MODULES.find(function(x){return x.name===md.m;}):null;if(M&&M.size)used[M.size]++;});
-     const over=!fitsBudget(used,bud);
-     const bc=function(k){return '<span style="color:'+(used[k]?'var(--text)':'var(--text2)')+'">'+k+' '+used[k]+'/'+(bud[k]||'\u2014')+'</span>';};
-     const budLine='<div class="dim" style="font-size:10px;margin-top:5px;padding-top:4px;border-top:1px solid var(--border)">\ud83e\udde9 Module slots \u2014 '+['S','M','L'].map(bc).join(' \u00b7 ')+(over?' \u00b7 <span style="color:var(--red);font-weight:700">over this hull\u2019s module budget</span>':' \u00b7 <span style="color:var(--text2)">within budget</span>')+'</div>';
      return '<div style="margin-top:9px"><div style="font-size:11px;font-weight:700;color:var(--cyan);margin-bottom:3px">\ud83e\udde9 Modules <span class="dim" style="font-weight:400">\u2014 cloak \u00b7 ECM \u00b7 holo-mask \u00b7 utility</span></div><table class="g" style="font-size:10.5px"><tr><th>Module</th><th title="Slot size needed">Sz</th><th>Type</th><th>Effect</th><th></th></tr>'
       +(rows||'<tr><td colspan="4" class="dim" style="padding:6px">No modules fitted.</td></tr>')
-      +'</table>'+budLine+'<button class="btn-add" style="margin-top:4px" onclick="addVehicleModule('+i+')">+ module</button></div>';
+      +'</table>'+'<button class="btn-add" style="margin-top:4px" onclick="addVehicleModule('+i+')">+ module</button></div>';
    })()}
+   ${vehicleEconomyHTML(v,i)}
    <details class="veh-combat"><summary style="font-size:11px;color:var(--cyan);cursor:pointer;font-weight:600;margin-top:8px">⚔ Combat &amp; fuel tracker <span class="dim" style="font-weight:400">— fire, incoming hits, fuel</span></summary>
    <div style="margin-top:7px;padding:6px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:5px">
     <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:11px">
@@ -5374,27 +5368,27 @@ function charBestPilot(){
  return best;
 }
 const SHIP_WEAPONS=[
-  {"name":"Light laser cannon","flat":40,"dmg":"6dx2","ap":0,"kind":"laser","acc":5,"band":"Knife/Close","rof":3,"rcl":1,"mount":"S","skill":"Gunner","ctr":"Dodge only"},
-  {"name":"Laser cannon","flat":50,"dmg":"6dx3","ap":0,"kind":"laser","acc":5,"band":"Close","rof":2,"rcl":1,"mount":"M","skill":"Gunner","ctr":"Dodge only"},
-  {"name":"Heavy laser cannon","flat":60,"dmg":"6dx4","ap":5,"kind":"laser","acc":7,"band":"Close/Med","rof":1,"rcl":1,"mount":"L","skill":"Gunner","ctr":"Dodge only"},
-  {"name":"Quad laser cannon","flat":50,"dmg":"6dx3","ap":0,"kind":"laser","rof":4,"acc":4,"band":"Knife/Close","rcl":1,"mount":"M","skill":"Gunner","ctr":"Dodge only"},
-  {"name":"Rapid-fire burst laser","flat":40,"dmg":"6dx2","ap":0,"kind":"laser","rof":8,"acc":2,"band":"Knife","rcl":2,"mount":"S","skill":"Gunner","ctr":"Dodge only"},
-  {"name":"Ion cannon","flat":40,"dmg":"6dx2","ap":0,"kind":"ion","acc":5,"band":"Close","rof":2,"rcl":1,"mount":"M","skill":"Ion Gunner","ctr":"Dodge only"},
-  {"name":"Concussion missile","flat":80,"dmg":"6dx4","ap":10,"kind":"missile","acc":3,"band":"Close/Med","guided":1,"rof":1,"rcl":1,"mount":"M","speed":"fast","skill":"Gunner","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare"},
-  {"name":"Proton torpedo","flat":100,"dmg":"6dx6","ap":20,"kind":"missile","acc":3,"band":"Med/Long","guided":1,"rof":1,"rcl":1,"mount":"L","speed":"slow","skill":"Gunner","arm":"arm 1 turn","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare"},
-  {"name":"Cluster missile","flat":50,"dmg":"3dx3","ap":0,"kind":"missile","rof":4,"acc":3,"band":"Close/Med","guided":1,"rcl":1,"mount":"M","speed":"fast","skill":"Gunner","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare"},
-  {"name":"Ion missile","flat":40,"dmg":"6dx2","ap":0,"kind":"ion","acc":3,"band":"Close/Med","guided":1,"warhead":1,"rof":1,"rcl":1,"mount":"M","speed":"fast","skill":"Ion Gunner","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare"},
-  {"name":"EMP missile","dmg":"","ap":0,"kind":"emp","acc":3,"band":"Close/Med","guided":1,"fx":"Area systems-kill — shields, drones, mines and unshielded systems in the burst go dark (no hull damage). Droids in the volume roll HT or shut down; shielded military systems resist on HT+2.","rof":1,"rcl":1,"mount":"M","speed":"fast","skill":"Ion Gunner","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare"},
-  {"name":"Seismic charge / mine","flat":120,"dmg":"6dx6","ap":10,"kind":"missile","acc":0,"band":"Knife","rof":1,"rcl":1,"mount":"L","speed":"mine","skill":"Gunner","arm":"deploy","ctr":"Maneuver around; can be shot"},
-  {"name":"Thermite torpedo","flat":80,"dmg":"6dx4","ap":80,"kind":"missile","acc":3,"band":"Med","guided":1,"rof":1,"rcl":1,"mount":"L","speed":"slow","skill":"Gunner","arm":"arm 1 turn","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare"},
-  {"name":"Sabotage probe","dmg":"","ap":0,"kind":"probe","acc":3,"band":"Knife","fx":"Latches on — cumulative −1 per turn to the target&#39;s Gunnery and Sensor rolls (max −4) until pried off (Mechanics or EVA crew, 2 turns).","rof":1,"rcl":1,"mount":"M","speed":"fast","skill":"Gunner","arm":"deploy","ctr":"Point-defence, ECM"},
-  {"name":"Slug railgun","flat":120,"dmg":"6dx6","ap":20,"kind":"rail","acc":9,"band":"Long","rof":1,"rcl":4,"mount":"L","skill":"Gunner","arm":"charge 1 turn","ctr":"Dodge only"},
-  {"name":"Ion railgun","flat":50,"dmg":"6dx3","ap":5,"kind":"ion","acc":9,"band":"Long","rof":1,"rcl":1,"mount":"L","skill":"Ion Gunner","arm":"charge 1 turn","ctr":"Dodge only"},
-  {"name":"Plasma railgun","flat":80,"dmg":"6dx4","ap":10,"kind":"rail","acc":8,"band":"Med/Long","rof":1,"rcl":4,"mount":"L","skill":"Gunner","arm":"charge 1 turn","ctr":"Dodge only"},
-  {"name":"Point-defence laser","flat":30,"dmg":"6dx2","ap":0,"kind":"pd","acc":1,"band":"Knife","rof":3,"rcl":2,"mount":"S","skill":"Gunner","ctr":"Dodge (this is itself the missile counter)"},
-  {"name":"Turbolaser (light)","flat":200,"dmg":"6dx10","ap":0,"kind":"capital","acc":8,"band":"Med/Long","rof":2,"rcl":4,"mount":"C","skill":"Gunner (capital)","ctr":"Dodge; −6 to hit fighter-size"},
-  {"name":"Turbolaser (heavy)","flat":400,"dmg":"6dx20","ap":0,"kind":"capital","acc":10,"band":"Long/Extreme","rof":2,"rcl":4,"mount":"C","skill":"Gunner (capital)","ctr":"Dodge; −6 to hit fighter-size"},
-  {"name":"Neuralyzer array","dmg":"","ap":0,"kind":"neural","acc":0,"band":"Close","rof":1,"rcl":1,"mount":"M","skill":"Gunner (exotic)","ctr":"Dodge; shielded hulls resist"}
+  {"name":"Light laser cannon","flat":40,"dmg":"6dx2","ap":0,"kind":"laser","acc":5,"band":"Knife/Close","rof":3,"rcl":1,"mount":"S","skill":"Gunner","ctr":"Dodge only","pwr":4,"mass":1},
+  {"name":"Laser cannon","flat":50,"dmg":"6dx3","ap":0,"kind":"laser","acc":5,"band":"Close","rof":2,"rcl":1,"mount":"M","skill":"Gunner","ctr":"Dodge only","pwr":6,"mass":2},
+  {"name":"Heavy laser cannon","flat":60,"dmg":"6dx4","ap":5,"kind":"laser","acc":7,"band":"Close/Med","rof":1,"rcl":1,"mount":"L","skill":"Gunner","ctr":"Dodge only","pwr":10,"mass":3},
+  {"name":"Quad laser cannon","flat":50,"dmg":"6dx3","ap":0,"kind":"laser","rof":4,"acc":4,"band":"Knife/Close","rcl":1,"mount":"M","skill":"Gunner","ctr":"Dodge only","pwr":8,"mass":3},
+  {"name":"Rapid-fire burst laser","flat":40,"dmg":"6dx2","ap":0,"kind":"laser","rof":8,"acc":2,"band":"Knife","rcl":2,"mount":"S","skill":"Gunner","ctr":"Dodge only","pwr":6,"mass":1},
+  {"name":"Ion cannon","flat":40,"dmg":"6dx2","ap":0,"kind":"ion","acc":5,"band":"Close","rof":2,"rcl":1,"mount":"M","skill":"Ion Gunner","ctr":"Dodge only","pwr":8,"mass":2},
+  {"name":"Concussion missile","flat":80,"dmg":"6dx4","ap":10,"kind":"missile","acc":3,"band":"Close/Med","guided":1,"rof":1,"rcl":1,"mount":"M","speed":"fast","skill":"Gunner","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare","pwr":1,"mass":3},
+  {"name":"Proton torpedo","flat":100,"dmg":"6dx6","ap":20,"kind":"missile","acc":3,"band":"Med/Long","guided":1,"rof":1,"rcl":1,"mount":"L","speed":"slow","skill":"Gunner","arm":"arm 1 turn","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare","pwr":1,"mass":6},
+  {"name":"Cluster missile","flat":50,"dmg":"3dx3","ap":0,"kind":"missile","rof":4,"acc":3,"band":"Close/Med","guided":1,"rcl":1,"mount":"M","speed":"fast","skill":"Gunner","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare","pwr":1,"mass":3},
+  {"name":"Ion missile","flat":40,"dmg":"6dx2","ap":0,"kind":"ion","acc":3,"band":"Close/Med","guided":1,"warhead":1,"rof":1,"rcl":1,"mount":"M","speed":"fast","skill":"Ion Gunner","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare","pwr":2,"mass":3},
+  {"name":"EMP missile","dmg":"","ap":0,"kind":"emp","acc":3,"band":"Close/Med","guided":1,"fx":"Area systems-kill — shields, drones, mines and unshielded systems in the burst go dark (no hull damage). Droids in the volume roll HT or shut down; shielded military systems resist on HT+2.","rof":1,"rcl":1,"mount":"M","speed":"fast","skill":"Ion Gunner","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare","pwr":2,"mass":3},
+  {"name":"Seismic charge / mine","flat":120,"dmg":"6dx6","ap":10,"kind":"missile","acc":0,"band":"Knife","rof":1,"rcl":1,"mount":"L","speed":"mine","skill":"Gunner","arm":"deploy","ctr":"Maneuver around; can be shot","pwr":1,"mass":5},
+  {"name":"Thermite torpedo","flat":80,"dmg":"6dx4","ap":80,"kind":"missile","acc":3,"band":"Med","guided":1,"rof":1,"rcl":1,"mount":"L","speed":"slow","skill":"Gunner","arm":"arm 1 turn","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare","pwr":1,"mass":5},
+  {"name":"Sabotage probe","dmg":"","ap":0,"kind":"probe","acc":3,"band":"Knife","fx":"Latches on — cumulative −1 per turn to the target&#39;s Gunnery and Sensor rolls (max −4) until pried off (Mechanics or EVA crew, 2 turns).","rof":1,"rcl":1,"mount":"M","speed":"fast","skill":"Gunner","arm":"deploy","ctr":"Point-defence, ECM","pwr":1,"mass":2},
+  {"name":"Slug railgun","flat":120,"dmg":"6dx6","ap":20,"kind":"rail","acc":9,"band":"Long","rof":1,"rcl":4,"mount":"L","skill":"Gunner","arm":"charge 1 turn","ctr":"Dodge only","pwr":6,"mass":5},
+  {"name":"Ion railgun","flat":50,"dmg":"6dx3","ap":5,"kind":"ion","acc":9,"band":"Long","rof":1,"rcl":1,"mount":"L","skill":"Ion Gunner","arm":"charge 1 turn","ctr":"Dodge only","pwr":10,"mass":4},
+  {"name":"Plasma railgun","flat":80,"dmg":"6dx4","ap":10,"kind":"rail","acc":8,"band":"Med/Long","rof":1,"rcl":4,"mount":"L","skill":"Gunner","arm":"charge 1 turn","ctr":"Dodge only","pwr":8,"mass":4},
+  {"name":"Point-defence laser","flat":30,"dmg":"6dx2","ap":0,"kind":"pd","acc":1,"band":"Knife","rof":3,"rcl":2,"mount":"S","skill":"Gunner","ctr":"Dodge (this is itself the missile counter)","pwr":3,"mass":1},
+  {"name":"Turbolaser (light)","flat":200,"dmg":"6dx10","ap":0,"kind":"capital","acc":8,"band":"Med/Long","rof":2,"rcl":4,"mount":"C","skill":"Gunner (capital)","ctr":"Dodge; −6 to hit fighter-size","pwr":30,"mass":20},
+  {"name":"Turbolaser (heavy)","flat":400,"dmg":"6dx20","ap":0,"kind":"capital","acc":10,"band":"Long/Extreme","rof":2,"rcl":4,"mount":"C","skill":"Gunner (capital)","ctr":"Dodge; −6 to hit fighter-size","pwr":50,"mass":35},
+  {"name":"Neuralyzer array","dmg":"","ap":0,"kind":"neural","acc":0,"band":"Close","rof":1,"rcl":1,"mount":"M","skill":"Gunner (exotic)","ctr":"Dodge; shielded hulls resist","pwr":6,"mass":3}
  ];
 const TGT_CLASSES=[['Speeder / walker',2],['Starfighter',4],['Gunship / shuttle',5],['Freighter',6],['Corvette',8],['Frigate',9],['Cruiser / capital',10]];
 const RANGE_BANDS=[['Knife-fight \u22641 km',0],['Close 1\u20135 km',-4],['Medium 5\u201315 km',-6],['Long 15\u201350 km',-8],['Extreme 50+ km',-12]];
@@ -5455,15 +5449,14 @@ function parseMountString(s){
 function mountUsedSizes(mounts){const u={S:0,M:0,L:0,C:0};(mounts||[]).forEach(mt=>{const W=mt.w?SHIP_WEAPONS.find(x=>x.name===mt.w):null;if(W&&W.mount)u[W.mount]+=(+mt.n||1);});return u;}
 function totalMountN(mounts){return (mounts||[]).reduce((t,mt)=>t+(+mt.n||1),0);}
 function toggleVehicleCustom(i){const v=C.vehicles[i];if(!v)return;v.custom=!v.custom;touch();renderVehicles();}
-function addMount(i){const v=C.vehicles[i];if(!v)return;const ms=shipMounts(v);if(!v.custom){const probe=ms.concat([{w:SHIP_WEAPONS[1].name,n:1}]);if(!fitsBudget(mountUsedSizes(probe),hardpointBudget(v))){alert('This hull\u2019s hardpoints are full \u2014 turn on \u201ccustom loadout\u201d on the ship to mount more than it\u2019s rated for.');return;}}ms.push({label:'New mount',w:SHIP_WEAPONS[1].name,n:1,shots:null,shotsNow:null});touch();renderVehicles();}
+function addMount(i){const v=C.vehicles[i];if(!v)return;const ms=shipMounts(v);if(!v.custom){const bad=econWouldExceed(v,ms.concat([{w:SHIP_WEAPONS[1].name,n:1}]),null);if(bad){alert('No room on this hull \u2014 '+(bad.powerOver?'reactor power':'mass capacity')+' would be exceeded. Turn on \u201ccustom loadout\u201d to override the hull limits.');return;}}ms.push({label:'New mount',w:SHIP_WEAPONS[1].name,n:1,shots:null,shotsNow:null});touch();renderVehicles();}
 function delMount(i,m){const v=C.vehicles[i];if(!v)return;shipMounts(v).splice(m,1);touch();renderVehicles();}
 function setMountField(i,m,f,val){
  const v=C.vehicles[i];if(!v)return;const ms=shipMounts(v);const mt=ms[m];if(!mt)return;
  if(!v.custom&&(f==='w'||f==='n')){
   const probe=ms.map((x,k)=>k===m?Object.assign({},x,f==='n'?{n:Math.max(1,parseInt(val)||1)}:{w:(val||null)}):x);
-  const bud=hardpointBudget(v);
-  const fitsAfter=fitsBudget(mountUsedSizes(probe),bud), fitsBefore=fitsBudget(mountUsedSizes(ms),bud), addsCount=totalMountN(probe)>totalMountN(ms);
-  if(!fitsAfter&&(fitsBefore||addsCount)){alert('That exceeds this hull\u2019s hardpoint budget \u2014 turn on \u201ccustom loadout\u201d to override the hull limits.');renderVehicles();return;}
+  const bad=econWouldExceed(v,probe,null);
+  if(bad){alert('That exceeds this hull\u2019s '+(bad.powerOver?'reactor power':'mass capacity')+' \u2014 turn on \u201ccustom loadout\u201d to override the hull limits.');renderVehicles();return;}
  }
  if(f==='n'){mt.n=Math.max(1,parseInt(val)||1);}
  else if(f==='shotsNow'){mt.shotsNow=val===''?null:Math.max(0,parseInt(val)||0);}
@@ -5474,23 +5467,23 @@ function setMountField(i,m,f,val){
 }
 // ─── SHIP UTILITY MODULES (sized S/M/L; hull dictates the budget) ───
 const SHIP_MODULES=[
- {name:'Stygium cloaking device',size:'L',cat:'Cloak',cost:24000000,lc:'Illegal',fx:'Full sensor cloak \u2014 vanish from scopes and targeting locks. Cannot fire or be locked while cloaked; drops the instant you attack. Powered by stygium crystals (state-secret tech).'},
- {name:'Hibridium cloak',size:'L',cat:'Cloak',cost:6000000,lc:'Illegal',fx:'Cheaper cloak \u2014 vanish from sensors, but you go blind to outside scopes while cloaked (the hibridium drawback). Fly by dead reckoning; cannot fire.'},
- {name:'Holographic transponder mask',size:'M',cat:'Deception',cost:480000,lc:'Illegal',fx:'Projects a false hull silhouette (appears as a chosen ship model \u2014 visual/sensor-ID only) and cycles a randomised fake transponder ID. Beats casual ID and registry checks, not a focused scan or a boarding.'},
- {name:'Military ECM suite',size:'M',cat:'Electronic Warfare',cost:230000,lc:'Res',fx:'+4 to break incoming missile locks; jams enemy fire-control. The bigger sibling of basic countermeasures.'},
- {name:'Sensor-stealth array',size:'S',cat:'Stealth',cost:540000,lc:'Res',fx:'Passive sensors only \u2014 scan without lighting up, staying off enemy scopes. No active ping.'},
- {name:'Shield booster capacitor',size:'M',cat:'Defence',cost:290000,lc:'Mil',fx:'Burst: +50% shield cap or double regen for 3 turns, then a cooldown. Saves you from the volley that would have dropped the screens.'},
- {name:'Repair-drone bay',size:'M',cat:'Support',cost:230000,lc:'Lic',fx:'Damage-control drones: repair Hull HP and clear a strained system over time between (and slowly during) fights.'},
- {name:'Tractor beam projector',size:'M',cat:'Utility',cost:420000,lc:'Mil',fx:'Grapples a smaller ship (Electronics Op vs Pilot) at 1\u20135 km \u2014 hold a prize for boarding or drag a wreck.'},
- {name:'Gravity-well projector',size:'L',cat:'Interdiction',cost:4800000,lc:'Mil',fx:'Interdiction field \u2014 blocks hyperspace jumps and yanks ships out of hyperspace in the zone (capital-scale). Rare and valuable.'},
- {name:'Concealed smuggling hold',size:'S',cat:'Smuggling',cost:290000,lc:'Illegal',fx:'Hidden cargo void: +6 to beat a customs inspection or sensor sweep of the hold. Where the spice rides.'},
- {name:'Chaff / decoy launcher',size:'S',cat:'Defence',cost:96000,lc:'Lic',fx:'Defeats one incoming guided warhead per reload \u2014 pop it as the missile commits.'},
- {name:'Encrypted comms suite',size:'S',cat:'Comms',cost:84000,lc:'Res',fx:'Secure comms (win Cryptography to crack) and a jammer that degrades enemy coordination rolls.'},
- {name:'Slaved gunner network',size:'M',cat:'Fire Control',cost:420000,lc:'Mil',fx:'One gunner fires every turret at +3 to hit \u2014 turns a short-handed crew into a full battery.'},
- {name:'Astromech socket',size:'S',cat:'Support',cost:130000,lc:'Lic',fx:'Houses an astromech: +3 Astrogation, on-the-fly repairs, and it can fly the ship home if the crew is downed (droids are immune to a Neuralyzer/boarding stun).'},
- {name:'Medbay / bacta tank',size:'M',cat:'Support',cost:170000,lc:'Lic',fx:'Treat and stabilise crew between or within scenes \u2014 a bacta tank for the badly hurt.'},
- {name:'Escape-pod bank',size:'S',cat:'Survival',cost:54000,lc:'Lic',fx:'Crew survival when the ship is lost \u2014 everyone aboard gets off before she goes.'},
- {name:'Extended fuel / life support',size:'S',cat:'Endurance',cost:84000,lc:'Lic',fx:'Bigger tanks and scrubbers: longer jump range and weeks more endurance between ports.'}
+ {"name":"Stygium cloaking device","size":"L","cat":"Cloak","cost":24000000,"lc":"Illegal","fx":"Full sensor cloak — vanish from scopes and targeting locks. Cannot fire or be locked while cloaked; drops the instant you attack. Powered by stygium crystals (state-secret tech).","pwr":16,"mass":4},
+ {"name":"Hibridium cloak","size":"L","cat":"Cloak","cost":6000000,"lc":"Illegal","fx":"Cheaper cloak — vanish from sensors, but you go blind to outside scopes while cloaked (the hibridium drawback). Fly by dead reckoning; cannot fire.","pwr":12,"mass":4},
+ {"name":"Holographic transponder mask","size":"M","cat":"Deception","cost":480000,"lc":"Illegal","fx":"Projects a false hull silhouette (appears as a chosen ship model — visual/sensor-ID only) and cycles a randomised fake transponder ID. Beats casual ID and registry checks, not a focused scan or a boarding.","pwr":4,"mass":2},
+ {"name":"Military ECM suite","size":"M","cat":"Electronic Warfare","cost":230000,"lc":"Res","fx":"+4 to break incoming missile locks; jams enemy fire-control. The bigger sibling of basic countermeasures.","pwr":4,"mass":2},
+ {"name":"Sensor-stealth array","size":"S","cat":"Stealth","cost":540000,"lc":"Res","fx":"Passive sensors only — scan without lighting up, staying off enemy scopes. No active ping.","pwr":2,"mass":1},
+ {"name":"Shield booster capacitor","size":"M","cat":"Defence","cost":290000,"lc":"Mil","fx":"Burst: +50% shield cap or double regen for 3 turns, then a cooldown. Saves you from the volley that would have dropped the screens.","pwr":8,"mass":2},
+ {"name":"Repair-drone bay","size":"M","cat":"Support","cost":230000,"lc":"Lic","fx":"Damage-control drones: repair Hull HP and clear a strained system over time between (and slowly during) fights.","pwr":4,"mass":2},
+ {"name":"Tractor beam projector","size":"M","cat":"Utility","cost":420000,"lc":"Mil","fx":"Grapples a smaller ship (Electronics Op vs Pilot) at 1–5 km — hold a prize for boarding or drag a wreck.","pwr":6,"mass":3},
+ {"name":"Gravity-well projector","size":"L","cat":"Interdiction","cost":4800000,"lc":"Mil","fx":"Interdiction field — blocks hyperspace jumps and yanks ships out of hyperspace in the zone (capital-scale). Rare and valuable.","pwr":16,"mass":6},
+ {"name":"Concealed smuggling hold","size":"S","cat":"Smuggling","cost":290000,"lc":"Illegal","fx":"Hidden cargo void: +6 to beat a customs inspection or sensor sweep of the hold. Where the spice rides.","pwr":2,"mass":1},
+ {"name":"Chaff / decoy launcher","size":"S","cat":"Defence","cost":96000,"lc":"Lic","fx":"Defeats one incoming guided warhead per reload — pop it as the missile commits.","pwr":2,"mass":1},
+ {"name":"Encrypted comms suite","size":"S","cat":"Comms","cost":84000,"lc":"Res","fx":"Secure comms (win Cryptography to crack) and a jammer that degrades enemy coordination rolls.","pwr":2,"mass":1},
+ {"name":"Slaved gunner network","size":"M","cat":"Fire Control","cost":420000,"lc":"Mil","fx":"One gunner fires every turret at +3 to hit — turns a short-handed crew into a full battery.","pwr":4,"mass":2},
+ {"name":"Astromech socket","size":"S","cat":"Support","cost":130000,"lc":"Lic","fx":"Houses an astromech: +3 Astrogation, on-the-fly repairs, and it can fly the ship home if the crew is downed (droids are immune to a Neuralyzer/boarding stun).","pwr":2,"mass":1},
+ {"name":"Medbay / bacta tank","size":"M","cat":"Support","cost":170000,"lc":"Lic","fx":"Treat and stabilise crew between or within scenes — a bacta tank for the badly hurt.","pwr":4,"mass":2},
+ {"name":"Escape-pod bank","size":"S","cat":"Survival","cost":54000,"lc":"Lic","fx":"Crew survival when the ship is lost — everyone aboard gets off before she goes.","pwr":2,"mass":1},
+ {"name":"Extended fuel / life support","size":"S","cat":"Endurance","cost":84000,"lc":"Lic","fx":"Bigger tanks and scrubbers: longer jump range and weeks more endurance between ports.","pwr":2,"mass":1}
 ];
 function moduleBudget(v){
  const s=String((v&&(v.hpClassHint||v.cat||v.frame||v.class))||'').toLowerCase();
@@ -5509,7 +5502,80 @@ function moduleBudget(v){
 function vehicleModules(v){ if(!v.modules)v.modules=[]; return v.modules; }
 function addVehicleModule(i){const v=C.vehicles[i];if(!v)return;vehicleModules(v).push({m:''});touch();renderVehicles();}
 function delVehicleModule(i,j){const v=C.vehicles[i];if(!v)return;vehicleModules(v).splice(j,1);touch();renderVehicles();}
-function setVehicleModuleField(i,j,f,val){const v=C.vehicles[i];if(!v)return;const md=vehicleModules(v)[j];if(!md)return;md[f]=val;touch();renderVehicles();}
+function setVehicleModuleField(i,j,f,val){const v=C.vehicles[i];if(!v)return;const mods=vehicleModules(v);const md=mods[j];if(!md)return;if(!v.custom&&f==='m'&&val){const probe=mods.map((x,k)=>k===j?Object.assign({},x,{m:val}):x);const bad=econWouldExceed(v,null,probe);if(bad){alert('No room for that module \u2014 '+(bad.powerOver?'reactor power':'mass capacity')+' would be exceeded. Turn on \u201ccustom loadout\u201d to override.');renderVehicles();return;}}md[f]=val;touch();renderVehicles();}
+// ─── SHIP POWER / MASS ECONOMY ───────────────────────────────────────────────
+// Per-class reactor output + core-system draw, mass capacity + core structural mass.
+// Calibrated so every catalogue ship's armament fits with headroom (house values).
+const SHIP_CLASS_ECON={
+ 'Light Fighter':{gen:50,draw:15,cap:28,mass:8},
+ 'Heavy Fighter':{gen:55,draw:18,cap:34,mass:10},
+ 'Interceptor':{gen:48,draw:14,cap:24,mass:7},
+ 'Gunship':{gen:60,draw:18,cap:34,mass:12},
+ 'Shuttle':{gen:55,draw:16,cap:34,mass:12},
+ 'Light Freighter':{gen:80,draw:22,cap:48,mass:18},
+ 'Heavy Freighter':{gen:70,draw:28,cap:56,mass:30},
+ 'Corvette':{gen:520,draw:120,cap:520,mass:200},
+ 'Frigate':{gen:1100,draw:260,cap:1100,mass:420},
+ 'Cruiser':{gen:3500,draw:700,cap:3500,mass:1400}
+};
+function shipClassEcon(v){
+ const cat=(v&&v.cat)||'';
+ if(SHIP_CLASS_ECON[cat])return SHIP_CLASS_ECON[cat];
+ const s=String((v&&(v.hpClassHint||cat||v.frame||v.class))||'').toLowerCase();
+ if(/dreadn|battleship|capital|flagship|destroyer/.test(s))return {gen:6000,draw:1200,cap:6000,mass:2400};
+ if(/carrier/.test(s))return {gen:2000,draw:500,cap:2000,mass:800};
+ if(/cruiser/.test(s))return SHIP_CLASS_ECON['Cruiser'];
+ if(/frigate/.test(s))return SHIP_CLASS_ECON['Frigate'];
+ if(/corvette|patrol/.test(s))return SHIP_CLASS_ECON['Corvette'];
+ if(/bulk|hauler|freighter/.test(s))return SHIP_CLASS_ECON['Light Freighter'];
+ if(/gunship/.test(s))return SHIP_CLASS_ECON['Gunship'];
+ if(/heavy fighter|bomber/.test(s))return SHIP_CLASS_ECON['Heavy Fighter'];
+ if(/shuttle|transport|drop|tender|courier|lander|skiff/.test(s))return SHIP_CLASS_ECON['Shuttle'];
+ if(/intercept|fighter|scout/.test(s))return SHIP_CLASS_ECON['Light Fighter'];
+ return {gen:60,draw:20,cap:40,mass:15};
+}
+function shipPowerMass(v){
+ const E=shipClassEcon(v);const cd=E.draw,cm=E.mass;
+ const parts=[
+  {name:'Reactor',role:'gen',pwr:-E.gen,mass:Math.round(cm*0.18)},
+  {name:'Sublight + hyperdrive',role:'core',pwr:Math.round(cd*0.45),mass:Math.round(cm*0.16)},
+  {name:'Shield generator',role:'core',pwr:Math.round(cd*0.38),mass:Math.round(cm*0.10)},
+  {name:'Sensors + computer',role:'core',pwr:Math.round(cd*0.17),mass:Math.round(cm*0.06)},
+  {name:'Hull + armour frame',role:'core',pwr:0,mass:Math.round(cm*0.50)}
+ ];
+ (shipMounts(v)||[]).forEach(mt=>{const W=mt.w?SHIP_WEAPONS.find(x=>x.name===mt.w):null;if(W){const n=+mt.n||1;parts.push({name:(mt.label||W.name)+(n>1?' ×'+n:''),role:'weapon',pwr:(+W.pwr||0)*n,mass:(+W.mass||0)*n});}});
+ (vehicleModules(v)||[]).forEach(md=>{const M=md&&md.m?SHIP_MODULES.find(x=>x.name===md.m):null;if(M)parts.push({name:M.name,role:'module',pwr:(+M.pwr||0),mass:(+M.mass||0)});});
+ const gen=E.gen;
+ const draw=parts.reduce((t,p)=>t+(p.pwr>0?p.pwr:0),0);
+ const massUsed=parts.reduce((t,p)=>t+(p.mass||0),0);
+ return {gen,draw,cap:E.cap,massUsed,parts,powerOver:draw>gen,massOver:massUsed>E.cap};
+}
+// returns the offending econ if a proposed loadout would newly exceed (and increase) power/mass; else null
+function econWouldExceed(v,probeMounts,probeModules){
+ const cur=shipPowerMass(v);
+ const probe=Object.assign({},v,{mounts:probeMounts!=null?probeMounts:shipMounts(v),modules:probeModules!=null?probeModules:vehicleModules(v)});
+ const nw=shipPowerMass(probe);
+ const increases=nw.draw>cur.draw||nw.massUsed>cur.massUsed;
+ return (increases&&(nw.powerOver||nw.massOver))?nw:null;
+}
+function vehicleEconomyHTML(v,i){
+ const E=shipPowerMass(v);
+ const pPct=Math.min(100,Math.round(E.draw/Math.max(1,E.gen)*100));
+ const mPct=Math.min(100,Math.round(E.massUsed/Math.max(1,E.cap)*100));
+ const bar=(pct,over)=>'<div style="height:7px;background:var(--bg3);border-radius:4px;overflow:hidden;border:1px solid var(--border);margin-top:2px"><div style="height:100%;width:'+pct+'%;background:'+(over?'var(--red)':(pct>85?'var(--amber)':'var(--green)'))+'"></div></div>';
+ const rows=E.parts.map(p=>{const col=p.role==='gen'?'var(--cyan)':(p.role==='weapon'?'var(--text)':(p.role==='module'?'var(--amber)':'var(--text2)'));const pw=p.pwr<0?('<span style="color:var(--cyan)">+'+(-p.pwr)+'</span>'):(p.pwr>0?p.pwr:'—');return '<tr><td style="color:'+col+'">'+esc(p.name)+'</td><td class="num">'+pw+'</td><td class="num">'+(p.mass||'—')+'</td></tr>';}).join('');
+ const tgl='<label style="font-size:10px;color:var(--text2);display:inline-flex;align-items:center;gap:4px;cursor:pointer" title="Custom hull — ignore the rated power/mass limits (one-off or modified ships)."><input type="checkbox"'+(v.custom?' checked':'')+' onchange="toggleVehicleCustom('+i+')"> custom loadout</label>';
+ return '<div style="margin-top:8px;padding:6px 9px;background:var(--bg2);border:1px solid var(--border);border-radius:6px">'
+  +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px"><span style="font-size:11px;font-weight:700;color:var(--cyan)">⚙ Power & Mass'+(v.custom?' <span style="color:var(--amber);font-weight:400">— hull limits off</span>':'')+'</span>'+tgl+'</div>'
+  +'<div style="display:flex;gap:16px;flex-wrap:wrap;font-size:11px">'
+   +'<div style="flex:1;min-width:150px"><span class="dim">⚡ Power</span> <b style="color:'+(E.powerOver?'var(--red)':'var(--text)')+'">'+E.draw+'</b><span class="dim"> drawn / '+E.gen+' output</span>'+bar(pPct,E.powerOver)+(E.powerOver?'<span style="color:var(--red);font-size:10px">reactor overdrawn — shed weapons or modules</span>':'')+'</div>'
+   +'<div style="flex:1;min-width:150px"><span class="dim">⚖ Mass</span> <b style="color:'+(E.massOver?'var(--red)':'var(--text)')+'">'+E.massUsed+'</b><span class="dim"> used / '+E.cap+' capacity</span>'+bar(mPct,E.massOver)+(E.massOver?'<span style="color:var(--red);font-size:10px">over mass capacity — Handling/Move suffer</span>':'')+'</div>'
+  +'</div>'
+  +'<details style="margin-top:5px"><summary style="font-size:10px;color:var(--cyan);cursor:pointer">ship systems & loadout — power draw / mass per part</summary>'
+   +'<table class="g" style="font-size:10px;margin-top:4px"><tr><th>Part</th><th title="+ generates power · a number draws power">Pwr</th><th>Mass</th></tr>'+rows+'</table>'
+   +'<div class="dim" style="font-size:9px;margin-top:3px">Core-system stats derive from hull class (house). Every weapon and module adds its own power draw + mass — more guns cost both.</div></details>'
+  +'</div>';
+}
 function setVehicleHPNow(i,val){const v=C.vehicles[i];if(!v)return;const hm=vehicleEffectiveStat(v,'hpMax')||1;v.hpNow=Math.max(-Math.ceil(hm*0.6),Math.min(hm,parseInt(val)||0));touch();renderVehicles();}
 function setVehicleShieldNow(i,val){const v=C.vehicles[i];if(!v)return;const cap=parseInt(v.shieldDR)||0;v.shieldNow=Math.max(0,Math.min(cap,parseInt(val)||0));touch();renderVehicles();}
 function gunnerSkillFor(W){
