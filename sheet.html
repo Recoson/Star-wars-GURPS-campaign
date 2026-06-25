@@ -5762,7 +5762,7 @@ function addVehicleFromCatalog(name){
  if(!cat)cat=SHIPS_FULL.find(s=>s.name.toLowerCase().startsWith(trimmed));
  if(!cat)cat=SHIPS_FULL.find(s=>s.name.toLowerCase().includes(trimmed));
  if(!cat){alert('No vessel found matching "'+name+'". Try picking from the list.');return;}
- const hpMax=cat.hp||parseInt(cat.hullDR)*10||100;
+ const hpMax=hullHPForClass(cat.cat||'',cat.hullDR);
  C.vehicles=C.vehicles||[];
  const _parts=synthShipParts(cat.cat||'');
  C.vehicles.push({
