@@ -4877,18 +4877,25 @@ function renderVehicles(){ migrateVehicleStats();
     <span class="dim" style="font-size:10px">${esc(v.cat||'')}${v.custom?' · <span style="color:var(--amber)">custom</span>':''}</span>
     <button class="btn-del" onclick="delVehicle(${i})">✕</button>
    </div>
-   <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;font-size:11px">
-    <div style="flex:1;min-width:170px">
-     <div class="dim">Hull HP <span style="opacity:.7">· ${_pOk}/${_pTot} systems intact ●</span>${(()=>{const pv=vehiclePrizeValue(v);return pv?` <span style="opacity:.7" title="Prize value = catalogue price × intact fraction. Fence pays ~1/3, legal registry ~60% (compendium Part VI, Stage 5).">· 💰 ${pv.toLocaleString()} cr</span>`:''})()}</div>
-     ${(()=>{const hm=vehicleEffectiveStat(v,'hpMax')||1;const hn=(v.hpNow==null?hm:v.hpNow);const pc=Math.max(0,Math.min(100,Math.round(100*hn/hm)));const col=hn<=0?'var(--red)':pc<25?'var(--red)':pc<50?'var(--amber)':'var(--green)';const state=hn<=-0.5*hm?'☠ DESTROYED — nothing to salvage':hn<=0?'⚠ CRIPPLED — adrift, ripe for boarding':pc<25?'⚠ past ¼ — critical, systems straining':pc<50?'past ½ — structural strain':'holding';return `<div style="display:flex;align-items:center;gap:4px"><button onclick="adjVehicleHP(${i},-10)">−10</button><button onclick="adjVehicleHP(${i},-1)">−</button><span style="font-family:monospace;font-weight:700;color:${col};min-width:78px;text-align:center" title="Hull HP pool — structural health. Strain at ½ &amp; ¼; crippled at 0; destroyed past −½ cap.">${hn} / ${hm}</span><button onclick="adjVehicleHP(${i},1)">+</button><button onclick="adjVehicleHP(${i},10)">+10</button></div><div style="position:relative;height:6px;background:var(--bg);border-radius:2px;margin-top:4px;overflow:hidden"><div style="height:100%;width:${pc}%;background:${col}"></div><div style="position:absolute;top:0;bottom:0;left:50%;width:1px;background:var(--text2);opacity:.55" title="½"></div><div style="position:absolute;top:0;bottom:0;left:25%;width:1px;background:var(--text2);opacity:.55" title="¼"></div></div><div class="dim" style="font-size:10px;margin-top:2px;color:${col}">${state}</div>`})()}
-    </div>
-    <div style="flex:1;min-width:170px">
-     <div class="dim">Shield SP / ${shieldCap||'—'}</div>
-     <div style="display:flex;align-items:center;gap:4px"><button onclick="adjVehicleShield(${i},-10)">−10</button><button onclick="adjVehicleShield(${i},-1)">−</button>
-      <span style="font-family:monospace;font-weight:700;color:${cSh};min-width:70px;text-align:center">${v.shieldNow||0}/${shieldCap||'—'}</span>
-      <button onclick="adjVehicleShield(${i},1)">+</button><button onclick="adjVehicleShield(${i},10)">+10</button><button onclick="regenShield(${i})" title="Regenerate 10% of capacity (half if emitters ◐, none if ✕). One regen per turn out of direct fire.">⟳</button></div>
-     <div style="height:4px;background:var(--bg);border-radius:2px;margin-top:4px;overflow:hidden"><div style="height:100%;width:${shieldPct}%;background:${cSh}"></div></div>
-    </div>
+   <div style="display:flex;flex-wrap:wrap;gap:5px 14px;margin-top:7px;font-size:11px;align-items:baseline">${(()=>{
+     const hm=vehicleEffectiveStat(v,'hpMax')||1;const hn=(v.hpNow==null?hm:v.hpNow);const hpc=Math.max(0,Math.min(100,Math.round(100*hn/hm)));
+     const hcol=hn<=0?'var(--red)':hpc<25?'var(--red)':hpc<50?'var(--amber)':'var(--green)';
+     const scap=parseInt(v.shieldDR)||0;const sn=v.shieldNow||0;const scol=(scap&&sn/scap<0.25)?'var(--red)':(scap&&sn/scap<0.6)?'var(--amber)':'var(--cyan)';
+     const hnd=vehicleHnd(v);const cell=(l,val)=>'<span><span class="dim">'+l+'</span> <b>'+val+'</b></span>';
+     const hpState=hn<=-0.5*hm?' \u2620':hn<=0?' \u26a0':'';
+     return cell('Hull DR',vehicleEffectiveStat(v,'dr')||v.hullDR||'\u2014')
+      +'<span title="Hull HP pool \u2014 structural health. Crippled at 0, destroyed past \u2212\u00bd."><span class="dim">Hull HP</span> <input class="cell" type="number" style="width:50px;color:'+hcol+';font-weight:700" value="'+hn+'" onchange="setVehicleHPNow('+i+',this.value)"><span class="dim">/'+hm+hpState+'</span></span>'
+      +'<span><span class="dim">Shield SP</span> <input class="cell" type="number" style="width:50px;color:'+scol+';font-weight:700" value="'+sn+'" onchange="setVehicleShieldNow('+i+',this.value)"><span class="dim">/'+(scap||'\u2014')+'</span> <button class="btn-sm" title="Regenerate 10% of shield capacity (one per calm turn)" onclick="regenShield('+i+')">\u27f3</button></span>'
+      +cell('Hnd',(hnd>=0?'+':'')+hnd)
+      +cell('SM','+'+vehicleSM(v))
+      +cell('Move',v.move||'\u2014')
+      +cell('Hyperdrive',v.hd?('Class '+v.hd):'\u2014')
+      +cell('Crew+Pax',esc(v.crew||'\u2014'))
+      +cell('Cost',(typeof v.cost==='number'?v.cost.toLocaleString()+' cr':esc(''+(v.cost||'\u2014'))))
+      +(v.lc?cell('LC',esc(v.lc)):'')
+      +cell('Systems',_pOk+'/'+_pTot+' \u25cf')
+      +(()=>{const pv=vehiclePrizeValue(v);return pv?cell('Prize',pv.toLocaleString()+' cr'):''})();
+   })()}
    </div>
    ${(()=>{const D=vehicleDodge(v);const sm=vehicleSM(v);
      const core=D.dodge!=null
@@ -4923,6 +4930,23 @@ function renderVehicles(){ migrateVehicleStats();
      return '<div style="margin-top:7px"><table class="g" style="font-size:10.5px"><tr><th>Mount</th><th>Weapon</th><th title="Hardpoint size this weapon needs — S/M/L/Capital">Mt</th><th title="Damage dice">Dmg</th><th title="Armour Piercing: ignores this much hull DR (1:1 at ship scale)">AP</th><th title="Aim a turn to add Acc to one shot (fire-control computer)">Acc</th><th title="Rate of fire — RoF 5+ gives a to-hit bonus">RoF</th><th title="Recoil — extra hits on a hit = floor(margin ÷ Rcl), capped at RoF−1">Rcl</th><th title="Band where this weapon works best">Best band</th><th title="Remaining warheads (launchers only)">Ammo</th><th></th><th></th></tr>'
       +(rows||'<tr><td colspan="11" class="dim" style="padding:6px">No mounts — add one, or they auto-fill from the catalogue armament line.</td></tr>')
       +'</table>'+budLine+'<button class="btn-add" style="margin-top:4px" onclick="addMount('+i+')">+ mount</button></div>';
+   })()}
+   ${(()=>{const mods=vehicleModules(v);
+     const optsFor=function(md){return '<option value=""'+(md.m?'':' selected')+'>\u2014 pick a module \u2014</option>'+SHIP_MODULES.map(function(x){return '<option value="'+esc(x.name)+'"'+(md.m===x.name?' selected':'')+'>'+esc(x.name)+' ('+x.size+')</option>';}).join('');};
+     const rows=mods.map(function(md,j){const M=md.m?SHIP_MODULES.find(function(x){return x.name===md.m;}):null;
+       return '<tr><td><select class="cell" style="width:210px" onchange="setVehicleModuleField('+i+','+j+',\'m\',this.value)">'+optsFor(md)+'</select></td>'
+        +'<td class="num" style="font-weight:700;color:var(--cyan)">'+(M?M.size:'\u2014')+'</td>'
+        +'<td class="dim" style="font-size:10px">'+(M?esc(M.cat):'')+'</td>'
+        +'<td class="dim" style="font-size:10px;max-width:340px">'+(M?esc(M.fx):'')+'</td>'
+        +'<td><button class="btn-del" onclick="delVehicleModule('+i+','+j+')">\u2715</button></td></tr>';
+     }).join('');
+     const bud=moduleBudget(v);const used={S:0,M:0,L:0,C:0};mods.forEach(function(md){const M=md.m?SHIP_MODULES.find(function(x){return x.name===md.m;}):null;if(M&&M.size)used[M.size]++;});
+     const over=!fitsBudget(used,bud);
+     const bc=function(k){return '<span style="color:'+(used[k]?'var(--text)':'var(--text2)')+'">'+k+' '+used[k]+'/'+(bud[k]||'\u2014')+'</span>';};
+     const budLine='<div class="dim" style="font-size:10px;margin-top:5px;padding-top:4px;border-top:1px solid var(--border)">\ud83e\udde9 Module slots \u2014 '+['S','M','L'].map(bc).join(' \u00b7 ')+(over?' \u00b7 <span style="color:var(--red);font-weight:700">over this hull\u2019s module budget</span>':' \u00b7 <span style="color:var(--text2)">within budget</span>')+'</div>';
+     return '<div style="margin-top:9px"><div style="font-size:11px;font-weight:700;color:var(--cyan);margin-bottom:3px">\ud83e\udde9 Modules <span class="dim" style="font-weight:400">\u2014 cloak \u00b7 ECM \u00b7 holo-mask \u00b7 utility</span></div><table class="g" style="font-size:10.5px"><tr><th>Module</th><th title="Slot size needed">Sz</th><th>Type</th><th>Effect</th><th></th></tr>'
+      +(rows||'<tr><td colspan="4" class="dim" style="padding:6px">No modules fitted.</td></tr>')
+      +'</table>'+budLine+'<button class="btn-add" style="margin-top:4px" onclick="addVehicleModule('+i+')">+ module</button></div>';
    })()}
    <div style="margin-top:7px;padding:6px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:5px">
     <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:11px">
@@ -5435,6 +5459,46 @@ function setMountField(i,m,f,val){
  else mt[f]=val;
  touch();renderVehicles();
 }
+// ─── SHIP UTILITY MODULES (sized S/M/L; hull dictates the budget) ───
+const SHIP_MODULES=[
+ {name:'Stygium cloaking device',size:'L',cat:'Cloak',cost:24000000,lc:'Illegal',fx:'Full sensor cloak \u2014 vanish from scopes and targeting locks. Cannot fire or be locked while cloaked; drops the instant you attack. Powered by stygium crystals (state-secret tech).'},
+ {name:'Hibridium cloak',size:'L',cat:'Cloak',cost:6000000,lc:'Illegal',fx:'Cheaper cloak \u2014 vanish from sensors, but you go blind to outside scopes while cloaked (the hibridium drawback). Fly by dead reckoning; cannot fire.'},
+ {name:'Holographic transponder mask',size:'M',cat:'Deception',cost:480000,lc:'Illegal',fx:'Projects a false hull silhouette (appears as a chosen ship model \u2014 visual/sensor-ID only) and cycles a randomised fake transponder ID. Beats casual ID and registry checks, not a focused scan or a boarding.'},
+ {name:'Military ECM suite',size:'M',cat:'Electronic Warfare',cost:230000,lc:'Res',fx:'+4 to break incoming missile locks; jams enemy fire-control. The bigger sibling of basic countermeasures.'},
+ {name:'Sensor-stealth array',size:'S',cat:'Stealth',cost:540000,lc:'Res',fx:'Passive sensors only \u2014 scan without lighting up, staying off enemy scopes. No active ping.'},
+ {name:'Shield booster capacitor',size:'M',cat:'Defence',cost:290000,lc:'Mil',fx:'Burst: +50% shield cap or double regen for 3 turns, then a cooldown. Saves you from the volley that would have dropped the screens.'},
+ {name:'Repair-drone bay',size:'M',cat:'Support',cost:230000,lc:'Lic',fx:'Damage-control drones: repair Hull HP and clear a strained system over time between (and slowly during) fights.'},
+ {name:'Tractor beam projector',size:'M',cat:'Utility',cost:420000,lc:'Mil',fx:'Grapples a smaller ship (Electronics Op vs Pilot) at 1\u20135 km \u2014 hold a prize for boarding or drag a wreck.'},
+ {name:'Gravity-well projector',size:'L',cat:'Interdiction',cost:4800000,lc:'Mil',fx:'Interdiction field \u2014 blocks hyperspace jumps and yanks ships out of hyperspace in the zone (capital-scale). Rare and valuable.'},
+ {name:'Concealed smuggling hold',size:'S',cat:'Smuggling',cost:290000,lc:'Illegal',fx:'Hidden cargo void: +6 to beat a customs inspection or sensor sweep of the hold. Where the spice rides.'},
+ {name:'Chaff / decoy launcher',size:'S',cat:'Defence',cost:96000,lc:'Lic',fx:'Defeats one incoming guided warhead per reload \u2014 pop it as the missile commits.'},
+ {name:'Encrypted comms suite',size:'S',cat:'Comms',cost:84000,lc:'Res',fx:'Secure comms (win Cryptography to crack) and a jammer that degrades enemy coordination rolls.'},
+ {name:'Slaved gunner network',size:'M',cat:'Fire Control',cost:420000,lc:'Mil',fx:'One gunner fires every turret at +3 to hit \u2014 turns a short-handed crew into a full battery.'},
+ {name:'Astromech socket',size:'S',cat:'Support',cost:130000,lc:'Lic',fx:'Houses an astromech: +3 Astrogation, on-the-fly repairs, and it can fly the ship home if the crew is downed (droids are immune to a Neuralyzer/boarding stun).'},
+ {name:'Medbay / bacta tank',size:'M',cat:'Support',cost:170000,lc:'Lic',fx:'Treat and stabilise crew between or within scenes \u2014 a bacta tank for the badly hurt.'},
+ {name:'Escape-pod bank',size:'S',cat:'Survival',cost:54000,lc:'Lic',fx:'Crew survival when the ship is lost \u2014 everyone aboard gets off before she goes.'},
+ {name:'Extended fuel / life support',size:'S',cat:'Endurance',cost:84000,lc:'Lic',fx:'Bigger tanks and scrubbers: longer jump range and weeks more endurance between ports.'}
+];
+function moduleBudget(v){
+ const s=String((v&&(v.hpClassHint||v.cat||v.frame||v.class))||'').toLowerCase();
+ const T=(S,M,L)=>({S:S,M:M,L:L,C:0});
+ if(/dreadn|battleship|battlecruiser|capital|flagship|destroyer|cruiser|carrier/.test(s))return T(8,6,4);
+ if(/frigate/.test(s))return T(6,4,3);
+ if(/corvette|patrol/.test(s))return T(4,3,2);
+ if(/heavy freighter|bulk|hauler/.test(s))return T(5,3,1);
+ if(/freighter|transport|courier/.test(s))return T(4,2,1);
+ if(/gunship/.test(s))return T(3,2,0);
+ if(/shuttle|drop|lander|tender|skiff/.test(s))return T(3,1,0);
+ if(/heavy fighter|bomber/.test(s))return T(2,1,0);
+ if(/intercept|fighter|scout/.test(s))return T(2,0,0);
+ return T(3,1,0);
+}
+function vehicleModules(v){ if(!v.modules)v.modules=[]; return v.modules; }
+function addVehicleModule(i){const v=C.vehicles[i];if(!v)return;vehicleModules(v).push({m:''});touch();renderVehicles();}
+function delVehicleModule(i,j){const v=C.vehicles[i];if(!v)return;vehicleModules(v).splice(j,1);touch();renderVehicles();}
+function setVehicleModuleField(i,j,f,val){const v=C.vehicles[i];if(!v)return;const md=vehicleModules(v)[j];if(!md)return;md[f]=val;touch();renderVehicles();}
+function setVehicleHPNow(i,val){const v=C.vehicles[i];if(!v)return;const hm=vehicleEffectiveStat(v,'hpMax')||1;v.hpNow=Math.max(-Math.ceil(hm*0.6),Math.min(hm,parseInt(val)||0));touch();renderVehicles();}
+function setVehicleShieldNow(i,val){const v=C.vehicles[i];if(!v)return;const cap=parseInt(v.shieldDR)||0;v.shieldNow=Math.max(0,Math.min(cap,parseInt(val)||0));touch();renderVehicles();}
 function gunnerSkillFor(W){
  const ion=W&&W.kind==='ion';
  const g1=charSkillByNames(ion?['Ion Gunner']:['Gunner']);
@@ -5766,7 +5830,7 @@ function addVehicleFromCatalog(name){
  C.vehicles.push({
   name:cat.name,cat:cat.cat,hullDR:String(cat.hullDR||''),shieldDR:String(cat.shieldDR||''),
   shieldNow:parseInt(cat.shieldDR)||0,
-  hpMax,hpNow:hpMax,weapons:cat.weapons||'',crew:String(cat.crew||1),fuel:String(cat.fuel||''),
+  hpMax,hpNow:hpMax,move:cat.move,hd:cat.hd,weapons:cat.weapons||'',crew:String(cat.crew||1),fuel:String(cat.fuel||''),
   cost:typeof cat.cost==='number'?cat.cost.toLocaleString():String(cat.cost||''),
   lc:cat.lc||'—',notes:cat.notes||'',parts:_parts,
   rfNow:(parseInt(String(cat.fuel||'').split('/')[0])||0),hfNow:(parseInt(String(cat.fuel||'').split('/')[1])||0)
