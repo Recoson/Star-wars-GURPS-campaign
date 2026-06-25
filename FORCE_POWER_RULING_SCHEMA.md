@@ -48,6 +48,7 @@ Sustained powers always hold a **Concentrate each turn** (see 2.1). The FP/durat
 - **(a) FP each turn** — a per-turn cost that may be the **full** activation FP **or a cheaper trickle**. Runs while you pay and concentrate.
 - **(b) Concentrate-only, no FP, capped** — costs the maneuver but **no FP**, lasts up to a **stated** duration (e.g. 1 minute), then ends.
 - **(c) FP per interval** — free turn-to-turn but **re-pay FP every stated interval** (e.g. each minute) to keep it up.
+- **(d) Latched** — raised with one Concentrate, then **runs free**: no per-turn maneuver, no FP, and being struck **never** forces a Will roll. Does **not** hold your Concentrate (so other Concentrate powers run alongside it without CM, and you move freely). Ends only on a stated trigger — typically **falling unconscious**. The explicit override of the standard sustained rules. (e.g. Tempered Blade.)
 - **Interruption roll = Will** (not affinity): take damage or a forced distraction → Will roll or the effect **ends** (or **drops a step**, for graduated powers like Force Speed). Affinity = how strong; Will = how hard to rattle.
 
 ### 2.3 Range
