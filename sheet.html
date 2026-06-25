@@ -5530,6 +5530,34 @@ function econWouldExceed(v,probeMounts,probeModules){
  const increases=nw.draw>cur.draw||nw.massUsed>cur.massUsed;
  return (increases&&(nw.powerOver||nw.massOver))?nw:null;
 }
+/* Keep the vehicles tab from "closing" a field on every edit: preserve open <details>,
+   scroll position, and the focused field (matched by its handler string, so tabbing between
+   fields survives the blur-triggered re-render) across renderVehicles(). */
+(function(){
+ if(typeof renderVehicles!=='function')return;
+ var _orig=renderVehicles;
+ renderVehicles=function(){
+  var el=document.getElementById('tab-vehicles');
+  var open=[],sy=(window.scrollY||window.pageYOffset||0),key=null,ss=null,se=null;
+  if(el){
+   open=[].slice.call(el.querySelectorAll('details[open]')).map(function(d){var s=d.querySelector('summary');return s?s.textContent:'';});
+   var a=document.activeElement;
+   if(a&&el.contains(a)&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)){
+    key=a.getAttribute('oninput')||a.getAttribute('onchange')||null;
+    if('selectionStart' in a){try{ss=a.selectionStart;se=a.selectionEnd;}catch(e){}}
+   }
+  }
+  _orig.apply(this,arguments);
+  if(el){
+   [].slice.call(el.querySelectorAll('details')).forEach(function(d){var s=d.querySelector('summary');if(s&&open.indexOf(s.textContent)>=0)d.open=true;});
+   if(key){
+    var n=[].slice.call(el.querySelectorAll('input,textarea,select')).filter(function(x){return (x.getAttribute('oninput')||x.getAttribute('onchange'))===key;})[0];
+    if(n){try{n.focus();if(ss!=null&&'setSelectionRange' in n){n.setSelectionRange(ss,se);}}catch(e){}}
+   }
+   try{window.scrollTo(0,sy);}catch(e){}
+  }
+ };
+})();
 function vehCorePart(v,cat){const nm=v&&v.core&&v.core[cat];return nm?SHIP_PARTS.find(x=>x.cat===cat&&x.name===nm):null;}
 function vehShieldSP(v){const P=vehCorePart(v,'Shields');return P?(+P.shieldSP||0):(parseInt(v.shieldDR)||0);}
 function vehHullDR(v){const A=vehCorePart(v,'Armour');return (parseInt(v.hullDR)||0)+(A?(+A.dr||0):0);}
