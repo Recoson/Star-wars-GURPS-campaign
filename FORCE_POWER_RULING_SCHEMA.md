@@ -32,25 +32,37 @@ default (marked). Note anything genuinely missing from the power's *design* for 
 ## 2. Global rulings (LOCKED)
 
 ### 2.1 Maneuver → which advantages apply
-- **Concentrate** powers: sped by **Compartmentalized Mind** (free 2nd Concentrate) and **Altered Time Sense**. **Never** Extra Attack.
-- **Attack** powers: sped by **Extra Attack** and **Rapid Strike**.
+- **Concentrate** powers: sped by **Compartmentalized Mind** (a free 2nd Concentrate) and **Altered Time Sense**. **Never** Extra Attack or Rapid Strike.
+- **Attack** powers: sped by **Extra Attack** (a 2nd attack/turn) — applies to **most** attack-powers. **Rapid Strike** applies **only** to attack-powers delivered as a *melee* strike (Force-empowered blow, saber-carried power); ranged projections (Lightning, Push) do **not** get it. Default Rapid Strike = no; flag the melee ones.
 - **Sustained** powers occupy a Concentrate every turn → no second power (or other Concentrate action) without CM; effect ends/weakens if concentration breaks.
-- **Hybrid** ("concentrate, then a motion"): one Concentrate maneuver resolving at its end; the motion is delivery, not an Attack.
+
+### 2.1a What a "motion" is (the hybrid ruling)
+A "motion" is the **delivery gesture of the effect resolving, folded into the Concentrate maneuver** — **not** a separate maneuver, **not** a Quick/free action, no extra cost.
+- **Standard (1-second) powers:** spend one Concentrate; the motion **and** effect resolve at the **end of that same maneuver, same turn**. No next-turn delay, no separate upkeep.
+- **Multi-second charge powers:** hold Concentrate across the charge turns (interruptible — damage/distraction → Will roll or it's lost); motion + effect fire at the **end of the final charge turn**.
+- **Prepared/Stored** (§4): charged in advance, released later as their own action.
+- The motion is delivery, **not an Attack** → Extra Attack never grants a second one.
 
 ### 2.2 Upkeep / interruption
-- Sustained = **1 Concentrate + its FP each turn** (or **FP per minute** for low-intensity senses/utility).
-- Holds your Concentrate (see 2.1).
-- **Interruption roll = Will** (not the power's affinity): take damage or a forced distraction → Will roll or the effect **ends** (or **drops a step**, for graduated powers like Force Speed). Affinity governs how strong the power is; Will governs how hard you are to rattle.
+Sustained powers always hold a **Concentrate each turn** (see 2.1). The FP/duration model varies — pick what fits, and **always state the duration cap and/or FP-refresh interval** (never open-ended):
+- **(a) FP each turn** — a per-turn cost that may be the **full** activation FP **or a cheaper trickle**. Runs while you pay and concentrate.
+- **(b) Concentrate-only, no FP, capped** — costs the maneuver but **no FP**, lasts up to a **stated** duration (e.g. 1 minute), then ends.
+- **(c) FP per interval** — free turn-to-turn but **re-pay FP every stated interval** (e.g. each minute) to keep it up.
+- **Interruption roll = Will** (not affinity): take damage or a forced distraction → Will roll or the effect **ends** (or **drops a step**, for graduated powers like Force Speed). Affinity = how strong; Will = how hard to rattle.
 
 ### 2.3 Range
-- **Every power states a default range.** For most, the default range **is the maximum**.
-- **FP→range only where it makes sense** (ranged energy/TK projection, e.g. Lightning). Rate: **+1 hex per 1 FP** off the base. Most powers do **not** get this.
+- **Every power states a default range.** For most, the default **is the maximum**.
+- **Range bands where they matter:** a power may behave **differently at distance** (reduced effect, a to-hit/resist penalty, a damage step-down past a threshold) — state the bands.
+- **FP→range where it makes sense** (ranged energy/TK projection). Rate: **+1 hex per 1 FP** off base. Most powers do **not** get this.
+- **Effectively unlimited reach** for raw TK (**Force Push/Pull**): range climbs with FP toward "as far as you can perceive," but **bought, not free** — a cumulative penalty per increment and/or rising FP per band, so distance has a price.
 
 ### 2.4 Hands
 - State hands tied up: **0** (TK, senses, mind powers) / **1** / **2** / **the blade**.
 - Powers projected from the hand (Lightning) require empty hands; nothing held.
+- **Saber-hand channel (mastery gate):** a hand-projected power may be used with a **lit lightsaber still in that same hand** if your best **Lightsaber/Form skill ≥ Force attribute + 6** — blade discipline automatic enough to free the hand's focus. Below that, the hand must be empty. Flag per-power which hand-powers allow it.
 
 ### 2.5 Movement while active (+ stance/movement-power interaction)
+- **Maneuver used:** movement powers consume a **base maneuver, not a Concentrate** — usually **Move** (Phantom Stride's teleport replaces your Move) or **Instant/free** (Force Step doesn't even spend your step). **Exception:** sustained movement *buffs* (Force Speed = Concentrate). Some also carry a **separate defensive Reaction** (Stride's Blink) using your Reaction, not your maneuver. State the exact maneuver + any free/Reaction sub-component.
 - **Free** — passive buffs/senses: move, Force Speed, Phantom Stride, Ataru momentum all fine while active (it only eats the Concentrate slot; CM to run a 2nd power).
 - **Step-only** — active channels (Lightning, sustained TK crush, active mind-domination): a Step only. **Incompatible with** Force Speed's bonus, **Phantom Stride / Force Step** (a Move/teleport drops the channel by breaking LoS), and **Ataru's Momentum Strike** (needs a 2+ hex run-up the channel can't make). You are rooted to the effect — pick mobility *or* the channel.
 - **Is-movement** — the power *is* the movement (Phantom Stride = Move-teleport; Force Step = Instant blink): cannot also sustain a rooted channel in the same turn.
