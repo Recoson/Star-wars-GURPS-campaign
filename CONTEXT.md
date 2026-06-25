@@ -254,14 +254,15 @@ Commit message convention: `Power adjudication batch NN (<section> X/Y): N power
 - **Saber-hand-gate per-power eligibility** — default rule applied (ranged hand-projected powers
   gate at skill ≥ Force attr + 6; flat thresholds where the source states one). James to confirm the
   per-power eligibility list.
-- **Force Grip & Force Whirlwind** are CM exceptions (no 2nd concentration power at all). Flagged and
-  locked. **Force Choke is a candidate third exception** — its source prose says flatly "Cannot use
-  other concentration powers simultaneously" (no CM qualifier), so it was written faithfully as a hard
-  exception. **Pending James:** codify in SCHEMA §2 + here, or treat as a generic restatement.
-- **Project-instructions vs canon drift:** the durable instructions line says "standard blasters
-  **AD 1**", but canonical (folded through the compendium prose + both weapon stat tables in an
-  earlier phase) is **AD 1.5**. Heavy-blaster-vs-energy-weave was deliberately left at "3/2 → AD 1".
-  This is James's line to update; the tool layer is already on 1.5.
+- **Force Grip & Force Whirlwind** are the only CM exceptions (no 2nd concentration power at all).
+  Flagged and locked. **Force Choke is NOT an exception (James ruled, this session):** it uses the
+  basic sustained-Concentrate ruling — holds your Concentrate, CM frees a 2nd power. Its source line
+  "cannot use other concentration powers simultaneously" is read as the ordinary no-CM default; the
+  Choke Upkeep + At-the-table in compendium and sheet were corrected to match.
+- **Standard-blaster AD (RESOLVED, James ruled this session):** canon is **AD 1.5** (already folded
+  through the compendium prose + both weapon stat tables). The stale "standard blasters AD 1" line is
+  to be **dropped from the Project Instructions** (James's panel — can't edit from here). Heavy-
+  blaster-vs-energy-weave stays at 3/2 → AD 1 as a deliberate exception.
 - **Pre-existing HEAD quirk:** Δ1 unclosed `<p>` and `<span>` in the document head — not ours.
 
 ---
@@ -339,7 +340,8 @@ grep -o '<span class="stat-k">Upkeep</span>' "Star Wars the Old Republic GURPS 4
 - **Armour variety expansion:** 7 new armours into sheet + compendium, Monte-Carlo balance-validated
   (kinetic-strong/energy-weak vs energy-tough split).
 - **Blaster AD 1 → 1.5 fold-through** across compendium prose + both weapon stat tables (left
-  heavy-blaster-vs-energy-weave at 3/2 → AD 1). See §6 for the lingering instructions-line drift.
+  heavy-blaster-vs-energy-weave at 3/2 → AD 1). Instructions-line drift resolved (see §6): AD 1.5 is
+  canonical; the "AD 1" line is dropped from the Project Instructions.
 - **Per-cell recharge differentiation** (+2 blaster ladder replacing the flat +4/turn trickle) and
   **ion magnetic-explosion redefinition** across compendium, sheet, console, cheatsheet
   (commit `3e29e5c` / handoff `08cc93f`).
@@ -353,12 +355,12 @@ grep -o '<span class="stat-k">Upkeep</span>' "Star Wars the Old Republic GURPS 4
 **The adjudication pass and the sheet mirror are both COMPLETE and pushed** (compendium `81d843a`,
 sheet `d0c54f3`). No batch work remains. Open items, in priority order:
 
-1. **PAT exposure (security).** A live `github_pat_…` was pasted in plaintext and proposed for the
-   durable Project Instructions. **Rotate it**, and keep the literal token out of any saved
-   instructions (paste per-session instead).
-2. **Force Choke CM-exception** — codify as a third hard exception in SCHEMA §2 + §6 here, or rule it a
-   generic restatement (see §6).
-3. **"AD 1" drift** in the proposed durable instructions vs the AD 1.5 tool layer (see §6).
+1. **PAT exposure (security) — still open.** A live `github_pat_…` was pasted in plaintext and
+   proposed for the durable Project Instructions. **Rotate it**, and keep the literal token out of any
+   saved instructions (paste per-session instead).
+
+_Resolved this session:_ Force Choke uses the basic ruling (not a CM exception); standard-blaster AD
+is 1.5 and the "AD 1" line is to be dropped from the Project Instructions. See §6.
 
 Optional follow-ups (not started, no urgency): spot-review a sample of At-the-table rulings for tone/
 consistency; consider whether the 13 sheet-absent powers should be added to `window.FORCE_DESC` at all
