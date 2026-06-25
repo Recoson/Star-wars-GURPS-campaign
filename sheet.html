@@ -1060,13 +1060,18 @@ function effMove(){const m=encMove();return(isReeling()||isTired())?Math.ceil(m/
 /* Body-mass distribution of armour weight by location — a torso plate is far
    heavier than a glove. Fractions sum to 1.0 across a full suit. */
 const LOC_WEIGHT={head:0.12,torso:0.34,arms:0.16,hands:0.06,legs:0.24,feet:0.08};
+/* Per fine-location mass share — lets armour weight scale by each individual
+   location worn, not just the 6 coarse zones (so neck+chest+vitals weighs more
+   than vitals alone). Each zone's fine parts sum to its LOC_WEIGHT above; the
+   whole body sums to 1.0. Tunable estimates — no per-armour values needed. */
+const FINE_WEIGHT={skull:0.06,face:0.04,eyes:0.02,neck:0.04,chest:0.20,vitals:0.06,groin:0.04,armR:0.08,armL:0.08,handR:0.03,handL:0.03,legR:0.12,legL:0.12,footR:0.04,footL:0.04};
 function armourBaseCoverSet(a){const ld=(a&&a.locDR)||{};const set=expandCover(LOC6.map(function(x){return x[0];}).filter(function(k){return ld[k];}));return set.length?set:ALL_FINE.slice();}
 function armourEffWeight(it,a){
  const base=(+((a&&a.wt))||0)+modSum(it,'wt');
  if(!a||!Array.isArray(it.cover))return base;            // default coverage → full catalogue weight
  const baseSet=armourBaseCoverSet(a);
- const baseFrac=Array.from(new Set(armourBaseCoverSet(a).map(fineBucket))).reduce((s,z)=>s+(LOC_WEIGHT[z]||0),0)||1;   // mass the catalogue weight represents
- const wornFrac=Array.from(new Set(expandCover(it.cover).map(fineBucket))).reduce((s,z)=>s+(LOC_WEIGHT[z]||0),0);     // mass actually worn
+ const baseFrac=baseSet.reduce((s,f)=>s+(FINE_WEIGHT[f]||0),0)||1;   // catalogue weight's mass-share (summed per fine location)
+ const wornFrac=expandCover(it.cover).reduce((s,f)=>s+(FINE_WEIGHT[f]||0),0);     // mass-share actually worn (per fine location)
  return Math.round(base*(wornFrac/baseFrac)*100)/100;   // proportion by real body mass, not zone count
 }
 function _wtFromCatalogue(kind,name){
