@@ -4865,7 +4865,7 @@ function renderVehicles(){ migrateVehicleStats();
  <div class="sec-head">Your Fleet${(C.vehicles||[]).length?` <span class="dim" style="font-weight:400;font-size:11px">— ${C.vehicles.length} vessel${C.vehicles.length===1?'':'s'}</span>`:''}</div>
  ${(C.vehicles||[]).length?`<div class="fleet-grid">`+(C.vehicles).map((v,i)=>{
   const _pTot=(v.parts||[]).length, _pOk=_vIntact(v); const hpPct=_pTot?Math.round(100*_pOk/_pTot):100;
-  const shieldCap=parseInt(v.shieldDR)||0;
+  const shieldCap=vehShieldSP(v);
   const shieldPct=shieldCap?Math.round(100*(v.shieldNow||0)/shieldCap):0;
   const cHP=hpPct<25?'var(--red)':hpPct<60?'var(--amber)':'var(--green)';
   const cSh=shieldPct<25?'var(--red)':shieldPct<60?'var(--amber)':'var(--cyan)';
@@ -4880,7 +4880,7 @@ function renderVehicles(){ migrateVehicleStats();
    <div style="display:flex;flex-wrap:wrap;gap:5px 14px;margin-top:7px;font-size:11px;align-items:baseline">${(()=>{
      const hm=vehicleEffectiveStat(v,'hpMax')||1;const hn=(v.hpNow==null?hm:v.hpNow);const hpc=Math.max(0,Math.min(100,Math.round(100*hn/hm)));
      const hcol=hn<=0?'var(--red)':hpc<25?'var(--red)':hpc<50?'var(--amber)':'var(--green)';
-     const scap=parseInt(v.shieldDR)||0;const sn=v.shieldNow||0;const scol=(scap&&sn/scap<0.25)?'var(--red)':(scap&&sn/scap<0.6)?'var(--amber)':'var(--cyan)';
+     const scap=vehShieldSP(v);const sn=v.shieldNow||0;const scol=(scap&&sn/scap<0.25)?'var(--red)':(scap&&sn/scap<0.6)?'var(--amber)':'var(--cyan)';
      const hnd=vehicleHnd(v);const cell=(l,val)=>'<span><span class="dim">'+l+'</span> <b>'+val+'</b></span>';
      const hpState=hn<=-0.5*hm?' \u2620':hn<=0?' \u26a0':'';
      return cell('Hull DR',vehicleEffectiveStat(v,'dr')||v.hullDR||'\u2014')
@@ -4888,7 +4888,7 @@ function renderVehicles(){ migrateVehicleStats();
       +'<span><span class="dim">Shield SP</span> <input class="cell" type="number" style="width:50px;color:'+scol+';font-weight:700" value="'+sn+'" onchange="setVehicleShieldNow('+i+',this.value)"><span class="dim">/'+(scap||'\u2014')+'</span> <button class="btn-sm" title="Regenerate 10% of shield capacity (one per calm turn)" onclick="regenShield('+i+')">\u27f3</button></span>'
       +cell('Hnd',(hnd>=0?'+':'')+hnd)
       +cell('SM','+'+vehicleSM(v))
-      +cell('Move',v.move||'\u2014')
+      +cell('Move',vehMoveBase(v)||'\u2014')
       +cell('Hyperdrive',v.hd?('Class '+v.hd):'\u2014')
       +cell('Crew+Pax',esc(v.crew||'\u2014'))
       +cell('Cost',(typeof v.cost==='number'?v.cost.toLocaleString()+' cr':esc(''+(v.cost||'\u2014'))))
@@ -4994,14 +4994,19 @@ function renderVehicles(){ migrateVehicleStats();
     </div>`;})()}
    </details>
    ${_pwarn}
-   <details style="margin-top:6px"><summary style="font-size:11px;color:var(--cyan);cursor:pointer">stats &amp; notes</summary>
-   <table class="g" style="margin-top:4px;font-size:10.5px">
-    <tr><td class="label" style="width:78px">Hull DR</td><td><input class="cell" value="${esc(v.hullDR||'')}" onchange="setVehicleField(${i},'hullDR',this.value)"></td>
-        <td class="label" style="width:78px">Shield SP</td><td><input class="cell" value="${esc(v.shieldDR||'')}" onchange="setVehicleField(${i},'shieldDR',this.value)"></td></tr>
-    <tr><td class="label" title="Handling: maneuver & Dodge modifier. Blank = class default.">Hnd</td><td><input class="cell" value="${v.hnd==null?'':esc(''+v.hnd)}" placeholder="${vehicleHnd(v)}" onchange="setVehicleField(${i},'hnd',this.value)"></td></tr>
-    <tr><td class="label">Crew + Pax</td><td><input class="cell" value="${esc(v.crew||'')}" onchange="setVehicleField(${i},'crew',this.value)"></td>
-        <td class="label">Fuel (RF/HF)</td><td><input class="cell" value="${esc(v.fuel||'')}" onchange="setVehicleField(${i},'fuel',this.value)"></td></tr>
-    <tr><td class="label">Notes</td><td colspan="3"><input class="cell" value="${esc(v.notes||'')}" onchange="setVehicleField(${i},'notes',this.value)" style="width:100%"></td></tr>
+   <details style="margin-top:6px"><summary style="font-size:11px;color:var(--cyan);cursor:pointer">core systems &amp; log</summary>
+   <div style="font-size:10px;color:var(--text2);margin:5px 0 3px">Swap a core part to change the ship\u2019s stats and power/mass. Leave a slot on <b>stock</b> to keep the catalogue value.</div>
+   <table class="g" style="margin-top:2px;font-size:10.5px">
+    <tr><td class="label" style="width:78px" title="Reactor \u2014 sets power output">Reactor</td><td>${coreSel(v,i,'Reactor','power','pw')}</td></tr>
+    <tr><td class="label" title="Drive \u2014 sets Move">Drive</td><td>${coreSel(v,i,'Sublight','move','Move')}</td></tr>
+    <tr><td class="label" title="Shields \u2014 sets Shield SP">Shields</td><td>${coreSel(v,i,'Shields','shieldSP','SP')}</td></tr>
+    <tr><td class="label" title="Armour \u2014 adds Hull DR on top of the frame">Armour</td><td>${coreSel(v,i,'Armour','dr','+DR')}</td></tr>
+   </table>
+   <table class="g" style="margin-top:5px;font-size:10.5px">
+    <tr><td class="label" style="width:78px" title="Handling: maneuver & Dodge modifier. Blank = class default.">Hnd</td><td><input class="cell" value="${v.hnd==null?'':esc(''+v.hnd)}" placeholder="${vehicleHndBase(v)}" onchange="setVehicleField(${i},'hnd',this.value)"></td>
+        <td class="label">Crew + Pax</td><td><input class="cell" value="${esc(v.crew||'')}" onchange="setVehicleField(${i},'crew',this.value)"></td></tr>
+    <tr><td class="label">Fuel (RF/HF)</td><td><input class="cell" value="${esc(v.fuel||'')}" onchange="setVehicleField(${i},'fuel',this.value)"></td>
+        <td class="label">Notes</td><td><input class="cell" value="${esc(v.notes||'')}" onchange="setVehicleField(${i},'notes',this.value)" style="width:100%"></td></tr>
    </table></details>
    ${renderShipPartsBlock(v,i)}
   </div>`;
@@ -5184,11 +5189,11 @@ function vehicleEffectiveStat(v,key){
  }
  if(key==='shieldCap'){
   parts.forEach(p=>{if(p.cat==='Shields'){if(p.status==='dmg')mult*=0.5;else if(p.status==='dest')mult=0;}});
-  return Math.round((parseInt(v.shieldDR)||0)*mult);
+  return Math.round(vehShieldSP(v)*mult);
  }
  if(key==='dr'){
   parts.forEach(p=>{if(p.cat==='Armour'){if(p.status==='dmg')mult*=0.75;else if(p.status==='dest')mult=0;}});
-  return Math.round((parseInt(v.hullDR)||0)*mult);
+  return Math.round(vehHullDR(v)*mult);
  }
  if(key==='attackMod'){
   let m=0;
@@ -5550,12 +5555,14 @@ function shipPowerMass(v){
   if(g>0)gen=g;
  } else {
   const cd=E.draw,cm=E.mass;
+  const R=vehCorePart(v,'Reactor'),SL=vehCorePart(v,'Sublight'),SH=vehCorePart(v,'Shields'),AR=vehCorePart(v,'Armour');
+  if(R)gen=(+R.power||E.gen);
   parts=[
-   {name:'Reactor',role:'gen',pwr:-E.gen,mass:Math.round(cm*0.18)},
-   {name:'Sublight + hyperdrive',role:'core',pwr:Math.round(cd*0.45),mass:Math.round(cm*0.16)},
-   {name:'Shield generator',role:'core',pwr:Math.round(cd*0.38),mass:Math.round(cm*0.10)},
+   R?{name:R.name,role:'gen',pwr:-(+R.power||0),mass:+R.mass||0}:{name:'Reactor',role:'gen',pwr:-E.gen,mass:Math.round(cm*0.18)},
+   SL?{name:SL.name+' (Sublight)',role:'core',pwr:+SL.powerDraw||0,mass:+SL.mass||0}:{name:'Sublight + hyperdrive',role:'core',pwr:Math.round(cd*0.45),mass:Math.round(cm*0.16)},
+   SH?{name:SH.name+' (Shields)',role:'core',pwr:+SH.powerDraw||0,mass:+SH.mass||0}:{name:'Shield generator',role:'core',pwr:Math.round(cd*0.38),mass:Math.round(cm*0.10)},
    {name:'Sensors + computer',role:'core',pwr:Math.round(cd*0.17),mass:Math.round(cm*0.06)},
-   {name:'Hull + armour frame',role:'core',pwr:0,mass:Math.round(cm*0.50)}
+   AR?{name:'Hull + '+AR.name,role:'core',pwr:0,mass:Math.round(cm*0.50)+(+AR.mass||0)}:{name:'Hull + armour frame',role:'core',pwr:0,mass:Math.round(cm*0.50)}
   ];
  }
  (shipMounts(v)||[]).forEach(mt=>{const W=mt.w?SHIP_WEAPONS.find(x=>x.name===mt.w):null;if(W){const n=+mt.n||1;parts.push({name:(mt.label||W.name)+(n>1?' ×'+n:''),role:'weapon',pwr:(+W.pwr||0)*n,mass:(+W.mass||0)*n});}});
@@ -5571,6 +5578,17 @@ function econWouldExceed(v,probeMounts,probeModules){
  const nw=shipPowerMass(probe);
  const increases=nw.draw>cur.draw||nw.massUsed>cur.massUsed;
  return (increases&&(nw.powerOver||nw.massOver))?nw:null;
+}
+function vehCorePart(v,cat){const nm=v&&v.core&&v.core[cat];return nm?SHIP_PARTS.find(x=>x.cat===cat&&x.name===nm):null;}
+function vehShieldSP(v){const P=vehCorePart(v,'Shields');return P?(+P.shieldSP||0):(parseInt(v.shieldDR)||0);}
+function vehHullDR(v){const A=vehCorePart(v,'Armour');return (parseInt(v.hullDR)||0)+(A?(+A.dr||0):0);}
+function vehMoveBase(v){const P=vehCorePart(v,'Sublight');return P?(+P.move||0):(v.move||0);}
+function setVehicleCore(i,cat,val){const v=C.vehicles[i];if(!v)return;v.core=v.core||{};if(val)v.core[cat]=val;else delete v.core[cat];if(!Object.keys(v.core).length)delete v.core;touch();renderVehicles();}
+function coreSel(v,i,cat,statKey,lab){
+ const opts=SHIP_PARTS.filter(x=>x.cat===cat).map(x=>'<option value="'+esc(x.name)+'"'+(v.core&&v.core[cat]===x.name?' selected':'')+'>'+esc(x.name)+(x[statKey]!=null?' \u00b7 '+x[statKey]+' '+lab:'')+'</option>').join('');
+ const cur=v.core&&v.core[cat]?SHIP_PARTS.find(x=>x.cat===cat&&x.name===v.core[cat]):null;
+ const tag=cur?(' <span class="dim">\u2192 '+lab+' '+(cur[statKey]!=null?cur[statKey]:'?')+'</span>'):' <span class="dim">\u2192 stock</span>';
+ return '<select class="cell" style="width:100%;max-width:240px" onchange="setVehicleCore('+i+',\''+cat+'\',this.value)"><option value="">\u2014 stock \u2014</option>'+opts+'</select>'+tag;
 }
 function shipOverloadPenalty(v){
  const E=shipPowerMass(v);
