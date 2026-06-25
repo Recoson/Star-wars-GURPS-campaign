@@ -4932,7 +4932,7 @@ function renderVehicles(){ migrateVehicleStats();
       +cell('Hnd',(hnd>=0?'+':'')+hnd)
       +cell('SM','+'+vehicleSM(v))
       +cell('Move',vehMoveBase(v)||'\u2014')
-      +cell('Hyperdrive',v.hd?('Class '+v.hd):'\u2014')
+      +cell('Hyperdrive',(function(){const hc=vehHyperClass(v);return hc?('Class '+hc):'\u2014';})())
       +cell('Crew+Pax',esc(v.crew||'\u2014'))
       +cell('Cost',(typeof v.cost==='number'?v.cost.toLocaleString()+' cr':esc(''+(v.cost||'\u2014'))))
       +(v.lc?cell('LC',esc(v.lc)):'')
@@ -5032,6 +5032,13 @@ function renderVehicles(){ migrateVehicleStats();
     <tr><td class="label" title="Drive \u2014 sets Move">Drive</td><td>${coreSel(v,i,'Sublight','move','Move')}</td></tr>
     <tr><td class="label" title="Shields \u2014 sets Shield SP">Shields</td><td>${coreSel(v,i,'Shields','shieldSP','SP')}</td></tr>
     <tr><td class="label" title="Armour \u2014 adds Hull DR on top of the frame">Armour</td><td>${coreSel(v,i,'Armour','dr','+DR')}</td></tr>
+    <tr><td class="label" title="Hyperdrive \u2014 sets jump class">Hyperdrive</td><td>${coreSel(v,i,'Hyperdrive','hyper','')}</td></tr>
+    <tr><td class="label" title="Sensors \u2014 detection range; draws power + adds mass">Sensors</td><td>${coreSel(v,i,'Sensors','sensorRng','km')}</td></tr>
+    <tr><td class="label" title="Targeting \u2014 gunnery to-hit bonus; draws power + adds mass">Targeting</td><td>${coreSel(v,i,'Targeting','targetBonus','to-hit')}</td></tr>
+    <tr><td class="label" title="ECM \u2014 jam / evade lock-ons; draws power + adds mass">ECM</td><td>${coreSel(v,i,'ECM','ecmBonus','ECM')}</td></tr>
+    <tr><td class="label" title="Astrogation \u2014 jump-plotting bonus; draws power + adds mass">Astrogation</td><td>${coreSel(v,i,'Astrogation','astroBonus','Astro')}</td></tr>
+    <tr><td class="label" title="Cargo hold \u2014 capacity; adds mass">Cargo</td><td>${coreSel(v,i,'Cargo','cargo','t')}</td></tr>
+    <tr><td class="label" title="Crew berths \u2014 passengers; adds mass">Crew</td><td>${coreSel(v,i,'Crew','pax','pax')}</td></tr>
    </table>
    <table class="g" style="margin-top:5px;font-size:10.5px">
     <tr><td class="label" style="width:78px" title="Handling: maneuver & Dodge modifier. Blank = class default.">Hnd</td><td><input class="cell" value="${v.hnd==null?'':esc(''+v.hnd)}" placeholder="${vehicleHndBase(v)}" onchange="setVehicleField(${i},'hnd',this.value)"></td>
@@ -5522,15 +5529,25 @@ function shipPowerMass(v){
   if(g>0)gen=g;
  } else {
   const cd=E.draw,cm=E.mass;
-  const R=vehCorePart(v,'Reactor'),SL=vehCorePart(v,'Sublight'),SH=vehCorePart(v,'Shields'),AR=vehCorePart(v,'Armour');
+  const cp=function(cat){return vehCorePart(v,cat);};
+  const R=cp('Reactor');
   if(R)gen=(+R.power||E.gen);
-  parts=[
-   R?{name:R.name,role:'gen',pwr:-(+R.power||0),mass:+R.mass||0}:{name:'Reactor',role:'gen',pwr:-E.gen,mass:Math.round(cm*0.18)},
-   SL?{name:SL.name+' (Sublight)',role:'core',pwr:+SL.powerDraw||0,mass:+SL.mass||0}:{name:'Sublight + hyperdrive',role:'core',pwr:Math.round(cd*0.45),mass:Math.round(cm*0.16)},
-   SH?{name:SH.name+' (Shields)',role:'core',pwr:+SH.powerDraw||0,mass:+SH.mass||0}:{name:'Shield generator',role:'core',pwr:Math.round(cd*0.38),mass:Math.round(cm*0.10)},
-   {name:'Sensors + computer',role:'core',pwr:Math.round(cd*0.17),mass:Math.round(cm*0.06)},
-   AR?{name:'Hull + '+AR.name,role:'core',pwr:0,mass:Math.round(cm*0.50)+(+AR.mass||0)}:{name:'Hull + armour frame',role:'core',pwr:0,mass:Math.round(cm*0.50)}
-  ];
+  // Per-category estimate fractions (each sums to 1.0, so a stock hull matches the class-derived
+  // total and the 0/107 budget calibration holds). An assigned core part replaces its slice with
+  // its real power draw / mass, so swapping a part talks straight to the power & mass economy.
+  const PWF={Sublight:0.34,Hyperdrive:0.11,Shields:0.38,Sensors:0.09,Targeting:0.04,ECM:0.03,Astrogation:0.01};
+  const MSF={Reactor:0.18,Sublight:0.12,Hyperdrive:0.04,Shields:0.10,Sensors:0.04,Targeting:0.01,ECM:0.01,Hull:0.50};
+  parts=[R?{name:R.name,role:'gen',pwr:-(+R.power||0),mass:+R.mass||0,cat:'Reactor'}
+          :{name:'Reactor',role:'gen',pwr:-E.gen,mass:Math.round(cm*MSF.Reactor),cat:'Reactor'}];
+  [['Sublight','Drive'],['Hyperdrive','Hyperdrive'],['Shields','Shields'],['Sensors','Sensors'],['Targeting','Targeting'],['ECM','ECM'],['Astrogation','Astrogation']].forEach(function(cl){
+   const c=cl[0],lab=cl[1],P=cp(c);
+   parts.push(P?{name:P.name+' ('+lab+')',role:'core',pwr:+P.powerDraw||0,mass:+P.mass||0,cat:c}
+               :{name:lab,role:'core',pwr:Math.round(cd*(PWF[c]||0)),mass:Math.round(cm*(MSF[c]||0)),cat:c});
+  });
+  ['Cargo','Crew'].forEach(function(c){const P=cp(c);if(P)parts.push({name:P.name+' ('+c+')',role:'core',pwr:0,mass:+P.mass||0,cat:c});});
+  const AR=cp('Armour');
+  parts.push(AR?{name:'Hull + '+AR.name,role:'core',pwr:0,mass:Math.round(cm*MSF.Hull)+(+AR.mass||0),cat:'Armour'}
+              :{name:'Hull + armour frame',role:'core',pwr:0,mass:Math.round(cm*MSF.Hull),cat:'Hull'});
  }
  (shipMounts(v)||[]).forEach(mt=>{const W=mt.w?SHIP_WEAPONS.find(x=>x.name===mt.w):null;if(W){const n=+mt.n||1;parts.push({name:(mt.label||W.name)+(n>1?' ×'+n:''),role:'weapon',pwr:(+W.pwr||0)*n,mass:(+W.mass||0)*n});}});
  (vehicleModules(v)||[]).forEach(md=>{const M=md&&md.m?SHIP_MODULES.find(x=>x.name===md.m):null;if(M)parts.push({name:M.name,role:'module',pwr:(+M.pwr||0),mass:(+M.mass||0)});});
@@ -5578,6 +5595,7 @@ function vehCorePart(v,cat){const nm=v&&v.core&&v.core[cat];return nm?SHIP_PARTS
 function vehShieldSP(v){const P=vehCorePart(v,'Shields');return P?(+P.shieldSP||0):(parseInt(v.shieldDR)||0);}
 function vehHullDR(v){const A=vehCorePart(v,'Armour');return (parseInt(v.hullDR)||0)+(A?(+A.dr||0):0);}
 function vehMoveBase(v){const P=vehCorePart(v,'Sublight');return P?(+P.move||0):(v.move||0);}
+function vehHyperClass(v){const P=vehCorePart(v,'Hyperdrive');if(P&&P.hyper){const m=String(P.hyper).match(/[\d.]+/);return m?m[0]:P.hyper;}return v.hd;}
 function setVehicleCore(i,cat,val){const v=C.vehicles[i];if(!v)return;v.core=v.core||{};if(val)v.core[cat]=val;else delete v.core[cat];if(!Object.keys(v.core).length)delete v.core;touch();renderVehicles();}
 function coreSel(v,i,cat,statKey,lab){
  const opts=SHIP_PARTS.filter(x=>x.cat===cat).map(x=>'<option value="'+esc(x.name)+'"'+(v.core&&v.core[cat]===x.name?' selected':'')+'>'+esc(x.name)+(x[statKey]!=null?' \u00b7 '+x[statKey]+' '+lab:'')+'</option>').join('');
