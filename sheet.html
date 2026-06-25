@@ -4925,12 +4925,14 @@ function renderVehicles(){ migrateVehicleStats();
    })()}
    </div>
    ${(()=>{const D=vehicleDodge(v);const sm=vehicleSM(v);
+     const src=D.npc?'NPC pilot':('Piloting'+(D.pilot&&D.pilot.spec?' ('+esc(D.pilot.spec)+')':''));
      const core=D.dodge!=null
-      ?`Dodge <b style="color:var(--green);font-size:12px">${D.dodge}</b> <span class="dim">= 3 + Piloting${D.pilot.spec?' ('+esc(D.pilot.spec)+')':''} ${D.pilot.lvl}÷3 ${D.hnd>=0?'+':'−'}${Math.abs(D.hnd)} Hnd</span> · Evasive <b style="color:var(--green)">${D.dodge+2}</b> <span class="dim">(your attacks −2)</span>`
-      :`Dodge = <b>3 + Pilot÷3 ${D.hnd>=0?'+':'−'}${Math.abs(D.hnd)} Hnd</b> <span class="dim">— add a Piloting skill to auto-compute</span>`;
+      ?`Dodge <b style="color:var(--green);font-size:12px">${D.dodge}</b> <span class="dim">= 3 + ${src} ${D.pilot.lvl}÷3 ${D.hnd>=0?'+':'−'}${Math.abs(D.hnd)} Hnd</span> · Evasive <b style="color:var(--green)">${D.dodge+2}</b> <span class="dim">(your attacks −2)</span>`
+      :`Dodge = <b>3 + Pilot÷3 ${D.hnd>=0?'+':'−'}${Math.abs(D.hnd)} Hnd</b> <span class="dim">— add a Piloting skill, or set an NPC pilot →</span>`;
+     const npcIn=`<label class="dim" style="margin-left:6px;white-space:nowrap" title="Per-ship pilot skill for an NPC or enemy crew — overrides the party's Piloting for this hull. Blank = use a PC's Piloting.">NPC pilot <input class="cell" type="number" style="width:46px" value="${v.npcPilot==null?'':esc(''+v.npcPilot)}" onchange="setVehicleField(${i},'npcPilot',this.value)"></label>`;
      return `<div style="margin-top:7px;padding:5px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:5px;font-size:11px">
     <span style="font-weight:700;color:var(--cyan)" title="Roll 3d6 ≤ Dodge against each attack you can see coming. Guided warheads: −2. Capital hulls effectively cannot dodge.">🛡 Defence</span> ${core}
-    <span class="dim">· vs missiles −2 · foes hit you at SM +${sm}${sm<=5?' but capital batteries −6 vs you':''}</span>
+    <span class="dim">· vs missiles −2 · foes hit you at SM +${sm}${sm<=5?' but capital batteries −6 vs you':''}</span>${npcIn}
    </div>`})()}
    ${(()=>{const ms=shipMounts(v);
      const rows=ms.map((mt,m)=>{
@@ -4947,14 +4949,14 @@ function renderVehicles(){ migrateVehicleStats();
        +'<td class="num">'+(W&&W.acc?W.acc:'—')+'</td>'
        +'<td class="num">'+(W&&W.rof?W.rof:'—')+'</td>'
        +'<td class="num">'+(W&&W.rcl?W.rcl:'—')+'</td>'
-       +'<td class="dim" style="font-size:10px">'+(W?W.band:'')+'</td>'
+       +'<td class="dim" style="font-size:10px">'+(W?W.band:'')+'</td>'+'<td class="num dim" style="font-size:10px">'+(W&&W.cost?(W.cost>=1000000?(W.cost/1000000)+'M':Math.round(W.cost/1000)+'k'):'\u2014')+'</td>'
        +'<td style="white-space:nowrap">'+ammo+'</td>'
        +'<td><button class="btn-del" onclick="delMount('+i+','+m+')">✕</button></td></tr>';
      }).join('');
      const _econFull=!v.custom&&!!econWouldExceed(v,ms.concat([{w:SHIP_WEAPONS[1].name,n:1}]),null);
      const firingLegend='<div class="dim" style="font-size:9.5px;margin-top:3px;color:var(--text2)">🔒 needs a sensor lock — defeat with chaff / ECM / EMP-flare · ⏱ arm or charge a turn before firing · <span style="color:var(--amber)">ion / cap / exo</span> = special skill (Ion Gunner / capital fire-direction / exotic) · hover ⓘ for a weapon’s firing rules</div>';
-     return '<div style="margin-top:7px"><table class="g" style="font-size:10.5px"><tr><th>Mount</th><th>Weapon</th><th title="Hardpoint size this weapon needs — S/M/L/Capital">Mt</th><th title="Damage dice">Dmg</th><th title="Armour Piercing: ignores this much hull DR (1:1 at ship scale)">AP</th><th title="Aim a turn to add Acc to one shot (fire-control computer)">Acc</th><th title="Rate of fire — RoF 5+ gives a to-hit bonus">RoF</th><th title="Recoil — extra hits on a hit = floor(margin ÷ Rcl), capped at RoF−1">Rcl</th><th title="Band where this weapon works best">Best band</th><th title="Remaining warheads (launchers only)">Ammo</th><th></th></tr>'
-      +(rows||'<tr><td colspan="10" class="dim" style="padding:6px">No mounts — add one, or they auto-fill from the catalogue armament line.</td></tr>')
+     return '<div style="margin-top:7px"><table class="g" style="font-size:10.5px"><tr><th>Mount</th><th>Weapon</th><th title="Hardpoint size this weapon needs — S/M/L/Capital">Mt</th><th title="Damage dice">Dmg</th><th title="Armour Piercing: ignores this much hull DR (1:1 at ship scale)">AP</th><th title="Aim a turn to add Acc to one shot (fire-control computer)">Acc</th><th title="Rate of fire — RoF 5+ gives a to-hit bonus">RoF</th><th title="Recoil — extra hits on a hit = floor(margin ÷ Rcl), capped at RoF−1">Rcl</th><th title="Band where this weapon works best">Best band</th><th title="Replacement cost (per weapon)">Cost</th><th title="Remaining warheads (launchers only)">Ammo</th><th></th></tr>'
+      +(rows||'<tr><td colspan="11" class="dim" style="padding:6px">No mounts — add one, or they auto-fill from the catalogue armament line.</td></tr>')
       +'</table>'+firingLegend+'<button class="btn-add"'+(_econFull?' disabled title="No power/mass headroom — turn on custom loadout below to add more"':'')+' style="margin-top:4px" onclick="addMount('+i+')">+ mount</button></div>';
    })()}
    ${(()=>{const mods=vehicleModules(v);
@@ -5386,29 +5388,7 @@ function charBestPilot(){
  });
  return best;
 }
-const SHIP_WEAPONS=[
-  {"name":"Light laser cannon","flat":40,"dmg":"6dx2","ap":0,"kind":"laser","acc":5,"band":"Knife/Close","rof":3,"rcl":1,"mount":"S","skill":"Gunner","ctr":"Dodge only","pwr":4,"mass":1},
-  {"name":"Laser cannon","flat":50,"dmg":"6dx3","ap":0,"kind":"laser","acc":5,"band":"Close","rof":2,"rcl":1,"mount":"M","skill":"Gunner","ctr":"Dodge only","pwr":6,"mass":2},
-  {"name":"Heavy laser cannon","flat":60,"dmg":"6dx4","ap":5,"kind":"laser","acc":7,"band":"Close/Med","rof":1,"rcl":1,"mount":"L","skill":"Gunner","ctr":"Dodge only","pwr":10,"mass":3},
-  {"name":"Quad laser cannon","flat":50,"dmg":"6dx3","ap":0,"kind":"laser","rof":4,"acc":4,"band":"Knife/Close","rcl":1,"mount":"M","skill":"Gunner","ctr":"Dodge only","pwr":8,"mass":3},
-  {"name":"Rapid-fire burst laser","flat":40,"dmg":"6dx2","ap":0,"kind":"laser","rof":8,"acc":2,"band":"Knife","rcl":2,"mount":"S","skill":"Gunner","ctr":"Dodge only","pwr":6,"mass":1},
-  {"name":"Ion cannon","flat":40,"dmg":"6dx2","ap":0,"kind":"ion","acc":5,"band":"Close","rof":2,"rcl":1,"mount":"M","skill":"Ion Gunner","ctr":"Dodge only","pwr":8,"mass":2},
-  {"name":"Concussion missile","flat":80,"dmg":"6dx4","ap":10,"kind":"missile","acc":3,"band":"Close/Med","guided":1,"rof":1,"rcl":1,"mount":"M","speed":"fast","skill":"Gunner","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare","pwr":1,"mass":3},
-  {"name":"Proton torpedo","flat":100,"dmg":"6dx6","ap":20,"kind":"missile","acc":3,"band":"Med/Long","guided":1,"rof":1,"rcl":1,"mount":"L","speed":"slow","skill":"Gunner","arm":"arm 1 turn","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare","pwr":1,"mass":6},
-  {"name":"Cluster missile","flat":50,"dmg":"3dx3","ap":0,"kind":"missile","rof":4,"acc":3,"band":"Close/Med","guided":1,"rcl":1,"mount":"M","speed":"fast","skill":"Gunner","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare","pwr":1,"mass":3},
-  {"name":"Ion missile","flat":40,"dmg":"6dx2","ap":0,"kind":"ion","acc":3,"band":"Close/Med","guided":1,"warhead":1,"rof":1,"rcl":1,"mount":"M","speed":"fast","skill":"Ion Gunner","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare","pwr":2,"mass":3},
-  {"name":"EMP missile","dmg":"","ap":0,"kind":"emp","acc":3,"band":"Close/Med","guided":1,"fx":"Area systems-kill — shields, drones, mines and unshielded systems in the burst go dark (no hull damage). Droids in the volume roll HT or shut down; shielded military systems resist on HT+2.","rof":1,"rcl":1,"mount":"M","speed":"fast","skill":"Ion Gunner","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare","pwr":2,"mass":3},
-  {"name":"Seismic charge / mine","flat":120,"dmg":"6dx6","ap":10,"kind":"missile","acc":0,"band":"Knife","rof":1,"rcl":1,"mount":"L","speed":"mine","skill":"Gunner","arm":"deploy","ctr":"Maneuver around; can be shot","pwr":1,"mass":5},
-  {"name":"Thermite torpedo","flat":80,"dmg":"6dx4","ap":80,"kind":"missile","acc":3,"band":"Med","guided":1,"rof":1,"rcl":1,"mount":"L","speed":"slow","skill":"Gunner","arm":"arm 1 turn","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare","pwr":1,"mass":5},
-  {"name":"Sabotage probe","dmg":"","ap":0,"kind":"probe","acc":3,"band":"Knife","fx":"Latches on — cumulative −1 per turn to the target&#39;s Gunnery and Sensor rolls (max −4) until pried off (Mechanics or EVA crew, 2 turns).","rof":1,"rcl":1,"mount":"M","speed":"fast","skill":"Gunner","arm":"deploy","ctr":"Point-defence, ECM","pwr":1,"mass":2},
-  {"name":"Slug railgun","flat":120,"dmg":"6dx6","ap":20,"kind":"rail","acc":9,"band":"Long","rof":1,"rcl":4,"mount":"L","skill":"Gunner","arm":"charge 1 turn","ctr":"Dodge only","pwr":6,"mass":5},
-  {"name":"Ion railgun","flat":50,"dmg":"6dx3","ap":5,"kind":"ion","acc":9,"band":"Long","rof":1,"rcl":1,"mount":"L","skill":"Ion Gunner","arm":"charge 1 turn","ctr":"Dodge only","pwr":10,"mass":4},
-  {"name":"Plasma railgun","flat":80,"dmg":"6dx4","ap":10,"kind":"rail","acc":8,"band":"Med/Long","rof":1,"rcl":4,"mount":"L","skill":"Gunner","arm":"charge 1 turn","ctr":"Dodge only","pwr":8,"mass":4},
-  {"name":"Point-defence laser","flat":30,"dmg":"6dx2","ap":0,"kind":"pd","acc":1,"band":"Knife","rof":3,"rcl":2,"mount":"S","skill":"Gunner","ctr":"Dodge (this is itself the missile counter)","pwr":3,"mass":1},
-  {"name":"Turbolaser (light)","flat":200,"dmg":"6dx10","ap":0,"kind":"capital","acc":8,"band":"Med/Long","rof":2,"rcl":4,"mount":"C","skill":"Gunner (capital)","ctr":"Dodge; −6 to hit fighter-size","pwr":30,"mass":20},
-  {"name":"Turbolaser (heavy)","flat":400,"dmg":"6dx20","ap":0,"kind":"capital","acc":10,"band":"Long/Extreme","rof":2,"rcl":4,"mount":"C","skill":"Gunner (capital)","ctr":"Dodge; −6 to hit fighter-size","pwr":50,"mass":35},
-  {"name":"Neuralyzer array","dmg":"","ap":0,"kind":"neural","acc":0,"band":"Close","rof":1,"rcl":1,"mount":"M","skill":"Gunner (exotic)","ctr":"Dodge; shielded hulls resist","pwr":6,"mass":3}
- ];
+const SHIP_WEAPONS=[{"name":"Light laser cannon","flat":40,"dmg":"6dx2","ap":0,"kind":"laser","acc":5,"band":"Knife/Close","rof":3,"rcl":1,"mount":"S","skill":"Gunner","ctr":"Dodge only","pwr":4,"mass":1,"cost":54000},{"name":"Laser cannon","flat":50,"dmg":"6dx3","ap":0,"kind":"laser","acc":5,"band":"Close","rof":2,"rcl":1,"mount":"M","skill":"Gunner","ctr":"Dodge only","pwr":6,"mass":2,"cost":130000},{"name":"Heavy laser cannon","flat":60,"dmg":"6dx4","ap":5,"kind":"laser","acc":7,"band":"Close/Med","rof":1,"rcl":1,"mount":"L","skill":"Gunner","ctr":"Dodge only","pwr":10,"mass":3,"cost":390000},{"name":"Quad laser cannon","flat":50,"dmg":"6dx3","ap":0,"kind":"laser","rof":4,"acc":4,"band":"Knife/Close","rcl":1,"mount":"M","skill":"Gunner","ctr":"Dodge only","pwr":8,"mass":3,"cost":290000},{"name":"Rapid-fire burst laser","flat":40,"dmg":"6dx2","ap":0,"kind":"laser","rof":8,"acc":2,"band":"Knife","rcl":2,"mount":"S","skill":"Gunner","ctr":"Dodge only","pwr":6,"mass":1,"cost":180000},{"name":"Ion cannon","flat":40,"dmg":"6dx2","ap":0,"kind":"ion","acc":5,"band":"Close","rof":2,"rcl":1,"mount":"M","skill":"Ion Gunner","ctr":"Dodge only","pwr":8,"mass":2,"cost":480000},{"name":"Concussion missile","flat":80,"dmg":"6dx4","ap":10,"kind":"missile","acc":3,"band":"Close/Med","guided":1,"rof":1,"rcl":1,"mount":"M","speed":"fast","skill":"Gunner","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare","pwr":1,"mass":3,"cost":210000,"ammo":6},{"name":"Proton torpedo","flat":100,"dmg":"6dx6","ap":20,"kind":"missile","acc":3,"band":"Med/Long","guided":1,"rof":1,"rcl":1,"mount":"L","speed":"slow","skill":"Gunner","arm":"arm 1 turn","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare","pwr":1,"mass":6,"cost":480000,"ammo":4},{"name":"Cluster missile","flat":50,"dmg":"3dx3","ap":0,"kind":"missile","rof":4,"acc":3,"band":"Close/Med","guided":1,"rcl":1,"mount":"M","speed":"fast","skill":"Gunner","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare","pwr":1,"mass":3,"cost":260000,"ammo":6},{"name":"Ion missile","flat":40,"dmg":"6dx2","ap":0,"kind":"ion","acc":3,"band":"Close/Med","guided":1,"warhead":1,"rof":1,"rcl":1,"mount":"M","speed":"fast","skill":"Ion Gunner","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare","pwr":2,"mass":3,"cost":320000,"ammo":4},{"name":"EMP missile","dmg":"","ap":0,"kind":"emp","acc":3,"band":"Close/Med","guided":1,"fx":"Area systems-kill — shields, drones, mines and unshielded systems in the burst go dark (no hull damage). Droids in the volume roll HT or shut down; shielded military systems resist on HT+2.","rof":1,"rcl":1,"mount":"M","speed":"fast","skill":"Ion Gunner","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare","pwr":2,"mass":3,"cost":360000,"ammo":4},{"name":"Seismic charge / mine","flat":120,"dmg":"6dx6","ap":10,"kind":"missile","acc":0,"band":"Knife","rof":1,"rcl":1,"mount":"L","speed":"mine","skill":"Gunner","arm":"deploy","ctr":"Maneuver around; can be shot","pwr":1,"mass":5,"cost":180000,"ammo":6},{"name":"Thermite torpedo","flat":80,"dmg":"6dx4","ap":80,"kind":"missile","acc":3,"band":"Med","guided":1,"rof":1,"rcl":1,"mount":"L","speed":"slow","skill":"Gunner","arm":"arm 1 turn","lock":true,"ctr":"Chaff/decoy, ECM, point-defence, EMP flare","pwr":1,"mass":5,"cost":520000,"ammo":4},{"name":"Sabotage probe","dmg":"","ap":0,"kind":"probe","acc":3,"band":"Knife","fx":"Latches on — cumulative −1 per turn to the target&#39;s Gunnery and Sensor rolls (max −4) until pried off (Mechanics or EVA crew, 2 turns).","rof":1,"rcl":1,"mount":"M","speed":"fast","skill":"Gunner","arm":"deploy","ctr":"Point-defence, ECM","pwr":1,"mass":2,"cost":140000,"ammo":2},{"name":"Slug railgun","flat":120,"dmg":"6dx6","ap":20,"kind":"rail","acc":9,"band":"Long","rof":1,"rcl":4,"mount":"L","skill":"Gunner","arm":"charge 1 turn","ctr":"Dodge only","pwr":6,"mass":5,"cost":540000},{"name":"Ion railgun","flat":50,"dmg":"6dx3","ap":5,"kind":"ion","acc":9,"band":"Long","rof":1,"rcl":1,"mount":"L","skill":"Ion Gunner","arm":"charge 1 turn","ctr":"Dodge only","pwr":10,"mass":4,"cost":720000},{"name":"Plasma railgun","flat":80,"dmg":"6dx4","ap":10,"kind":"rail","acc":8,"band":"Med/Long","rof":1,"rcl":4,"mount":"L","skill":"Gunner","arm":"charge 1 turn","ctr":"Dodge only","pwr":8,"mass":4,"cost":780000},{"name":"Point-defence laser","flat":30,"dmg":"6dx2","ap":0,"kind":"pd","acc":1,"band":"Knife","rof":3,"rcl":2,"mount":"S","skill":"Gunner","ctr":"Dodge (this is itself the missile counter)","pwr":3,"mass":1,"cost":170000},{"name":"Turbolaser (light)","flat":200,"dmg":"6dx10","ap":0,"kind":"capital","acc":8,"band":"Med/Long","rof":2,"rcl":4,"mount":"C","skill":"Gunner (capital)","ctr":"Dodge; −6 to hit fighter-size","pwr":30,"mass":20,"cost":1600000},{"name":"Turbolaser (heavy)","flat":400,"dmg":"6dx20","ap":0,"kind":"capital","acc":10,"band":"Long/Extreme","rof":2,"rcl":4,"mount":"C","skill":"Gunner (capital)","ctr":"Dodge; −6 to hit fighter-size","pwr":50,"mass":35,"cost":5400000},{"name":"Neuralyzer array","dmg":"","ap":0,"kind":"neural","acc":0,"band":"Close","rof":1,"rcl":1,"mount":"M","skill":"Gunner (exotic)","ctr":"Dodge; shielded hulls resist","pwr":6,"mass":3,"cost":960000}];
 const TGT_CLASSES=[['Speeder / walker',2],['Starfighter',4],['Gunship / shuttle',5],['Freighter',6],['Corvette',8],['Frigate',9],['Cruiser / capital',10]];
 const RANGE_BANDS=[['Knife-fight \u22641 km',0],['Close 1\u20135 km',-4],['Medium 5\u201315 km',-6],['Long 15\u201350 km',-8],['Extreme 50+ km',-12]];
 function travelTurns(band,speed){
@@ -5432,9 +5412,9 @@ function parseMountString(s){
   if(!w){ const hit=SHIP_WEAPONS.find(x=>x.name.toLowerCase()===low||x.name.toLowerCase()===sing); if(hit)w=hit.name; }
   if(!w){ const key=Object.keys(AL).find(k=>low.indexOf(k)>=0||sing.indexOf(k)>=0); if(key)w=AL[key]; }
   const W=w?SHIP_WEAPONS.find(x=>x.name===w):null;
-  const launcher=!!(W&&(W.kind==='missile'||W.kind==='emp'||(W.kind==='ion'&&W.warhead)));
+  const launcher=!!(W&&W.ammo);
   const rack=/rack/i.test(t);
-  const shots=launcher?(rack?n*4:n):null;
+  const shots=launcher?((m&&m[1])?n:W.ammo):null;
   out.push({label:t.charAt(0).toUpperCase()+t.slice(1),w:w,n:launcher?(rack?n:1):n,shots:shots,shotsNow:shots});
  });
  return out;
@@ -5452,7 +5432,7 @@ function setMountField(i,m,f,val){
  if(f==='n'){mt.n=Math.max(1,parseInt(val)||1);}
  else if(f==='shotsNow'){mt.shotsNow=val===''?null:Math.max(0,parseInt(val)||0);}
  else if(f==='shots'){mt.shots=val===''?null:Math.max(0,parseInt(val)||0);if(mt.shotsNow==null||mt.shotsNow>mt.shots)mt.shotsNow=mt.shots;}
- else if(f==='w'){mt.w=val||null;const W=SHIP_WEAPONS.find(x=>x.name===val);const launcher=!!(W&&(W.kind==='missile'||W.kind==='emp'||(W.kind==='ion'&&W.warhead)));if(launcher&&mt.shots==null){mt.shots=4;mt.shotsNow=4}if(!launcher){mt.shots=null;mt.shotsNow=null}}
+ else if(f==='w'){mt.w=val||null;const W=SHIP_WEAPONS.find(x=>x.name===val);const cap=(W&&W.ammo)||null;if(cap){mt.shots=cap;mt.shotsNow=cap}else{mt.shots=null;mt.shotsNow=null}}
  else mt[f]=val;
  touch();renderVehicles();
 }
@@ -5627,8 +5607,11 @@ function damageControl(i,j){
  touch();renderVehicles();
 }
 function vehicleDodge(v){
- const pi=charBestPilot(); const hnd=vehicleHnd(v);
- return pi?{dodge:Math.max(0,3+Math.floor(pi.lvl/3)+hnd),pilot:pi,hnd:hnd}:{dodge:null,pilot:null,hnd:hnd};
+ const hnd=vehicleHnd(v);
+ const n=(v&&v.npcPilot!=null&&v.npcPilot!==''&&!isNaN(+v.npcPilot))?+v.npcPilot:null;
+ if(n!=null)return {dodge:Math.max(0,3+Math.floor(n/3)+hnd),pilot:{lvl:n,name:'NPC pilot',spec:''},hnd:hnd,npc:true};
+ const pi=charBestPilot();
+ return pi?{dodge:Math.max(0,3+Math.floor(pi.lvl/3)+hnd),pilot:pi,hnd:hnd,npc:false}:{dodge:null,pilot:null,hnd:hnd,npc:false};
 }
 function _degrade(p,steps){
  const order=['ok','dmg','dest'];
