@@ -929,8 +929,22 @@ const TRAIT_ATTR_MAP={
  'Attribute Enfeeblement - HP':'HP','Attribute Enfeeblement - FP':'FP','Attribute Enfeeblement - Per':'Per','Attribute Enfeeblement - Will':'Will',
  'Basic Move':'Move','Basic Speed':'Speed'
 };
-function traitAttrBonus(stat){
+const TRAIT_ATTR_FIXED={
+  'Very Fit':['HT',2],'Fit':['HT',1],'Unfit':['HT',-1],'Very Unfit':['HT',-2]
+};
+/* Flat named-trait folds (value encodes direction; not level-based).
+   House rule: these raise/lower the ATTRIBUTE, so derived stats follow. */
+function traitAttrFixedBonus(stat){
   let n=0;
+  (C.traits||[]).forEach(tr=>{
+    if(!tr||!tr.name)return;
+    const fx=TRAIT_ATTR_FIXED[tr.name];
+    if(fx && fx[0]===stat) n += fx[1];
+  });
+  return n;
+}
+function traitAttrBonus(stat){
+  let n=traitAttrFixedBonus(stat);
   (C.traits||[]).forEach(tr=>{
     if(!tr||!tr.name)return;
     const mapped=TRAIT_ATTR_MAP[tr.name];
@@ -981,7 +995,6 @@ function ownedTraitLevels(frag){
 function ownsTrait(frag){const f=frag.toLowerCase();return (C.traits||[]).some(tr=>tr.name&&tr.name.toLowerCase().includes(f));}
 function liftingSTbonus(){return ownedTraitLevels('Lifting ST');}
 function strikingSTbonus(){return ownedTraitLevels('Striking ST');}
-function fitHTbonus(){let b=0;(C.traits||[]).forEach(tr=>{if(!tr||!tr.name)return;const n=(''+tr.name).trim();if(n==='Very Fit')b+=2;else if(n==='Fit')b+=1;else if(n==='Very Unfit')b-=2;else if(n==='Unfit')b-=1;});return b;}
 
 // Appearance reaction modifier (GURPS B21): map owned Appearance trait to its reaction bonus
 function appearanceMod(){
@@ -1806,8 +1819,8 @@ function renderSheet(){
     </tr>
     ${[['ST','HP','HP',HP()],['DX','Per','Per',Per()],['IQ','Will','Will',Will()],['HT','FP','FP',FP()]].map(([a,key,lbl,val])=>`<tr>
      <td class="label" title="${GTIP[a]||''}"><b style="color:var(--text)">${a}</b></td>
-     <td class="num calc">${attrLevel(a)}${sp[a.toLowerCase()]?` <span style="color:var(--dim)">(${sp[a.toLowerCase()]>0?'+':''}${sp[a.toLowerCase()]})</span>`:''}${a==='HT'&&fitHTbonus()?` <span style="color:var(--accent)" title="Fit / Unfit \u2014 bonus to HT rolls only (not HP, FP or Basic Speed)">(${fitHTbonus()>0?'+':''}${fitHTbonus()} rolls)</span>`:''} <button class="btn-sm" style="padding:0 5px" title="Roll 3d6 vs ${a}" onclick="gurpsRoll(${attrLevel(a)+(a==='HT'?fitHTbonus():0)},'${a}')">🎲</button></td>
-     <td><div class="stepper"><button onclick="C.attr.${a}-=ATTR_COST.${a};touch();renderAll()">−</button><span class="sv">${attrLevel(a)}</span><button onclick="C.attr.${a}+=ATTR_COST.${a};touch();renderAll()">+</button></div></td>
+     <td class="num calc">${attrLevel(a)}${sp[a.toLowerCase()]?` <span style="color:var(--dim)">(${sp[a.toLowerCase()]>0?'+':''}${sp[a.toLowerCase()]})</span>`:''} <button class="btn-sm" style="padding:0 5px" title="Roll 3d6 vs ${a}" onclick="gurpsRoll(${attrLevel(a)},'${a}')">🎲</button></td>
+     <td><div class="stepper"><button onclick="C.attr.${a}-=ATTR_COST.${a};touch();renderAll()">−</button><span class="sv">${attrLevel(a)-traitAttrFixedBonus(a)}</span><button onclick="C.attr.${a}+=ATTR_COST.${a};touch();renderAll()">+</button></div></td>
      <td class="num val">${+C.attr[a]||0}</td>
      <td class="label" style="border-left:2px solid var(--border)" title="${GTIP[lbl]||''}">${lbl}</td>
      <td class="num calc">${val}${(lbl==='Will'||lbl==='Per')?` <button class="btn-sm" style="padding:0 5px" title="Roll 3d6 vs ${lbl}" onclick="gurpsRoll(${val},'${lbl}')">🎲</button>`:''}</td>
