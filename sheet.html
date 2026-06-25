@@ -5333,7 +5333,8 @@ function vehiclePrizeValue(v){
  const frac=tot?_vIntact(v)/tot:1;
  return Math.round(cost*frac);
 }
-function vehicleHnd(v){
+function vehicleHnd(v){const _b=vehicleHndBase(v);const _p=(typeof shipOverloadPenalty==='function')?(shipOverloadPenalty(v).hndPen||0):0;return _b-_p;}
+function vehicleHndBase(v){
  if(v&&v.hnd!=null&&v.hnd!==''&&!isNaN(+v.hnd))return +v.hnd;
  const c=String((v&&v.cat)||'').toLowerCase();
  if(/intercept|swoop/.test(c))return 2;
@@ -5558,8 +5559,19 @@ function econWouldExceed(v,probeMounts,probeModules){
  const increases=nw.draw>cur.draw||nw.massUsed>cur.massUsed;
  return (increases&&(nw.powerOver||nw.massOver))?nw:null;
 }
+function shipOverloadPenalty(v){
+ const E=shipPowerMass(v);
+ const massPct=E.cap>0?Math.max(0,(E.massUsed-E.cap)/E.cap):0;
+ const hndPen=Math.min(6,Math.floor(massPct/0.10));
+ const movePen=Math.min(4,Math.floor(massPct/0.25));
+ let offlineN=0;
+ if(E.draw>E.gen){const wpns=E.parts.filter(p=>p.role==='weapon'&&p.pwr>0).sort((a,b)=>b.pwr-a.pwr);let d=E.draw;for(const w of wpns){if(d<=E.gen)break;d-=w.pwr;offlineN++;}}
+ return {hndPen,movePen,offlineN,powerOver:E.powerOver,massOver:E.massOver};
+}
 function vehicleEconomyHTML(v,i){
  const E=shipPowerMass(v);
+ const O=shipOverloadPenalty(v);
+ const ovl=(O.massOver||O.powerOver)?('<div style="margin-top:5px;padding:4px 7px;background:rgba(255,80,80,0.10);border:1px solid var(--red);border-radius:4px;font-size:10px;color:var(--red)">⚠ '+[O.massOver?('Overweight — Handling −'+O.hndPen+(O.movePen?(', Move −'+O.movePen):'')+' (Handling applied to Dodge below)'):'',O.powerOver?('Reactor overdrawn — shields offline'+(O.offlineN?(', '+O.offlineN+' weapon'+(O.offlineN>1?'s':'')+' can\u2019t fire'):'')):''].filter(Boolean).join(' · ')+'</div>'):'';
  const pPct=Math.min(100,Math.round(E.draw/Math.max(1,E.gen)*100));
  const mPct=Math.min(100,Math.round(E.massUsed/Math.max(1,E.cap)*100));
  const bar=(pct,over)=>'<div style="height:7px;background:var(--bg3);border-radius:4px;overflow:hidden;border:1px solid var(--border);margin-top:2px"><div style="height:100%;width:'+pct+'%;background:'+(over?'var(--red)':(pct>85?'var(--amber)':'var(--green)'))+'"></div></div>';
@@ -5571,6 +5583,7 @@ function vehicleEconomyHTML(v,i){
    +'<div style="flex:1;min-width:150px"><span class="dim">⚡ Power</span> <b style="color:'+(E.powerOver?'var(--red)':'var(--text)')+'">'+E.draw+'</b><span class="dim"> drawn / '+E.gen+' output</span>'+bar(pPct,E.powerOver)+(E.powerOver?'<span style="color:var(--red);font-size:10px">reactor overdrawn — shed weapons or modules</span>':'')+'</div>'
    +'<div style="flex:1;min-width:150px"><span class="dim">⚖ Mass</span> <b style="color:'+(E.massOver?'var(--red)':'var(--text)')+'">'+E.massUsed+'</b><span class="dim"> used / '+E.cap+' capacity</span>'+bar(mPct,E.massOver)+(E.massOver?'<span style="color:var(--red);font-size:10px">over mass capacity — Handling/Move suffer</span>':'')+'</div>'
   +'</div>'
+  +ovl
   +'<details style="margin-top:5px"><summary style="font-size:10px;color:var(--cyan);cursor:pointer">ship systems & loadout — power draw / mass per part</summary>'
    +'<table class="g" style="font-size:10px;margin-top:4px"><tr><th>Part</th><th title="+ generates power · a number draws power">Pwr</th><th>Mass</th></tr>'+rows+'</table>'
    +'<div class="dim" style="font-size:9px;margin-top:3px">Core-system stats derive from hull class (house). Every weapon and module adds its own power draw + mass — more guns cost both.</div></details>'
