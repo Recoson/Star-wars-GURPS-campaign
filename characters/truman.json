@@ -56,11 +56,11 @@
       "spec": ""
     },
     {
-      "name": "Blaster (Pistol)",
+      "name": "Blasters",
       "pts": 8,
       "attr": "DX",
       "diff": "E",
-      "spec": ""
+      "spec": "Pistol"
     },
     {
       "name": "Brawling",

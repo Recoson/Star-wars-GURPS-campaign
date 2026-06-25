@@ -6295,7 +6295,7 @@ const TEMPLATES=[
   species:'Human',
   traits:[{name:'Combat Reflexes',type:'Advantage',levels:1,varCost:15},{name:'High Pain Threshold',type:'Advantage',levels:1,varCost:10},{name:'Sense of Duty (Clan)',type:'Disadvantage',levels:1,varCost:-10}],
   skills:[
-   {name:'Blaster (Rifle)',attr:'DX',diff:'E',pts:4},{name:'Blaster (Pistol)',attr:'DX',diff:'E',pts:2},
+   {name:'Blasters',spec:'Rifle',attr:'DX',diff:'E',pts:4},{name:'Blasters',spec:'Pistol',attr:'DX',diff:'E',pts:2},
    {name:'Broadsword',attr:'DX',diff:'A',pts:4},{name:'Brawling',attr:'DX',diff:'E',pts:2},
    {name:'Survival (Wilderness)',attr:'Per',diff:'A',pts:2},{name:'Armoury',attr:'IQ',diff:'A',pts:2}
   ]
@@ -6307,7 +6307,7 @@ const TEMPLATES=[
   species:'Human',
   traits:[{name:'Luck',type:'Advantage',levels:1,varCost:15},{name:'Sense of Duty (Crew)',type:'Disadvantage',levels:1,varCost:-5},{name:'Greed',type:'Disadvantage',levels:1,varCost:-15}],
   skills:[
-   {name:'Piloting',attr:'DX',diff:'A',pts:4},{name:'Blaster (Pistol)',attr:'DX',diff:'E',pts:2},
+   {name:'Piloting',attr:'DX',diff:'A',pts:4},{name:'Blasters',spec:'Pistol',attr:'DX',diff:'E',pts:2},
    {name:'Fast-Talk',attr:'IQ',diff:'A',pts:4},{name:'Streetwise',attr:'IQ',diff:'A',pts:2},
    {name:'Gambling',attr:'IQ',diff:'A',pts:2},{name:'Mechanic',attr:'IQ',diff:'A',pts:2}
   ]
@@ -6319,7 +6319,7 @@ const TEMPLATES=[
   species:'Human',
   traits:[{name:'Combat Reflexes',type:'Advantage',levels:1,varCost:15},{name:'Duty (Republic)',type:'Disadvantage',levels:1,varCost:-10}],
   skills:[
-   {name:'Blaster (Rifle)',attr:'DX',diff:'E',pts:4},{name:'Blaster (Pistol)',attr:'DX',diff:'E',pts:2},
+   {name:'Blasters',spec:'Rifle',attr:'DX',diff:'E',pts:4},{name:'Blasters',spec:'Pistol',attr:'DX',diff:'E',pts:2},
    {name:'Tactics',attr:'IQ',diff:'H',pts:2},{name:'Soldier',attr:'IQ',diff:'A',pts:2},
    {name:'Leadership',attr:'IQ',diff:'A',pts:2},{name:'First Aid',attr:'IQ',diff:'E',pts:2}
   ]
@@ -6379,7 +6379,7 @@ const TEMPLATES=[
   species:'Trandoshan',
   traits:[{name:'Combat Reflexes',type:'Advantage',levels:1,varCost:15},{name:'Greed',type:'Disadvantage',levels:1,varCost:-15}],
   skills:[
-   {name:'Blaster (Rifle)',attr:'DX',diff:'E',pts:4},{name:'Tracking',attr:'Per',diff:'A',pts:4},
+   {name:'Blasters',spec:'Rifle',attr:'DX',diff:'E',pts:4},{name:'Tracking',attr:'Per',diff:'A',pts:4},
    {name:'Stealth',attr:'DX',diff:'A',pts:2},{name:'Streetwise',attr:'IQ',diff:'A',pts:2},
    {name:'Brawling',attr:'DX',diff:'E',pts:2}
   ]
@@ -6391,7 +6391,7 @@ const TEMPLATES=[
   species:'Human',
   traits:[{name:'Combat Reflexes',type:'Advantage',levels:1,varCost:15},{name:'Force-Sensitive',type:'Advantage',levels:1,varCost:10},{name:'Sense of Duty (Clan)',type:'Disadvantage',levels:1,varCost:-10}],
   skills:[
-   {name:'Lightsaber',attr:'DX',diff:'VH',pts:4},{name:'Blaster (Rifle)',attr:'DX',diff:'E',pts:2},
+   {name:'Lightsaber',attr:'DX',diff:'VH',pts:4},{name:'Blasters',spec:'Rifle',attr:'DX',diff:'E',pts:2},
    {name:'Force Push',attr:'Will',diff:'H',pts:2},{name:'Brawling',attr:'DX',diff:'E',pts:2}
   ],
   force:{primary:'Will',activeBook:'Bonded Blade',books:{'Bonded Blade':true,'Common Force':true}}
@@ -6503,20 +6503,20 @@ function rollBackground(){
  // pick a small skill set based on profession
  const profSkills={
   'Spacer':['Piloting','Mechanic','Free Fall'],
-  'Soldier':['Soldier','Tactics','Blaster (Rifle)'],
+  'Soldier':['Soldier','Tactics','Blasters'],
   'Smuggler':['Piloting','Fast-Talk','Streetwise'],
   'Diplomat':['Diplomacy','Languages','Detect Lies'],
   'Scholar':['Research','Languages','History'],
   'Merchant':['Merchant','Accounting','Diplomacy'],
   'Thief':['Stealth','Pickpocket','Lockpicking'],
-  'Bounty Hunter':['Tracking','Blaster (Rifle)','Streetwise'],
+  'Bounty Hunter':['Tracking','Blasters','Streetwise'],
   'Outlaw':['Streetwise','Brawling','Stealth'],
   'Healer':['Physician','First Aid','Diagnosis'],
   'Engineer':['Engineer','Mechanic','Electronics Repair'],
   'Slicer':['Computer Hacking','Cryptography','Computer Operation'],
   'Pilot':['Piloting','Navigation','Free Fall'],
   'Mechanic':['Mechanic','Electronics Repair','Armoury'],
-  'Mercenary':['Blaster (Rifle)','Tactics','Brawling'],
+  'Mercenary':['Blasters','Tactics','Brawling'],
   'Pirate':['Piloting','Brawling','Streetwise'],
   'Scout':['Survival','Stealth','Observation'],
   'Investigator':['Observation','Detect Lies','Interrogation']
@@ -7296,7 +7296,6 @@ const EXTRA_WEAPONS=[
  {cat:'Broadsword',cls:'Melee',name:'Durasteel war-cleaver',tl:8,swMod:2,thMod:null,fixed:'',dtype:'cut',ad:1,reach:1,parry:'0',cost:200,wt:2.5,st:10,acc:'',r12:'',rmax:'',rof:'',shots:'',lc:'\u2014',notes:'Cheap, heavy frontier chopping blade \u2014 plain durasteel, no vibro edge, no fuss. A ubiquitous militia and dock-worker sidearm. Min ST 10 for the mass.'}
 ];
 const EXTRA_SKILLS=[
- ['Blaster (Pistol)','DX','E'],['Blaster (Rifle)','DX','E'],
  ['Guns (Pistol)','DX','E'],['Guns (Rifle)','DX','E'],['Guns (Shotgun)','DX','E'],
  ['Guns (LAW)','DX','E'],['Guns (Grenade Launcher)','DX','E'],['Gunner (Beams)','DX','A']
 ];
@@ -7352,8 +7351,8 @@ const SKILL_INFO={
  'Bicycling':{u:'Operate cycles.',t:'Continuous'},
  'Bioengineering':{u:'Modify living organisms; specify spec.',t:'1 roll per project-week',s:'Weeks to months'},
  'Biology':{u:'Lifeform biology, ecology, alien fauna.',t:'1 roll per hour of study'},
- 'Blaster (Pistol)':{u:'Aim & fire blaster pistols; quick-draw, snap-shots, called shots.',t:'1 roll per shot'},
- 'Blaster (Rifle)':{u:'Aim & fire blaster rifles & carbines; supports aimed bursts.',t:'1 roll per shot or burst'},
+ 'Blasters':{u:'Aim & fire blaster pistols; quick-draw, snap-shots, called shots.',t:'1 roll per shot'},
+ 'Blasters':{u:'Aim & fire blaster rifles & carbines; supports aimed bursts.',t:'1 roll per shot or burst'},
  'Blasters':{u:'Aim & fire blasters; called shots, snap-shots, suppressive fire.',t:'1 roll per shot or burst'},
  'Blind Fighting':{u:'Fight without sight; reduce darkness penalty.',t:'1 roll per attack in darkness'},
  'Blowpipe':{u:'Aim breath-powered dart; very stealthy.',t:'1 roll per shot'},
