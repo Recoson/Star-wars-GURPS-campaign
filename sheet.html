@@ -4463,6 +4463,10 @@ function setShock(d){C.conditions=C.conditions||{};let s=((+C.conditions._shock)
 // ─────────────────────────────────────────────────────
 function renderStances(){
  const el=document.getElementById('tab-stances');
+ // Preserve which tradition groups are open across re-render (learning a stance must
+ // not collapse the group you're in and snap back to the default-open Iktotchi group).
+ const _stRendered=!!el.querySelector('details[data-grp]');
+ const _openGrps=new Set([...el.querySelectorAll('details[data-grp][open]')].map(d=>d.getAttribute('data-grp')));
  const learned=C.stances||[];
  const active=learned.find(s=>s.active);
  const forms=C.forms||[];
@@ -4550,8 +4554,8 @@ function renderStances(){
       const arr=groups[g];
       const learnedN=arr.filter(s=>learned.find(x=>x.name===s.name)).length;
       const activeHere=arr.some(s=>{const l=learned.find(x=>x.name===s.name);return l&&l.active;});
-      const open=(g==='Iktotchi'||activeHere)?' open':'';
-      return `<details${open} style="margin-bottom:6px;border:1px solid var(--border);border-radius:4px;overflow:hidden">
+      const open=(activeHere||(_stRendered?_openGrps.has(g):g==='Iktotchi'))?' open':'';
+      return `<details${open} data-grp="${esc(g)}" style="margin-bottom:6px;border:1px solid var(--border);border-radius:4px;overflow:hidden">
         <summary style="cursor:pointer;padding:6px 9px;font-weight:600;font-size:12px;background:var(--bg3)">${esc(g)} <span class="dim" style="font-weight:400;font-size:10px">— ${arr.length} stance${arr.length!==1?'s':''}${learnedN?` · ${learnedN} learned`:''}${activeHere?' · active':''}</span></summary>
         <table class="g" style="margin:0">
          <tr><th style="width:160px">Stance</th><th style="width:64px">Focus</th><th>Effect</th><th style="width:96px">Modifiers</th><th style="width:118px">Status</th></tr>
