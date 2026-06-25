@@ -4948,6 +4948,7 @@ function renderVehicles(){ migrateVehicleStats();
       +(rows||'<tr><td colspan="4" class="dim" style="padding:6px">No modules fitted.</td></tr>')
       +'</table>'+budLine+'<button class="btn-add" style="margin-top:4px" onclick="addVehicleModule('+i+')">+ module</button></div>';
    })()}
+   <details class="veh-combat"><summary style="font-size:11px;color:var(--cyan);cursor:pointer;font-weight:600;margin-top:8px">⚔ Combat &amp; fuel tracker <span class="dim" style="font-weight:400">— fire, incoming hits, fuel</span></summary>
    <div style="margin-top:7px;padding:6px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:5px">
     <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:11px">
      <span style="font-weight:700;color:var(--cyan)">🔫 Fire</span>
@@ -4994,6 +4995,7 @@ function renderVehicles(){ migrateVehicleStats();
      </div>
      <div class="dim" style="font-size:9.5px;margin-top:5px">Full-tank value ${t.full.toLocaleString()} cr \u00b7 RF burns by the day cruising / by the hour in combat; HF only on jumps. Remote ports mark up 2\u20133\u00d7.</div>
     </div>`;})()}
+   </details>
    ${_pwarn}
    <details style="margin-top:6px"><summary style="font-size:11px;color:var(--cyan);cursor:pointer">stats &amp; notes</summary>
    <table class="g" style="margin-top:4px;font-size:10.5px">
