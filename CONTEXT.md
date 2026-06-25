@@ -13,9 +13,11 @@ file is *current task state + the exact mechanics of the job in flight*.
 Per-power **"full adjudication" pass** over every Force power in the compendium: add a 3-field
 statgrid extension (**Upkeep / Hands / Move**) plus an **"At the table."** ruling block to each of
 the **192** powers, authored against the canonical schema. **COMPLETE — all 192 done and pushed**
-(compendium commit `81d843a`), **and the fields are mirrored into `sheet.html`** for the 179 powers
-present in its `window.FORCE_DESC` object (commit `d0c54f3`). The pass is finished; §11 holds the
-only open items (James's flagged decisions + optional follow-ups).
+(compendium commit `81d843a`). **Since then the 20 Minor Traditions sub-tradition abilities were also
+converted into full power blocks** (compendium `c2334a0`) — corpus is now **212 powers**, every one
+with the statgrid triple + At-the-table. **The sheet `window.FORCE_DESC` info panels are now fully
+synced to the compendium** (latest sheet commit): all 204 in-compendium catalogue powers covered. The
+pass is finished; §11 holds the only open items.
 
 James's standing instruction is **"go nuts" / "keep going"** = grind continuously, batch after
 batch, no pausing for review, honest pushback wanted on any ruling that breaks balance or the
@@ -83,10 +85,11 @@ reading either in full OVERFLOWS THE WINDOW AND ENDS THE CHAT.**
   powers under a run of **H1 sub-banners** (The First Faces, The Hexing Hand, The Reach Beyond,
   The Greater Workings, The Final Inscriptions) with intro prose between each banner and its first
   power — *not* a single H2. The Dark Side lives under H1 "THE UNCHAINED" → H2 "The Dark Side".
-- **Minor Traditions, The Nine Forms, and Battle Master Signatures use different markup (not
-  `power-name` h4) and are OUT OF SCOPE for this pass.** Only the 192 `<h4 class="power-name">`
-  entries are adjudicated. The 8 **Form-Neutral Techniques** *are* power-name h4s (the last 8,
-  #185–192) and are in scope.
+- **Minor Traditions are now CONVERTED** (commit `c2334a0`): all 20 sub-tradition abilities
+  (Iktotchi 6 / Baran Do 7 / Zeltron 7) were rewritten from compact `<p class="rule">` form into full
+  `power-name` h4 + statgrid (with an added **Tier** field) + Upkeep/Hands/Move + At-the-table blocks,
+  taking the corpus to **212**. **The Nine Forms and Battle Master Signatures still use different
+  markup and remain OUT OF SCOPE.** The 8 **Form-Neutral Techniques** are power-name h4s (#185–192).
 
 ### 3a. What we add to each power (output format, per schema §3)
 1. Into the statgrid, **before the statgrid's own closing `</div>`** (found by div-balance from
@@ -267,29 +270,30 @@ Commit message convention: `Power adjudication batch NN (<section> X/Y): N power
 
 ---
 
-## 7. PROGRESS LEDGER — 192 / 192 DONE · COMPENDIUM PASS COMPLETE · SHEET MIRROR COMPLETE
+## 7. PROGRESS LEDGER — 212 POWERS · COMPENDIUM COMPLETE · SHEET FORCE_DESC FULLY SYNCED (204 panels)
 
 **ALL SECTIONS COMPLETE (every batch pushed).** Final tally below; recompute command retained.
 
 - The Bonded Blade (4) · The Light Side (28) · The Common Force (28) · The Concordance of Feathers (26)
   · The Hollowing (34) · The Inscribed Voice / witch tradition — all four sub-books (The First Faces 7,
   The Hexing Hand 7, The Reach Beyond 5, The Greater Workings 6, The Final Inscriptions 6) · **The Dark
-  Side (33)** · **Form-Neutral Techniques (8)**. Total = **192**.
+  Side (33)** · **Form-Neutral Techniques (8)**. Total = **192**, + **Minor Traditions 20** (Iktotchi 6 / Baran Do 7 / Zeltron 7, converted in `c2334a0`) = **212**.
 
 - Final batches this run: 18 (Greater Workings finish), 19 (Final Inscriptions → witch tradition complete),
   20–23 (The Dark Side 33/33), 24 (Form-Neutral 8/8 → 192/192, commit `81d843a`).
 
-- **Whole-pass integrity check passed:** 192 `power-name` h4s, each with exactly one Upkeep field and one
+- **Whole-corpus integrity check passed:** **212** `power-name` h4s, each with exactly one Upkeep field and one
   At-the-table block; zero misses, zero duplicates.
 
-**§7 SHEET-MIRROR — COMPLETE (commit `d0c54f3`).** The Upkeep/Hands/Move triple + At-the-table block were
-**extracted from the finished compendium** (source of truth) and injected into the matching entries of the
-sheet's `window.FORCE_DESC` data object, re-escaped (`"`→`\"`) for the JSON-string context. 179 of 192
-powers matched and were edited; the 13 absent from the sheet (the 8 saber techniques + Blade Velocity,
-Force Torrent, Force Vessel, Mist-Fold, Tempered Blade) are a deliberate curated-subset omission and live
-only in the compendium. Verified: 179 escaped Upkeep / 179 escaped At-the-table, `node --check` 0 fails,
-data object evals to 179 keys, and a **DOM-driven Playwright render** confirmed the fields appear in a
-rendered power card (only console noise was the expected `firebase-sync.js` CORS block under `file://`).
+**§7 SHEET FORCE_DESC — FULLY SYNCED TO THE COMPENDIUM.** Originally 179 of 192 mirrored (`d0c54f3`).
+Now **rebuilt to 204 entries** = every in-compendium catalogue power: the 20 Minor Traditions abilities
+mirrored, the 5 previously-absent powers (Force Torrent / Force Vessel / Blade Velocity / Tempered Blade /
+Mist-Fold) added, and all 40 stale panels re-synced to the compendium — including mechanical drift such as
+Force Speed's +2→+4 cap, and a voice genericisation she/Chatni → "you" (the shared multi-PC sheet should
+read second-person). Transform = extract statgrid→At-the-table, strip the `power-body` wrapper, normalise
+inter-tag whitespace, escape via JSON. Verified: object evals to **204** keys, `node --check` 0 fails,
+0 U+FFFD, and **Playwright** confirms the page loads error-free and new/updated panels open. The 8 Form-
+Neutral saber techniques and other compendium-only powers are not in the sheet catalogue, so need no panel.
 
 **Recompute progress any time** with:
 ```
@@ -352,16 +356,21 @@ grep -o '<span class="stat-k">Upkeep</span>' "Star Wars the Old Republic GURPS 4
 
 ## 11. IMMEDIATE NEXT STEP
 
-**The adjudication pass and the sheet mirror are both COMPLETE and pushed** (compendium `81d843a`,
-sheet `d0c54f3`). No batch work remains. Open items, in priority order:
+**The adjudication pass, the Minor Traditions conversion, and the full sheet FORCE_DESC sync are all
+COMPLETE and pushed.** No batch work remains. Open items, in priority order:
 
 1. **PAT exposure (security) — still open.** A live `github_pat_…` was pasted in plaintext and
    proposed for the durable Project Instructions. **Rotate it**, and keep the literal token out of any
    saved instructions (paste per-session instead).
 
-_Resolved this session:_ Force Choke uses the basic ruling (not a CM exception); standard-blaster AD
-is 1.5 and the "AD 1" line is to be dropped from the Project Instructions. See §6.
+_Done this session:_ Force Guidance cap ½→¼ of the assisted skill's governing attribute (`faaaa16`); all
+20 Minor Traditions abilities converted to full power blocks (`c2334a0`); sheet sub-tradition **dropdown
+selector** (Iktotchi/Baran Do/Zeltron, race-titled, smooth learn/unlearn, Playwright-verified) (`0aa69cd`);
+FORCE_DESC mirror for the 20 (`7142457`); and the full FORCE_DESC re-sync to 204 panels.
 
-Optional follow-ups (not started, no urgency): spot-review a sample of At-the-table rulings for tone/
-consistency; consider whether the 13 sheet-absent powers should be added to `window.FORCE_DESC` at all
-(currently a deliberate subset). Otherwise the pass is done — resume only on James's direction.
+_Earlier-resolved:_ Force Choke uses the basic ruling (not a CM exception); standard-blaster AD is 1.5 and
+the "AD 1" line is to be dropped from the Project Instructions (see §6).
+
+Flagged to James: the FORCE_DESC re-sync genericised ~30 panels from third-person (she/Chatni) to the
+compendium's second-person "you" — correct for a shared multi-PC sheet, but if any of that personalisation
+was deliberate, say the word and it can be selectively restored. Otherwise the toolset is current.
