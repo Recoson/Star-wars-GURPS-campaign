@@ -5536,20 +5536,33 @@ function shipClassEcon(v){
  return {gen:60,draw:20,cap:40,mass:15};
 }
 function shipPowerMass(v){
- const E=shipClassEcon(v);const cd=E.draw,cm=E.mass;
- const parts=[
-  {name:'Reactor',role:'gen',pwr:-E.gen,mass:Math.round(cm*0.18)},
-  {name:'Sublight + hyperdrive',role:'core',pwr:Math.round(cd*0.45),mass:Math.round(cm*0.16)},
-  {name:'Shield generator',role:'core',pwr:Math.round(cd*0.38),mass:Math.round(cm*0.10)},
-  {name:'Sensors + computer',role:'core',pwr:Math.round(cd*0.17),mass:Math.round(cm*0.06)},
-  {name:'Hull + armour frame',role:'core',pwr:0,mass:Math.round(cm*0.50)}
- ];
+ const E=shipClassEcon(v);
+ const bp=v&&v.builderParts;
+ let parts=[], gen=E.gen, cap=E.cap;
+ if(bp&&typeof bp==='object'&&Object.keys(bp).length){
+  // real parts from the in-tool builder (catalogue ships fall through to the class-derived model)
+  let g=0;
+  ['Hull','Reactor','Sublight','Hyperdrive','Shields','Armour','Sensors','Targeting','ECM','Astrogation','Cargo','Crew'].forEach(cat=>{
+   if(!bp[cat])return; const P=SHIP_PARTS.find(x=>x.cat===cat&&x.name===bp[cat]); if(!P)return;
+   if(cat==='Reactor'){g+=(+P.power||0);parts.push({name:P.name,role:'gen',pwr:-(+P.power||0),mass:+P.mass||0});}
+   else parts.push({name:P.name+' ('+cat+')',role:'core',pwr:(+P.powerDraw||0),mass:+P.mass||0});
+  });
+  if(g>0)gen=g;
+ } else {
+  const cd=E.draw,cm=E.mass;
+  parts=[
+   {name:'Reactor',role:'gen',pwr:-E.gen,mass:Math.round(cm*0.18)},
+   {name:'Sublight + hyperdrive',role:'core',pwr:Math.round(cd*0.45),mass:Math.round(cm*0.16)},
+   {name:'Shield generator',role:'core',pwr:Math.round(cd*0.38),mass:Math.round(cm*0.10)},
+   {name:'Sensors + computer',role:'core',pwr:Math.round(cd*0.17),mass:Math.round(cm*0.06)},
+   {name:'Hull + armour frame',role:'core',pwr:0,mass:Math.round(cm*0.50)}
+  ];
+ }
  (shipMounts(v)||[]).forEach(mt=>{const W=mt.w?SHIP_WEAPONS.find(x=>x.name===mt.w):null;if(W){const n=+mt.n||1;parts.push({name:(mt.label||W.name)+(n>1?' ×'+n:''),role:'weapon',pwr:(+W.pwr||0)*n,mass:(+W.mass||0)*n});}});
  (vehicleModules(v)||[]).forEach(md=>{const M=md&&md.m?SHIP_MODULES.find(x=>x.name===md.m):null;if(M)parts.push({name:M.name,role:'module',pwr:(+M.pwr||0),mass:(+M.mass||0)});});
- const gen=E.gen;
  const draw=parts.reduce((t,p)=>t+(p.pwr>0?p.pwr:0),0);
  const massUsed=parts.reduce((t,p)=>t+(p.mass||0),0);
- return {gen,draw,cap:E.cap,massUsed,parts,powerOver:draw>gen,massOver:massUsed>E.cap};
+ return {gen,draw,cap,massUsed,parts,powerOver:draw>gen,massOver:massUsed>cap};
 }
 // returns the offending econ if a proposed loadout would newly exceed (and increase) power/mass; else null
 function econWouldExceed(v,probeMounts,probeModules){
