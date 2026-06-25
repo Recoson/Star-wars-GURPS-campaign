@@ -4935,13 +4935,12 @@ function renderVehicles(){ migrateVehicleStats();
        +'<td class="num">'+(W&&W.rcl?W.rcl:'—')+'</td>'
        +'<td class="dim" style="font-size:10px">'+(W?W.band:'')+'</td>'
        +'<td style="white-space:nowrap">'+ammo+'</td>'
-       +'<td><button class="btn-sm" '+(W?'':'disabled ')+'onclick="fireShipWeapon('+i+','+m+')" title="Fire this mount with the console settings below">🔫</button></td>'
        +'<td><button class="btn-del" onclick="delMount('+i+','+m+')">✕</button></td></tr>';
      }).join('');
      const _econFull=!v.custom&&!!econWouldExceed(v,ms.concat([{w:SHIP_WEAPONS[1].name,n:1}]),null);
      const firingLegend='<div class="dim" style="font-size:9.5px;margin-top:3px;color:var(--text2)">🔒 needs a sensor lock — defeat with chaff / ECM / EMP-flare · ⏱ arm or charge a turn before firing · <span style="color:var(--amber)">ion / cap / exo</span> = special skill (Ion Gunner / capital fire-direction / exotic) · hover ⓘ for a weapon’s firing rules</div>';
-     return '<div style="margin-top:7px"><table class="g" style="font-size:10.5px"><tr><th>Mount</th><th>Weapon</th><th title="Hardpoint size this weapon needs — S/M/L/Capital">Mt</th><th title="Damage dice">Dmg</th><th title="Armour Piercing: ignores this much hull DR (1:1 at ship scale)">AP</th><th title="Aim a turn to add Acc to one shot (fire-control computer)">Acc</th><th title="Rate of fire — RoF 5+ gives a to-hit bonus">RoF</th><th title="Recoil — extra hits on a hit = floor(margin ÷ Rcl), capped at RoF−1">Rcl</th><th title="Band where this weapon works best">Best band</th><th title="Remaining warheads (launchers only)">Ammo</th><th></th><th></th></tr>'
-      +(rows||'<tr><td colspan="11" class="dim" style="padding:6px">No mounts — add one, or they auto-fill from the catalogue armament line.</td></tr>')
+     return '<div style="margin-top:7px"><table class="g" style="font-size:10.5px"><tr><th>Mount</th><th>Weapon</th><th title="Hardpoint size this weapon needs — S/M/L/Capital">Mt</th><th title="Damage dice">Dmg</th><th title="Armour Piercing: ignores this much hull DR (1:1 at ship scale)">AP</th><th title="Aim a turn to add Acc to one shot (fire-control computer)">Acc</th><th title="Rate of fire — RoF 5+ gives a to-hit bonus">RoF</th><th title="Recoil — extra hits on a hit = floor(margin ÷ Rcl), capped at RoF−1">Rcl</th><th title="Band where this weapon works best">Best band</th><th title="Remaining warheads (launchers only)">Ammo</th><th></th></tr>'
+      +(rows||'<tr><td colspan="10" class="dim" style="padding:6px">No mounts — add one, or they auto-fill from the catalogue armament line.</td></tr>')
       +'</table>'+firingLegend+'<button class="btn-add"'+(_econFull?' disabled title="No power/mass headroom — turn on custom loadout below to add more"':'')+' style="margin-top:4px" onclick="addMount('+i+')">+ mount</button></div>';
    })()}
    ${(()=>{const mods=vehicleModules(v);
@@ -4958,20 +4957,7 @@ function renderVehicles(){ migrateVehicleStats();
       +'</table>'+'<button class="btn-add" style="margin-top:4px" onclick="addVehicleModule('+i+')">+ module</button></div>';
    })()}
    ${vehicleEconomyHTML(v,i)}
-   <details class="veh-combat"><summary style="font-size:11px;color:var(--cyan);cursor:pointer;font-weight:600;margin-top:8px">⚔ Combat &amp; fuel tracker <span class="dim" style="font-weight:400">— fire, incoming hits, fuel</span></summary>
-   <div style="margin-top:7px;padding:6px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:5px">
-    <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:11px">
-     <span style="font-weight:700;color:var(--cyan)">🔫 Fire</span>
-     <select id="vfWpn${i}" class="cell" style="width:170px">${(()=>{const ms=shipMounts(v);let o='';if(ms.length){o+='<optgroup label="Mounted">'+ms.map((mt,k)=>mt.w?('<option value="m:'+k+'">'+esc(mt.label)+' · '+esc(mt.w)+'</option>'):'').join('')+'</optgroup>'}o+='<optgroup label="Full catalogue">'+SHIP_WEAPONS.map((w,k)=>'<option value="c:'+k+'">'+esc(w.name)+' · '+w.dmg+(w.ap?' AP'+w.ap:'')+(w.kind==='ion'?' ion':'')+'</option>').join('')+'</optgroup>';return o})()}</select>
-     <label class="dim">at <select id="vfTgt${i}" class="cell" style="width:120px">${TGT_CLASSES.map(t=>`<option value="${t[1]}"${t[1]===4?' selected':''}>${t[0]} (SM+${t[1]})</option>`).join('')}</select></label>
-     <label class="dim">band <select id="vfBand${i}" class="cell" style="width:130px" title="Range band — compendium: Range &amp; Engagement Bands">${RANGE_BANDS.map(b=>`<option value="${b[1]}"${b[1]===-4?' selected':''}>${b[0]} (${b[1]||'±0'})</option>`).join('')}</select></label>
-     <label class="dim" style="display:inline-flex;align-items:center;gap:3px" title="You spent last turn aiming: add the weapon's Acc (fire-control) to this shot"><input type="checkbox" id="vfAim${i}">Aim</label>
-     <label class="dim" style="display:inline-flex;align-items:center;gap:3px" title="You are flying evasively: −2 to your own attacks (+2 to your Dodge)"><input type="checkbox" id="vfEv${i}">evasive</label>
-     <button class="btn-sm" onclick="fireShipWeapon(${i})">Roll</button>
-     <span class="dim" style="font-size:10px">3d6 ≤ Gunner + SM + band + Aim − evasive</span>
-    </div>
-    ${v.lastFire?`<div style="font-size:10.5px;margin-top:4px">${v.lastFire}</div>`:''}
-   </div>
+   <details class="veh-combat"><summary style="font-size:11px;color:var(--cyan);cursor:pointer;font-weight:600;margin-top:8px">⚔ Damage &amp; fuel tracker <span class="dim" style="font-weight:400">— incoming hits, fuel</span></summary>
    <div style="margin-top:7px;padding:6px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:5px">
     <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:11px">
      <span style="font-weight:700;color:var(--amber)">⚔ Incoming hit</span>
@@ -5416,32 +5402,6 @@ function travelTurns(band,speed){
  if(speed==='slow'){ if(band>=-4)return 1; if(band===-6)return 1; if(band===-8)return 2; return 3; }
  if(band>=-4)return 0; if(band===-6)return 1; return 2;
 }
-function hardpointBudget(v){
- const s=String((v&&(v.hpClassHint||v.cat||v.frame||v.class))||'').toLowerCase();
- const T=(S,M,L,C)=>({S:S,M:M,L:L,C:C});
- if(/dreadn|battleship|battlecruiser|capital|flagship|war station|destroyer/.test(s))return T(8,10,8,64);
- if(/carrier/.test(s))return T(6,6,4,24);
- if(/cruiser/.test(s))return T(6,8,6,56);
- if(/frigate/.test(s))return T(4,12,4,24);
- if(/corvette|patrol/.test(s))return T(4,6,2,12);
- if(/bulk|hauler/.test(s))return T(5,3,1,0);
- if(/gunship/.test(s))return T(6,3,1,0);
- if(/heavy fighter|bomber/.test(s))return T(3,4,3,0);
- if(/freighter|transport|shuttle|drop|tender|courier|lander|skiff/.test(s))return T(4,4,4,0);
- if(/intercept|fighter|scout/.test(s))return T(3,3,2,0);
- return T(3,2,1,0);
-}
-function fitsBudget(used,bud){
- const rank={S:0,M:1,L:2,C:3};
- const free={S:bud.S||0,M:bud.M||0,L:bud.L||0,C:bud.C||0};
- for(const wsz of ['C','L','M','S']){
-  let cnt=used[wsz]||0;
-  while(cnt>0){ let placed=false;
-   for(const msz of ['S','M','L','C']){ if(rank[msz]>=rank[wsz]&&free[msz]>0){ free[msz]--; placed=true; break; } }
-   if(!placed)return false; cnt--; }
- }
- return true;
-}
 function shipMounts(v){
  if(!v.mounts){ v.mounts=parseMountString(v.weapons||''); }
  return v.mounts;
@@ -5465,8 +5425,6 @@ function parseMountString(s){
  });
  return out;
 }
-function mountUsedSizes(mounts){const u={S:0,M:0,L:0,C:0};(mounts||[]).forEach(mt=>{const W=mt.w?SHIP_WEAPONS.find(x=>x.name===mt.w):null;if(W&&W.mount)u[W.mount]+=(+mt.n||1);});return u;}
-function totalMountN(mounts){return (mounts||[]).reduce((t,mt)=>t+(+mt.n||1),0);}
 function toggleVehicleCustom(i){const v=C.vehicles[i];if(!v)return;v.custom=!v.custom;touch();renderVehicles();}
 function addMount(i){const v=C.vehicles[i];if(!v)return;const ms=shipMounts(v);if(!v.custom){const bad=econWouldExceed(v,ms.concat([{w:SHIP_WEAPONS[1].name,n:1}]),null);if(bad){alert('No room on this hull \u2014 '+(bad.powerOver?'reactor power':'mass capacity')+' would be exceeded. Turn on \u201ccustom loadout\u201d to override the hull limits.');return;}}ms.push({label:'New mount',w:SHIP_WEAPONS[1].name,n:1,shots:null,shotsNow:null});touch();renderVehicles();}
 function delMount(i,m){const v=C.vehicles[i];if(!v)return;shipMounts(v).splice(m,1);touch();renderVehicles();}
@@ -5504,20 +5462,6 @@ const SHIP_MODULES=[
  {"name":"Escape-pod bank","size":"S","cat":"Survival","cost":54000,"lc":"Lic","fx":"Crew survival when the ship is lost — everyone aboard gets off before she goes.","pwr":2,"mass":1},
  {"name":"Extended fuel / life support","size":"S","cat":"Endurance","cost":84000,"lc":"Lic","fx":"Bigger tanks and scrubbers: longer jump range and weeks more endurance between ports.","pwr":2,"mass":1}
 ];
-function moduleBudget(v){
- const s=String((v&&(v.hpClassHint||v.cat||v.frame||v.class))||'').toLowerCase();
- const T=(S,M,L)=>({S:S,M:M,L:L,C:0});
- if(/dreadn|battleship|battlecruiser|capital|flagship|destroyer|cruiser|carrier/.test(s))return T(8,6,4);
- if(/frigate/.test(s))return T(6,4,3);
- if(/corvette|patrol/.test(s))return T(4,3,2);
- if(/heavy freighter|bulk|hauler/.test(s))return T(5,3,1);
- if(/freighter|transport|courier/.test(s))return T(4,2,1);
- if(/gunship/.test(s))return T(3,2,0);
- if(/shuttle|drop|lander|tender|skiff/.test(s))return T(3,1,0);
- if(/heavy fighter|bomber/.test(s))return T(2,1,0);
- if(/intercept|fighter|scout/.test(s))return T(2,0,0);
- return T(3,1,0);
-}
 function vehicleModules(v){ if(!v.modules)v.modules=[]; return v.modules; }
 function addVehicleModule(i){const v=C.vehicles[i];if(!v)return;vehicleModules(v).push({m:''});touch();renderVehicles();}
 function delVehicleModule(i,j){const v=C.vehicles[i];if(!v)return;vehicleModules(v).splice(j,1);touch();renderVehicles();}
@@ -5635,14 +5579,6 @@ function vehicleEconomyHTML(v,i){
 }
 function setVehicleHPNow(i,val){const v=C.vehicles[i];if(!v)return;const hm=vehicleEffectiveStat(v,'hpMax')||1;v.hpNow=Math.max(-Math.ceil(hm*0.6),Math.min(hm,parseInt(val)||0));touch();renderVehicles();}
 function setVehicleShieldNow(i,val){const v=C.vehicles[i];if(!v)return;const cap=parseInt(v.shieldDR)||0;v.shieldNow=Math.max(0,Math.min(cap,parseInt(val)||0));touch();renderVehicles();}
-function gunnerSkillFor(W){
- const ion=W&&W.kind==='ion';
- const g1=charSkillByNames(ion?['Ion Gunner']:['Gunner']);
- if(g1)return g1;
- const g2=charSkillByNames(ion?['Gunner']:['Ion Gunner']);
- if(g2)return {lvl:g2.lvl-2,name:g2.name+' (default \u22122)',spec:g2.spec};
- return null;
-}
 function charSkillByNames(names){
  let best=null;
  (C.skills||[]).forEach(sk=>{
@@ -5652,65 +5588,6 @@ function charSkillByNames(names){
   if(!best||l>best.lvl)best={lvl:l,name:sk.name,spec:sk.spec||''};
  });
  return best;
-}
-function fireShipWeapon(i,mIdx){
- const v=C.vehicles[i]; if(!v)return;
- const mounts=shipMounts(v);
- let W=null, mount=null;
- if(mIdx!=null){ mount=mounts[mIdx]; if(!mount)return; W=SHIP_WEAPONS.find(x=>x.name===mount.w); if(!W){alert('Pick a weapon type for this mount first.');return} }
- else{
-  const sel=((document.getElementById('vfWpn'+i)||{}).value||'');
-  if(sel.charAt(0)==='m'){ mount=mounts[+sel.slice(2)]; W=mount?SHIP_WEAPONS.find(x=>x.name===mount.w):null; }
-  else W=SHIP_WEAPONS[+sel.slice(2)||0];
-  if(!W){alert('Pick a weapon.');return}
- }
- if(mount&&mount.shots!=null&&(+mount.shotsNow||0)<=0){ v.lastFire='\u26a0 '+esc(mount.label)+' \u2014 no ammunition left. Re-arm in port ('+(W.name)+').'; touch();renderVehicles(); return; }
- const sm=+((document.getElementById('vfTgt'+i)||{}).value||4);
- const band=+((document.getElementById('vfBand'+i)||{}).value||-4);
- const aim=!!((document.getElementById('vfAim'+i)||{}).checked);
- const evasive=!!((document.getElementById('vfEv'+i)||{}).checked);
- const g=gunnerSkillFor(W);
- if(!g){alert('Add a Gunner (or Ion Gunner) skill to fire ship weapons.');return}
- const track=(W.kind==='capital'&&sm<=5)?-6:0;
- const rofB=W.rof?(typeof rofBonus==='function'?rofBonus(W.rof):1):0;
- const accB=aim?(+W.acc||0):0;
- const eff=g.lvl+sm+band+track+(evasive?-2:0)+rofB+accB;
- const spend=()=>{ if(mount&&mount.shots!=null){ mount.shotsNow=Math.max(0,(+mount.shotsNow||0)-1); } };
- if(W.kind==='neural'){
-  const r2=rollDice(3,0);
-  const held=r2.total<=eff;
-  v._neurC=held?Math.min(3,(+v._neurC||0)+1):0;
-  let m2='\u{1F9E0} Neuralyzer \u2014 lock roll 3d6 '+r2.total+' vs '+eff+': ';
-  if(!held) m2+='LOCK BROKEN \u2014 charge resets (0/3).';
-  else if(v._neurC<3) m2+='beam holding \u2014 charge '+v._neurC+'/3. Keep training it (no other actions for the gunner).';
-  else {
-   m2+='<b>FIRES (3/3).</b> Bypasses shields, no hull damage. Every LIVING crew member in the volume rolls <b>HT\u22124</b>: fail = unconscious 1d\u00d710 min; success = mentally stunned (IQ each turn). Droids immune. SM\u2264+6: whole crew \u00b7 SM+8/9: one section \u00b7 SM+10+: one compartment. Capacitor: 1 hour recharge.';
-   v._neurC=0;
-  }
-  v.lastFire=m2;
-  if(typeof _rollLog!=='undefined'){(_rollCount++,_rollLog).unshift({label:'Neuralyzer lock',target:eff,dice:r2.rolls,sum:r2.total,outcome:held?(v._neurC===0?'FIRED':'HOLD '+v._neurC+'/3'):'broken',cls:held?'ok':'miss',margin:eff-r2.total});if(_rollLog.length>14)_rollLog.pop();if(typeof _renderRollPanel==='function')_renderRollPanel();}
-  touch();renderVehicles();return;
- }
- const r=rollDice(3,0);
- const critMiss=r.total>=18||(r.total===17&&eff<16);
- const hit=r.total<=eff&&!critMiss;
- const crit=hit&&(r.total<=4||(r.total===5&&eff>=15)||(r.total===6&&eff>=16));
- spend();
- const bandName=(RANGE_BANDS.find(b=>b[1]===band)||['?'])[0].split(' ')[0];
- let msg='\u{1F52B} '+(mount?esc(mount.label)+' \u2014 ':'')+W.name+' \u2014 3d6 '+r.total+' vs '+eff+' ('+g.name+' '+g.lvl+(sm?(sm>0?' +':' ')+sm+' SM':'')+' '+(band||'\u00b10')+' '+bandName+(accB?' +'+accB+' Aim':'')+(track?' '+track+' tracking':'')+(evasive?' \u22122 evasive':'')+(rofB?' +'+rofB+' RoF':'')+'): ';
- if(!hit){ msg+=critMiss?'\u2620 CRITICAL MISS':'MISS'; }
- else if(W.fx){ msg+=(crit?'\u2605 CRITICAL HIT':'HIT')+' \u2014 '+W.fx; }
- else{
-  const _flat=(+W.flat||0), _dice=W.dmg||'';
-  msg+=(crit?'\u2605 CRITICAL HIT':'HIT')+' \u2014 <b>'+_flat+'</b> damage'+(_dice?' (personal scale: '+_dice+')':'')+(W.ap?', AP '+W.ap:'')+(W.kind==='ion'?' \u00b7 ION (\u00d72 vs shields, no structure)':'')+(W.kind==='missile'?' \u00b7 warhead (target dodges at \u22122)':'')+(crit?' \u00b7 crit: ignore cover DR or +1 damage step \u2014 GM call':'')+'. Feed it to the target\u2019s \u2694 Incoming hit.';
-  if(W.rof>1&&W.rcl){const _mgn=eff-r.total;const _eh=Math.max(0,Math.min((+W.rof||1)-1,Math.floor(_mgn/(+W.rcl||1))));if(_eh>0)msg+=' \u00b7 +'+_eh+' extra hit'+(_eh>1?'s':'')+' (RoF '+W.rof+', margin '+_mgn+'/Rcl '+W.rcl+')';}
-  if(typeof _rollLog!=='undefined'){(_rollCount++,_rollLog).unshift({label:W.name+' dmg',target:null,dice:[],sum:_flat,outcome:String(_flat),cls:'ok',margin:null});if(_rollLog.length>14)_rollLog.pop();}
- }
- if(W.speed && W.speed!=='mine' && hit){ const _tt=travelTurns(band,W.speed); msg+= _tt>0 ? ' \u00b7 \u27f6 in flight: impacts in '+_tt+' turn'+(_tt>1?'s':'')+' \u2014 the target keeps its Dodge and point-defence may intercept before it lands' : ' \u00b7 \u27f6 reaches the target this turn'; }
- if(mount&&mount.shots!=null) msg+=' <span class="dim">['+mount.shotsNow+'/'+mount.shots+' left]</span>';
- v.lastFire=msg;
- if(typeof _rollLog!=='undefined'){(_rollCount++,_rollLog).unshift({label:(mount?mount.label+' ':'')+W.name,target:eff,dice:r.rolls,sum:r.total,outcome:critMiss?'crit miss':crit?'CRIT':hit?'hit':'miss',cls:hit?'ok':'miss',margin:eff-r.total});if(_rollLog.length>14)_rollLog.pop();if(typeof _renderRollPanel==='function')_renderRollPanel();}
- touch();renderVehicles();
 }
 function regenShield(i){
  const v=C.vehicles[i]; if(!v)return;
