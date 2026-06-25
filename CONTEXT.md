@@ -366,7 +366,7 @@ COMPLETE and pushed.** No batch work remains. Open items, in priority order:
 _Done this session:_ Force Guidance cap ½→¼ of the assisted skill's governing attribute (`faaaa16`); all
 20 Minor Traditions abilities converted to full power blocks (`c2334a0`); sheet sub-tradition **dropdown
 selector** (Iktotchi/Baran Do/Zeltron, race-titled, smooth learn/unlearn, Playwright-verified) (`0aa69cd`);
-FORCE_DESC mirror for the 20 (`7142457`); and the full FORCE_DESC re-sync to 204 panels.
+FORCE_DESC mirror for the 20 (`7142457`); and the full FORCE_DESC re-sync to 204 panels. **Blade techniques recategorised as Common Force** in both files: the compendium “Form-Neutral Techniques” section retitled “Common Force — Blade Techniques” (intro reframed, Trakata carved out under a new “The Unorthodox Technique” h3); the sheet’s standalone technique table relabelled “Common Force — Blade Techniques” with Trakata split into its own “Unorthodox Technique” section (scope-safe inline-map split, no global helper — slotBadge is nested in the render fn). The 11 sheet FORCE_TECHNIQUES (Bolt Deflection, Saber Throw, Saber Bind, Saber Bash, Sokan, Blade Barrier, Guided Strike, Sundering Strike, Saber Split, Force Cadence) are now Common Force; Trakata alone is Unorthodox. NB: these techniques live in their own non-tiered system (FORCE_TECHNIQUES / the compendium Form-Neutral section), NOT in FORCE_POWERS — this was a rebrand-in-place, not a physical merge into the tiered Common Force list.
 
 _Earlier-resolved:_ Force Choke uses the basic ruling (not a CM exception); standard-blaster AD is 1.5 and
 the "AD 1" line is to be dropped from the Project Instructions (see §6).

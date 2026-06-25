@@ -4623,11 +4623,29 @@ function renderStances(){
   }).join('')}
  </table>
 
- <div class="sec-head" style="margin-top:18px">Form-Neutral Techniques (${FORCE_TECHNIQUES.length} available — ${techs.length} learned)</div>
- <div class="dim" style="font-size:11px;margin-bottom:6px">Single learnable units, usable alongside any Form. Tick Active to flag the ones you have readied this fight (shown on your sheet). Most are invoked manoeuvres rather than passive bonuses.</div>
+ <div class="sec-head" style="margin-top:18px">Common Force — Blade Techniques (${FORCE_TECHNIQUES.filter(t=>t.name!=='Trakata').length} available — ${techs.filter(l=>l.name!=='Trakata').length} learned)</div>
+ <div class="dim" style="font-size:11px;margin-bottom:6px">Part of the Common Force — the shared blade vocabulary every Force-user can learn, tied to no Form. Tick Active to flag the ones you have readied this fight (shown on your sheet). Most are invoked manoeuvres rather than passive bonuses.</div>
  <table class="g">
   <tr><th style="width:150px">Technique</th><th style="width:150px">Prerequisite</th><th>Effect</th><th style="width:118px">Status</th></tr>
-  ${FORCE_TECHNIQUES.map(t=>{
+  ${FORCE_TECHNIQUES.filter(t=>t.name!=='Trakata').map(t=>{
+   const l=techs.find(x=>x.name===t.name);
+   const nm=t.name.replace(/'/g,"\\'");
+   let ctrl;
+   if(!l){ctrl=`<button class="btn-add" style="margin:0" onclick="learnTech('${nm}')">Learn</button>`;}
+   else{ctrl=`<label style="font-size:11px;cursor:pointer;display:inline-flex;align-items:center;gap:3px"><input type="checkbox" ${l.active?'checked':''} onchange="setTechActive('${nm}',this.checked)"> Active</label> <button class="btn-del" title="Forget" onclick="forgetTech('${nm}')">✕</button>`;}
+   return `<tr style="${l?(l.active?'background:rgba(94,196,212,.12)':'background:var(--bg3)'):''}">
+     <td style="font-weight:600;font-size:12px">${slotBadge(t.slot)}${esc(t.name)}</td>
+     <td class="dim" style="font-size:10px">${esc(t.prereq||'')}</td>
+     <td style="font-size:11px"><span class="dim">${esc(t.desc||'')}</span></td>
+     <td>${ctrl}</td>
+   </tr>`;
+  }).join('')}
+ </table>
+ <div class="sec-head" style="margin-top:18px">Unorthodox Technique (${techs.filter(l=>l.name==='Trakata').length} learned)</div>
+ <div class="dim" style="font-size:11px;margin-bottom:6px">Forbidden — taught by almost no one, self-taught at great risk. Stands apart from the Common Force and from every tradition.</div>
+ <table class="g">
+  <tr><th style="width:150px">Technique</th><th style="width:150px">Prerequisite</th><th>Effect</th><th style="width:118px">Status</th></tr>
+  ${FORCE_TECHNIQUES.filter(t=>t.name==='Trakata').map(t=>{
    const l=techs.find(x=>x.name===t.name);
    const nm=t.name.replace(/'/g,"\\'");
    let ctrl;
