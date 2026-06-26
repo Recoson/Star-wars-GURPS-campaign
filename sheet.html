@@ -4960,6 +4960,7 @@ function renderVehicles(){ migrateVehicleStats();
       const opts='<option value=""'+(mt.w?'':' selected')+'>— pick —</option>'+SHIP_WEAPONS.map(x=>'<option value="'+esc(x.name)+'"'+(mt.w===x.name?' selected':'')+'>'+esc(x.name)+'</option>').join('');
       const ammo=(mt.shots!=null)?('<input class="cell" type="number" style="width:40px" value="'+(mt.shotsNow==null?'':mt.shotsNow)+'" onchange="setMountField('+i+','+m+',\'shotsNow\',this.value)"><span class="dim">/'+mt.shots+'</span>'):'<span class="dim">—</span>';
       const fire=W?(()=>{const g=[];if(W.lock)g.push('🔒');if(W.arm)g.push('⏱');const sk=W.skill==='Ion Gunner'?'ion':(W.skill==='Gunner (capital)'?'cap':(W.skill==='Gunner (exotic)'?'exo':''));const tip=(W.fx?'Effect: '+W.fx+'\n\n':'')+'Skill: '+W.skill+(W.arm?' · Arming: '+W.arm:' · fires instantly')+(W.lock?' · Needs a sensor lock (Electronics Op, 1 turn); target dodges −2':' · Direct fire, line of sight')+' · Countered by: '+(W.ctr||'Dodge');return '<span title="'+esc(tip)+'" style="margin-left:5px;cursor:help;color:var(--text2)">ⓘ'+(g.length?' '+g.join(''):'')+(sk?' <span style="color:var(--amber)">'+sk+'</span>':'')+'</span>';})():'';
+      const curArc=mt.arc||defaultArc(W);const arcSel='<select class="cell" style="width:165px;font-size:11px" onchange="setMountField('+i+','+m+',\'arc\',this.value)">'+Object.keys(ARC_LABEL).map(function(k){return '<option value="'+k+'"'+(curArc===k?' selected':'')+'>'+ARC_LABEL[k]+'</option>';}).join('')+'</select>';const _det=W?((W.fx?'<b>Effect:</b> '+esc(W.fx)+' ':'')+((W.arm||W.lock)?'<b>Timing:</b> '+(W.lock?'needs a sensor lock; ':'')+(W.arm?esc(W.arm):'fires instantly')+'. ':'')+'<span class="dim">'+(curArc==='forward'?'Forward arc \u2014 the pilot can fire this (or a gunner).':'Off-axis \u2014 needs a dedicated gunner for the full arc; the pilot can only fire it straight ahead.')+'</span>'):'';const subRow=mt.w?('<tr><td colspan="12" style="padding:0 10px 8px;font-size:11px;line-height:1.5;color:var(--text2);border-top:none"><b>Arc:</b> '+arcSel+'  '+_det+'</td></tr>'):'';
       return '<tr>'
        +'<td><input class="cell" style="width:110px" value="'+esc(mt.label||'')+'" onchange="setMountField('+i+','+m+',\'label\',this.value)">'+(mt.n>1?' <span class="dim" style="font-size:10px">×'+mt.n+'</span>':'')+'</td>'
        +'<td><select class="cell" style="width:150px" onchange="setMountField('+i+','+m+',\'w\',this.value)">'+opts+'</select>'+fire+'</td>'
@@ -4971,14 +4972,14 @@ function renderVehicles(){ migrateVehicleStats();
        +'<td class="num">'+(W&&W.rcl?W.rcl:'—')+'</td>'
        +'<td class="dim" style="font-size:10px">'+(W?W.band:'')+'</td>'+'<td class="num dim" style="font-size:10px">'+(W&&W.cost?(W.cost>=1000000?(W.cost/1000000)+'M':Math.round(W.cost/1000)+'k'):'\u2014')+'</td>'
        +'<td style="white-space:nowrap">'+ammo+'</td>'
-       +'<td><button class="btn-del" onclick="delMount('+i+','+m+')">✕</button></td></tr>';
+       +'<td><button class="btn-del" onclick="delMount('+i+','+m+')">✕</button></td></tr>'+subRow;
      }).join('');
      const _econFull=!v.custom&&!!econWouldExceed(v,ms.concat([{w:SHIP_WEAPONS[1].name,n:1}]),null);
      const firingLegend='<div class="dim" style="font-size:9.5px;margin-top:3px;color:var(--text2)">🔒 needs a sensor lock — defeat with chaff / ECM / EMP-flare · ⏱ arm or charge a turn before firing · <span style="color:var(--amber)">ion / cap / exo</span> = special skill (Ion Gunner / capital fire-direction / exotic) · hover ⓘ for a weapon’s firing rules</div>';
-     const _hpf=hardpointsFit(v,ms);const hpInfo='<div style="font-size:10px;margin-top:4px;color:'+(_hpf.fit?'var(--text2)':'var(--danger,#c0392b)')+'">\u2693 Hardpoints ('+(v.cat||'hull')+'): <b>'+_hpf.used+' / '+_hpf.total+'</b> \u00b7 budget '+hardpointLabel(v)+(_hpf.fit?'':' \u2014 \u26a0 over capacity')+(v.custom?' \u2014 custom (limits off)':'')+'</div>';
+     const _hpf=hardpointsFit(v,ms);const hpInfo='<div style="font-size:10px;margin-top:4px;color:'+(_hpf.fit?'var(--text2)':'var(--danger,#c0392b)')+'">\u2693 Hardpoints ('+(v.cat||'hull')+'): <b>'+_hpf.used+' / '+_hpf.total+'</b> \u00b7 budget '+hardpointLabel(v)+(_hpf.fit?'':' \u2014 \u26a0 over capacity')+(v.custom?' \u2014 custom (limits off)':'')+'</div>';const _stn=shipStations(v);const _sl=_stn.stations.map(function(s){return (s[1]>1?s[1]+'\u00d7 ':'')+s[0];}).join(' \u00b7 ');const _cov=_stn.crew>=_stn.need;const crewInfo='<div style="font-size:10px;margin-top:3px;color:'+(_cov?'var(--text2)':'var(--amber)')+'">\ud83d\udc65 Stations to fully crew: <b>'+_sl+'</b> = '+_stn.need+' \u00b7 complement <b>'+_stn.crew+'</b>'+(_cov?(_stn.crew>_stn.need?' ('+(_stn.crew-_stn.need)+' spare)':' \u2014 fully crewable'):' \u2014 '+(_stn.need-_stn.crew)+' unmanned (pilot doubles up \u2014 fly cautious or leave a turret cold)')+'</div>';
      return '<div style="margin-top:7px"><table class="g" style="font-size:10.5px"><tr><th>Mount</th><th>Weapon</th><th title="Hardpoint size this weapon needs — S/M/L/Capital">Mt</th><th title="Damage dice">Dmg</th><th title="Armour Piercing: ignores this much hull DR (1:1 at ship scale)">AP</th><th title="Aim a turn to add Acc to one shot (fire-control computer)">Acc</th><th title="Rate of fire — RoF 5+ gives a to-hit bonus">RoF</th><th title="Recoil — extra hits on a hit = floor(margin ÷ Rcl), capped at RoF−1">Rcl</th><th title="Band where this weapon works best">Best band</th><th title="Replacement cost (per weapon)">Cost</th><th title="Remaining warheads (launchers only)">Ammo</th><th></th></tr>'
       +(rows||'<tr><td colspan="11" class="dim" style="padding:6px">No mounts — add one, or they auto-fill from the catalogue armament line.</td></tr>')
-      +'</table>'+hpInfo+firingLegend+'<button class="btn-add"'+(_econFull?' disabled title="No power/mass headroom — turn on custom loadout below to add more"':'')+' style="margin-top:4px" onclick="addMount('+i+')">+ mount</button></div>';
+      +'</table>'+hpInfo+crewInfo+firingLegend+'<button class="btn-add"'+(_econFull?' disabled title="No power/mass headroom — turn on custom loadout below to add more"':'')+' style="margin-top:4px" onclick="addMount('+i+')">+ mount</button></div>';
    })()}
    ${(()=>{const mods=vehicleModules(v);
      const optsFor=function(md){return '<option value=""'+(md.m?'':' selected')+'>\u2014 pick a module \u2014</option>'+SHIP_MODULES.map(function(x){return '<option value="'+esc(x.name)+'"'+(md.m===x.name?' selected':'')+'>'+esc(x.name)+' ('+x.size+')</option>';}).join('');};
@@ -5476,6 +5477,36 @@ function hardpointsFit(v,mountList){
  return {fit:ok, budget:b, total:avail.length, used:need.length};
 }
 function hardpointLabel(v){const b=hardpointBudget(v);const parts=[];['S','M','L','C'].forEach(function(k){if(b[k])parts.push(b[k]+k);});return parts.join(' ')||'\u2014';}
+
+// Default firing arc inferred from the weapon (user can override per mount).
+function defaultArc(W){
+ if(!W)return 'forward';
+ const n=(W.name||'').toLowerCase();
+ if(/turret|quad|point-defen/.test(n))return 'turret';
+ if(W.kind==='capital'||W.kind==='pd')return 'turret';
+ return 'forward';
+}
+const ARC_LABEL={forward:'Forward (fixed)',turret:'Turret (360°)',dorsal:'Dorsal — fires above',ventral:'Ventral — fires below',gimbal:'Gimbal — limited'};
+// Crew complement parsed from the hull's crew stat.
+function shipCrewComplement(v){
+ const c=String((v&&v.crew)||''); const nums=c.match(/[\d,]+/g);
+ let n=nums?Math.max.apply(null,nums.map(function(x){return parseInt(x.replace(/,/g,''))||0;})):0;
+ return n||1;
+}
+// Mannable stations derived from the loadout (mounts -> gunners, lock weapons -> sensor op, size -> co-pilot/engineer).
+function shipStations(v){
+ const ms=(typeof shipMounts==='function')?shipMounts(v):[];
+ let gunnerSeats=ms.filter(function(mt){ if(!mt.w)return false; const W=SHIP_WEAPONS.find(function(x){return x.name===mt.w;}); const a=mt.arc||defaultArc(W); return a!=='forward'; }).length;
+ const hasLock=ms.some(function(mt){const W=SHIP_WEAPONS.find(function(x){return x.name===mt.w;});return W&&W.lock;});
+ const cap=shipCrewComplement(v);
+ const st=[['Pilot / Helm',1]];
+ if(cap>=2)st.push(['Co-pilot',1]);
+ if(gunnerSeats>0)st.push(['Gunner (turret)',gunnerSeats]);
+ if(hasLock||cap>=2)st.push(['Sensor Op',1]);
+ if(cap>=4)st.push(['Engineer / DC',1]);
+ const need=st.reduce(function(n,s){return n+s[1];},0);
+ return {stations:st, need:need, crew:cap, gunnerSeats:gunnerSeats};
+}
 
 function addMount(i){const v=C.vehicles[i];if(!v)return;const ms=shipMounts(v);let def=SHIP_WEAPONS[1].name;if(!v.custom){const bad=econWouldExceed(v,ms.concat([{w:def,n:1}]),null);if(bad){alert('No room on this hull \u2014 '+(bad.powerOver?'reactor power':'mass capacity')+' would be exceeded. Turn on \u201ccustom loadout\u201d to override the hull limits.');return;}if(!hardpointsFit(v,ms.concat([{w:def,n:1}])).fit){const sm=SHIP_WEAPONS.find(function(x){return x.mount==='S';});const smn=sm?sm.name:def;if(hardpointsFit(v,ms.concat([{w:smn,n:1}])).fit){def=smn;}else{alert('No free hardpoint \u2014 a '+(v.cat||'hull')+' has only '+hardpointLabel(v)+' (S/M/L/C). Remove or down-fit a mount, or turn on \u201ccustom loadout\u201d to override.');return;}}}ms.push({label:'New mount',w:def,n:1,shots:null,shotsNow:null});touch();renderVehicles();}
 function delMount(i,m){const v=C.vehicles[i];if(!v)return;shipMounts(v).splice(m,1);touch();renderVehicles();}
@@ -7117,7 +7148,7 @@ function renderReference(){
      <h3>Crew Stations &amp; Firing Arcs</h3>
      <div style="font-size:12px;line-height:1.6">
       <b>Who mans what.</b> <b>Pilot</b> flies and sets Dodge; may fire <b>forward-arc</b> guns from the seat, but not on a maximum-evasion turn. <b>Co-pilot / Systems</b> runs sensors, shields or ECM, or pops chaff as a free reaction so the pilot keeps flying. <b>Gunner</b> works one turret in its <b>full arc</b>, independent of the nose &mdash; one gunner per turret. <b>Sensor op</b> locks warheads and runs ECM. <b>Engineer</b> reroutes power and fights damage. <b>Captain</b> (capital) buffs the bridge with Tactics.<br>
-      <b>Arcs (per hardpoint).</b> <b>F</b> fixed-forward (nose / wing &mdash; pilot or gunner) &middot; <b>T</b> turret 360&deg; (needs a gunner for the full arc; <b>fired from the pilot&rsquo;s seat it is forward-only</b>) &middot; <b>D</b> / <b>V</b> dorsal / ventral cover the hemisphere above / below &mdash; they decide whether you can hit a ship over or under you on a layered board &middot; <b>G</b> gimbal (forward plus a margin).<br>
+      <b>Arcs (per hardpoint) — what each one means.</b> <b>Forward (fixed)</b> — nose / wing guns, fire forward only (pilot or gunner). <b>Turret (360&deg;)</b> — full traverse, any bearing (needs a gunner for the full arc; <b>fired from the pilot&rsquo;s seat it is forward-only</b>). <b>Dorsal</b> (fires above) / <b>Ventral</b> (fires below) — cover the hemisphere over / under you, so they decide whether you can hit a ship above or below on a layered board. <b>Gimbal</b> — forward plus a margin.<br>
       <b>The rule that matters.</b> A weapon uses the <b>mount&rsquo;s</b> arc only when a crew member is dedicated to it. A pilot flying may fire forward-arc weapons only (and not while evading hard). A <b>dedicated gunner</b> unlocks the full arc <b>and</b> frees the pilot to fly evasive &mdash; so a two-seater can <b>dodge and shoot at once</b>, and a tail gunner covers the rear the pilot can&rsquo;t see. Angle on a foe (their six): <b>+2 Gunnery, foe Dodge &minus;2</b>.<br>
       <b>Chaff &amp; countermeasures</b> are defensive, not attacks &mdash; who pops them: <b>Automated</b> auto-fires on an incoming lock (limited charges, no action &mdash; the solo-pilot default); <b>Crew reaction</b> &mdash; a spare crew member pops them as a free reaction, pilot flies on; <b>Pilot action</b> &mdash; solo with no auto launcher, costs the pilot their turn. Charges and cooldowns per the compendium Countermeasures table.
      </div>
