@@ -2533,8 +2533,9 @@ function modSum(item,key){return (item&&item.mods||[]).reduce((s,m)=>s+(+m[key]|
 function intOrStr(v){const n=parseInt(v);return isNaN(n)?v:n;}
 function _eqArr(cat){C[cat]=C[cat]||[];return C[cat];}
 function effItem(obj,it){return (it&&it.ovr&&Object.keys(it.ovr).length)?Object.assign({},obj,it.ovr):obj;}
-function effWeapon(it){const w0=DATA.weapons.find(x=>x.name===it.name);if(!w0)return null;let base=w0;if(it&&it.useST&&w0.stMode){base=Object.assign({},w0,{fixed:'',sw:w0.stMode.sw||null,th:w0.stMode.th||null,swMod:null,thMod:null});}else if(it&&it.altOn&&w0.altProfile){base=Object.assign({},w0,{fixed:'',sw:w0.altProfile.sw||null,th:w0.altProfile.th||null,swMod:null,thMod:null});}return applyModFx(effItem(base,it),it);}
-// quality/material -> bonuses. melee: +1 dmg per Q & per M. ranged: +1 dmg per M, +1 Acc per Q. armour: +1 DR per Q & per M.
+function effWeapon(it){const w0=DATA.weapons.find(x=>x.name===it.name);if(!w0)return null;let base=w0;if(it&&it.useST&&w0.stMode){base=Object.assign({},w0,{fixed:'',sw:w0.stMode.sw||null,th:w0.stMode.th||null,swMod:null,thMod:null});}else if(it&&it.altOn&&w0.altProfile){base=Object.assign({},w0,{fixed:'',sw:w0.altProfile.sw||null,th:w0.altProfile.th||null,swMod:null,thMod:null});}const _ew=applyModFx(effItem(base,it),it);if(_ew&&_ew.cls==='Ranged'){const _qa=Math.min(+it.quality||0,QUAL_ACC_CAP);if(_qa)return Object.assign({},_ew,{acc:(+_ew.acc||0)+_qa});}return _ew;}
+const QUAL_ACC_CAP=4; // ranged-quality Acc cap (RAW fine/very-fine = +1/+2 Acc; this expanded ladder caps here) — tune freely
+// quality/material -> bonuses. melee: +1 dmg per Q & per M. ranged: +1 dmg per M, +1 Acc per Q (capped at QUAL_ACC_CAP). armour: +1 DR per Q & per M.
 function wDmgBonus(it,w){const q=+it.quality||0,m=+it.material||0;return ((w&&w.cls==='Melee')?(q+m):m)+modSum(it,'dmg');}
 function wParryBonus(it){return modSum(it,'parry');}
 function setWeaponST(cat,i,on){const a=_eqArr(cat);if(!a[i])return;if(on)a[i].useST=true;else delete a[i].useST;touch();renderEquipment();}
