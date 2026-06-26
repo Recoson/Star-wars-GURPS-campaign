@@ -442,3 +442,6 @@ Two additive dev aids landed (no rules/data touched):
 
 Both verified locally: YAML parses, `node --check` clean on the smoke script, query tool exercised
 against the live compendium (exact lookup / multi-match / TOC / grep / no-match exit), `check.py` green.
+
+### 2026-06-26 (cont.) — Decision C resolved (lightsaber NOT fencing)
+GM ruled the lightsaber is **not** a fencing weapon (would be overpowered with Dodge-15+ duelists). Stripped the `F` from all lightsaber Parry cells (compendium: standard/shoto/saberstaff/great saber `0F`->`0`; sheet: standard + Sith synth-crystal `0F`->`0`) and added an explicit note on the Lightsaber Parry rule: balanced weapon, retreat gives the standard **+1** Parry (never +3), and it does **not** get the fencing −2 multi-parry reduction (only Weapon Master halves it, per the house rule). No code keyed off the `F`, so this is the table-tag + prose only. **Still open: (D) rear-aware −4 vs RAW −2.**
