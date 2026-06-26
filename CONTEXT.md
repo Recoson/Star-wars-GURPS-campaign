@@ -408,3 +408,17 @@ Both open decisions above are now **RESOLVED**:
 **STALE ARTIFACT:** `Combat_Cheatsheet_A3.pdf` is now out of sync with the edited `.html` (M&A/slam lines). Needs regeneration from the HTML.
 
 **Remaining RAW basics audit (now fully book-backed, both Basic Set + MA):** active-defence formulas; retreat bonus (+3 Dodge / +1 Parry-Block / +3 Parry for fencing — lightsaber `0F` Parry gets the +3); multiple-defence penalty (−4, WM/TbaM −2); knockback formula; posture; full ranged section. Awaiting GM's preferred order (defences/retreat flagged as highest-value next).
+
+### 2026-06-26 (cont.) — Audit pass 1: Active Defences + Retreat (vs Basic Set + MA)
+
+**Verified RAW-faithful (no change):** Dodge = Basic Speed+3 (drop fractions, −enc); Parry = skill/2+3; Block = skill/2+3; one active defence per attack; side arc −2; rear-arc-unaware = no defence; off-hand parry −4 (unless Ambidexterity); unbalanced ("U") weapon can't parry the turn after attacking; +1 Combat Reflexes; retreat = +3 Dodge / +1 Parry-Block / +3 Parry for fencing or Boxing/Judo/Karate; retreat once per turn, applies vs that attacker, costs your step.
+
+**FIXED → RAW (commit pending):** **Retreat distance.** Was "retreat is one hex" (2 spots); RAW B377 = a retreat is a step, "at least one yard, not more than 1/10 your Move." Now "a step (1/10 Move, min 1 hex)" — direct corollary of the Step fix.
+
+**OPEN DECISIONS for James (consequential / mislabelled — flagged, NOT changed):**
+- **(A) Multiple-defence penalty is mislabelled "Standard (RAW)."** Basic Set B376 penalises ONLY repeated parries with the *same weapon/hand*: −4 cumulative per parry after the first; reduced to −2 with a **fencing weapon OR WM/TbaM**, −1 with **both**. **Dodge has NO penalty (unlimited); Block is once/turn.** MA adds no general multi-defence penalty. The compendium's universal −4/−8/−12 to *all* defences (dodge included) is a **HOUSE rule**, not RAW. → (a) keep the universal penalty but re-tag HOUSE, or (b) revert to true RAW (parries-only; dodge spammable). Balance-defining.
+- **(B) WM/TbaM halving citation is wrong.** Compendium says "MA p.122 RAW halves all defenses." Actually the −4→−2 reduction is Basic Set B376, applies to **parries**, and triggers on fencing-weapon OR WM OR TbaM (−1 with both). MA p.122 only halves Rapid Strike + multiple-parry penalties. Tied to (A).
+- **(C) Is the lightsaber a fencing weapon (`0F`)?** If yes: its Parry gets the **+3 retreat**, and its multiple-parry penalty is **−2 even without WM (−1 with WM)**. RAW's fencing list (Main-Gauche/Rapier/Saber/Smallsword) excludes setting weapons, so this is a classification call. Confirm intended.
+- **(D) Rear attack when AWARE: compendium −4 vs RAW −2.** RAW (B392/Close Combat) treats a rear attack the victim *is* aware of (attacker circled into the back arc) as a **side attack: −2**. Compendium gives −4, reserving −2 for 360°/Peripheral Vision. → keep −4 (house) or align to RAW −2?
+
+**Next audit slices (unstarted):** knockback formula; posture penalties; full ranged section (Acc/Aim/RoF/range bands/Bolt Deflection already done).
