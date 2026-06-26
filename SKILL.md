@@ -3,13 +3,13 @@ name: kotor-toolset
 description: >-
   Engineering conventions, data model, and workflow for a Star Wars KOTOR-era
   tabletop RPG toolset built on a custom GURPS 4th Edition ruleset. Use this
-  whenever working on any of the campaign HTML tools — the KOTOR character sheet
-  (KOTOR_Sheet_v*.html), the Galaxy Map (Galaxy_Map_KOTOR_Era.html), the
-  companion / Galactic Record compendium, the GM Toolkit, or the combat
+  whenever working on any of the campaign HTML tools — the character sheet
+  (sheet.html), the galaxy map (galaxy-map.html), the galactic-record
+  companion, the GM console (KOTOR_GM_Console_v4.html), or the combat
   cheatsheet — or when editing campaign data such as the global C character
   object, Force powers, weapons / armour / shields, skills / traits, the credits
-  system, or anything grounded in the "The Force & the Fight — Complete
-  Compendium". Apply it for ANY edit, bugfix, feature, data conversion, JSON
+  system, or anything grounded in the compendium ("Star Wars the Old Republic
+  GURPS 4E conversion.html"). Apply it for ANY edit, bugfix, feature, data conversion, JSON
   import, or test on these files, even when the request doesn't name the
   conventions explicitly, so the compendium-first rule, the point-cost data
   model, the exact trait-naming catalog, and the Python → node --check →
@@ -30,12 +30,13 @@ explicitly asks to break offline self-containment.
 
 | File | Role |
 |---|---|
-| `KOTOR_Sheet_v*.html` (~920 KB) | The character sheet. Single-file HTML/CSS/vanilla-JS, localStorage, Excel-dense aesthetic for laptop + iPad. The largest and most complex tool. |
-| `Galaxy_Map_KOTOR_Era.html` | Interactive hyperspace travel calculator. |
-| `Galactic_Record_Compendium*.html` | In-tool lore / reference companion. |
-| `KOTOR_GM_Toolkit.html` | GM-side utilities. |
-| Combat cheatsheet | A3 landscape PDF/HTML quick reference. |
-| `The_Force_and_the_Fight_Complete_Compendium*.html` (~2.5 MB, ~222k words) | **The authoritative rules document.** Source of truth for all mechanics. |
+| `sheet.html` (~1.7 MB) | The character sheet. Single-file HTML/CSS/vanilla-JS, localStorage; dense aesthetic for laptop + iPad. The largest and most complex tool. Holds the minified `DATA` object and the `window.FORCE_DESC` info panels. |
+| `galaxy-map.html` | Interactive hyperspace travel calculator. |
+| `galactic-record.html` | In-tool lore / reference companion. |
+| `KOTOR_GM_Console_v4.html` | GM-side console / utilities. Script is wrapped in an outer IIFE — top-level consts/functions are closure-private (test via the DOM or a probe injected inside the IIFE, not `page.evaluate` free-var refs). |
+| `Combat_Cheatsheet_A3.html` | A3 landscape HTML quick reference. (Also `Combat_Player_Briefs.html`, `ambience-player.html`, `group-storage.html`.) |
+| `Star Wars the Old Republic GURPS 4E conversion.html` (~3 MB) | **The authoritative rules document.** Source of truth for all mechanics. Too large to read whole — grep/slice only. |
+| `characters/` | `truman.json` (Tylo Dara), `chatni.json` (Chatni), `sekan.json` (Sekan Nightfall). |
 
 ## Golden rules
 
@@ -141,13 +142,13 @@ The established, reliable loop — follow it for every change:
    Always verify JS parses before functional testing.
 4. **Functionally test** with Playwright (headless Chromium): load the file,
    exercise the changed path, assert on rendered output / `C` state.
-5. **Ship** the finished file to `/mnt/user-data/outputs/` and present it. After
-   export, the `/mnt/project/` copy is stale — the user must manually re-upload
-   it to the project for the next session to see it.
+5. **Ship** by committing and pushing to `main` (the repo is the source of
+   truth), then copy the finished file to `/mnt/user-data/outputs/` and present
+   it. The `/mnt/project/` mount goes stale after edits — rely on the repo.
 
-The **compendium file is read-only in the project mount and cannot be written
-back.** Compendium changes are delivered as **handoff documents**, not direct
-edits.
+The compendium is edited like any other file — clone, surgical patch, verify,
+commit, push (see the GitHub workflow below). It is too large to read whole, so
+grep/slice to locate and view a tight range; never read it end-to-end.
 
 ## GitHub read/write workflow
 
@@ -165,6 +166,11 @@ the GitHub MCP connector's ~50 KB write ceiling entirely.
   source of truth; an update that only lands in `/mnt/user-data/outputs/` is
   not shipped. Still copy final deliverables to `/mnt/user-data/outputs/` so
   they're visible in-chat.
+- **`main` moves under you — parallel sessions push constantly.** `git fetch` +
+  `git rebase origin/main` before every push. Conflicts on the giant minified
+  lines aren't hand-mergeable: `git rebase --abort` → `git reset --hard
+  origin/main` → re-apply the patch fresh → push. Re-check current state before
+  re-applying — another session may have already done the task.
 
 ### Token hygiene — never echo the PAT
 
@@ -197,10 +203,15 @@ the chat to pause/stall, and every repetition widens transcript exposure.
 
 ## Campaign constants (deliberate design — do not "correct")
 
+The compendium is the source of truth for every rule value; this table only flags
+*deliberate deviations* from baseline GURPS so they aren't "corrected" back. Treat
+the values below as reminders of intent — when one matters to a task, confirm the
+live number in the compendium rather than trusting this table.
+
 | Constant | Value | Why it matters |
 |---|---|---|
 | Scale | **1 metre = 1 hex** | House convention; all ranges/areas assume it. |
-| Standard blaster armour divisor | **AD (1)** | *Intentional* deviation from baseline GURPS. Creates hard armour-penetration tiers (heavy armour effectively immune to standard fire) — a rock-paper-scissors dynamic, not an attrition curve. Do not "fix" to a higher divisor. |
+| Standard blaster armour divisor | **AD (1.5)** | *Intentional* deviation from baseline GURPS, creating hard armour-penetration tiers (a rock-paper-scissors dynamic, not an attrition curve). The compendium is authoritative for the live value; heavy-blaster-vs-energy-weave is kept at AD 1 as a deliberate sub-exception. |
 | Morality / alignment mechanics | **Removed** from tool mechanics; Force power system fully preserved | The removal was at the mechanics/UI layer. Note: the data schema still *seeds* `force.morality / conflict / darkSurgeLog` — see Known quirks. |
 | Damage types | lightsaber, disruptor, ion treated as **distinct** types | Combat resolver branches on these. |
 | Hyperdrive (galaxy-crossing baseline) | ~24 h @ Class 0.5 · ~48 h @ Class 1.0 · ~96 h @ Class 2.0 | Class labels in-tool: 0.5 = elite courier/Jedi scout, 1.0 = military/fine freighter, 2.0 = standard freighter. The Galaxy Map's own formula is authoritative — reconfirm there before changing. |
