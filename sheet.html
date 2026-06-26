@@ -5018,17 +5018,18 @@ function renderVehicles(){ migrateVehicleStats();
    <details style="margin-top:6px"><summary style="font-size:11px;color:var(--cyan);cursor:pointer">core systems &amp; log</summary>
    <div style="font-size:10px;color:var(--text2);margin:5px 0 3px">Swap a core part to change the ship\u2019s stats and power/mass. Leave a slot on <b>stock</b> to keep the catalogue value.</div>
    <table class="g" style="margin-top:2px;font-size:10.5px">
-    <tr><td class="label" style="width:78px" title="Reactor \u2014 sets power output">Reactor</td><td>${coreSel(v,i,'Reactor','power','pw')}</td></tr>
-    <tr><td class="label" title="Drive \u2014 sets Move">Drive</td><td>${coreSel(v,i,'Sublight','move','Move')}</td></tr>
-    <tr><td class="label" title="Shields \u2014 sets Shield SP">Shields</td><td>${coreSel(v,i,'Shields','shieldSP','SP')}</td></tr>
-    <tr><td class="label" title="Armour \u2014 adds Hull DR on top of the frame">Armour</td><td>${coreSel(v,i,'Armour','dr','+DR')}</td></tr>
-    <tr><td class="label" title="Hyperdrive \u2014 sets jump class">Hyperdrive</td><td>${coreSel(v,i,'Hyperdrive','hyper','')}</td></tr>
-    <tr><td class="label" title="Sensors \u2014 detection range; draws power + adds mass">Sensors</td><td>${coreSel(v,i,'Sensors','sensorRng','km')}</td></tr>
-    <tr><td class="label" title="Targeting \u2014 gunnery to-hit bonus; draws power + adds mass">Targeting</td><td>${coreSel(v,i,'Targeting','targetBonus','to-hit')}</td></tr>
-    <tr><td class="label" title="ECM \u2014 jam / evade lock-ons; draws power + adds mass">ECM</td><td>${coreSel(v,i,'ECM','ecmBonus','ECM')}</td></tr>
-    <tr><td class="label" title="Astrogation \u2014 jump-plotting bonus; draws power + adds mass">Astrogation</td><td>${coreSel(v,i,'Astrogation','astroBonus','Astro')}</td></tr>
-    <tr><td class="label" title="Cargo hold \u2014 capacity; adds mass">Cargo</td><td>${coreSel(v,i,'Cargo','cargo','t')}</td></tr>
-    <tr><td class="label" title="Crew berths \u2014 passengers; adds mass">Crew</td><td>${coreSel(v,i,'Crew','pax','pax')}</td></tr>
+    <tr><td class="label" style="width:78px" title="Hull frame \u2014 sets the hardpoint budget (mounts); modify it to add HP / DR / a mount / etc.">Hull</td><td>${coreSel(v,i,'Hull','slots','slots')}${coreModHTML(v,i,'Hull')}</td></tr>
+    <tr><td class="label" style="width:78px" title="Reactor \u2014 sets power output">Reactor</td><td>${coreSel(v,i,'Reactor','power','pw')}${coreModHTML(v,i,'Reactor')}</td></tr>
+    <tr><td class="label" title="Drive \u2014 sets Move">Drive</td><td>${coreSel(v,i,'Sublight','move','Move')}${coreModHTML(v,i,'Sublight')}</td></tr>
+    <tr><td class="label" title="Shields \u2014 sets Shield SP">Shields</td><td>${coreSel(v,i,'Shields','shieldSP','SP')}${coreModHTML(v,i,'Shields')}</td></tr>
+    <tr><td class="label" title="Armour \u2014 adds Hull DR on top of the frame">Armour</td><td>${coreSel(v,i,'Armour','dr','+DR')}${coreModHTML(v,i,'Armour')}</td></tr>
+    <tr><td class="label" title="Hyperdrive \u2014 sets jump class">Hyperdrive</td><td>${coreSel(v,i,'Hyperdrive','hyper','')}${coreModHTML(v,i,'Hyperdrive')}</td></tr>
+    <tr><td class="label" title="Sensors \u2014 detection range; draws power + adds mass">Sensors</td><td>${coreSel(v,i,'Sensors','sensorRng','km')}${coreModHTML(v,i,'Sensors')}</td></tr>
+    <tr><td class="label" title="Targeting \u2014 gunnery to-hit bonus; draws power + adds mass">Targeting</td><td>${coreSel(v,i,'Targeting','targetBonus','to-hit')}${coreModHTML(v,i,'Targeting')}</td></tr>
+    <tr><td class="label" title="ECM \u2014 jam / evade lock-ons; draws power + adds mass">ECM</td><td>${coreSel(v,i,'ECM','ecmBonus','ECM')}${coreModHTML(v,i,'ECM')}</td></tr>
+    <tr><td class="label" title="Astrogation \u2014 jump-plotting bonus; draws power + adds mass">Astrogation</td><td>${coreSel(v,i,'Astrogation','astroBonus','Astro')}${coreModHTML(v,i,'Astrogation')}</td></tr>
+    <tr><td class="label" title="Cargo hold \u2014 capacity; adds mass">Cargo</td><td>${coreSel(v,i,'Cargo','cargo','t')}${coreModHTML(v,i,'Cargo')}</td></tr>
+    <tr><td class="label" title="Crew berths \u2014 passengers; adds mass">Crew</td><td>${coreSel(v,i,'Crew','pax','pax')}${coreModHTML(v,i,'Crew')}</td></tr>
    </table>
    <table class="g" style="margin-top:5px;font-size:10.5px">
     <tr><td class="label" style="width:78px" title="Handling: maneuver & Dodge modifier. Blank = class default.">Hnd</td><td><input class="cell" value="${v.hnd==null?'':esc(''+v.hnd)}" placeholder="${vehicleHndBase(v)}" onchange="setVehicleField(${i},'hnd',this.value)"></td>
@@ -5213,7 +5214,7 @@ function vehicleEffectiveStat(v,key){
  let mult=1;
  if(key==='hpMax'){
   parts.forEach(p=>{if(p.cat==='Hull'){if(p.status==='dmg')mult*=0.75;else if(p.status==='dest')mult*=0.5;}});
-  return Math.round((v.hpMax||0)*mult);
+  return Math.round(((v.hpMax||0)+coreModSum(v,'hp'))*mult);
  }
  if(key==='shieldCap'){
   parts.forEach(p=>{if(p.cat==='Shields'){if(p.status==='dmg')mult*=0.5;else if(p.status==='dest')mult=0;}});
@@ -5436,13 +5437,11 @@ const HARDPOINTS={
 };
 const _MSZ={S:1,M:2,L:3,C:4};
 function hardpointBudget(v){
+ let base;
  const HP=v&&v.core&&v.core.Hull&&SHIP_PARTS.find(function(x){return x.cat==='Hull'&&x.name===v.core.Hull;});
- if(HP&&HP.mounts){const hm=HP.mounts;return {S:+hm.S||0,M:+hm.M||0,L:+hm.L||0,C:+hm.C||0};}
- const hp=v&&HARDPOINTS[v.cat]; if(hp)return {S:hp.S,M:hp.M,L:hp.L,C:hp.C};
- const cap=((shipClassEcon(v)||{}).cap)||40;
- if(cap>=3000)return {S:6,M:8,L:6,C:2}; if(cap>=1000)return {S:6,M:6,L:4,C:1};
- if(cap>=400)return {S:4,M:4,L:2,C:0}; if(cap>=48)return {S:2,M:2,L:0,C:0};
- return {S:2,M:1,L:0,C:0};
+ if(HP&&HP.mounts){const hm=HP.mounts;base={S:+hm.S||0,M:+hm.M||0,L:+hm.L||0,C:+hm.C||0};}
+ else{const hp=v&&HARDPOINTS[v.cat]; if(hp){base={S:hp.S,M:hp.M,L:hp.L,C:hp.C};} else {const cap=((shipClassEcon(v)||{}).cap)||40; base=(cap>=3000)?{S:6,M:8,L:6,C:2}:(cap>=1000)?{S:6,M:6,L:4,C:1}:(cap>=400)?{S:4,M:4,L:2,C:0}:(cap>=48)?{S:2,M:2,L:0,C:0}:{S:2,M:1,L:0,C:0};}}
+ return {S:Math.max(0,base.S+coreModSum(v,'S')),M:Math.max(0,base.M+coreModSum(v,'M')),L:Math.max(0,base.L+coreModSum(v,'L')),C:Math.max(0,base.C+coreModSum(v,'C'))};
 }
 // greedy feasibility — each weapon needs a hardpoint of its size or larger (larger holds smaller)
 function hardpointsFit(v,mountList){
@@ -5647,8 +5646,12 @@ function shipPowerMass(v){
  }
  (shipMounts(v)||[]).forEach(mt=>{const W=mt.w?SHIP_WEAPONS.find(x=>x.name===mt.w):null;if(W){const n=+mt.n||1;parts.push({name:(mt.label||W.name)+(n>1?' ×'+n:''),role:'weapon',pwr:(+W.pwr||0)*n,mass:(+W.mass||0)*n});}});
  (vehicleModules(v)||[]).forEach(md=>{const M=md&&md.m?SHIP_MODULES.find(x=>x.name===md.m):null;if(M)parts.push({name:M.name,role:'module',pwr:(+M.pwr||0),mass:(+M.mass||0)});});
- const draw=parts.reduce((t,p)=>t+(p.pwr>0?p.pwr:0),0);
- const massUsed=parts.reduce((t,p)=>t+(p.mass||0),0);
+ let _bd=parts.reduce((t,p)=>t+(p.pwr>0?p.pwr:0),0);
+ let _bm=parts.reduce((t,p)=>t+(p.mass||0),0);
+ if(v&&v.coreMods){Object.keys(v.coreMods).forEach(function(c){(v.coreMods[c]||[]).forEach(function(md){const dp=+md.pwr||0,dm=+md.mass||0;_bd+=dp;_bm+=dm;if(dp||dm||md.label)parts.push({name:c+' mod'+(md.label?': '+md.label:''),role:'mod',pwr:dp,mass:dm});});});}
+ const _mg=coreModSum(v,'gen'); if(_mg)gen+=_mg;
+ const draw=Math.max(0,_bd);
+ const massUsed=_bm;
  return {gen,draw,cap,massUsed,parts,powerOver:draw>gen,massOver:massUsed>cap};
 }
 // returns the offending econ if a proposed loadout would newly exceed (and increase) power/mass; else null
@@ -5688,11 +5691,26 @@ function econWouldExceed(v,probeMounts,probeModules){
  };
 })();
 function vehCorePart(v,cat){const nm=v&&v.core&&v.core[cat];return nm?SHIP_PARTS.find(x=>x.cat===cat&&x.name===nm):null;}
-function vehShieldSP(v){const P=vehCorePart(v,'Shields');return P?(+P.shieldSP||0):(parseInt(v.shieldDR)||0);}
-function vehHullDR(v){const A=vehCorePart(v,'Armour');return (parseInt(v.hullDR)||0)+(A?(+A.dr||0):0);}
-function vehMoveBase(v){const P=vehCorePart(v,'Sublight');return P?(+P.move||0):(v.move||0);}
+function vehShieldSP(v){const P=vehCorePart(v,'Shields');return (P?(+P.shieldSP||0):(parseInt(v.shieldDR)||0))+coreModSum(v,'sp');}
+function vehHullDR(v){const A=vehCorePart(v,'Armour');return (parseInt(v.hullDR)||0)+(A?(+A.dr||0):0)+coreModSum(v,'dr');}
+function vehMoveBase(v){const P=vehCorePart(v,'Sublight');return (P?(+P.move||0):(v.move||0))+coreModSum(v,'move');}
 function vehHyperClass(v){const P=vehCorePart(v,'Hyperdrive');if(P&&P.hyper){const m=String(P.hyper).match(/[\d.]+/);return m?m[0]:P.hyper;}return v.hd;}
 function setVehicleCore(i,cat,val){const v=C.vehicles[i];if(!v)return;v.core=v.core||{};if(val)v.core[cat]=val;else delete v.core[cat];if(!Object.keys(v.core).length)delete v.core;touch();renderVehicles();}
+
+// ─── PART MODIFICATIONS: free-form upgrades on any assigned core part (mirrors equipment mods). Each adds mass + power draw and may bump one core stat. Stored on v.coreMods[cat]=[{label,mass,pwr,stat,val}]. ───
+function coreModSum(v,key){let t=0;const cm=v&&v.coreMods;if(cm)Object.keys(cm).forEach(function(c){(cm[c]||[]).forEach(function(m){if(key==='mass')t+=+m.mass||0;else if(key==='pwr')t+=+m.pwr||0;else if(m.stat===key)t+=+m.val||0;});});return t;}
+function addCoreMod(i,cat){const v=C.vehicles[i];if(!v)return;v.coreMods=v.coreMods||{};v.coreMods[cat]=v.coreMods[cat]||[];v.coreMods[cat].push({label:'',mass:null,pwr:null,stat:'',val:null});touch();renderVehicles();}
+function setCoreMod(i,cat,j,f,val){const v=C.vehicles[i];if(!v||!v.coreMods||!v.coreMods[cat]||!v.coreMods[cat][j])return;const num=['mass','pwr','val'];v.coreMods[cat][j][f]=num.indexOf(f)>=0?(val===''?null:+val):val;touch();renderVehicles();}
+function delCoreMod(i,cat,j){const v=C.vehicles[i];if(!v||!v.coreMods||!v.coreMods[cat])return;v.coreMods[cat].splice(j,1);if(!v.coreMods[cat].length)delete v.coreMods[cat];if(v.coreMods&&!Object.keys(v.coreMods).length)delete v.coreMods;touch();renderVehicles();}
+const COREMOD_STATS=[['','— stat —'],['S','+S mount'],['M','+M mount'],['L','+L mount'],['C','+C mount'],['dr','+Hull DR'],['hp','+Hull HP'],['sp','+Shield SP'],['move','+Move'],['gen','+Power out']];
+function coreModHTML(v,i,cat){
+ const mods=(v.coreMods&&v.coreMods[cat])||[];
+ const rows=mods.map(function(md,j){
+  const st=COREMOD_STATS.map(function(o){return '<option value="'+o[0]+'"'+(md.stat===o[0]?' selected':'')+'>'+o[1]+'</option>';}).join('');
+  return '<div style="display:flex;gap:3px;align-items:center;margin-top:3px;flex-wrap:wrap">'   +'<input class="cell" style="width:92px;font-size:10px;height:22px" placeholder="mod name" value="'+esc(md.label||'')+'" oninput="setCoreMod('+i+',\''+cat+'\','+j+',\'label\',this.value)">'   +'<span class="dim" style="font-size:9px">m</span><input class="cell" type="number" title="mass added" style="width:40px;font-size:10px;height:22px" value="'+(md.mass==null?'':md.mass)+'" onchange="setCoreMod('+i+',\''+cat+'\','+j+',\'mass\',this.value)">'   +'<span class="dim" style="font-size:9px">pw</span><input class="cell" type="number" title="power draw added (negative = frees power)" style="width:40px;font-size:10px;height:22px" value="'+(md.pwr==null?'':md.pwr)+'" onchange="setCoreMod('+i+',\''+cat+'\','+j+',\'pwr\',this.value)">'   +'<select class="cell" style="width:88px;font-size:10px;height:22px" onchange="setCoreMod('+i+',\''+cat+'\','+j+',\'stat\',this.value)">'+st+'</select>'   +'<input class="cell" type="number" title="amount for the chosen stat" style="width:40px;font-size:10px;height:22px" value="'+(md.val==null?'':md.val)+'" onchange="setCoreMod('+i+',\''+cat+'\','+j+',\'val\',this.value)">'   +'<button class="btn-del" title="remove modification" onclick="delCoreMod('+i+',\''+cat+'\','+j+')">\u2715</button></div>';
+ }).join('');
+ return rows+'<div style="margin-top:2px"><button onclick="addCoreMod('+i+',\''+cat+'\')" style="font-size:9.5px;padding:1px 7px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--cyan);cursor:pointer">+ modify this part</button></div>';
+}
 function coreSel(v,i,cat,statKey,lab){
  const opts=SHIP_PARTS.filter(x=>x.cat===cat).map(x=>'<option value="'+esc(x.name)+'"'+(v.core&&v.core[cat]===x.name?' selected':'')+'>'+esc(x.name)+(x[statKey]!=null?' \u00b7 '+x[statKey]+' '+lab:'')+'</option>').join('');
  const cur=v.core&&v.core[cat]?SHIP_PARTS.find(x=>x.cat===cat&&x.name===v.core[cat]):null;
