@@ -4831,7 +4831,8 @@ function migrateVehicleStats(){
   }
  });
  (C.vehicles||[]).forEach(v=>{ // conform Hull HP pool to class every render
-  const want=hullHPForClass(v.hpClassHint||v.cat,v.hullDR);
+  const _Hh=v.core&&v.core.Hull&&SHIP_PARTS.find(function(x){return x.cat==='Hull'&&x.name===v.core.Hull;});
+  const want=_Hh&&_Hh.hp?+_Hh.hp:hullHPForClass(v.hpClassHint||v.cat,v.hullDR);
   const cur=+v.hpMax||0;
   if(cur!==want){ const frac=cur>0?(v.hpNow==null?1:v.hpNow/cur):1; v.hpMax=want; v.hpNow=Math.round(want*frac); }
  });
@@ -5595,8 +5596,9 @@ const SHIP_CLASS_ECON={
 };
 function shipClassEcon(v){
  const cat=(v&&v.cat)||'';
- if(SHIP_CLASS_ECON[cat])return SHIP_CLASS_ECON[cat];
- const s=String((v&&(v.hpClassHint||cat||v.frame||v.class))||'').toLowerCase();
+ const _hull=v&&v.core&&v.core.Hull;
+ if(!_hull&&SHIP_CLASS_ECON[cat])return SHIP_CLASS_ECON[cat];
+ const s=String(_hull||(v&&(v.hpClassHint||cat||v.frame||v.class))||'').toLowerCase();
  if(/dreadn|battleship|capital|flagship|destroyer/.test(s))return {gen:6000,draw:1200,cap:6000,mass:2400};
  if(/carrier/.test(s))return {gen:2000,draw:500,cap:2000,mass:800};
  if(/cruiser/.test(s))return SHIP_CLASS_ECON['Cruiser'];
@@ -5640,9 +5642,11 @@ function shipPowerMass(v){
                :{name:lab,role:'core',pwr:Math.round(cd*(PWF[c]||0)),mass:Math.round(cm*(MSF[c]||0)),cat:c});
   });
   ['Cargo','Crew'].forEach(function(c){const P=cp(c);if(P)parts.push({name:P.name+' ('+c+')',role:'core',pwr:0,mass:+P.mass||0,cat:c});});
+  const _H=cp('Hull');
+  const _hm=_H?(+_H.mass||0):Math.round(cm*MSF.Hull);
   const AR=cp('Armour');
-  parts.push(AR?{name:'Hull + '+AR.name,role:'core',pwr:0,mass:Math.round(cm*MSF.Hull)+(+AR.mass||0),cat:'Armour'}
-              :{name:'Hull + armour frame',role:'core',pwr:0,mass:Math.round(cm*MSF.Hull),cat:'Hull'});
+  parts.push(AR?{name:(_H?_H.name:'Hull')+' + '+AR.name,role:'core',pwr:0,mass:_hm+(+AR.mass||0),cat:'Armour'}
+              :{name:(_H?_H.name:'Hull + armour frame'),role:'core',pwr:0,mass:_hm,cat:'Hull'});
  }
  (shipMounts(v)||[]).forEach(mt=>{const W=mt.w?SHIP_WEAPONS.find(x=>x.name===mt.w):null;if(W){const n=+mt.n||1;parts.push({name:(mt.label||W.name)+(n>1?' ×'+n:''),role:'weapon',pwr:(+W.pwr||0)*n,mass:(+W.mass||0)*n});}});
  (vehicleModules(v)||[]).forEach(md=>{const M=md&&md.m?SHIP_MODULES.find(x=>x.name===md.m):null;if(M)parts.push({name:M.name,role:'module',pwr:(+M.pwr||0),mass:(+M.mass||0)});});
@@ -5692,7 +5696,7 @@ function econWouldExceed(v,probeMounts,probeModules){
 })();
 function vehCorePart(v,cat){const nm=v&&v.core&&v.core[cat];return nm?SHIP_PARTS.find(x=>x.cat===cat&&x.name===nm):null;}
 function vehShieldSP(v){const P=vehCorePart(v,'Shields');return (P?(+P.shieldSP||0):(parseInt(v.shieldDR)||0))+coreModSum(v,'sp');}
-function vehHullDR(v){const A=vehCorePart(v,'Armour');return (parseInt(v.hullDR)||0)+(A?(+A.dr||0):0)+coreModSum(v,'dr');}
+function vehHullDR(v){const A=vehCorePart(v,'Armour');const _H=v&&v.core&&v.core.Hull&&SHIP_PARTS.find(function(x){return x.cat==='Hull'&&x.name===v.core.Hull;});const base=_H&&_H.dr!=null?+_H.dr:(parseInt(v.hullDR)||0);return base+(A?(+A.dr||0):0)+coreModSum(v,'dr');}
 function vehMoveBase(v){const P=vehCorePart(v,'Sublight');return (P?(+P.move||0):(v.move||0))+coreModSum(v,'move');}
 function vehHyperClass(v){const P=vehCorePart(v,'Hyperdrive');if(P&&P.hyper){const m=String(P.hyper).match(/[\d.]+/);return m?m[0]:P.hyper;}return v.hd;}
 function setVehicleCore(i,cat,val){const v=C.vehicles[i];if(!v)return;v.core=v.core||{};if(val)v.core[cat]=val;else delete v.core[cat];if(!Object.keys(v.core).length)delete v.core;touch();renderVehicles();}
@@ -5716,15 +5720,13 @@ function vehFrameSize(v){const H=v&&v.core&&v.core.Hull&&SHIP_PARTS.find(functio
 // Which frame-size tiers a part suits. Size-agnostic systems fit any hull; faction parts read their (light/heavy/capital)
 // tier from the name; the propulsion/power/shield generics default to light unless a heavy/capital keyword says otherwise.
 function partFrameBand(p){
- const cat=p.cat,n=(p.name||'').toLowerCase();
- if(cat==='Hyperdrive'||cat==='Targeting'||cat==='ECM'||cat==='Astrogation'||cat==='Crew')return [0,5];
- if(n.indexOf('(light)')>=0)return [0,2];
- if(n.indexOf('(heavy)')>=0)return [2,4];
- if(n.indexOf('(capital)')>=0)return [4,5];
- if(/\bcapital\b|sienar|capital-scale/.test(n))return [4,5];
- if(/\bheavy\b|\bbulk\b|cluster|twin deflector|ablative|quadanium/.test(n))return [2,4];
- if(cat==='Reactor'||cat==='Sublight'||cat==='Shields')return [0,2];
- return [0,4];
+ const cat=p.cat;
+ // The trio where scale really bites is power / propulsion / protection - tier those by their defining stat
+ // (this tiers faction AND generic parts alike). Every other system is applicable to any hull (quality varies).
+ if(cat==='Reactor'){const w=+p.power||0;return w<=220?[0,2]:w<=500?[2,4]:[4,5];}
+ if(cat==='Sublight'){const m=+p.mass||0;return m<=4?[0,2]:m<=20?[2,4]:[4,5];}
+ if(cat==='Shields'){const sp=+p.shieldSP||0;return sp<=500?[0,2]:sp<=1600?[2,4]:[4,5];}
+ return [0,5];
 }
 function partFitsFrame(p,frameSize){if(!frameSize)return true;const r=FRAME_RANK[frameSize];if(r==null)return true;const b=partFrameBand(p);return r>=b[0]&&r<=b[1];}
 function coreSel(v,i,cat,statKey,lab){
