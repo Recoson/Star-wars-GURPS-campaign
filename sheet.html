@@ -4312,6 +4312,7 @@ function forceBookChecklist(book){
   }).join('');
   html+='</table>';
  });
+ if(book==='Common Force'){const techs=C.techniques||[];const cf=FORCE_TECHNIQUES.filter(t=>t.name!=='Trakata');html+=`<div class="sec-head" style="margin-top:14px">Blade Techniques (${cf.length} available — ${techs.filter(l=>l.name!=='Trakata').length} learned)</div><div class="dim" style="font-size:11px;margin-bottom:6px">Single learnable units of the Common Force, usable alongside any Form. Tick Active to flag those readied this fight.</div><table class="g"><tr><th style="width:150px">Technique</th><th style="width:150px">Prerequisite</th><th>Effect</th><th style="width:118px">Status</th></tr>${cf.map(t=>techRow(t,techs)).join('')}</table>`;}
  return html;
 }
 
@@ -4491,6 +4492,32 @@ function setShock(d){C.conditions=C.conditions||{};let s=((+C.conditions._shock)
 // ─────────────────────────────────────────────────────
 // STANCES & FORMS / NOTES
 // ─────────────────────────────────────────────────────
+const SLOT_BADGE={
+   "free":      {t:"FREE",        c:"#3fae5a", d:"Free action — rides another action; no maneuver, defense, or Quick-Action slot used"},
+   "free-attack":{t:"FREE ATK",   c:"#3f9fd6", d:"Free bonus attack — triggered by a hit/parry/step; once per turn"},
+   "attack":    {t:"ATTACK",      c:"#d68b2e", d:"Is your Attack maneuver this turn (a modified attack)"},
+   "force":     {t:"FORCE",       c:"#9a6dd6", d:"Force-power rider on a saber attack — costs FP, no extra maneuver"},
+   "free-force":{t:"FREE·FORCE",  c:"#7d6dd6", d:"Free Force action declared with your attack — costs FP, no extra maneuver"},
+   "reactive":  {t:"REACTIVE",    c:"#c25d8a", d:"Out-of-turn reaction (when hit / when a power is used on you)"},
+   "posture":   {t:"FULL·DEF",    c:"#b06a3a", d:"Takes your whole turn as a defensive stance"},
+   "full":      {t:"FULL TURN",   c:"#c0503a", d:"Full action — uses your entire turn"},
+   "passive":   {t:"PASSIVE",     c:"#7a8590", d:"Always-on / automatic — no action to use"}
+ }
+function slotBadge(slot){ const b=SLOT_BADGE[slot]; if(!b)return ''; return `<span class="slot-badge" title="${esc(b.d)}" style="--sc:${b.c}">${b.t}</span>`; }
+function techRow(t,techs){
+   const l=techs.find(x=>x.name===t.name);
+   const nm=t.name.replace(/'/g,"\\'");
+   let ctrl;
+   if(!l){ctrl=`<button class="btn-add" style="margin:0" onclick="learnTech('${nm}')">Learn</button>`;}
+   else{ctrl=`<label style="font-size:11px;cursor:pointer;display:inline-flex;align-items:center;gap:3px"><input type="checkbox" ${l.active?'checked':''} onchange="setTechActive('${nm}',this.checked)"> Active</label> <button class="btn-del" title="Forget" onclick="forgetTech('${nm}')">✕</button>`;}
+   return `<tr style="${l?(l.active?'background:rgba(94,196,212,.12)':'background:var(--bg3)'):''}">
+     <td style="font-weight:600;font-size:12px">${slotBadge(t.slot)}${esc(t.name)}</td>
+     <td class="dim" style="font-size:10px">${esc(t.prereq||'')}</td>
+     <td style="font-size:11px"><span class="dim">${esc(t.desc||'')}</span></td>
+     <td>${ctrl}</td>
+   </tr>`;
+  }
+
 function renderStances(){
  const el=document.getElementById('tab-stances');
  // Preserve which tradition groups are open across re-render (learning a stance must
@@ -4505,18 +4532,8 @@ function renderStances(){
  const activeTechs=techs.filter(t=>t.active);
  const FXL={st:'ST',dx:'DX',iq:'IQ',ht:'HT',ST:'ST',DX:'DX',IQ:'IQ',HT:'HT',Will:'Will',Per:'Per',dodge:'Dodge',parry:'Parry',block:'Block',allDef:'All Def',hit:'To-Hit',move:'Move',speed:'Speed',dr:'DR'};
  function fxStr(fx){const ks=fx?Object.keys(fx).filter(k=>fx[k]):[];return ks.length?ks.map(k=>`${FXL[k]||k} ${fx[k]>=0?'+':''}${fx[k]}`).join(', '):'—';}
- const SLOT_BADGE={
-   "free":      {t:"FREE",        c:"#3fae5a", d:"Free action — rides another action; no maneuver, defense, or Quick-Action slot used"},
-   "free-attack":{t:"FREE ATK",   c:"#3f9fd6", d:"Free bonus attack — triggered by a hit/parry/step; once per turn"},
-   "attack":    {t:"ATTACK",      c:"#d68b2e", d:"Is your Attack maneuver this turn (a modified attack)"},
-   "force":     {t:"FORCE",       c:"#9a6dd6", d:"Force-power rider on a saber attack — costs FP, no extra maneuver"},
-   "free-force":{t:"FREE·FORCE",  c:"#7d6dd6", d:"Free Force action declared with your attack — costs FP, no extra maneuver"},
-   "reactive":  {t:"REACTIVE",    c:"#c25d8a", d:"Out-of-turn reaction (when hit / when a power is used on you)"},
-   "posture":   {t:"FULL·DEF",    c:"#b06a3a", d:"Takes your whole turn as a defensive stance"},
-   "full":      {t:"FULL TURN",   c:"#c0503a", d:"Full action — uses your entire turn"},
-   "passive":   {t:"PASSIVE",     c:"#7a8590", d:"Always-on / automatic — no action to use"}
- };
- function slotBadge(slot){ const b=SLOT_BADGE[slot]; if(!b)return ''; return `<span class="slot-badge" title="${esc(b.d)}" style="--sc:${b.c}">${b.t}</span>`; }
+ ;
+ 
  const appFX=combatFX();
  const appliedKs=Object.keys(appFX).filter(k=>appFX[k]);
  const fmDB=activeForm?SABER_FORMS.find(s=>s.name===activeForm.name):null;
@@ -4628,41 +4645,11 @@ function renderStances(){
   }).join('')}
  </table>
 
- <div class="sec-head" style="margin-top:18px">Common Force — Blade Techniques (${FORCE_TECHNIQUES.filter(t=>t.name!=='Trakata').length} available — ${techs.filter(l=>l.name!=='Trakata').length} learned)</div>
- <div class="dim" style="font-size:11px;margin-bottom:6px">Part of the Common Force — the shared blade vocabulary every Force-user can learn, tied to no Form. Tick Active to flag the ones you have readied this fight (shown on your sheet). Most are invoked manoeuvres rather than passive bonuses.</div>
- <table class="g">
-  <tr><th style="width:150px">Technique</th><th style="width:150px">Prerequisite</th><th>Effect</th><th style="width:118px">Status</th></tr>
-  ${FORCE_TECHNIQUES.filter(t=>t.name!=='Trakata').map(t=>{
-   const l=techs.find(x=>x.name===t.name);
-   const nm=t.name.replace(/'/g,"\\'");
-   let ctrl;
-   if(!l){ctrl=`<button class="btn-add" style="margin:0" onclick="learnTech('${nm}')">Learn</button>`;}
-   else{ctrl=`<label style="font-size:11px;cursor:pointer;display:inline-flex;align-items:center;gap:3px"><input type="checkbox" ${l.active?'checked':''} onchange="setTechActive('${nm}',this.checked)"> Active</label> <button class="btn-del" title="Forget" onclick="forgetTech('${nm}')">✕</button>`;}
-   return `<tr style="${l?(l.active?'background:rgba(94,196,212,.12)':'background:var(--bg3)'):''}">
-     <td style="font-weight:600;font-size:12px">${slotBadge(t.slot)}${esc(t.name)}</td>
-     <td class="dim" style="font-size:10px">${esc(t.prereq||'')}</td>
-     <td style="font-size:11px"><span class="dim">${esc(t.desc||'')}</span></td>
-     <td>${ctrl}</td>
-   </tr>`;
-  }).join('')}
- </table>
  <div class="sec-head" style="margin-top:18px">Unorthodox Technique (${techs.filter(l=>l.name==='Trakata').length} learned)</div>
- <div class="dim" style="font-size:11px;margin-bottom:6px">Forbidden — taught by almost no one, self-taught at great risk. Stands apart from the Common Force and from every tradition.</div>
+ <div class="dim" style="font-size:11px;margin-bottom:6px">Forbidden — taught by almost no one, self-taught at great risk. Stands apart from the Common Force and every tradition. The Common Force blade techniques now live under the <b>Common Force</b> book (Force tab).</div>
  <table class="g">
   <tr><th style="width:150px">Technique</th><th style="width:150px">Prerequisite</th><th>Effect</th><th style="width:118px">Status</th></tr>
-  ${FORCE_TECHNIQUES.filter(t=>t.name==='Trakata').map(t=>{
-   const l=techs.find(x=>x.name===t.name);
-   const nm=t.name.replace(/'/g,"\\'");
-   let ctrl;
-   if(!l){ctrl=`<button class="btn-add" style="margin:0" onclick="learnTech('${nm}')">Learn</button>`;}
-   else{ctrl=`<label style="font-size:11px;cursor:pointer;display:inline-flex;align-items:center;gap:3px"><input type="checkbox" ${l.active?'checked':''} onchange="setTechActive('${nm}',this.checked)"> Active</label> <button class="btn-del" title="Forget" onclick="forgetTech('${nm}')">✕</button>`;}
-   return `<tr style="${l?(l.active?'background:rgba(94,196,212,.12)':'background:var(--bg3)'):''}">
-     <td style="font-weight:600;font-size:12px">${slotBadge(t.slot)}${esc(t.name)}</td>
-     <td class="dim" style="font-size:10px">${esc(t.prereq||'')}</td>
-     <td style="font-size:11px"><span class="dim">${esc(t.desc||'')}</span></td>
-     <td>${ctrl}</td>
-   </tr>`;
-  }).join('')}
+  ${FORCE_TECHNIQUES.filter(t=>t.name==='Trakata').map(t=>techRow(t,techs)).join('')}
  </table>`;
 }
 function learnStance(n){C.stances=C.stances||[];if(!C.stances.find(s=>s.name===n))C.stances.push({name:n,active:false});touch();renderStances();}
