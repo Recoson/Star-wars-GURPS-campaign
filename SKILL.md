@@ -217,6 +217,24 @@ the chat to pause/stall, and every repetition widens transcript exposure.
    needs it directly; never `echo` it or include it in a curl line shown in
    output.
 
+## Dev aids: CI gate + compendium locator
+
+**CI (`.github/workflows/check.yml`).** Every push to `main` runs two independent jobs:
+- `invariants` — `python3 check.py` (the full harness). A red `invariants` job is a *real*
+  failure: the repo violates a structural / golden-math invariant. Treat it as blocking.
+- `smoke` — boots `sheet.html` in headless Chromium (which the dev sandbox can't launch) via
+  `tools/ci_smoke.mjs`, serving over http, and fails on any *uncaught* JS exception during load.
+  This is the one runtime check `node --check` can't give. Widen it by adding to `PAGES` in that file.
+You still run `python3 check.py` locally before pushing — CI is the backstop, not a substitute.
+
+**`tools/query_compendium.py` — locate, don't read whole.** The compendium overflows the context
+budget if read end-to-end (it has ended chats). Pull the exact slice instead:
+- `python3 tools/query_compendium.py "Blade Velocity"` — that power's section + line range.
+- `--all` dumps every name match · `--strip` drops HTML tags · `--full` lifts the truncation caps ·
+  `--headers` prints a table of contents · `--grep REGEX` is arbitrary regex (`grep -n` style).
+Output is capped by default so a single hit never blows context. Sections are delimited exactly as
+`check.py` delimits them (`h4.power-name` → next header), so the slice you read is the slice you edit.
+
 ## Campaign constants (deliberate design — do not "correct")
 
 The compendium is the source of truth for every rule value; this table only flags

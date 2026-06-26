@@ -425,3 +425,20 @@ Both open decisions above are now **RESOLVED**:
 
 ### 2026-06-26 (cont.) — Decisions A & B resolved (multiple-defence penalty)
 GM confirmed (PCs reach Dodge 15+: Truman 15, Sekan 12, Chatni 11 at base; higher in defensive forms) that true-RAW uncapped dodge would make high-Speed PCs untouchable. **(A) KEEP the universal multi-defence penalty; re-tagged from "Standard (RAW)" to "House Rule"** with a note that Basic Set RAW penalises only repeated same-hand parries (dodge/block uncapped). **(B) Fixed the false "MA p.122 halves all defenses" citation** to the real B376 rule (−2 with fencing weapon / WM / TbaM, −1 with both, parries only; ruleset extends the halving to the matching weapon/skill). Mechanic unchanged — label/citation only. **Still open: (C) lightsaber-as-fencing (0F) -> +3 retreat & −2/−1 multi-parry; (D) rear-aware −4 vs RAW −2.**
+
+### 2026-06-26 (cont.) — Dev tooling: CI gate + compendium locator
+
+Two additive dev aids landed (no rules/data touched):
+
+- **`.github/workflows/check.yml`** — first CI on the repo. Job `invariants` runs `check.py` on
+  every push to `main` (auto-catches a broken parallel-session push; currently green, 3 pre-existing
+  non-breaking schema-key warnings). Job `smoke` boots `sheet.html` in real headless Chromium via
+  `tools/ci_smoke.mjs` — the runtime check the dev sandbox can't run — failing only on an uncaught
+  JS exception at load. NOTE: the `smoke` job's first real exercise *is* CI itself (Chromium won't
+  launch in the sandbox), so it may want a tweak on first run; `invariants` is the proven gate.
+- **`tools/query_compendium.py`** — `name → section + tight line range` locator, plus `--grep`,
+  `--headers`, `--all`, `--strip`, `--full`. Output capped by default. Use it instead of ad-hoc grep
+  / whole-file reads against the compendium. Documented in SKILL.md → "Dev aids".
+
+Both verified locally: YAML parses, `node --check` clean on the smoke script, query tool exercised
+against the live compendium (exact lookup / multi-match / TOC / grep / no-match exit), `check.py` green.
