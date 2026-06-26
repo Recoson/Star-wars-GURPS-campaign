@@ -252,6 +252,8 @@ Commit message convention: `Power adjudication batch NN (<section> X/Y): N power
 
 ## 6. OPEN FLAGS / PENDING JAMES DECISIONS (carry forward, surface when relevant)
 
+- **[OPEN — needs James] Slim-block format vs the Upkeep/Hands/Move contract.** Commit `631a97f` piloted a slimmer power block on **Force Empathy** (dropped the verbose Upkeep stat field as "covered in At-the-table"), flagged as an *exemplar for a wider block-slimming pass*. That breaks the corpus-wide invariant (every power carries exactly one Upkeep/Hands/Move field) that the batch machine emits, §3a mandates, and `check.py` enforces — so it turned **CI red on every push**. **Restored Upkeep on Force Empathy to unblock CI.** DECISION: (A) hold the contract — keep Upkeep in the grid, no slimming; or (B) adopt the slim format corpus-wide, which means *deliberately* relaxing the `check.py` Upkeep invariant (weakening detection of accidental Upkeep loss across all 215 powers), updating the §3a format spec + batch machine, and a re-slimming pass. **Do not re-slim any power until James rules** — re-dropping Upkeep just re-reds CI.
+
 - **Force Push / Force Pull range-falloff rate** — shipped PROPOSED as **+2 FP and −2 to hit per
   +8 hexes beyond base 8**. James has not confirmed. Flag for ratification, don't silently re-tune.
 - **Saber-hand-gate per-power eligibility** — default rule applied (ranged hand-projected powers
