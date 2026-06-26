@@ -4945,7 +4945,7 @@ function renderVehicles(){ migrateVehicleStats();
       const sizeSel='<select class="cell" style="width:66px;font-weight:700;color:var(--cyan)" title="Hardpoint size — sets which weapons fit (larger holds smaller)" onchange="setMountField('+i+','+m+',\'size\',this.value)">'+['S','M','L','C'].map(function(sz){return '<option value="'+sz+'"'+(curSize===sz?' selected':'')+'>'+sz+'</option>';}).join('')+'</select>';
       const ammo=(mt.shots!=null)?('<input class="cell" type="number" style="width:40px" value="'+(mt.shotsNow==null?'':mt.shotsNow)+'" onchange="setMountField('+i+','+m+',\'shotsNow\',this.value)"><span class="dim">/'+mt.shots+'</span>'):'<span class="dim">—</span>';
       const fire=W?(()=>{const g=[];if(W.lock)g.push('🔒');if(W.arm)g.push('⏱');const sk=W.skill==='Ion Gunner'?'ion':(W.skill==='Gunner (capital)'?'cap':(W.skill==='Gunner (exotic)'?'exo':''));const tip=(W.fx?'Effect: '+W.fx+'\n\n':'')+'Skill: '+W.skill+(W.arm?' · Arming: '+W.arm:' · fires instantly')+(W.lock?' · Needs a sensor lock (Electronics Op, 1 turn); target dodges −2':' · Direct fire, line of sight')+' · Countered by: '+(W.ctr||'Dodge')+'\n\nRange: best at '+bandHexLabel(W.band)+'. Bands (1 hex=100m): '+bandTableStr()+'. A turn of Aim cancels the band; the penalty is on Gunnery, not Perception.\nFlight: '+flightPhrase(W);return '<span title="'+esc(tip)+'" style="margin-left:5px;cursor:help;color:var(--text2)">ⓘ'+(g.length?' '+g.join(''):'')+(sk?' <span style="color:var(--amber)">'+sk+'</span>':'')+'</span>';})():'';
-      const _ma=mountArc(mt,W);const travSel='<select class="cell" style="width:118px;font-size:11px" onchange="setMountField('+i+','+m+',\'arc\',this.value)">'+Object.keys(TRAV_LABEL).map(function(k){return '<option value="'+k+'"'+(_ma.t===k?' selected':'')+'>'+TRAV_LABEL[k]+'</option>';}).join('')+'</select>';const faceSel='<select class="cell" style="width:142px;font-size:11px" onchange="setMountField('+i+','+m+',\'face\',this.value)">'+Object.keys(FACE_LABEL).map(function(k){return '<option value="'+k+'"'+(_ma.f===k?' selected':'')+'>'+FACE_LABEL[k]+'</option>';}).join('')+'</select>';const _ng=mountNeedsGunner(_ma.t,_ma.f);const _det=W?((W.fx?'<b>Effect:</b> '+esc(W.fx)+' ':'')+((W.arm||W.lock)?'<b>Timing:</b> '+(W.lock?'needs a sensor lock; ':'')+(W.arm?esc(W.arm):'fires instantly')+'. ':'')+'<span class="dim">'+esc(arcPhrase(_ma.t,_ma.f))+' — '+(_ng?'needs a dedicated gunner; the pilot can only fire straight-ahead weapons.':'the pilot can fire this (forward), or a gunner can.')+'</span>'):'';const _fl=flightPhrase(W);const _rng=W?('<b>Range:</b> best at '+bandHexLabel(W.band)+'. <b>Flight:</b> '+esc(_fl)):'';const subRow=mt.w?('<tr><td colspan="11" style="padding:0 10px 8px;font-size:11px;line-height:1.5;color:var(--text2);border-top:none"><div><b>Mount:</b> '+travSel+' '+faceSel+'  '+_det+'</div>'+(_rng?'<div style="margin-top:2px">'+_rng+'</div>':'')+'</td></tr>'):'';
+      const _ma=mountArc(mt,W);const swivSel='<select class="cell" style="width:150px;font-size:11px" onchange="setMountField('+i+','+m+',\'swiv\',this.value)">'+Object.keys(SWIVEL_LABEL).map(function(k){return '<option value="'+k+'"'+(_ma.sw===k?' selected':'')+'>'+SWIVEL_LABEL[k]+'</option>';}).join('')+'</select>';const deckSel='<select class="cell" style="width:112px;font-size:11px" onchange="setMountField('+i+','+m+',\'deck\',this.value)">'+Object.keys(DECK_LABEL).map(function(k){return '<option value="'+k+'"'+(_ma.dk===k?' selected':'')+'>'+DECK_LABEL[k]+'</option>';}).join('')+'</select>';const posSel='<select class="cell" style="width:150px;font-size:11px" onchange="setMountField('+i+','+m+',\'pos\',this.value)">'+Object.keys(POS_LABEL).map(function(k){return '<option value="'+k+'"'+(_ma.ps===k?' selected':'')+'>'+POS_LABEL[k]+'</option>';}).join('')+'</select>';const _ng=mountNeedsGunner(_ma.sw);const _det=W?((W.fx?'<b>Effect:</b> '+esc(W.fx)+' ':'')+((W.arm||W.lock)?'<b>Timing:</b> '+(W.lock?'needs a sensor lock; ':'')+(W.arm?esc(W.arm):'fires instantly')+'. ':'')+'<span class="dim">'+esc(arcPhrase(_ma.sw,_ma.dk,_ma.ps))+' — '+(_ng?'needs a dedicated gunner; the pilot can only fire forward-facing weapons.':'the pilot can fire this (forward), or a gunner can.')+'</span>'):'';const _fl=flightPhrase(W);const _rng=W?('<b>Range:</b> best at '+bandHexLabel(W.band)+'. <b>Flight:</b> '+esc(_fl)):'';const subRow=mt.w?('<tr><td colspan="11" style="padding:0 10px 8px;font-size:11px;line-height:1.5;color:var(--text2);border-top:none"><div><b>Swivel:</b> '+swivSel+'  <b>Location:</b> '+deckSel+' '+posSel+'  '+_det+'</div>'+(_rng?'<div style="margin-top:2px">'+_rng+'</div>':'')+'</td></tr>'):'';
       return '<tr>'
        +'<td>'+sizeSel+(mt.n>1?' <span class="dim" style="font-size:10px">×'+mt.n+'</span>':'')+'</td>'
        +'<td><select class="cell" style="width:150px" onchange="setMountField('+i+','+m+',\'w\',this.value)">'+opts+'</select>'+fire+'</td>'
@@ -5456,33 +5456,38 @@ function hardpointsFit(v,mountList){
 function hardpointLabel(v){const b=hardpointBudget(v);const parts=[];['S','M','L','C'].forEach(function(k){if(b[k])parts.push(b[k]+k);});return parts.join(' ')||'\u2014';}
 
 // Default firing arc inferred from the weapon (user can override per mount).
-function defaultTraverse(W){
+function defaultSwivel(W){
  if(!W)return 'fixed';
  const n=(W.name||'').toLowerCase();
  if(/turret|quad|point-defen/.test(n)||W.kind==='capital'||W.kind==='pd')return 'turret';
  return 'fixed';
 }
-function defaultFace(W,trav){ return (trav||defaultTraverse(W))==='turret'?'level':'forward'; }
+const SWIVEL_LABEL={fixed:'Fixed — forward',front:'120° arc — front',rear:'120° arc — rear',port:'120° arc — port (left)',stbd:'120° arc — starboard (right)',turret:'360° turret'};
+const DECK_LABEL={top:'Top (dorsal)',mid:'Middle',bot:'Bottom (ventral)'};
+const POS_LABEL={bow:'Bow (fore-centre)',foreP:'Fore-port',foreS:'Fore-starboard',port:'Port (mid-left)',centre:'Centre (amidships)',stbd:'Starboard (mid-right)',aftP:'Aft-port',tail:'Tail (aft-centre)',aftS:'Aft-starboard'};
+const SWIVEL_SHORT={fixed:'fixed forward',front:'120° forward arc',rear:'120° rear arc',port:'120° port arc',stbd:'120° starboard arc',turret:'360° turret'};
+const POS_SHORT={bow:'bow',foreP:'fore-port',foreS:'fore-starboard',port:'port side',centre:'centre',stbd:'starboard side',aftP:'aft-port',tail:'tail',aftS:'aft-starboard'};
 function mountArc(mt,W){
- let t=mt.arc,f=mt.face;
- if(t==='gimbal'){t='arc';if(!f)f='forward';}
- else if(t==='dorsal'){t='arc';if(!f)f='dorsal';}
- else if(t==='ventral'){t='arc';if(!f)f='ventral';}
- else if(t==='turret'){if(!f)f='level';}
- else if(t==='forward'){t='fixed';if(!f)f='forward';}
- if(t!=='fixed'&&t!=='arc'&&t!=='turret')t=defaultTraverse(W);
- if(!f)f=defaultFace(W,t);
- return {t:t,f:f};
+ let sw=mt.swiv, dk=mt.deck, ps=mt.pos;
+ if(!sw){ const a=mt.arc, f=mt.face;
+  sw=(a==='turret')?'turret':((a==='arc'||a==='gimbal')?'front':((f==='rear')?'rear':'fixed'));
+  if(!dk) dk=(f==='dorsal')?'top':((f==='ventral')?'bot':'mid');
+  if(!ps) ps=(f==='rear')?'tail':'bow';
+ }
+ if(SWIVEL_LABEL[sw]===undefined) sw=defaultSwivel(W);
+ if(DECK_LABEL[dk]===undefined) dk='mid';
+ if(POS_LABEL[ps]===undefined) ps='bow';
+ return {sw:sw,dk:dk,ps:ps};
 }
-const TRAV_LABEL={fixed:'Fixed (welded)',arc:'Limited arc',turret:'360° turret'};
-const FACE_LABEL={forward:'Forward',rear:'Rear / aft',dorsal:'Above (dorsal)',ventral:'Below (ventral)',level:'Level (horizontal)',sphere:'Full sphere'};
-function arcPhrase(t,f){
- if(t==='turret'){ if(f==='sphere')return '360° turret — all bearings & elevations'; if(f==='dorsal')return '360° turret — covers above'; if(f==='ventral')return '360° turret — covers below'; if(f==='level')return '360° turret — level plane'; return '360° turret — '+(FACE_LABEL[f]||f).toLowerCase(); }
- const tw=t==='arc'?'Limited swivel':'Fixed';
- const fw={forward:'forward',rear:'to the rear',dorsal:'above',ventral:'below',level:'level',sphere:'all round'}[f]||f;
- return tw+', fires '+fw;
+function arcPhrase(sw,dk,ps){
+ const s=SWIVEL_SHORT[sw]||sw; const d={top:'top',mid:'middle',bot:'bottom'}[dk]||dk; const p=POS_SHORT[ps]||ps;
+ let cover='';
+ if(sw==='turret') cover=(dk==='top')?' — reaches above & all bearings':((dk==='bot')?' — reaches below & all bearings':' — all bearings, level');
+ else if(dk==='top') cover=' — angled above';
+ else if(dk==='bot') cover=' — angled below';
+ return s+', mounted '+d+' '+p+cover;
 }
-function mountNeedsGunner(t,f){ return t==='turret' || f!=='forward'; }
+function mountNeedsGunner(sw){ return sw!=='fixed' && sw!=='front'; }
 const SHIP_BANDS=[['Knife','±0'],['Close','−4'],['Medium','−6'],['Long','−8'],['Extreme','−12']];
 function bandPenaltyStr(){ return SHIP_BANDS.map(function(b){return b[0]+' '+b[1];}).join(' · '); }
 const BAND_HEX={Knife:[1,2,'±0'],Close:[3,10,'−4'],Medium:[11,20,'−6'],Long:[21,50,'−8'],Extreme:[51,200,'−12']};
@@ -5505,7 +5510,7 @@ function shipCrewComplement(v){
 // Mannable stations derived from the loadout (mounts -> gunners, lock weapons -> sensor op, size -> co-pilot/engineer).
 function shipStations(v){
  const ms=(typeof shipMounts==='function')?shipMounts(v):[];
- let gunnerSeats=ms.filter(function(mt){ if(!mt.w)return false; const W=SHIP_WEAPONS.find(function(x){return x.name===mt.w;}); const a=mountArc(mt,W); return mountNeedsGunner(a.t,a.f); }).length;
+ let gunnerSeats=ms.filter(function(mt){ if(!mt.w)return false; const W=SHIP_WEAPONS.find(function(x){return x.name===mt.w;}); const a=mountArc(mt,W); return mountNeedsGunner(a.sw); }).length;
  const hasLock=ms.some(function(mt){const W=SHIP_WEAPONS.find(function(x){return x.name===mt.w;});return W&&W.lock;});
  const cap=shipCrewComplement(v);
  const st=[['Pilot / Helm',1]];
@@ -5528,7 +5533,7 @@ function addMountWithWeapon(i,name){
  }
  const W=SHIP_WEAPONS.find(function(x){return x.name===name;});
  const cap=(W&&W.ammo)||null;
- ms.push({size:(W?(W.mount||'M'):'M'),w:name,n:1,shots:cap,shotsNow:cap,arc:defaultTraverse(W),face:defaultFace(W)});
+ ms.push({size:(W?(W.mount||'M'):'M'),w:name,n:1,shots:cap,shotsNow:cap,swiv:defaultSwivel(W),deck:'mid',pos:'bow'});
  touch();renderVehicles();
 }
 // Weapon palette: tappable chips grouped by hardpoint size, biased to what the hull can still fit.
