@@ -597,6 +597,13 @@ html{scroll-behavior:smooth}
 .ordbtns button:hover:not(:disabled){color:var(--cyan);border-color:var(--cyan)}
 .ordbtns button:disabled{opacity:.25;cursor:default}
 #skillTable.filtering .ordbtns{visibility:hidden}
+.sk-grip{display:inline-block;cursor:grab;touch-action:none;color:var(--text2);font-size:14px;line-height:1;padding:3px 5px;margin-right:1px;vertical-align:middle;-webkit-user-select:none;user-select:none}
+.sk-grip:hover{color:var(--cyan)}
+tr.sk-dragging td{opacity:.4;background:color-mix(in srgb,var(--cyan) 14%,transparent)}
+#skillTable.filtering .sk-grip{visibility:hidden;pointer-events:none}
+.sk-dropline{position:fixed;height:0;border-top:2px solid var(--cyan,#5ec4d4);box-shadow:0 0 7px 1px var(--cyan,#5ec4d4);border-radius:2px;pointer-events:none;z-index:10000}
+body.sk-dragging-active{cursor:grabbing}
+body.sk-dragging-active *{cursor:grabbing !important}
 #skillSearch{background:var(--bg2);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:3px 9px;font-size:11px;width:175px;margin-left:10px;vertical-align:middle}
 #skillSearch:focus{border-color:var(--cyan);outline:none}
 /* arrange v2: guides + active panel */
@@ -2125,7 +2132,7 @@ function renderSkills(){
       onchange="C.skills[${i}].spec=this.value;touch()">`;
    }
    return `<tr data-skname="${esc(((sk.name||'')+' '+(sk.spec||'')).toLowerCase())}">
-    <td class="num dim sk-ord"><span>${i+1}</span><span class="ordbtns"><button title="Move up" ${i===0?'disabled':''} onclick="moveSkill(${i},-1)">▲</button><button title="Move down" ${i===(C.skills||[]).length-1?'disabled':''} onclick="moveSkill(${i},1)">▼</button></span></td>
+    <td class="num dim sk-ord"><span class="sk-grip" data-i="${i}" title="Drag to reorder" aria-label="Drag to reorder">⠿</span><span class="sk-num">${i+1}</span><span class="ordbtns"><button title="Move up" ${i===0?'disabled':''} onclick="moveSkill(${i},-1)">▲</button><button title="Move down" ${i===(C.skills||[]).length-1?'disabled':''} onclick="moveSkill(${i},1)">▼</button></span></td>
     <td><select class="cell" onchange="setSkillName(${i},this.value)" style="max-width:240px">
      <option value="">— select —</option>
      ${allNames.map(n=>`<option value="${esc(n)}"${n===sk.name?' selected':''}>${esc(n)}${SPECIALTIES[n]&&SPECIALTIES[n].reqd?' †':''}</option>`).join('')}
@@ -2299,6 +2306,63 @@ function filterSkillRows(v){_skillFilter=(v||'').trim().toLowerCase();
 }
 function moveSkill(i,d){const a=C.skills||[];const j=i+d;if(j<0||j>=a.length)return;const t=a[i];a[i]=a[j];a[j]=t;touch();renderSkills();}
 function sortSkillsAZ(){(C.skills||[]).sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''))||String(a.spec||'').localeCompare(String(b.spec||'')));touch();renderSkills();}
+/* drag-to-reorder for skills (pointer events: mouse + touch/iPad) */
+(function(){
+ if(window._skDnDReady)return; window._skDnDReady=true;
+ var drag=null;
+ function rowsOf(t){return Array.prototype.slice.call(t.querySelectorAll('tr[data-skname]'));}
+ function scrollParent(el){var n=el&&el.parentElement;while(n){var st=getComputedStyle(n);if(/(auto|scroll)/.test(st.overflowY)&&n.scrollHeight>n.clientHeight)return n;n=n.parentElement;}return document.scrollingElement||document.documentElement;}
+ function place(x,y){
+  if(!drag)return;
+  var rows=drag.rows.filter(function(r){return r.style.display!=='none';});
+  if(!rows.length)return;
+  var chosen=null,i;
+  for(i=0;i<rows.length;i++){var m=rows[i].getBoundingClientRect();if(y<m.top+m.height/2){chosen=rows[i];break;}}
+  var lineY;
+  if(chosen){var rc=chosen.getBoundingClientRect();lineY=rc.top;drag.insertBefore=+chosen.querySelector('.sk-grip').getAttribute('data-i');}
+  else{var last=rows[rows.length-1];var rl=last.getBoundingClientRect();lineY=rl.bottom;drag.insertBefore=(+last.querySelector('.sk-grip').getAttribute('data-i'))+1;}
+  var tb=drag.table.getBoundingClientRect();
+  drag.line.style.display='block';drag.line.style.left=tb.left+'px';drag.line.style.width=tb.width+'px';drag.line.style.top=(lineY-1)+'px';
+ }
+ function autoscroll(y){
+  if(!drag)return;var sp=drag.scroll,M=48,SPD=15,dy=0;
+  if(sp===document.scrollingElement||sp===document.documentElement||sp===document.body){if(y<M)dy=-SPD;else if(y>window.innerHeight-M)dy=SPD;if(dy)window.scrollBy(0,dy);}
+  else{var rc=sp.getBoundingClientRect();if(y<rc.top+M)dy=-SPD;else if(y>rc.bottom-M)dy=SPD;if(dy)sp.scrollTop+=dy;}
+ }
+ function loop(){if(!drag)return;autoscroll(drag.lastY);place(drag.lastX,drag.lastY);drag.raf=requestAnimationFrame(loop);}
+ function onMove(e){if(!drag)return;e.preventDefault();drag.lastX=e.clientX;drag.lastY=e.clientY;place(e.clientX,e.clientY);}
+ function finish(commit){
+  if(!drag)return;
+  cancelAnimationFrame(drag.raf);
+  window.removeEventListener('pointermove',onMove,true);
+  window.removeEventListener('pointerup',onUp,true);
+  window.removeEventListener('pointercancel',onCancel,true);
+  if(drag.srcRow)drag.srcRow.classList.remove('sk-dragging');
+  document.body.classList.remove('sk-dragging-active');
+  if(drag.line&&drag.line.parentNode)drag.line.parentNode.removeChild(drag.line);
+  var src=drag.srcIdx,before=drag.insertBefore;drag=null;
+  if(commit&&before!=null&&before!==src&&before!==src+1){
+   var a=C.skills||[];if(src<0||src>=a.length)return;
+   var item=a.splice(src,1)[0];var dest=before;if(src<before)dest--;
+   a.splice(dest,0,item);touch();renderSkills();
+  }
+ }
+ function onUp(){finish(true);} function onCancel(){finish(false);}
+ document.addEventListener('pointerdown',function(e){
+  var t=e.target,grip=t&&t.closest?t.closest('.sk-grip'):null;if(!grip)return;
+  var table=document.getElementById('skillTable');if(!table||table.classList.contains('filtering'))return;
+  var row=grip.closest('tr');if(!row)return;
+  e.preventDefault();
+  var line=document.createElement('div');line.className='sk-dropline';line.style.display='none';document.body.appendChild(line);
+  drag={table:table,srcRow:row,srcIdx:+grip.getAttribute('data-i'),rows:rowsOf(table),line:line,scroll:scrollParent(table),insertBefore:null,lastX:e.clientX,lastY:e.clientY,raf:0};
+  row.classList.add('sk-dragging');document.body.classList.add('sk-dragging-active');
+  try{grip.setPointerCapture(e.pointerId);}catch(_){}
+  window.addEventListener('pointermove',onMove,true);
+  window.addEventListener('pointerup',onUp,true);
+  window.addEventListener('pointercancel',onCancel,true);
+  place(e.clientX,e.clientY);drag.raf=requestAnimationFrame(loop);
+ },true);
+})();
 function setSkillName(i,name){
  const db=DATA.skills.find(s=>s[0]===name);
  C.skills[i].name=name;
