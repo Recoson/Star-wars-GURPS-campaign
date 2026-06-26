@@ -1542,6 +1542,16 @@ function weaponSkillBinding(wName){
 }
 // Small "Uses: <skill>" line shown under a weapon picker on the Equipment tab.
 // add an integer modifier to a GURPS dice string, e.g. ("2d", +1) -> "2d+1", ("1d-1", +2) -> "1d+1"
+// B269 "Modifying Dice + Adds" (optional rule): large positive damage adds roll up into dice —
+// +4 → +1d, +7 → +2d (first die costs 4, each further die 3). e.g. 2d+5 becomes 3d+1.
+function convAddsToDice(expr){
+ const m=String(expr).match(/^(\d+)d([+-]\d+)?$/);
+ if(!m)return expr;
+ const n=+m[1], add=m[2]?+m[2]:0;
+ if(add<4)return expr;
+ const dd=Math.floor((add-1)/3), rem=add-(3*dd+1);
+ return (n+dd)+'d'+(rem?'+'+rem:'');
+}
 function addDiceMod(dice,mod){
  mod=+mod||0;
  // ── Handle "thr"/"sw" shorthand: resolve to current character roll first ──
@@ -1560,7 +1570,7 @@ function addDiceMod(dice,mod){
    }
    if(sm[3])bonus+=parseInt(sm[3],10);
    bonus+=mod;
-   return dice2+'d'+(bonus?(bonus>0?'+':'')+bonus:'');
+   return convAddsToDice(dice2+'d'+(bonus?(bonus>0?'+':'')+bonus:''));
   }
   // Fallback if base un-parsable
   return base+(mod?(mod>0?'+':'')+mod:'');
@@ -1569,14 +1579,14 @@ function addDiceMod(dice,mod){
  const m=str.match(/^(\d+)d([+-]\d+)?$/);
  if(!m)return str+(mod?(mod>0?'+':'')+mod:'');
  const tot=(m[2]?parseInt(m[2],10):0)+mod;
- return m[1]+'d'+(tot?(tot>0?'+':'')+tot:'');
+ return convAddsToDice(m[1]+'d'+(tot?(tot>0?'+':'')+tot:''));
 }
 function addTwoDice(a,b){
  const A=String(a).match(/^(\d+)d([+-]\d+)?$/),B=String(b).match(/^(\d+)d([+-]\d+)?$/);
  if(!A||!B)return a;
  const d=parseInt(A[1],10)+parseInt(B[1],10);
  const m=(A[2]?parseInt(A[2],10):0)+(B[2]?parseInt(B[2],10):0);
- return d+'d'+(m?(m>0?'+':'')+m:'');
+ return convAddsToDice(d+'d'+(m?(m>0?'+':'')+m:''));
 }
 // follow-up / secondary damage line (electrical burn, stun affliction, etc.) —
 // a real, separate component rather than text buried in the primary damage type.
