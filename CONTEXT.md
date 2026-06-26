@@ -422,3 +422,6 @@ Both open decisions above are now **RESOLVED**:
 - **(D) Rear attack when AWARE: compendium −4 vs RAW −2.** RAW (B392/Close Combat) treats a rear attack the victim *is* aware of (attacker circled into the back arc) as a **side attack: −2**. Compendium gives −4, reserving −2 for 360°/Peripheral Vision. → keep −4 (house) or align to RAW −2?
 
 **Next audit slices (unstarted):** knockback formula; posture penalties; full ranged section (Acc/Aim/RoF/range bands/Bolt Deflection already done).
+
+### 2026-06-26 (cont.) — Decisions A & B resolved (multiple-defence penalty)
+GM confirmed (PCs reach Dodge 15+: Truman 15, Sekan 12, Chatni 11 at base; higher in defensive forms) that true-RAW uncapped dodge would make high-Speed PCs untouchable. **(A) KEEP the universal multi-defence penalty; re-tagged from "Standard (RAW)" to "House Rule"** with a note that Basic Set RAW penalises only repeated same-hand parries (dodge/block uncapped). **(B) Fixed the false "MA p.122 halves all defenses" citation** to the real B376 rule (−2 with fencing weapon / WM / TbaM, −1 with both, parries only; ruleset extends the halving to the matching weapon/skill). Mechanic unchanged — label/citation only. **Still open: (C) lightsaber-as-fencing (0F) -> +3 retreat & −2/−1 multi-parry; (D) rear-aware −4 vs RAW −2.**
