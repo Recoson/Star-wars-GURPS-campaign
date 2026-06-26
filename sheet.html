@@ -587,6 +587,8 @@ input[type=checkbox]{accent-color:var(--cyan)}
  details>*:not(summary){animation:tabIn .15s ease-out}
 }
 html{scroll-behavior:smooth}
+.drop-hot{outline:2px dashed var(--cyan);outline-offset:3px;background:color-mix(in srgb,var(--cyan) 8%,transparent)}
+.wchip{transition:background .12s,transform .12s}.wchip:hover{background:var(--bg3)!important}.wchip:active{transform:scale(.96)}
 </style>
 <style id="ux-patch">
 /* skills: reorder arrows + search */
@@ -4977,9 +4979,9 @@ function renderVehicles(){ migrateVehicleStats();
      const _econFull=!v.custom&&!!econWouldExceed(v,ms.concat([{w:SHIP_WEAPONS[1].name,n:1}]),null);
      const firingLegend='<div class="dim" style="font-size:9.5px;margin-top:3px;color:var(--text2)">🔒 needs a sensor lock — defeat with chaff / ECM / EMP-flare · ⏱ arm or charge a turn before firing · <span style="color:var(--amber)">ion / cap / exo</span> = special skill (Ion Gunner / capital fire-direction / exotic) · hover ⓘ for a weapon’s firing rules</div>';
      const _hpf=hardpointsFit(v,ms);const hpInfo='<div style="font-size:10px;margin-top:4px;color:'+(_hpf.fit?'var(--text2)':'var(--danger,#c0392b)')+'">\u2693 Hardpoints ('+(v.cat||'hull')+'): <b>'+_hpf.used+' / '+_hpf.total+'</b> \u00b7 budget '+hardpointLabel(v)+(_hpf.fit?'':' \u2014 \u26a0 over capacity')+(v.custom?' \u2014 custom (limits off)':'')+'</div>';const _stn=shipStations(v);const _sl=_stn.stations.map(function(s){return (s[1]>1?s[1]+'\u00d7 ':'')+s[0];}).join(' \u00b7 ');const _cov=_stn.crew>=_stn.need;const crewInfo='<div style="font-size:10px;margin-top:3px;color:'+(_cov?'var(--text2)':'var(--amber)')+'">\ud83d\udc65 Stations to fully crew: <b>'+_sl+'</b> = '+_stn.need+' \u00b7 complement <b>'+_stn.crew+'</b>'+(_cov?(_stn.crew>_stn.need?' ('+(_stn.crew-_stn.need)+' spare)':' \u2014 fully crewable'):' \u2014 '+(_stn.need-_stn.crew)+' unmanned (pilot doubles up \u2014 fly cautious or leave a turret cold)')+'</div>';
-     return '<div style="margin-top:7px"><table class="g" style="font-size:10.5px"><tr><th>Mount</th><th>Weapon</th><th title="Hardpoint size this weapon needs — S/M/L/Capital">Mt</th><th title="Damage dice">Dmg</th><th title="Armour Piercing: ignores this much hull DR (1:1 at ship scale)">AP</th><th title="Aim a turn to add Acc to one shot (fire-control computer)">Acc</th><th title="Rate of fire — RoF 5+ gives a to-hit bonus">RoF</th><th title="Recoil — extra hits on a hit = floor(margin ÷ Rcl), capped at RoF−1">Rcl</th><th title="Band where this weapon works best">Best band</th><th title="Replacement cost (per weapon)">Cost</th><th title="Remaining warheads (launchers only)">Ammo</th><th></th></tr>'
+     return '<div style="margin-top:7px" ondragover="event.preventDefault();this.classList.add(\'drop-hot\')" ondragleave="this.classList.remove(\'drop-hot\')" ondrop="dropWeaponOnMounts(event,'+i+')"><table class="g" style="font-size:10.5px"><tr><th>Mount</th><th>Weapon</th><th title="Hardpoint size this weapon needs — S/M/L/Capital">Mt</th><th title="Damage dice">Dmg</th><th title="Armour Piercing: ignores this much hull DR (1:1 at ship scale)">AP</th><th title="Aim a turn to add Acc to one shot (fire-control computer)">Acc</th><th title="Rate of fire — RoF 5+ gives a to-hit bonus">RoF</th><th title="Recoil — extra hits on a hit = floor(margin ÷ Rcl), capped at RoF−1">Rcl</th><th title="Band where this weapon works best">Best band</th><th title="Replacement cost (per weapon)">Cost</th><th title="Remaining warheads (launchers only)">Ammo</th><th></th></tr>'
       +(rows||'<tr><td colspan="11" class="dim" style="padding:6px">No mounts — add one, or they auto-fill from the catalogue armament line.</td></tr>')
-      +'</table>'+hpInfo+crewInfo+firingLegend+'<button class="btn-add"'+(_econFull?' disabled title="No power/mass headroom — turn on custom loadout below to add more"':'')+' style="margin-top:4px" onclick="addMount('+i+')">+ mount</button></div>';
+      +'</table>'+hpInfo+crewInfo+firingLegend+weaponPalette(i,v)+'<button class="btn-add"'+(_econFull?' disabled title="No power/mass headroom — turn on custom loadout below to add more"':'')+' style="margin-top:4px" onclick="addMount('+i+')">+ mount</button></div>';
    })()}
    ${(()=>{const mods=vehicleModules(v);
      const optsFor=function(md){return '<option value=""'+(md.m?'':' selected')+'>\u2014 pick a module \u2014</option>'+SHIP_MODULES.map(function(x){return '<option value="'+esc(x.name)+'"'+(md.m===x.name?' selected':'')+'>'+esc(x.name)+' ('+x.size+')</option>';}).join('');};
@@ -5506,6 +5508,39 @@ function shipStations(v){
  if(cap>=4)st.push(['Engineer / DC',1]);
  const need=st.reduce(function(n,s){return n+s[1];},0);
  return {stations:st, need:need, crew:cap, gunnerSeats:gunnerSeats};
+}
+
+// Add a specific weapon as a new mount (tap-to-add / drag-drop), honouring power/mass + hardpoints.
+function addMountWithWeapon(i,name){
+ const v=C.vehicles[i]; if(!v||!name)return;
+ const ms=shipMounts(v); const probe=ms.concat([{w:name,n:1}]);
+ if(!v.custom){
+  const bad=econWouldExceed(v,probe,null);
+  if(bad){alert('No room for a '+name+' \u2014 '+(bad.powerOver?'reactor power':'mass capacity')+' would be exceeded. Turn on \u201ccustom loadout\u201d to override.');return;}
+  if(!hardpointsFit(v,probe).fit){alert('No free hardpoint for a '+name+' \u2014 a '+(v.cat||'hull')+' has only '+hardpointLabel(v)+' (S/M/L/C). Down-fit, swap a mount, or turn on \u201ccustom loadout\u201d.');return;}
+ }
+ const W=SHIP_WEAPONS.find(function(x){return x.name===name;});
+ const cap=(W&&W.ammo)||null;
+ ms.push({label:(W?W.name:'New mount'),w:name,n:1,shots:cap,shotsNow:cap,arc:defaultArc(W)});
+ touch();renderVehicles();
+}
+function dropWeaponOnMounts(ev,i){ ev.preventDefault(); try{ev.currentTarget.classList.remove('drop-hot');}catch(e){} const n=ev.dataTransfer?ev.dataTransfer.getData('text/plain'):''; if(n)addMountWithWeapon(i,n); }
+function dragWeaponStart(ev,name){ if(ev.dataTransfer){ev.dataTransfer.setData('text/plain',name);ev.dataTransfer.effectAllowed='copy';} }
+// Weapon palette: tappable / draggable chips grouped by hardpoint size, biased to what the hull can still fit.
+function weaponPalette(i,v){
+ const order={S:1,M:2,L:3,C:4}; const _MS={S:1,M:2,L:3,C:4};
+ const groups={S:[],M:[],L:[],C:[]};
+ SHIP_WEAPONS.forEach(function(W){ const sz=W.mount||'M'; if(groups[sz])groups[sz].push(W); });
+ const fits=v?hardpointsFit(v,shipMounts(v).concat([])):null;
+ const chip=function(W){
+  const fit=v?hardpointsFit(v,shipMounts(v).concat([{w:W.name,n:1}])).fit:true;
+  const dim=(!v||v.custom||fit)?'':'opacity:.4;';
+  const dmg=W.dmg?(' '+W.dmg.replace('x','\u00d7')):(W.fx?' \u00b7 fx':'');
+  return '<span class="wchip" draggable="true" ondragstart="dragWeaponStart(event,\''+esc(W.name).replace(/'/g,"\\'")+'\')" onclick="addMountWithWeapon('+i+',\''+esc(W.name).replace(/'/g,"\\'")+'\')" title="Tap to mount, or drag onto the mounts table" style="display:inline-block;margin:2px;padding:2px 7px;border:1px solid var(--bg3);border-radius:11px;font-size:10.5px;cursor:pointer;background:var(--bg2);'+dim+'"><b>'+esc(W.name)+'</b> <span class="dim">'+(W.mount||'M')+dmg+'</span></span>';
+ };
+ let out='';
+ ['S','M','L','C'].forEach(function(k){ if(!groups[k].length)return; const lbl={S:'Small',M:'Medium',L:'Large',C:'Capital'}[k]; out+='<div style="margin:4px 0 2px;font-size:10px;color:var(--text2)"><b>'+lbl+' ('+k+')</b></div>'+groups[k].sort(function(a,b){return (a.name>b.name)?1:-1;}).map(chip).join(''); });
+ return '<details style="margin-top:6px"><summary style="cursor:pointer;font-size:11px;color:var(--cyan)">\u2795 Add a weapon \u2014 tap a chip, or drag it onto the mounts</summary><div style="padding:4px 2px">'+out+'<div class="dim" style="font-size:9.5px;margin-top:4px">Dimmed = no free hardpoint of that size on this hull (down-fit or enable custom loadout). Tap works on iPad; drag works on desktop.</div></div></details>';
 }
 
 function addMount(i){const v=C.vehicles[i];if(!v)return;const ms=shipMounts(v);let def=SHIP_WEAPONS[1].name;if(!v.custom){const bad=econWouldExceed(v,ms.concat([{w:def,n:1}]),null);if(bad){alert('No room on this hull \u2014 '+(bad.powerOver?'reactor power':'mass capacity')+' would be exceeded. Turn on \u201ccustom loadout\u201d to override the hull limits.');return;}if(!hardpointsFit(v,ms.concat([{w:def,n:1}])).fit){const sm=SHIP_WEAPONS.find(function(x){return x.mount==='S';});const smn=sm?sm.name:def;if(hardpointsFit(v,ms.concat([{w:smn,n:1}])).fit){def=smn;}else{alert('No free hardpoint \u2014 a '+(v.cat||'hull')+' has only '+hardpointLabel(v)+' (S/M/L/C). Remove or down-fit a mount, or turn on \u201ccustom loadout\u201d to override.');return;}}}ms.push({label:'New mount',w:def,n:1,shots:null,shotsNow:null});touch();renderVehicles();}
