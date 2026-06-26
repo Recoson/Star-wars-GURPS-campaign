@@ -457,3 +457,13 @@ GM ruled the lightsaber is **not** a fencing weapon (would be overpowered with D
 **Posture (vs B364/B551) — core penalties RAW-correct:** own-attack penalties (crouch/kneel/sit −2, crawl/prone −4) ✓; own-defence penalties (kneel/sit −2, crawl/prone −3) ✓. **FLAG: the "Hit Against" column** (+3 close / −2 ranged for prone; +2 close for crawling). RAW's lever for "prone = easy melee target" is the defender's −3 defence (already in the table); couldn't confirm a *separate* melee to-hit bonus in the Basic Set dump, so the "+3/+2 close" may double-count (harsher than RAW). Ranged −2 vs prone is plausibly RAW. → confirm whether "+N close" is an extra modifier or a restatement of the −3 defence.
 
 **Next slice: ranged** (Acc/Aim/RoF/range bands; Bolt Deflection already done).
+
+### 2026-06-26 (cont.) — Knockback/Posture RAW applied + Ranged slice (audit complete)
+
+**Knockback → RAW (done):** cutting now knocks back ONLY if it fails to penetrate DR (was "half, always"); crushing regardless of DR; impaling/piercing none. Compendium + sheet knockback hint both updated.
+
+**Posture → RAW (done):** the counterintuitive one — a *crawling or lying* foe is **−3 to hit in melee** (kneeling/sitting −2), offset by their −3 defence; ranged −2 vs low postures. Flipped the compendium's wrong **+3/+2 close** to **−3** across ALL 7 references (main posture table, two ranged-section copies, the prose "easy to hit at close range", the "attacker bonus" line, the ranged targeting summary, and two End-Prone maneuver notes reframed to the −3 defence downside). Sheet had no posture table.
+
+**Ranged slice — mostly RAW-clean:** Aim (Acc, +1@2s, +2@3+s) ✓; Recoil (hits = margin÷Rcl +1, bracing −1) ✓; ranged maneuvers table (M&A −2/Bulk, AoA, Committed +2, Defensive, Telegraphic, Targeted hit-locations, Off-Hand −4, Bulk) ✓; the **entire range/Speed table** (7-10→−3/−4 … 700-1000→−15/−16) ✓. **FIXED:** the 3–5 hex band was −2/−3, off by one; now RAW **−1 to −2**. **FLAGGED (not changed): RoF bonus table.** Compendium "9–16 → +2, 17–49 → +3" vs RAW finer "9–12→+2, 13–16→+3, 17–24→+4, 25–49→+5, 50–99→+6". Simplified, looks deliberate. → adopt RAW progression or keep simplified?
+
+**AUDIT STATUS: all five slices complete** — (1) movement/maneuvers [Step, AoA-HOUSE, M&A→RAW], (2) defences/retreat [multi-defence HOUSE re-tag, retreat distance→RAW, lightsaber-not-fencing, rear-aware-HOUSE], (3) knockback→RAW, (4) posture→RAW, (5) ranged [3-5 band→RAW; RoF flagged]. Only open item: the RoF-table decision.
