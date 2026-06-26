@@ -5589,7 +5589,8 @@ const SHIP_CLASS_ECON={
  'Gunship':{gen:60,draw:18,cap:34,mass:12},
  'Shuttle':{gen:55,draw:16,cap:34,mass:12},
  'Light Freighter':{gen:80,draw:22,cap:48,mass:18},
- 'Heavy Freighter':{gen:70,draw:28,cap:56,mass:30},
+ 'Medium Freighter':{gen:140,draw:40,cap:130,mass:50},
+ 'Heavy Freighter':{gen:200,draw:55,cap:240,mass:90},
  'Corvette':{gen:520,draw:120,cap:520,mass:200},
  'Frigate':{gen:1100,draw:260,cap:1100,mass:420},
  'Cruiser':{gen:3500,draw:700,cap:3500,mass:1400}
@@ -5600,10 +5601,12 @@ function shipClassEcon(v){
  if(!_hull&&SHIP_CLASS_ECON[cat])return SHIP_CLASS_ECON[cat];
  const s=String(_hull||(v&&(v.hpClassHint||cat||v.frame||v.class))||'').toLowerCase();
  if(/dreadn|battleship|capital|flagship|destroyer/.test(s))return {gen:6000,draw:1200,cap:6000,mass:2400};
- if(/carrier/.test(s))return {gen:2000,draw:500,cap:2000,mass:800};
+ if(/carrier/.test(s))return {gen:3500,draw:900,cap:5000,mass:2000};
  if(/cruiser/.test(s))return SHIP_CLASS_ECON['Cruiser'];
  if(/frigate/.test(s))return SHIP_CLASS_ECON['Frigate'];
  if(/corvette|patrol/.test(s))return SHIP_CLASS_ECON['Corvette'];
+ if(/heavy freighter/.test(s))return SHIP_CLASS_ECON['Heavy Freighter'];
+ if(/medium freighter/.test(s))return SHIP_CLASS_ECON['Medium Freighter'];
  if(/bulk|hauler|freighter/.test(s))return SHIP_CLASS_ECON['Light Freighter'];
  if(/gunship/.test(s))return SHIP_CLASS_ECON['Gunship'];
  if(/heavy fighter|bomber/.test(s))return SHIP_CLASS_ECON['Heavy Fighter'];
