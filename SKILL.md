@@ -150,8 +150,12 @@ The established, reliable loop — follow it for every change:
 4. **Functionally test** with Playwright (headless Chromium): load the file,
    exercise the changed path, assert on rendered output / `C` state.
 5. **Ship** by committing and pushing to `main` (the repo is the source of
-   truth), then copy the finished file to `/mnt/user-data/outputs/` and present
-   it. The `/mnt/project/` mount goes stale after edits — rely on the repo.
+   truth), that push *is* the delivery (GitHub Pages serves `main`; the next session
+   clones it). The `/mnt/project/` mount goes stale after edits — rely on the
+   repo. Then surface a **review artifact** via `present_files` — a `git show`
+   diff, or the edited file only if it's small. Do **not** copy the multi-MB
+   source files (compendium, `sheet.html`) to `/mnt/user-data/outputs/`; the
+   push already shipped them, so present a diff instead.
 
 The compendium is edited like any other file — clone, surgical patch, verify,
 commit, push (see the GitHub workflow below). It is too large to read whole, so
@@ -171,8 +175,9 @@ the GitHub MCP connector's ~50 KB write ceiling entirely.
   commit and push. **Pushing to `main` is the default final ship step for every
   session that edits any project file** — not just large ones. The repo is the
   source of truth; an update that only lands in `/mnt/user-data/outputs/` is
-  not shipped. Still copy final deliverables to `/mnt/user-data/outputs/` so
-  they're visible in-chat.
+  not shipped. After pushing, surface a **review artifact** — a `git show <sha> -- <file>`
+  diff, or a small edited file — via `present_files`; skip copying the multi-MB
+  source files, which the push already delivered.
 - **`main` moves under you — parallel sessions push constantly.** `git fetch` +
   `git rebase origin/main` before every push. Conflicts on the giant minified
   lines aren't hand-mergeable: `git rebase --abort` → `git reset --hard
