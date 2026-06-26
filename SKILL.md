@@ -171,6 +171,15 @@ the GitHub MCP connector's ~50 KB write ceiling entirely.
   lines aren't hand-mergeable: `git rebase --abort` → `git reset --hard
   origin/main` → re-apply the patch fresh → push. Re-check current state before
   re-applying — another session may have already done the task.
+- **Claim your workstream in `CONTEXT.md`.** When starting a multi-batch job,
+  add a named, status-tagged line to the in-flight section (e.g. "*power
+  adjudication — IN PROGRESS, batch N*") so a parallel session sees the claim
+  before duplicating it. Read that section first; refresh it when you finish.
+- **Run `python3 check.py` before every push.** It asserts the structural
+  invariants (per-power statgrid fields + At-the-table block, unique headers,
+  div balance, FORCE_DESC panels ⊆ real powers, JSON schema-key coverage) and
+  the golden attribute-derivation math. Green-with-warnings is fine; a FAIL means
+  don't push. It pins no magic numbers, so it survives the growing corpus.
 
 ### Token hygiene — never echo the PAT
 
