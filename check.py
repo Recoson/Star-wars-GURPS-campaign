@@ -87,15 +87,16 @@ def check_compendium():
     viol = []
     for h, nm in zip(ph, names):
         nxt = min([x for x in heads if x > h], default=len(s)); seg = s[h:nxt]
-        cnt = [seg.count(f'<span class="stat-k">{k}</span>') for k in ('Upkeep', 'Hands', 'Move')]
+        cnt = [seg.count(f'<span class="stat-k">{k}</span>') for k in ('Hands', 'Move')]
+        up = seg.count('<p class="upkeep">')
         w = seg.count('<p class="warn"><b>At the table.</b>')
-        if cnt != [1, 1, 1] or w != 1: viol.append((nm, cnt, w))
+        if cnt != [1, 1] or up != 1 or w != 1: viol.append((nm, cnt, up, w))
     if viol:
         fail(f"compendium: {len(viol)} power(s) with bad statgrid fields / At-the-table block: {viol[:8]}")
     d = s.count('<div') - s.count('</div>')
     if d != 0: fail(f"compendium: <div> balance delta {d} (expected 0)")
     if not dup and not viol and d == 0:
-        note(f"compendium: {len(ph)} powers, each with Upkeep/Hands/Move + At-the-table; headers unique; div-balanced")
+        note(f"compendium: {len(ph)} powers, each with Hands/Move (grid) + Upkeep line + At-the-table; headers unique; div-balanced")
     return set(names)
 
 # ---- B. Sheet ------------------------------------------------------------
