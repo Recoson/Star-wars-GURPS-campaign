@@ -447,3 +447,13 @@ against the live compendium (exact lookup / multi-match / TOC / grep / no-match 
 
 ### 2026-06-26 (cont.) — Decision C resolved (lightsaber NOT fencing)
 GM ruled the lightsaber is **not** a fencing weapon (would be overpowered with Dodge-15+ duelists). Stripped the `F` from all lightsaber Parry cells (compendium: standard/shoto/saberstaff/great saber `0F`->`0`; sheet: standard + Sith synth-crystal `0F`->`0`) and added an explicit note on the Lightsaber Parry rule: balanced weapon, retreat gives the standard **+1** Parry (never +3), and it does **not** get the fencing −2 multi-parry reduction (only Weapon Master halves it, per the house rule). No code keyed off the `F`, so this is the table-tag + prose only. **Still open: (D) rear-aware −4 vs RAW −2.**
+
+### 2026-06-26 (cont.) — D closed + audit pass 2: Knockback + Posture
+
+**(D) closed:** rear-aware −4 tagged as a deliberate house deviation (RAW = side attack, −2). GM confirmed keeping −4.
+
+**Knockback (vs B378) — mostly RAW-faithful:** ST−2 per metre formula ✓; crushing knocks back regardless of DR ✓; impaling/piercing no knockback ✓; fall rule (1m safe, 2+ roll vs best of DX/Acrobatics/Judo at −1/m) ✓; knockback off basic damage before DR/multiplier ✓. **DIVERGENCE (flagged, not changed): cutting.** RAW = cutting causes knockback ONLY if it fails to penetrate DR (then full). Compendium = cutting knocks back at HALF, always, regardless of DR. Likely a deliberate simplification (and near-moot for a saber game — lightsabers are burn, no knockback either way). → keep house "cutting half" (tag HOUSE) or align to RAW?
+
+**Posture (vs B364/B551) — core penalties RAW-correct:** own-attack penalties (crouch/kneel/sit −2, crawl/prone −4) ✓; own-defence penalties (kneel/sit −2, crawl/prone −3) ✓. **FLAG: the "Hit Against" column** (+3 close / −2 ranged for prone; +2 close for crawling). RAW's lever for "prone = easy melee target" is the defender's −3 defence (already in the table); couldn't confirm a *separate* melee to-hit bonus in the Basic Set dump, so the "+3/+2 close" may double-count (harsher than RAW). Ranged −2 vs prone is plausibly RAW. → confirm whether "+N close" is an extra modifier or a restatement of the −3 defence.
+
+**Next slice: ranged** (Acc/Aim/RoF/range bands; Bolt Deflection already done).
