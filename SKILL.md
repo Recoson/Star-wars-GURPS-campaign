@@ -71,14 +71,21 @@ source of persisted state.
 - **Schema:** the canonical shape is whatever `blankChar()` returns. That
   function IS the schema — read it before assuming any key exists. Full key list
   and nested shapes are in `references/data-model.md`.
-- **Import is a wholesale replace, not a merge.** `importChar()` does
-  `C = JSON.parse(file)` with no reconciliation against `blankChar()`. This is
-  the single biggest footgun:
-  > **Any imported JSON missing a top-level key will break the sheet.** Some
-  > access is guarded (`(C.stances||[])`), but plenty is not (`C.attr[a]`,
-  > `C.species`, `C.force.powers`). When building or converting an import, start
-  > from a full `blankChar()` and overlay values — never hand-author a partial
-  > object.
+- **Import reconciles against the schema (shallow).** `importChar()` does
+  `C = mergeChar(JSON.parse(file))`, and `mergeChar` starts from a full
+  `blankChar()` and overlays the file's **top-level** keys
+  (`for (k in data) if (data[k]!==undefined) base[k]=data[k]`). Implications:
+  > A **missing top-level key is backfilled with its `blankChar()` default** —
+  > non-breaking, but you get the default *silently* (a silent-wrong, not a
+  > crash): a forgotten key like `force` or `weapons` yields an empty default
+  > rather than an error. The live footgun is that the merge is **shallow** — a
+  > present-but-*partial* nested object replaces the whole default for that key,
+  > so nested sub-keys are **not** backfilled. Build nested objects complete.
+  > Some access is guarded (`(C.stances||[])`), but plenty is not (`C.attr[a]`,
+  > `C.force.powers`).
+  >
+  > `load()` (localStorage restore) is a raw `JSON.parse` with no merge, but
+  > localStorage is written by the running sheet, so it's already schema-complete.
 
 ### Attributes are stored as raw point-costs, not levels
 
