@@ -358,6 +358,13 @@ grep -o '<span class="stat-k">Upkeep</span>' "Star Wars the Old Republic GURPS 4
 
 ## 11. IMMEDIATE NEXT STEP
 
+**SHIP-BUILDER WORKSTREAM (separate from the Force/RAW work below).** A full vehicle/ship-builder overhaul
+shipped this session — size-first mounts, swivel+location firing arcs, compendium range bands + warhead
+flight, hardpoints-from-hull, free-form per-part mods, a frame-scale part filter, 3 capital frames, and
+frame-driven base HP/DR/mass/econ. Full detail + open items in the latest dated entry below. Top open
+items: **ratify the extrapolated capital-frame hardpoint/HP/mass numbers**; optionally add
+sensors/cargo/crew to the part-mod stat dropdown.
+
 **The adjudication pass, the Minor Traditions conversion, and the full sheet FORCE_DESC sync are all
 COMPLETE and pushed.** No batch work remains. Open items, in priority order:
 
@@ -471,3 +478,61 @@ GM ruled the lightsaber is **not** a fencing weapon (would be overpowered with D
 ### 2026-06-26 (cont.) — RoF table → RAW (audit fully closed)
 
 GM ruled adopt RAW RoF. **The sheet was already RAW** (`rofBonus()` labelled B373: 9–12 +2, 13–16 +3, 17–24 +4, 25–49 +5, 50–99 +6, 100+ +7) — the compendium and cheatsheet were the drifted ones (simplified 9–16 +2 / 17–49 +3 / 50–99 +4 / 100+ +5). Fixed both to the RAW progression; all three artifacts now agree. Cheatsheet PDF regenerated (4pp A3, fonts subset). **No open items remain — the GURPS-RAW basics audit is fully closed.**
+
+### 2026-06-26 (cont.) — Ship-builder overhaul: mounts → parts → frames → frame-driven base stats
+
+A self-contained **vehicle / ship-builder** workstream (sheet.html), separate from the Force/RAW work above.
+Each commit node --check + Playwright verified.
+
+**Size-first mounts** (`c9c9ede`): first mount column is an S/M/L/C **size** selector that filters the weapon
+dropdown (larger holds smaller). Dropped the free-text label + drag-and-drop (weapon palette is tap-only).
+
+**Firing arcs = swivel + location** (`7cff69e`): per mount a **Swivel** (Fixed-forward / 120° arc / 360°
+turret) + **Location** = Deck (top/mid/bot) × Position (3×3 bow-to-stern grid). Deck drives above/below
+coverage; swivel drives pilot-vs-gunner (pilot fires fixed-forward + 120°-front; else needs a gunner).
+Legacy arc/face fields migrate on read.
+
+**Range bands + warhead flight** (`64cd76f`,`6bdcd24`) per compendium: range is abstract bands on 100-m
+hexes (Knife ±0 / Close −4 / Medium −6 / Long −8 / Extreme −12; penalty on Gunnery, not Perception), derived
+hex spans shown (Knife ≤2 … Extreme ≤200). Warhead flight = impact delay in TURNS (missiles Fast, torpedoes
+Slow, mines Placed, beams instant).
+
+**STAGE 1 — hardpoints from the hull** (`56a20d6`): each hull frame carries `mounts:{S,M,L,C}` (compendium
+per-class table); `hardpointBudget(v)` reads the assigned `v.core.Hull` part first, class/cap fallback only
+for catalogue ships.
+
+**STAGE 2 — free-form part mods** (`29df7b7`, "Full" per James): every assigned core part takes free-form
+mods stored on **`v.coreMods[cat]=[{label,mass,pwr,stat,val}]`** (mirrors equipment `mods[]`). Each adds mass
++ power draw (negative frees power, clamped ≥0) and may bump ONE stat: +S/M/L/C hardpoint, Hull DR, Hull HP,
+Shield SP, Move, Power output. `coreModSum(v,key)` is the single summer, hooked into shipPowerMass
+(mass/draw/gen), hardpointBudget, vehHullDR, vehShieldSP, vehMoveBase, vehicleEffectiveStat hpMax. Added the
+**Hull picker row** (was UI-unreachable before).
+
+**Frame-scale filter + 3 capital frames** (`7127c25`→retuned `dbdc921`): frame ladder is now 6 tiers —
+**Small · Fighter · Light · Medium · Heavy · Capital**. Core-system pickers only offer parts that suit the
+assigned hull. **CORRECTION to an earlier in-chat claim:** the compendium hardpoint table STOPS at Frigate
+(6S/6M/4L/1C) + generic "capital 4C" — it does NOT spell out Cruiser/Dreadnought/Carrier rows. So the 3 new
+capital frames (Cruiser 6S/8M/6L/2C · Dreadnought 8S/10M/8L/4C · Carrier 6S/4M/2L/1C) have **DR grounded in
+the warships catalogue** (~150/300/270) but **S/M/L hardpoints + HP/mass EXTRAPOLATED**. Fit logic
+(`partFrameBand`) is **stat-tiered**, not keyword: Reactor by power, Sublight by mass, Shields by SP →
+light/heavy/capital bands with a 1-tier overlap; every other system fits any hull. Off-scale current
+selection stays visible with a hint.
+
+**STAGE 3 — frames drive base HP/DR/mass/econ** (`dbdc921`): a frame sets base HP (its own pool — Gunship 900
+/ Cruiser 45000, supersedes hullHPForClass when a frame is assigned), base Hull DR (frame dr, before armour +
+mods), structural mass (frame mass), and class economy (cap/power via the frame's class keyword — every frame
+name resolves). Stage-2 mods still layer on top. Catalogue ships (no frame) fully unchanged.
+
+**Econ rescale** (`d230db6`): Stage 3 exposed Medium Freighter(45)/Heavy Freighter(85)/Carrier(1800) frames
+out-massing their caps(48/48/2000). Added Medium Freighter econ (cap 130), rescaled Heavy Freighter (240) +
+carrier (5000), routed both freighter frame names ahead of the generic /freighter/. All 15 frames now 18–60%
+structural mass, 40–82% headroom, none overweight stock.
+
+**Data model:** `v.core={cat:partName}` (frame + core parts; `vehCorePart`/`setVehicleCore`),
+`v.coreMods={cat:[mods]}` (part mods), hull parts carry `mounts:{S,M,L,C}` + `size` (1 of 6 tiers).
+`FRAME_RANK` size→0..5; `partFrameBand`/`partFitsFrame`/`vehFrameSize` drive the filter.
+
+**OPEN (ship-builder):** capital-frame HP/mass/hardpoints are extrapolations (no compendium source) — ratify
+or retune. Sensors/Cargo/Crew not in the mod-stat dropdown (only fully-wired stats) — add if wanted. The
+part-tier heuristic is stat-threshold based — retune `partFrameBand` if a generic mis-tiers. Hull picker tag
+shows `slots` (could show HP/DR; cosmetic).
