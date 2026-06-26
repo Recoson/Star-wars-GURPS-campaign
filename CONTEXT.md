@@ -378,3 +378,21 @@ the "AD 1" line is to be dropped from the Project Instructions (see §6).
 Flagged to James: the FORCE_DESC re-sync genericised ~30 panels from third-person (she/Chatni) to the
 compendium's second-person "you" — correct for a shared multi-PC sheet, but if any of that personalisation
 was deliberate, say the word and it can be selectively restored. Otherwise the toolset is current.
+
+---
+
+## 2026-06-26 — Djem So redesign + start of GURPS-4e-RAW basics audit (commit 38669c4)
+
+**Djem So reworked (compendium + sheet):** the push-away knockback contradicted the form's constant-aggression identity. Replaced with **Relentless Advance** — the blow still drives the foe back 1 hex (+1 per 3 pts of success; 2+ hexes = DX/Acrobatics roll or prone) and staggers (−1→−3 by tier), but immediately after the blow you may **step toward the foe to stay in reach, one step (1/10 Move, min 1 hex) per attack you have made this turn**. You drive them across the field and advance into the space they leave — never away from you. Knockback now functions as positional control + footing disruption, not distance-opening. Counterattack economy (no-limit, 1 FP each, −2→+0 by tier) unchanged.
+
+**Step rule → RAW (compendium):** was flat "one hex"; now **1/10 your Move rounded down, min 1 hex** (Move 20 = 2 hexes, 30 = 3; below 20 = 1 hex). Still one step per maneuver.
+
+**CORRECTION to the prior "STEP RULING" above:** the "step, or two steps (2nd at −2)" option is **Committed Attack (Determined)** — a *Martial Arts* maneuver — NOT All-Out Attack. RAW **All-Out Attack** movement = move FIRST then attack, up to **half your Move (round up), min 2 hexes**. The compendium's AoA "Step or full Move" is a divergence (full > RAW half); it is tagged HOUSE on the A3 cheatsheet (deliberate) but **untagged in the compendium**.
+
+**OPEN DECISIONS for James (RAW cited, not yet changed — both are balance-affecting / possibly-intentional home-brew):**
+1. **All-Out Attack movement** — compendium "full Move" vs RAW "half Move (round up), min 2 hexes, move-then-attack." Cheatsheet tags it HOUSE (but the tag is ambiguous — may apply to the QA/Fast-Draw permission, not the movement). → revert to RAW half-Move, or formally tag the full-Move as HOUSE in the compendium?
+2. **Move-and-Attack melee cap** — compendium "max(9, DX+2)" (in BOTH compendium and cheatsheet, untagged) vs RAW "**−4 to hit, adjusted skill capped at 9**" (the asterisk rule; no DX+2 floor). The DX+2 floor specifically rescues high-DX duelists from RAW's max-9 — looks deliberate. → revert to RAW, or formally tag the DX+2 floor as HOUSE?
+
+**A3 cheatsheet checked:** AoA full-Move tagged HOUSE ✓; M&A DX+2 present, untagged (same as #2); no incorrect step-distance statement (only the "1 m = 1 hex" scale note, which is fine); does not yet reflect the Move/10 step.
+
+**Remaining GURPS-RAW basics audit (each its own focused pass; not yet done):** active-defence formulas (Parry/Block = skill/2+3, Dodge = Speed+3); retreat bonus (RAW +3 Dodge / +1 Parry-Block / **+3 Parry for fencing skills** — lightsaber weapon Parry is `0F`=Fencing, so it gets +3 retreat; verify compendium matches & whether the Fencing class is intended); multiple-defense penalty (RAW −4 per extra same-hand parry, **WM/TbaM halves to −2** — already confirmed applied); knockback formula (RAW per ST−2 of crushing/cutting after DR); posture penalties; ranged (Acc/Aim/RoF/range bands). **Caveat: GURPS Martial Arts is NOT in the project files** — MA-sourced rules (Committed Attack, Deceptive Attack variants, Beat, etc.) are adjudicated from knowledge and flagged as not book-verifiable.
