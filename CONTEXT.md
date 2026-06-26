@@ -396,3 +396,15 @@ was deliberate, say the word and it can be selectively restored. Otherwise the t
 **A3 cheatsheet checked:** AoA full-Move tagged HOUSE ✓; M&A DX+2 present, untagged (same as #2); no incorrect step-distance statement (only the "1 m = 1 hex" scale note, which is fine); does not yet reflect the Move/10 step.
 
 **Remaining GURPS-RAW basics audit (each its own focused pass; not yet done):** active-defence formulas (Parry/Block = skill/2+3, Dodge = Speed+3); retreat bonus (RAW +3 Dodge / +1 Parry-Block / **+3 Parry for fencing skills** — lightsaber weapon Parry is `0F`=Fencing, so it gets +3 retreat; verify compendium matches & whether the Fencing class is intended); multiple-defense penalty (RAW −4 per extra same-hand parry, **WM/TbaM halves to −2** — already confirmed applied); knockback formula (RAW per ST−2 of crushing/cutting after DR); posture penalties; ranged (Acc/Aim/RoF/range bands). **Caveat: GURPS Martial Arts is NOT in the project files** — MA-sourced rules (Committed Attack, Deceptive Attack variants, Beat, etc.) are adjudicated from knowledge and flagged as not book-verifiable.
+
+### 2026-06-26 (cont.) — GM rulings applied + MA book now in project (commit f824557)
+
+Both open decisions above are now **RESOLVED**:
+1. **All-Out Attack movement — KEEP full Move, tagged HOUSE.** GM ruling: AoA already surrenders every active defence, so half-Move would make it a trap against a mobile foe. Compendium AoA definition now carries an inline HOUSE tag documenting the deviation from RAW (half Move, round up, min 2). Cheatsheet was already HOUSE-tagged.
+2. **Move-and-Attack — REVERTED to RAW.** Now "**−4 to hit, adjusted skill capped at 9**" (no DX+2 floor) in all 6 compendium M&A spots + both cheatsheet spots. Fixed the rule that falsely claimed the DX+2 floor was "Per RAW". **Slams** corrected too: RAW exempts slams from the −4/cap-9 (roll vs DX). The 2 surviving "DX+2" in the compendium are the **Weapon Master / Mighty Blows damage bonus** (+2/die at skill DX+2) — correct, left intact.
+
+**GURPS Martial Arts is now in the project** (`/mnt/project/GURPS_-_Martial_Arts.pdf`, a text dump like the Basic Set, 1.37 M chars, fully readable/cite-able). The "MA rules not book-verifiable" caveat is closed. Verified core **Committed Attack** (MA p99): Determined +2 hit / Strong +1 dmg, and the Strong bonus **explicitly excludes force swords** — corroborates the compendium's AoA-Strong carve-out and the "flat +damage is noise for lightsabers" principle.
+
+**STALE ARTIFACT:** `Combat_Cheatsheet_A3.pdf` is now out of sync with the edited `.html` (M&A/slam lines). Needs regeneration from the HTML.
+
+**Remaining RAW basics audit (now fully book-backed, both Basic Set + MA):** active-defence formulas; retreat bonus (+3 Dodge / +1 Parry-Block / +3 Parry for fencing — lightsaber `0F` Parry gets the +3); multiple-defence penalty (−4, WM/TbaM −2); knockback formula; posture; full ranged section. Awaiting GM's preferred order (defences/retreat flagged as highest-value next).
