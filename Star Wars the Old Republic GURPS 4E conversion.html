@@ -3091,7 +3091,7 @@ The Force shall free me.<br>
 
 <p class="rule"><span class="rule__name">Retreat.</span> Step away from a melee attacker as you defend. Bonus on that single defense: +3 to Dodge, or to Parry with Boxing, Judo, Karate, or any fencing skill. +1 to any other Parry, or to Block. Applies only against that attacker. Once per turn. Costs your step (can’t already have stepped). Forbidden during Committed Attack, Move and Attack, or AoA. Movement bonuses do not multiply; the retreat is a step — at least one hex, up to 1/10 your Move (as Step, above).</p>
 
-<p class="rule"><span class="tag tag--ma">MA</span><span class="rule__name">Dive.</span> Standing/kneeling → prone, under a melee attack. −1 + retreat bonus. End your turn prone (future attackers: +3 to hit). Useful when cornered with allies nearby.</p>
+<p class="rule"><span class="tag tag--ma">MA</span><span class="rule__name">Dive.</span> Standing/kneeling → prone, under a melee attack. −1 + retreat bonus. End your turn prone (your active defences are at −3 next turn). Useful when cornered with allies nearby.</p>
 
 <p class="rule"><span class="tag tag--ma">MA</span><span class="rule__name">Sideslip.</span> Standing only. Step sideways — same distance from attacker. −1 + retreat bonus. Net 0 most defenses; net +2 with Dodge or fencing/Boxing/Judo/Karate Parry. Use when you cannot cede ground but want geometry advantage.</p>
 
@@ -3230,8 +3230,8 @@ The Force shall free me.<br>
     <tr><td><strong>Crouching</strong></td><td>−2</td><td>0</td><td>−2 to hit (from outside C)</td><td>× 2/3</td></tr>
     <tr><td><strong>Kneeling</strong></td><td>−2</td><td>−2</td><td>−2 to hit</td><td>× 1/3</td></tr>
     <tr><td><strong>Sitting</strong></td><td>−2</td><td>−2</td><td>−2 to hit</td><td>0 (M&amp;A 1 hex only)</td></tr>
-    <tr><td><strong>Crawling</strong></td><td>−4</td><td>−3</td><td>+2 close / −2 ranged</td><td>1 hex / turn</td></tr>
-    <tr><td><strong>Prone / Supine</strong></td><td>−4</td><td>−3</td><td>+3 close / −2 ranged</td><td>—</td></tr>
+    <tr><td><strong>Crawling</strong></td><td>−4</td><td>−3</td><td>−3 close / −2 ranged</td><td>1 hex / turn</td></tr>
+    <tr><td><strong>Prone / Supine</strong></td><td>−4</td><td>−3</td><td>−3 close / −2 ranged</td><td>—</td></tr>
   </tbody>
 </table></div>
 
@@ -3270,7 +3270,7 @@ The Force shall free me.<br>
 
 <p>Crouching is the standout posture for active combat — no defense penalty, −2 to ranged attacks against you. Often used to take cover behind low obstacles or gain a brief defensive edge.</p>
 
-<p>Prone has the most severe defense penalty (−3) and an attacker bonus (+3 close, −2 ranged). Avoid being knocked down — a fallen Force-user is in catastrophic trouble.</p>
+<p>Prone has the most severe defense penalty (−3), but it is also an awkward target to strike: −3 to hit in close combat, −2 at range. Avoid being knocked down — a fallen Force-user is in catastrophic trouble.</p>
 
 <h2 class="section-head" id="sec-changing-posture">Changing Posture</h2>
 
@@ -3865,7 +3865,7 @@ The Force shall free me.<br>
   <thead><tr><th style="width:38%">Combination</th><th style="width:18%">Net</th><th>Effect</th></tr></thead>
   <tbody>
     <tr><td><strong>Dive alone</strong></td><td>−1 + retreat bonus</td><td>Standing or kneeling → prone under a melee attack.</td></tr>
-    <tr><td><strong>End prone</strong></td><td>Future attackers: +3 to hit</td><td>Trade-off: defense now, vulnerability after.</td></tr>
+    <tr><td><strong>End prone</strong></td><td>Your active defences −3 next turn</td><td>Trade-off: defence now, vulnerability after.</td></tr>
     <tr><td><strong>+ Combat Reflexes</strong></td><td>+1 base</td><td>Mitigates the −1.</td></tr>
     <tr><td><strong>Use case</strong></td><td>Cornered with allies nearby</td><td>Allies can cover your prone state next turn.</td></tr>
   </tbody>
@@ -4850,7 +4850,7 @@ The Force shall free me.<br>
     <tr><td><strong>Accuracy</strong> (Acc)</td><td>Weapon stat</td><td>Bonus from Aiming. Added on top of your skill when you spend a turn (or more) Aiming first.</td></tr>
     <tr><td><strong>Size Modifier</strong> (SM)</td><td>Target stat block</td><td>+ for larger targets, − for smaller. Human = 0, speeder = +3, AT-ST = +5, mouse droid = −3.</td></tr>
     <tr><td><strong>Range penalty</strong></td><td>Speed/Range Table</td><td>The greater the distance, the harder the shot. 2 hexes = 0, 10 m = −4, 100 m = −10, 1000 m = −16.</td></tr>
-    <tr><td><strong>Posture mod</strong></td><td>You &amp; target</td><td>Crouching target: −2 to hit. Prone target: +3 close range / −2 ranged. Your own posture also affects your skill (see <a href="#book-combat">Doc I</a> Part VI).</td></tr>
+    <tr><td><strong>Posture mod</strong></td><td>You &amp; target</td><td>Crouching target: −2 to hit. Prone target: −3 close range / −2 ranged. Your own posture also affects your skill (see <a href="#book-combat">Doc I</a> Part VI).</td></tr>
     <tr><td><strong>Cover</strong></td><td>Battlefield</td><td>Partial cover adds penalty to hit (low wall −2, firing slit −4, peek around corner −4 or worse). Full cover blocks the line of sight entirely.</td></tr>
     <tr><td><strong>Situational</strong></td><td>GM call</td><td>Darkness, smoke, wind, target movement, your own movement (Move and Attack −2 or Bulk), shock penalties, stun.</td></tr>
   </tbody>
@@ -5353,7 +5353,7 @@ The Force shall free me.<br>
 
 <p class="rule"><span class="rule__name">Block vs Ranged.</span> A shield can intercept arrows, bullets, and blaster bolts. Block skill ÷ 2 + 3, drop fractions, +1 Combat Reflexes, +DB. Block follows the same multi-defense penalty as Dodge. Successful block: the shield takes the damage (apply shield DR vs the attack; shields have HP and can be destroyed). Note that <strong>cloak Block</strong> works for bolts physically interposing, but flame and lasers may set the cloak on fire — GM call.</p>
 
-<p class="rule"><span class="rule__name">Drop Prone as Defense.</span> Drop to prone as a Free Action used as your defense for one incoming attack. +2 to Dodge against that attack (missile fire is hardest to land on prone targets at range — but they’re easy to hit at close range, +3 close / −2 ranged per <a href="#book-combat">Doc I</a> posture rules). Ends your turn prone; future ranged attackers shoot at −2; future melee attackers at +3.</p>
+<p class="rule"><span class="rule__name">Drop Prone as Defense.</span> Drop to prone as a Free Action used as your defense for one incoming attack. +2 to Dodge against that attack (missile fire is hardest to land on prone targets at range — but a prone foe is awkward to reach in close combat too, −3 close / −2 ranged per <a href="#book-combat">Doc I</a> posture rules). Ends your turn prone; future ranged attackers shoot at −2; future melee attackers at +3.</p>
 
 <p class="rule"><span class="rule__name">Dive for Cover.</span> Take an All-Out Defense (Dodge) variant: roll Acrobatics or Dodge, modified by terrain. Success means you reach the nearest cover in one motion, ending prone behind it. The defense applies to the attack triggering the dive. Combatants in firefights frequently use this — a +3 retreat bonus replacement when retreat itself is forbidden.</p>
 
@@ -5816,7 +5816,7 @@ The Force shall free me.<br>
     <tr><td><strong>Target speed</strong></td><td>+speed-SM bonus</td><td>Fast target reads ”larger” via velocity. Speeder at 10 hex/turn (10 m/s): +4. Foot movement rarely matters.</td></tr>
     <tr><td><strong>Stationary target</strong></td><td>+0</td><td>Standard. Most combatants aren’t truly stationary; the GM applies this only when explicitly so.</td></tr>
     <tr><td><strong>Target crouching</strong></td><td>−2 to hit</td><td>Hard to spot smaller silhouette.</td></tr>
-    <tr><td><strong>Target prone</strong></td><td>+3 close / −2 ranged</td><td>Huge target close, tiny target far.</td></tr>
+    <tr><td><strong>Target prone</strong></td><td>−3 close / −2 ranged</td><td>Huge target close, tiny target far.</td></tr>
     <tr><td><strong>Target running across LoS</strong></td><td>−2 to hit</td><td>Lateral movement adds difficulty separate from speed-SM.</td></tr>
     <tr><td><strong>Target moving toward / away</strong></td><td>+0 (small)</td><td>Range changes mid-turn; recompute next turn.</td></tr>
     <tr><td><strong>Target on high ground</strong></td><td>+1 to hit you</td><td>Better view from above; default the elevated foe has the advantage.</td></tr>
@@ -6196,7 +6196,7 @@ The Force shall free me.<br>
 <p class="rule"><span class="rule__name">Blunt Trauma Worked Example.</span> A blaster bolt rolling 12 damage hits a target wearing flexible vest DR 8. Pen = 12 − 8 = 4, tib-burn ×1 = 4 HP. Blunt trauma not normally applied to energy weapons (the burn doesn’t transmit as impact). A slug rifle bullet (pi+) rolling 12 damage hits same vest: 12 − 8 = 4 penetration, ×1.5 = 6 HP injury. <em>Plus</em> 8/5 = 1 HP of blunt trauma from the stopped portion = 7 total HP. Blunt trauma matters most against high-DR-but-flexible armour like ceramic mesh undersuits.</p>
 
 <h2 class="section-head" id="sec-knockback">Knockback — Melee &amp; Kinetic Shove</h2>
-<p class="rule"><span class="rule__name">Knockback.</span> Crushing attacks — and to a lesser degree cutting and large kinetic hits — don’t just wound, they <strong>shove</strong>. For every full multiple of (the target’s <strong>ST − 2</strong>) in a single blow’s basic damage, the target is knocked back <strong>one metre</strong>. So a ST 10 target (ST−2 = 8) struck for 18 points is pushed <strong>2 metres</strong>; 36 points pushes 4. Crushing applies in full; <strong>cutting knocks back at half</strong>; impaling and piercing do not knock back (they punch through rather than shove). Knockback is measured from the basic damage <em>before</em> the wounding multiplier, and the push happens whether or not the blow penetrates DR — a heavy hit on good armour still rocks you.</p>
+<p class="rule"><span class="rule__name">Knockback.</span> Crushing attacks — and to a lesser degree cutting and large kinetic hits — don’t just wound, they <strong>shove</strong>. For every full multiple of (the target’s <strong>ST − 2</strong>) in a single blow’s basic damage, the target is knocked back <strong>one metre</strong>. So a ST 10 target (ST−2 = 8) struck for 18 points is pushed <strong>2 metres</strong>; 36 points pushes 4. Crushing applies in full, whether or not it penetrates DR; <strong>cutting knocks back only if the blow fails to penetrate DR</strong> (a cut that bites in slices rather than shoves); impaling and piercing do not knock back (they punch through). Knockback is measured from the basic damage <em>before</em> the wounding multiplier — a heavy crushing hit on good armour still rocks you even when the DR holds.</p>
 <p class="rule"><span class="rule__name">Falling Down.</span> A target knocked back <strong>one metre stays standing</strong>; knocked back <strong>two or more metres</strong>, they must roll against the <em>best</em> of DX, Acrobatics, or Judo or fall <strong>prone</strong> (−1 per metre beyond the first to that roll). A character knocked into a wall or hard object takes the “stopped” distance as extra crushing damage (1 HP per metre not travelled, GM call). Knockback is the cinematic answer to “why did the Wookiee just punt that Gamorrean across the cantina.”</p>
 <p class="rule"><span class="rule__name">In play.</span> The companion sheet’s <em>Log an Incoming Hit</em> tool computes knockback automatically for crushing and cutting hits and reminds you of the DX/Acrobatics/Judo roll, alongside any blunt trauma through flexible armour.</p>
 

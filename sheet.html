@@ -3245,7 +3245,7 @@ function explosiveBlast(rec){
  const rm=nt.match(/(\d+)\s*-?\s*m\b[- ]?(?:radius|burst)?/i)||nt.match(/within\s*(\d+)\s*m\b/i)||nt.match(/out to ~?(\d+)\s*m\b/i)||nt.match(/(\d+)-m\b/i);
  if(rm)rad=Math.max(1,Math.min(8,+rm[1]));
  const steps=[];for(let d=1;d<=rad&&d<=6;d++){const v=Math.round(avg/(2*d));if(v<1)break;steps.push(d+' hex ~'+v);}
- const kb=(t==='cr'||t==='cut')?'cr/cut — ~1 m per full (ST−2) of damage rolled; target rolls DX/Acrobatics −1/m or is knocked down':(t==='burn'?'concussive/burn — no true knockback (GM may allow a shove on a heavy concussion hit)':'energy/area — no knockback');
+ const kb=(t==='cr'||t==='cut')?'cr/cut — ~1 m per full (ST−2) rolled (crushing always; cutting only if DR stops the blow); target rolls DX/Acrobatics −1/m or is knocked down':(t==='burn'?'concussive/burn — no true knockback (GM may allow a shove on a heavy concussion hit)':'energy/area — no knockback');
  return '<div class="dim" style="font-size:10px;line-height:1.4;margin-top:3px;white-space:normal">💥 <b>Blast</b> ~'+avg+' avg at the burst hex · falloff ÷(2×hexes) ('+(steps.join(' · ')||'—')+') · effective ~'+rad+' hex<br><b>Knockback</b> '+kb+'</div>';
 }
 /* ── per-row lock-in: once an item is locked, the catalogue picker is gone for
