@@ -129,6 +129,47 @@ def check_sheet(power_names):
             else:
                 note(f"sheet: all {len(keys)} FORCE_DESC panels map to a real compendium power")
 
+# ---- B2. Panel <-> compendium FP fidelity --------------------------------
+def _norm_fp(x): return re.sub(r'\s+', '', (x or '')).lower()
+
+def check_panel_fidelity():
+    """Every FORCE_DESC panel that exposes an FP stat field must carry the SAME
+    FP cost as its compendium block. Catches the mechanical-cost drift the
+    name-mapping check (B) can't see. Compares only where BOTH sides have an FP
+    field; the Upkeep *prose* legitimately differs in wording between the panel
+    (grid) and compendium (prose) formats, so only the discrete FP value is
+    asserted. WARN (reconcile), not FAIL — matches the panel-subset severity."""
+    if not (COMP and SHEET): return
+    comp = open(COMP, encoding="utf-8").read()
+    sheet = open(SHEET, encoding="utf-8").read()
+    fp_re = r'>FP</span><span class="stat-v[^"]*">([^<]*)</span>'
+    # compendium: power-name -> FP grid value
+    heads = sorted([m.start() for m in re.finditer(r'<h4 class="power-name">', comp)] +
+                   [m.start() for m in re.finditer(r'<h[12]', comp)])
+    comp_fp = {}
+    for h in [m.start() for m in re.finditer(r'<h4 class="power-name">', comp)]:
+        nm = re.sub(r'<[^>]+>', '', comp[h+len('<h4 class="power-name">'):comp.find('</h4>', h)]).strip()
+        nxt = min([x for x in heads if x > h], default=len(comp))
+        m = re.search(fp_re, comp[h:nxt])
+        if m: comp_fp[nm] = m.group(1).strip()
+    # panel: eval FORCE_DESC, pull each panel's FP with the same regex inside node
+    lit = obj_after("FORCE_DESC", sheet)
+    if not lit: return   # check_sheet already warned
+    js = ("const O=%s;const out={};const re=new RegExp('>FP</span><span class=\"stat-v[^\"]*\">([^<]*)</span>');"
+          "for(const k in O){const m=O[k].match(re); if(m) out[k]=m[1].trim();}"
+          "process.stdout.write(JSON.stringify(out));") % lit
+    rc, o, err = node_run(js)
+    if rc != 0: return   # eval failure already surfaced by check_sheet
+    panel_fp = json.loads(o)
+    both = [n for n in panel_fp if n in comp_fp]
+    mism = [(n, panel_fp[n], comp_fp[n]) for n in both if _norm_fp(panel_fp[n]) != _norm_fp(comp_fp[n])]
+    if mism:
+        warn("sheet: %d panel FP cost(s) differ from the compendium — reconcile: %s"
+             % (len(mism), "; ".join("%s [panel %r vs comp %r]" % (n, p, c) for n, p, c in mism[:6])))
+    else:
+        note("sheet: all %d panel FP costs (of %d panels) match the compendium (FP-fidelity)"
+             % (len(both), len(panel_fp)))
+
 # ---- C. Characters -------------------------------------------------------
 def required_keys_from_blankchar():
     if not SHEET: return None
@@ -215,6 +256,7 @@ process.exit(bad?1:0);
 def main():
     names = check_compendium()
     check_sheet(names)
+    check_panel_fidelity()
     check_characters()
     check_golden_math()
 

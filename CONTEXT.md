@@ -557,3 +557,15 @@ shows `slots` (could show HP/DR; cosmetic).
 _Superseded note:_ Full 15-frame table reviewed. Capital tier (Cruiser hp62000/dr150/mass850/70slots/6-8-6-2 · Carrier hp100000/dr270/mass1800/100/6-4-2-1 · Dreadnought hp150000/dr300/mass2400/130/8-10-8-4). Key finding: the big Frigate→Cruiser HP jump (14000→62000, 4.4×) is the Heavy→Capital tier boundary, and HP-per-DR is internally consistent ACROSS the capital tier (Cruiser 413, Carrier 370, Dreadnought 500) — it's the Heavy tier (Frigate 113) that's DR-heavy. Cruiser note flags hardpoints as "extrapolated above frigate", DR "per catalogue". Recommend ratify-as-is + strip the hedge wording; offered smoothing/DR-bump alternatives.
 
 **Skills/traits/point-cost audit — STARTED (foundational tier clean).** Primer-A chargen sections are thin orientation prose (no big cost tables). Verified vs GURPS RAW: A.3 attribute costs (ST10/DX20/IQ20/HT10) and A.4 secondary costs (HP2/Will5/Per5/FP3/BasicSpeed5-per-0.25/Move=Speed-floored) — ALL correct, no changes. Remaining (multi-pass): skill costs-by-difficulty + defaults, advantage/disadvantage *costs* (traits section names them only — costs live in sheet trait data), Force-power point costs in the Force sections.
+
+### 2026-06-27 — Sheet audit + panel↔compendium FP-fidelity CI guard
+
+**Project Instructions' "What is not tracked" block is STALE.** sheet.html already implements thrust/swing, Dodge/Parry/Block (effDodge / weaponParry / block + rollDef), Basic Lift/Speed/Move, the full encumbrance chain (gearWeight→encLevel→encName→effDodge/effMove), reeling/tired + negative-HP death ladder + shock strip, totalPts vs ptTarget, and per-location DR ("DR by Hit Location": shield→armour, energy/kinetic). No Critical/Important data gap remains.
+
+**Genuinely not tracked (all Minor):** self-control CR+roll on disads; Cultural Familiarity tracker. Possible-minor: major-wound auto-flag; natural/racial DR folded into the DR-by-location readout.
+
+**Automation is deep** — v29 integrated hit resolver (skill +RoF −loc −range ±sit → 3d6 → dmg → AD÷DR → wound-mult → injury) + all rollers. **The one real gap: Force-power activation** (no usePower/spendFP; clicking a power doesn't deduct FP or start Upkeep/concentration, though powers carry FP+Upkeep and the tracker has concentration/charge fields). Minor: shock not subtracted from rolls; no recovery roll. ← next feature candidate.
+
+**"Panel FP drift" was a FALSE ALARM:** panel FP *fields* are byte-identical to the compendium for all 204 powers. "no FP" in compendium Upkeep prose = "no *per-turn* FP" (metered per minute), consistent with the FP field. Now CI-guarded: check.py `check_panel_fidelity()` asserts every panel FP == compendium FP (204/204 pass); future drift WARNs.
+
+**Open compendium-internal question (James's ruling, NOT a sync fix):** a couple of *latched* powers read in tension within the compendium itself — Force Balance Walk FP "1 per turn" vs Upkeep "runs free … no FP"; Tempered Blade "…then 1 per turn" vs "runs free … no FP". Likely the FP field is the pre-latch cost and "runs free" is post-latch; confirm intended reading. Panels mirror the compendium faithfully either way.
