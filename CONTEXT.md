@@ -537,3 +537,11 @@ for capital hull HP/mounts) — **James ratified them as best-available**; revis
 total in the picker tag (their only display surface — none are read in combat). **Still open (minor):** the
 part-tier heuristic is stat-threshold based — retune `partFrameBand` if a generic mis-tiers; Hull picker tag
 shows `slots` (could show HP/DR; cosmetic).
+
+### 2026-06-26 (cont.) — Compendium polish + cross-file rule consistency
+
+**Structural breakage fixed:** one unclosed `<p>` (the "Power Affinity" rule ran straight into the "What an hour buys" `<div>` with no `</p>` — closing it dropped rendered height ~17k px, so it had been wrapping following content in a stray paragraph) + removed 9 empty `<p></p>`. Paragraphs now balanced 3727/3727. (The 16 "xxx- xxx" hyphen hits are intentional suspended compounds — "one- and two-handed", "vehicle- and ship-mounted" — left alone.)
+
+**Cross-file rule consistency (compendium ↔ cheatsheet ↔ sheet):** cheatsheet had two values still on the pre-RAW numbers I'd fixed in the compendium — the **3–5 hex range band ("−2/3" → RAW "−1/2")** and **retreat distance ("Step 1 m back" → "1/10 Move, min 1 m")**. Both fixed + PDF regenerated. Verified consistent across files: RoF (all RAW), M&A (−4/max-9), AoA (full-Move HOUSE), multi-defence penalty, lightsaber Parry 0. Cheatsheet knockback is generic (no cr/cut claim to contradict) and has no posture-modifier table, so nothing to reconcile there.
+
+**Visual:** compendium is already well-designed (clean tables, power blocks, drop caps, consistent headers) — did not impose a redesign. Minor open item: ~8px horizontal overflow at iPad width (768px) from `.cover`/`.path-doc`; `box-sizing` + body margin are already correct so it's a specific child element, and the fix risks the shared print/PDF CSS — left it.
