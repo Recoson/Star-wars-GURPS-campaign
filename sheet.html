@@ -5709,7 +5709,7 @@ function coreModSum(v,key){let t=0;const cm=v&&v.coreMods;if(cm)Object.keys(cm).
 function addCoreMod(i,cat){const v=C.vehicles[i];if(!v)return;v.coreMods=v.coreMods||{};v.coreMods[cat]=v.coreMods[cat]||[];v.coreMods[cat].push({label:'',mass:null,pwr:null,stat:'',val:null});touch();renderVehicles();}
 function setCoreMod(i,cat,j,f,val){const v=C.vehicles[i];if(!v||!v.coreMods||!v.coreMods[cat]||!v.coreMods[cat][j])return;const num=['mass','pwr','val'];v.coreMods[cat][j][f]=num.indexOf(f)>=0?(val===''?null:+val):val;touch();renderVehicles();}
 function delCoreMod(i,cat,j){const v=C.vehicles[i];if(!v||!v.coreMods||!v.coreMods[cat])return;v.coreMods[cat].splice(j,1);if(!v.coreMods[cat].length)delete v.coreMods[cat];if(v.coreMods&&!Object.keys(v.coreMods).length)delete v.coreMods;touch();renderVehicles();}
-const COREMOD_STATS=[['','— stat —'],['S','+S mount'],['M','+M mount'],['L','+L mount'],['C','+C mount'],['dr','+Hull DR'],['hp','+Hull HP'],['sp','+Shield SP'],['move','+Move'],['gen','+Power out']];
+const COREMOD_STATS=[['','— stat —'],['S','+S mount'],['M','+M mount'],['L','+L mount'],['C','+C mount'],['dr','+Hull DR'],['hp','+Hull HP'],['sp','+Shield SP'],['move','+Move'],['gen','+Power out'],['sens','+Sensor km'],['cargo','+Cargo t'],['pax','+Crew berths']];
 function coreModHTML(v,i,cat){
  const mods=(v.coreMods&&v.coreMods[cat])||[];
  const rows=mods.map(function(md,j){
@@ -5737,7 +5737,10 @@ function coreSel(v,i,cat,statKey,lab){
  const opts=SHIP_PARTS.filter(x=>x.cat===cat&&(cat==='Hull'||partFitsFrame(x,_fs)||(v.core&&v.core[cat]===x.name))).map(x=>'<option value="'+esc(x.name)+'"'+(v.core&&v.core[cat]===x.name?' selected':'')+'>'+esc(x.name)+(x[statKey]!=null?' \u00b7 '+x[statKey]+' '+lab:'')+'</option>').join('');
  const cur=v.core&&v.core[cat]?SHIP_PARTS.find(x=>x.cat===cat&&x.name===v.core[cat]):null;
  const _mm=(cur&&cat!=='Hull'&&_fs&&!partFitsFrame(cur,_fs))?' <span style="color:var(--red);font-size:9px">off-scale for this hull</span>':'';
- const tag=cur?(' <span class="dim">\u2192 '+lab+' '+(cur[statKey]!=null?cur[statKey]:'?')+'</span>'):' <span class="dim">\u2192 stock</span>';
+ const _mk={sensorRng:'sens',cargo:'cargo',pax:'pax'}[statKey];
+ const _b=cur&&cur[statKey]!=null?+cur[statKey]:0;
+ const _md=_mk?coreModSum(v,_mk):0;
+ const tag=_mk?((_b||_md)?(' <span class="dim">\u2192 '+lab+' '+(_b+_md)+'</span>'):' <span class="dim">\u2192 stock</span>'):(cur?(' <span class="dim">\u2192 '+lab+' '+(cur[statKey]!=null?cur[statKey]:'?')+'</span>'):' <span class="dim">\u2192 stock</span>');
  return '<select class="cell" style="width:100%;max-width:240px" onchange="setVehicleCore('+i+',\''+cat+'\',this.value)"><option value="">\u2014 stock \u2014</option>'+opts+'</select>'+tag+_mm;
 }
 function shipOverloadPenalty(v){

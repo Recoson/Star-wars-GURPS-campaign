@@ -361,9 +361,8 @@ grep -o '<span class="stat-k">Upkeep</span>' "Star Wars the Old Republic GURPS 4
 **SHIP-BUILDER WORKSTREAM (separate from the Force/RAW work below).** A full vehicle/ship-builder overhaul
 shipped this session — size-first mounts, swivel+location firing arcs, compendium range bands + warhead
 flight, hardpoints-from-hull, free-form per-part mods, a frame-scale part filter, 3 capital frames, and
-frame-driven base HP/DR/mass/econ. Full detail + open items in the latest dated entry below. Top open
-items: **ratify the extrapolated capital-frame hardpoint/HP/mass numbers**; optionally add
-sensors/cargo/crew to the part-mod stat dropdown.
+frame-driven base HP/DR/mass/econ. Full detail in the latest dated entry below. (Capital-frame numbers ratified by James; sensors/cargo/crew
+now in the part-mod stat dropdown.) Remaining ship-builder items are minor — see the dated entry.
 
 **The adjudication pass, the Minor Traditions conversion, and the full sheet FORCE_DESC sync are all
 COMPLETE and pushed.** No batch work remains. Open items, in priority order:
@@ -532,7 +531,9 @@ structural mass, 40–82% headroom, none overweight stock.
 `v.coreMods={cat:[mods]}` (part mods), hull parts carry `mounts:{S,M,L,C}` + `size` (1 of 6 tiers).
 `FRAME_RANK` size→0..5; `partFrameBand`/`partFitsFrame`/`vehFrameSize` drive the filter.
 
-**OPEN (ship-builder):** capital-frame HP/mass/hardpoints are extrapolations (no compendium source) — ratify
-or retune. Sensors/Cargo/Crew not in the mod-stat dropdown (only fully-wired stats) — add if wanted. The
-part-tier heuristic is stat-threshold based — retune `partFrameBand` if a generic mis-tiers. Hull picker tag
+**RATIFIED/DONE (follow-up):** capital-frame HP/mass/hardpoints stay extrapolations (no compendium source
+for capital hull HP/mounts) — **James ratified them as best-available**; revisit only if a source surfaces.
+**Sensors/Cargo/Crew are now in the part-mod stat dropdown** (`sens`/`cargo`/`pax`), shown as the part+mod
+total in the picker tag (their only display surface — none are read in combat). **Still open (minor):** the
+part-tier heuristic is stat-threshold based — retune `partFrameBand` if a generic mis-tiers; Hull picker tag
 shows `slots` (could show HP/DR; cosmetic).
