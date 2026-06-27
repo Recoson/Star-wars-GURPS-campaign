@@ -1997,6 +1997,39 @@ function setRoundCur(v){const n=parseInt(v);if(!isNaN(n)&&n>=0){C.combat=C.comba
 function setShockCur(v){let n=parseInt(v);if(isNaN(n))n=0;n=Math.max(0,Math.min(4,Math.abs(n)));C.combat=C.combat||{};C.combat.shock=n;touch();if(typeof renderStatusStrip==='function')renderStatusStrip();}
 function adjFP(d){C.combat=C.combat||{};if(C.combat.fp==null)C.combat.fp=maxFP();C.combat.fp+=d;touch();renderSheet()}
 
+// -- Force-power activation (v1): spend activation FP + track upkeep as a reminder; no auto-metering --
+function powerActFP(name){ var L=(typeof FORCE_POWERS!=='undefined')?FORCE_POWERS:(window.FORCE_POWERS||[]); var p=(L||[]).find(function(x){return x.name===name;}); return p?(parseInt(p.fp,10)||0):0; }
+function powerUpkeepShort(name){
+  var d=(window.FORCE_DESC||{})[name]; if(!d) return null;
+  var m=d.match(/>FP<\/span><span class="stat-v[^"]*">([^<]*)</);
+  var s=m?m[1]:''; if(!/then|per (turn|min)/i.test(s)) return null;
+  s=s.replace(/^.*?\bthen\s*/i,'').replace(/\s*per\s*minute/ig,'/min').replace(/\s*per\s*turn/ig,'/turn').trim();
+  return s||null;
+}
+function activatePower(name){
+  C.combat=C.combat||{}; C.combat.active=C.combat.active||[];
+  var up=powerUpkeepShort(name);
+  if(up&&C.combat.active.find(function(a){return a.n===name;})){ _fxToast(esc(name)+' already active'); return; }
+  var cost=powerActFP(name);
+  if(cost>0){ if(C.combat.fp==null)C.combat.fp=maxFP(); C.combat.fp-=cost; }
+  if(up) C.combat.active.push({n:name,up:up});
+  touch(); renderSheet(); if(typeof renderStatusStrip==='function')renderStatusStrip();
+  _fxToast((cost>0?('\u2212'+cost+' FP \u00b7 '):'')+esc(name)+(up?(' \u00b7 upkeep '+esc(up)):''));
+}
+function dropPower(name){
+  if(!(C.combat&&C.combat.active))return;
+  C.combat.active=C.combat.active.filter(function(a){return a.n!==name;});
+  touch(); renderSheet(); if(typeof renderStatusStrip==='function')renderStatusStrip();
+}
+function _fxToast(msg){
+  var t=document.getElementById('_fxToast');
+  if(!t){ t=document.createElement('div'); t.id='_fxToast';
+    t.style.cssText='position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:rgba(20,24,30,.96);color:var(--gold,#d4a04e);border:1px solid var(--border,#3a4250);padding:7px 14px;border-radius:6px;font:600 12px/1.35 var(--serif,serif);z-index:9999;pointer-events:none;opacity:0;transition:opacity .18s';
+    document.body.appendChild(t); }
+  t.innerHTML=msg; t.style.opacity='1';
+  clearTimeout(t._h); t._h=setTimeout(function(){t.style.opacity='0';},1500);
+}
+
 // ─────────────────────────────────────────────────────
 // SKILLS
 // ─────────────────────────────────────────────────────
@@ -4305,7 +4338,7 @@ function forceBookChecklist(book){
    if(!lock&&over)lock=`requires ${book} Tier ${ROMAN[t]||t}`;
    const disabled=lock&&!isKnown;
    const cb=`<input type="checkbox" ${isKnown?'checked':''} ${disabled?'disabled':''} onchange="toggleForcePower('${bk}','${fp.name.replace(/'/g,"\\'")}',this.checked)">`;
-   const nm=`<div style="font-weight:${isKnown?600:400};${disabled?'opacity:.5':''}">${esc(fp.name)}${lock?` <span title="${esc(lock)}" style="color:var(--red);font-size:10px">🔒</span>`:''}${(window.FORCE_DESC&&window.FORCE_DESC[fp.name])?` <span class="pdesc-btn" data-n="${esc(fp.name)}" onclick="showForceDesc(event,this.dataset.n)" title="Full compendium description">&#9432;</span>`:''}</div>${fp.desc?`<div class="dim" style="font-size:10px;line-height:1.3;margin-top:1px;white-space:normal;max-width:430px">${esc(fp.desc)}</div>`:''}${fp.def?`<div class="dim" style="font-size:9px;line-height:1.3;margin-top:1px;color:var(--cyan);white-space:normal;max-width:430px">🛡 Defence: ${esc(fp.def)}</div>`:''}`;
+   const nm=`<div style="font-weight:${isKnown?600:400};${disabled?'opacity:.5':''}">${esc(fp.name)}${lock?` <span title="${esc(lock)}" style="color:var(--red);font-size:10px">🔒</span>`:''}${(window.FORCE_DESC&&window.FORCE_DESC[fp.name])?` <span class="pdesc-btn" data-n="${esc(fp.name)}" onclick="showForceDesc(event,this.dataset.n)" title="Full compendium description">&#9432;</span>`:''}${isKnown?` <span class="pdesc-btn" data-n="${esc(fp.name)}" title="Activate (spend FP; sustained powers add an upkeep reminder)" onclick="activatePower(this.dataset.n)" style="cursor:pointer;color:var(--gold)">⚡</span>`:''}</div>${fp.desc?`<div class="dim" style="font-size:10px;line-height:1.3;margin-top:1px;white-space:normal;max-width:430px">${esc(fp.desc)}</div>`:''}${fp.def?`<div class="dim" style="font-size:9px;line-height:1.3;margin-top:1px;color:var(--cyan);white-space:normal;max-width:430px">🛡 Defence: ${esc(fp.def)}</div>`:''}`;
    return `<tr style="${isKnown?'background:rgba(94,196,212,.10)':''}"><td class="ctr">${cb}</td><td>${nm}</td><td class="ctr dim" style="font-size:10px">${fp.pg?'p.'+fp.pg:'-'}</td><td class="ctr dim">${esc(fp.aff||fp.skill)}</td><td class="ctr">${esc(fp.fp)}</td><td class="num">${fp.pts}</td></tr>`;
   }).join('');
   html+='</table>';
@@ -8868,6 +8901,7 @@ function renderStatusStrip(){
    ${condCount?`<span class="badge">${condCount} cond</span>`:''}
    ${stance?`<span class="badge" style="background:rgba(94,196,212,.25)">★ ${esc(stance.name)}</span>`:''}
    ${form?`<span class="badge" style="background:rgba(212,160,78,.25)">⚔ ${esc(form.name)}</span>`:''}
+   ${(C.combat&&C.combat.active&&C.combat.active.length)?C.combat.active.map(function(a){return `<span class="badge" style="background:rgba(150,120,220,.28)" title="Force power active — upkeep reminder; click × to drop">✦ ${esc(a.n)} · ${esc(a.up)} <span data-n="${esc(a.n)}" onclick="dropPower(this.dataset.n)" style="cursor:pointer;font-weight:700;margin-left:3px">×</span></span>`;}).join(''):''}
    <span style="margin-left:auto;font-size:10px;color:var(--text2)">${esc(C.name||'unnamed')}${C.species?' · '+esc(C.species):''}</span>`;
   el.style.display='flex';
  }catch(e){el.style.display='none';}

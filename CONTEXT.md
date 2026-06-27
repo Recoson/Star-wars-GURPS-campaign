@@ -576,3 +576,11 @@ Audited the sheet's `DATA.ads` (457) + `DATA.disads` (367) cost catalogs vs GURP
 **One real error found + fixed:** `Gadgeteer (Quick)` was 40 → corrected to **50** (Basic Set: Gadgeteer "25 or 50 points"). All other checked core traits (Combat Reflexes 15, HPT 10, Trained By A Master 30, full Innate-Attack/Regeneration/Wealth/Weapon-Master ladders, etc.) are RAW-accurate. Coverage = the common Basic-Set core; the ~640 supplement/Powers/home-brew entries (Magery variants, Damage Reduction tiers, Force-linked) not individually checked.
 
 **Still open (next point-cost passes):** skill defaults + costs-by-difficulty, and Force-power point costs (compendium Force sections — internal-consistency check, since those are home-brew).
+
+### 2026-06-27 (cont.) — Force-power activation v1 (shipped)
+
+Closed the real automation gap. **⚡ on every KNOWN power row** (Force tab, beside ⓘ) → `activatePower(name)`: deducts activation FP (`parseInt(FORCE_POWERS[name].fp)` — FORCE_POWERS is a lexical `const`, reference it BARE, not `window.FORCE_POWERS`, or it reads undefined → deducts 0) and, if sustained/latched (detected from `window.FORCE_DESC[name]` FP field matching `/then|per (turn|min)/`), pushes `{n,up}` to a NEW `C.combat.active[]` with a short upkeep reminder ("1/min","2/turn"). **Active powers render as violet badges in `renderStatusStrip`** (beside stance/form) with × → `dropPower`. Toast feedback = `_fxToast`. Helpers sit right after `adjFP`.
+
+Deliberate scope: **no auto-metering** of ongoing FP (upkeep is a displayed reminder; the player meters it with the existing FP ± buttons). Sustained powers dedupe (no double-charge on re-click); one-shot powers just deduct. Playwright-tested (11 assertions: FP deduction, upkeep parse, dedupe, one-shot, drop, no console errors); check.py green.
+
+**v2 candidates (not built):** quick-cast list in the HUD (activate lives on the Force tab, see/drop on the combat HUD — split surfaces); subtract shock from to-hit rolls; FP recovery roll.
