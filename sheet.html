@@ -3261,13 +3261,14 @@ function weaponCell(w){
 }
 /* weaponCharge — display string: full drained-cell charge time, plus the in-combat trickle in
    parentheses (per compendium). Charge tiers: standard ~2h, heavy ~4h, sonic ~3h, ion ~6h,
-   disruptor & crew/emplaced ~8h. Trickle: blaster cores +2/t, sonic & crew/emplaced +1/t,
+   disruptor & crew/emplaced ~8h (crew cores are larger -> longer charge). Trickle: blaster &
+   crew/emplaced cores +2/t (crew use the blaster rate per 'Overcharge & Drain'), sonic +1/t,
    ion +1/2t, disruptor +1/4t. Kinetic/fuel/munition feeds (mag/cartridge/per-shot) have no cell
    and no trickle; melee is blank. Call sites interpolate ${weaponCharge(w)||'-'}. */
 function weaponCharge(w){
  var cell=weaponCell(w);
  var charge={melee:'',munition:'per-shot',cartridge:'cartridge',mag:'mag',standard:'~2h',heavy:'~4h',sonic:'~3h',ion:'~6h',disruptor:'~8h',crew:'~8h'}[cell]||'';
- var trickle={ion:'+1/2t',sonic:'+1/t',disruptor:'+1/4t',crew:'+1/t',standard:'+2/t',heavy:'+2/t'}[cell]||'';
+ var trickle={ion:'+1/2t',sonic:'+1/t',disruptor:'+1/4t',crew:'+2/t',standard:'+2/t',heavy:'+2/t'}[cell]||'';
  return charge+(trickle?' ('+trickle+')':'');
 }
 function eqStatLine(kind,i,rec){
