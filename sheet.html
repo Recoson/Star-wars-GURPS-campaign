@@ -6970,11 +6970,11 @@ function syncForceStudy(i){
  const d=forcePowerDef(p.power); p.book=d?d.book:'';
  p.lastSync=r.detail; touch();renderForce();
 }
-function addForceStudy(){_forceStudy().push({power:'',book:'',target:forceStudyTarget(),req:0,done:0,hpm:10,teacher:false,selfTaught:false});touch();renderForce();}
+function addForceStudy(){_forceStudy().push({power:'',label:'',book:'',target:forceStudyTarget(),req:0,done:0,hpm:10,teacher:false,selfTaught:false});touch();renderForce();}
 function setForceStudyPower(i,name){
  const p=_forceStudy()[i]; if(!p)return;
  p.power=name; p.done=0; p.last=''; p.lastKind='';
- if(name){const r=forceLearnHours(name,{teacher:p.teacher,selfTaught:p.selfTaught});p.req=r.hours;p.lastSync=r.detail;const d=forcePowerDef(name);p.book=d?d.book:'';if(p.target==null)p.target=forceStudyTarget();}
+ if(name){const r=forceLearnHours(name,{teacher:p.teacher,selfTaught:p.selfTaught});p.req=r.hours;p.lastSync=r.detail;p.label=name;const d=forcePowerDef(name);p.book=d?d.book:'';if(p.target==null)p.target=forceStudyTarget();}
  else {p.req=0;p.book='';p.lastSync='';}
  touch();renderForce();
 }
@@ -6991,8 +6991,7 @@ function setForceTrainAvail(v){C.trainHoursAvail=Math.round(+v||0);touch();rende
 function addForceTrainAvail(n){C.trainHoursAvail=Math.round((+C.trainHoursAvail||0)+(+n||0));touch();renderForce();}
 function rollForceStudy(i){
  const p=_forceStudy()[i]; if(!p)return;
- if(!p.power){alert('Pick a power to learn first.');return;}
- const t=Math.max(3,+p.target||10), hpm=Math.max(1,+p.hpm||10), req=Math.max(0,+p.req||0);
+  const t=Math.max(3,+p.target||10), hpm=Math.max(1,+p.hpm||10), req=Math.max(0,+p.req||0);
  let done=Math.max(0,+p.done||0);
  const dr=()=>1+Math.floor(Math.random()*6), a=dr(),b=dr(),c=dr(), roll=a+b+c, dice=`${a}+${b}+${c}=${roll}`;
  let critS=roll<=4||(roll===5&&t>=15)||(roll===6&&t>=16);
@@ -7003,11 +7002,11 @@ function rollForceStudy(i){
  else if(critS){done=req>0?req:done+FORCE_HOURS_PER_WEEK;kind='crit';msg=`★ CRITICAL (${dice})! The power opens to you at once.`;}
  else if(roll<=t){const m=t-roll,gain=m*hpm;done=req>0?Math.min(req,done+gain):done+gain;kind='ok';msg=`✓ Success by ${m} (${dice} vs ${t}) — ${gain} h off (${m}×${hpm}).`;}
  else {kind='fail';msg=`✗ Failed (${dice} vs ${t}). No progress this session.`;}
- if(req>0&&done>=req&&kind!=='critfail')msg+=' Power learned!';
+ if(req>0&&done>=req&&kind!=='critfail')msg+=p.power?' Power learned!':' Complete!';
  if(typeof _rollLog!=='undefined'){(_rollCount++,_rollLog).unshift({label:'Force study'+(p.power?': '+p.power:''),target:t,dice:[a,b,c],sum:roll,outcome:(kind==='crit'?'CRIT':kind==='critfail'?'CRIT FAIL':(roll<=t?'Success':'Failure')),cls:(kind==='crit'?'crit-s':kind==='critfail'?'crit-f':(roll<=t?'succ':'fail')),margin:Math.abs(t-roll)});if(_rollLog.length>14)_rollLog.pop();if(typeof _renderRollPanel==='function')_renderRollPanel();}
  const gd=done-(+p.done||0);if(gd>0){C.trainHoursTotal=(+C.trainHoursTotal||0)+gd;C.trainHoursAvail=(+C.trainHoursAvail||0)-gd;}
  p.done=done;p.last=msg;p.lastKind=kind;
- if(req>0&&done>=req&&kind!=='critfail'){learnForcePower(i);return;}   // auto-learn on completion
+ if(p.power&&req>0&&done>=req&&kind!=='critfail'){learnForcePower(i);return;}   // auto-learn on completion
  touch();renderForce();
 }
 
@@ -7018,7 +7017,7 @@ function forceStudySection(){
  const projects=_forceStudy();
  const pri=forcePrimaryAttr();
  const optsFor=(cur)=>{
-  let o='<option value="">— pick a power —</option>';
+  let o='<option value="">— free study (no power) —</option>';
   books.forEach(b=>{
    let list=(byBook[b]||[]).slice().sort((x,y)=>(x.tier-y.tier)||x.name.localeCompare(y.name));
    if(cur&&!list.some(p=>p.name===cur)){const d=forcePowerDef(cur);if(d&&d.book===b)list=list.concat([d]);}
@@ -7039,6 +7038,7 @@ function forceStudySection(){
   const aligned=!!(d&&d.aff&&d.aff===pri);
   return `<tr>
    <td><select class="cell" onchange="setForceStudyPower(${i},this.value)" style="width:100%">${optsFor(p.power)}</select></td>
+   <td><input class="cell" value="${esc(p.label||'')}" placeholder="auto-fills from the power" onchange="C.forceStudy[${i}].label=this.value;touch()" style="width:100%"></td>
    <td class="ctr dim">${d?('T'+d.tier):'—'}</td>
    <td class="ctr dim" style="font-size:10px">${d?esc(d.aff||d.skill):'—'}${aligned?' <span title="attribute-aligned: half learning time" style="color:var(--gold)">◆</span>':''}</td>
    <td><input class="cell" type="number" value="${p.target==null?forceStudyTarget():p.target}" onchange="C.forceStudy[${i}].target=+this.value;touch()" style="width:36px"></td>
@@ -7047,23 +7047,23 @@ function forceStudySection(){
    <td><input class="cell" type="number" min="1" value="${p.hpm==null?10:p.hpm}" onchange="C.forceStudy[${i}].hpm=+this.value;touch()" style="width:36px"></td>
    <td class="ctr"><input type="checkbox" ${p.teacher?'checked':''} ${tdis} title="${hollow?'The Hollowing admits no teacher':'Teacher who knows it — half time'}" onchange="C.forceStudy[${i}].teacher=this.checked;if(this.checked)C.forceStudy[${i}].selfTaught=false;syncForceStudy(${i})"></td>
    <td class="ctr"><input type="checkbox" ${p.selfTaught?'checked':''} ${tdis} title="${hollow?'Hollowing is always self-derived (x2)':'Self-taught — x2 time, -4 Force roll to begin'}" onchange="C.forceStudy[${i}].selfTaught=this.checked;if(this.checked)C.forceStudy[${i}].teacher=false;syncForceStudy(${i})"></td>
-   <td class="dim" style="font-size:10px">${complete?'<b style="color:var(--green)">Learned!</b>':(req?done+' / '+req+' <span style="color:var(--text2)">('+pct+'%)</span>':done+' h')}</td>
+   <td class="dim" style="font-size:10px">${complete?'<b style="color:var(--green)">'+(p.power?'Learned!':'Complete!')+'</b>':(req?done+' / '+req+' <span style="color:var(--text2)">('+pct+'%)</span>':done+' h')}</td>
    <td><button class="btn-add" style="margin:0;padding:2px 6px;font-size:10px" onclick="rollForceStudy(${i})" title="Roll a study session">⚄ Roll</button> ${p.power?`<button class="btn-add" style="margin:0;padding:2px 6px;font-size:10px" onclick="syncForceStudy(${i})" title="Recompute hours from the Force-Learning Standard">↻</button>`:''}${p.power&&!complete?` <button class="btn-add" style="margin:0;padding:2px 6px;font-size:10px;background:var(--amber);color:#1a1206;font-weight:600" onclick="learnForcePower(${i},true)" title="Buy it outright with character points — the always-available alternative to training (Master Cost Reference)">⟐ Buy ${d?d.pts:0}p</button>`:''}${complete&&p.power?` <button class="btn-add" style="margin:0;padding:2px 6px;font-size:10px;background:var(--green)" onclick="learnForcePower(${i})" title="Mark this power known">+ Learn it</button>`:''} <button class="btn-del" onclick="C.forceStudy.splice(${i},1);touch();renderForce()">✕</button></td>
-  </tr>${p.lastSync?`<tr><td colspan="11" style="font-size:10px;padding:0 8px 2px;color:var(--text2);font-style:italic">↻ ${esc(p.lastSync)}</td></tr>`:''}${p.last?`<tr><td colspan="11" style="font-size:10.5px;padding:1px 8px 6px;color:${col}">${esc(p.last)}</td></tr>`:''}`;
- }).join('')||'<tr><td colspan="11" class="dim" style="padding:8px">No training underway — add a project and pick a power from a book you know to begin.</td></tr>';
+  </tr>${p.lastSync?`<tr><td colspan="12" style="font-size:10px;padding:0 8px 2px;color:var(--text2);font-style:italic">↻ ${esc(p.lastSync)}</td></tr>`:''}${p.last?`<tr><td colspan="12" style="font-size:10.5px;padding:1px 8px 6px;color:${col}">${esc(p.last)}</td></tr>`:''}`;
+ }).join('')||'<tr><td colspan="12" class="dim" style="padding:8px">No training underway — add a project and pick a power from a book you know to begin.</td></tr>';
  const note=!books.length
   ?'<div class="dim" style="font-size:11px;padding:6px 2px">Enable a book under <b>Active Books</b> above; its powers become trainable here.</div>'
   :(!learn.length?'<div class="dim" style="font-size:11px;padding:4px 2px">Every power you can currently reach is already known — advance a tradition tier to open higher powers.</div>':'');
  return `<div class="sec-head" style="margin-top:18px">Force Training <button class="btn-add" onclick="addForceStudy()">+ Train a Power</button>
    <span class="dim" style="float:right;font-weight:400;font-size:10px">Compendium Doc V · learned by training time (tier), never by use</span></div>
-  <div class="dim" style="font-size:11px;margin:2px 0 8px">Pick a power from a book you know — its hours come from its <b>tier</b> (I≈1 wk · II≈3 · III≈6 · IV≈12, at ${FORCE_HOURS_PER_WEEK} h/wk). <b style="color:var(--gold)">◆ Attribute-aligned</b> powers (governing attribute = your Force Primary) halve the time; a <b style="color:var(--cyan)">teacher</b> halves it again; <b style="color:var(--amber)">self-taught</b> doubles it and needs a Force roll at −4 to begin. Each session, roll <b>3d6 ≤ Tgt</b> (your Force attribute): success shaves <b>/Marg</b> hours per point of margin; a <span style="color:var(--green)">critical</span> learns it outright. <b>Learned!</b> → the power is ticked known above. <b style="color:var(--text2)">Tier V powers are earned by a deed in play, not trained.</b> <b style="color:var(--amber)">Or skip the grind</b> and buy a power outright with character points — the always-available alternative (Tier I/II/III/IV/V = 5/10/20/35/60 pts); either route lands the power in your point budget.</div>
+  <div class="dim" style="font-size:11px;margin:2px 0 8px">Pick a power from a book you know — its hours come from its <b>tier</b> (I≈1 wk · II≈3 · III≈6 · IV≈12, at ${FORCE_HOURS_PER_WEEK} h/wk). <b style="color:var(--gold)">◆ Attribute-aligned</b> powers (governing attribute = your Force Primary) halve the time; a <b style="color:var(--cyan)">teacher</b> halves it again; <b style="color:var(--amber)">self-taught</b> doubles it and needs a Force roll at −4 to begin. Each session, roll <b>3d6 ≤ Tgt</b> (your Force attribute): success shaves <b>/Marg</b> hours per point of margin; a <span style="color:var(--green)">critical</span> learns it outright. <b>Learned!</b> → the power is ticked known above. <b style="color:var(--text2)">Tier V powers are earned by a deed in play, not trained.</b> <b style="color:var(--amber)">Or skip the grind</b> and buy a power outright with character points — the always-available alternative (Tier I/II/III/IV/V = 5/10/20/35/60 pts); either route lands the power in your point budget. Leave the <b>power</b> blank for a <b>free-study</b> project — set your own Req and label and roll sessions (it just won't auto-tick a power).</div>
   <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 8px;font-size:12px"><b>⏳ Hours available to train:</b><input class="cell" type="number" style="width:84px" value="${av}" onchange="setForceTrainAvail(this.value)"><button class="btn-sm" onclick="addForceTrainAvail(8)">+8h</button><button class="btn-sm" onclick="addForceTrainAvail(40)">+40h</button><button class="btn-sm" onclick="addForceTrainAvail(200)">+200h</button><span class="dim" style="font-size:10.5px">shared with skill study; rolling sessions spends them</span></div>
   ${note}
   <table class="g">
-   <tr><th style="width:200px">Power to learn</th><th style="width:30px" title="Tier">Tr</th><th style="width:56px" title="Governing / learning attribute">Attr</th><th style="width:40px" title="Roll target — your Force attribute">Tgt</th><th style="width:50px" title="Required hours (tier + modifiers)">Req</th><th style="width:50px">Done</th><th style="width:38px" title="Hours off per point of margin">/Marg</th><th style="width:30px" title="Teacher who knows it — half time"><span style="color:var(--cyan)">T</span></th><th style="width:30px" title="Self-taught — double time"><span style="color:var(--amber)">S</span></th><th style="width:90px">Progress</th><th style="width:170px"></th></tr>
+   <tr><th style="width:200px">Power to learn</th><th style="width:130px" title="Auto-fills from the power; editable. Name a free-study project here.">Label / note</th><th style="width:30px" title="Tier">Tr</th><th style="width:56px" title="Governing / learning attribute">Attr</th><th style="width:40px" title="Roll target — your Force attribute">Tgt</th><th style="width:50px" title="Required hours (tier + modifiers)">Req</th><th style="width:50px">Done</th><th style="width:38px" title="Hours off per point of margin">/Marg</th><th style="width:30px" title="Teacher who knows it — half time"><span style="color:var(--cyan)">T</span></th><th style="width:30px" title="Self-taught — double time"><span style="color:var(--amber)">S</span></th><th style="width:90px">Progress</th><th style="width:170px"></th></tr>
    ${rows}
   </table>
-  <div class="dim" style="font-size:11px;margin:6px 0 2px">⏳ <b style="color:${av>0?'var(--cyan)':'var(--red)'}">${av} h available</b> · ⏱ Total logged <b style="color:var(--text)">${th} h</b><span style="opacity:.6"> (shared downtime pool)</span></div>`;
+  <div class="dim" style="font-size:11px;margin:6px 0 2px">⏳ <b style="color:${av>0?'var(--cyan)':'var(--red)'}">${av} h available</b> · ⏱ Total logged <b style="color:var(--text)">${th} h</b>${(function(){const ip=projects.reduce((s,p)=>s+(+p.done||0),0);return ip?' · <b style="color:var(--text2)">'+ip+' h</b> toward projects':'';})()}<span style="opacity:.6"> (shared downtime pool)</span></div>`;
 }
 
 function forceLearnRefSection(){
