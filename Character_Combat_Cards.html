@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Combat Cards — Tylo &amp; Chatni</title>
+<!-- no-flash theme: read shared key before paint -->
+<script>try{if((localStorage.getItem('kotorTheme')||'')==='dark')document.documentElement.classList.add('dark');}catch(e){}</script>
+<style>
+  :root{
+    --paper:#efe9dc; --panel:#fbf7ee; --band:#e7dcc6;
+    --ink:#241f1a; --soft:#6d6453; --line:#cdbfa3; --line2:#e0d4ba;
+    --crimson:#9c2b25; --crimson-d:#7d211c; --steel:#345d80; --steel-d:#274a68;
+    --gold:#9a7b2e; --green:#3f7d3a;
+    --serif:'Iowan Old Style','Palatino Linotype','Palatino',Georgia,serif;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  }
+  html.dark{
+    --paper:#17171b; --panel:#212128; --band:#0e0f13;
+    --ink:#e9e5da; --soft:#a7a298; --line:#3a3a42; --line2:#2b2b32;
+    --crimson:#c0392f; --crimson-d:#e0655d; --steel:#7fa9cc; --steel-d:#5d86a8;
+    --gold:#d2a531; --green:#6fb56a;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);
+    font-size:14px;line-height:1.45;-webkit-text-size-adjust:100%;}
+  .wrap{max-width:1100px;margin:0 auto;padding:18px 16px 60px;}
+
+  /* top bar */
+  .top{display:flex;align-items:center;gap:12px;margin:2px 0 16px;flex-wrap:wrap;}
+  .top h1{font-family:var(--serif);font-weight:700;font-size:19px;letter-spacing:.5px;
+    margin:0;flex:1;color:var(--ink);}
+  .top .sub{color:var(--soft);font-size:12px;font-weight:400;letter-spacing:.3px;}
+  .btn{font:inherit;font-size:12px;letter-spacing:.4px;cursor:pointer;
+    border:1px solid var(--line);background:var(--panel);color:var(--ink);
+    padding:6px 12px;border-radius:20px;}
+  .btn:hover{border-color:var(--soft);}
+
+  /* card grid */
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  @media(max-width:820px){.cards{grid-template-columns:1fr;}}
+
+  .card{border:1px solid var(--line);background:var(--panel);border-radius:10px;
+    overflow:hidden;display:flex;flex-direction:column;}
+  .chead{padding:13px 16px 12px;border-bottom:2px solid var(--accent);
+    background:linear-gradient(180deg,var(--band),var(--panel));}
+  .card.tylo{--accent:var(--steel);}
+  .card.chatni{--accent:var(--crimson);}
+  .chead .nm{font-family:var(--serif);font-weight:700;font-size:21px;letter-spacing:.4px;
+    color:var(--accent);line-height:1.1;}
+  .chead .role{color:var(--soft);font-size:12px;margin-top:2px;letter-spacing:.2px;}
+  .chead .traits{margin-top:7px;display:flex;flex-wrap:wrap;gap:5px;}
+  .tag{font-size:10.5px;letter-spacing:.3px;border:1px solid var(--line);
+    color:var(--soft);border-radius:4px;padding:1px 6px;background:var(--paper);}
+
+  .body{padding:13px 16px 15px;flex:1;}
+
+  /* stat chips */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:14px;}
+  .stat{border:1px solid var(--line2);border-radius:6px;background:var(--paper);
+    padding:5px 4px 6px;text-align:center;}
+  .stat .k{font-size:9.5px;letter-spacing:.6px;color:var(--soft);text-transform:uppercase;}
+  .stat .v{font-family:var(--serif);font-weight:700;font-size:18px;color:var(--ink);line-height:1.05;}
+  .stat.hot .v{color:var(--accent);}
+
+  /* sections */
+  .sec{margin:0 0 13px;}
+  .sec h3{font-family:var(--serif);font-size:12px;font-weight:700;letter-spacing:.7px;
+    text-transform:uppercase;color:var(--accent);margin:0 0 6px;
+    padding-bottom:3px;border-bottom:1px solid var(--line2);display:flex;align-items:baseline;gap:8px;}
+  .sec h3 .roll{margin-left:auto;font-family:var(--sans);font-size:11px;font-weight:600;
+    letter-spacing:.2px;color:var(--ink);text-transform:none;}
+  .sec h3 .roll b{color:var(--accent);}
+
+  /* line items */
+  .row{display:flex;gap:9px;padding:4px 0;border-bottom:1px dashed var(--line2);align-items:baseline;}
+  .row:last-child{border-bottom:0;}
+  .row .hit{flex:0 0 auto;min-width:30px;text-align:center;font-family:var(--serif);
+    font-weight:700;font-size:16px;color:var(--accent);line-height:1;}
+  .row .fp{flex:0 0 auto;min-width:30px;text-align:center;font-family:var(--serif);
+    font-weight:700;font-size:15px;color:var(--gold);line-height:1;}
+  .row .nm{flex:0 0 auto;font-weight:600;min-width:96px;}
+  .row .ds{flex:1;color:var(--soft);font-size:12.5px;}
+  .row .ds b{color:var(--ink);font-weight:600;}
+
+  .defgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;}
+  @media(max-width:480px){.defgrid{grid-template-columns:repeat(2,1fr);}}
+  .def{border:1px solid var(--line2);border-radius:6px;background:var(--paper);
+    padding:5px 4px 6px;text-align:center;}
+  .def .k{font-size:9.5px;letter-spacing:.5px;color:var(--soft);text-transform:uppercase;}
+  .def .v{font-family:var(--serif);font-weight:700;font-size:18px;color:var(--accent);line-height:1.05;}
+  .def .x{font-size:9.5px;color:var(--soft);}
+
+  .note{font-size:11.5px;color:var(--soft);line-height:1.5;margin-top:3px;}
+  .note b{color:var(--ink);font-weight:600;}
+  .note.special{border-left:3px solid var(--accent);padding:4px 0 4px 9px;margin-top:9px;background:var(--paper);}
+
+  /* legend / footer */
+  .legend{margin-top:20px;border-top:1px solid var(--line2);padding-top:11px;
+    color:var(--soft);font-size:11.5px;line-height:1.6;}
+  .legend b{color:var(--ink);}
+  .legend code{font-family:var(--serif);color:var(--ink);font-weight:700;}
+
+  /* print: light, both cards, no chrome */
+  @media print{
+    .noprint{display:none!important;}
+    body{background:#fff;font-size:11px;}
+    .wrap{max-width:none;padding:0;}
+    .cards{display:block;gap:0;}
+    .card{border:1px solid #aaa;overflow:visible;margin:0 0 10px;}
+    .card + .card{break-before:page;}
+    @page{size:A4;margin:12mm;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top noprint">
+    <h1>Combat Cards <span class="sub">— quick reference · roll 3d6 under the number</span></h1>
+    <button class="btn" id="themeBtn" onclick="toggleTheme()">☾ Dark</button>
+    <button class="btn" onclick="window.print()">⎙ Print</button>
+  </div>
+
+  <div class="cards">
+
+    <!-- ════════════════ TYLO ════════════════ -->
+    <section class="card tylo">
+      <div class="chead">
+        <div class="nm">Tylo Dara</div>
+        <div class="role">Iktotchi · grey saberstaff duelist · TL10</div>
+        <div class="traits">
+          <span class="tag">Combat Reflexes</span>
+          <span class="tag">High Pain Threshold</span>
+          <span class="tag">Extra Attack</span>
+          <span class="tag">Ambidextrous</span>
+          <span class="tag">Precognition</span>
+        </div>
+      </div>
+      <div class="body">
+
+        <div class="stats">
+          <div class="stat hot"><div class="k">HP</div><div class="v">36</div></div>
+          <div class="stat hot"><div class="k">FP</div><div class="v">30</div></div>
+          <div class="stat"><div class="k">Will</div><div class="v">14</div></div>
+          <div class="stat"><div class="k">Per</div><div class="v">13</div></div>
+          <div class="stat"><div class="k">ST</div><div class="v">16</div></div>
+          <div class="stat"><div class="k">DX</div><div class="v">26</div></div>
+          <div class="stat"><div class="k">Speed</div><div class="v">10.5</div></div>
+          <div class="stat"><div class="k">Move</div><div class="v">10</div></div>
+        </div>
+
+        <div class="sec">
+          <h3>Attacks</h3>
+          <div class="row">
+            <div class="hit">30</div><div class="nm">Saberstaff ×2</div>
+            <div class="ds"><b>8d+8</b> imp+burn · <b>AD 5</b> · reach 1–2 · two strikes/turn (−2 dual-grip), parry 0</div>
+          </div>
+          <div class="row">
+            <div class="hit">29</div><div class="nm">Brawling</div>
+            <div class="ds">punch <b>1d</b> cr · kick <b>1d+1</b> cr · reach C</div>
+          </div>
+          <div class="row">
+            <div class="hit">—</div><div class="nm">Ion pistol</div>
+            <div class="ds"><b>2d+2</b> ion · Acc 2 · RoF 3 · <i>untrained — rolls at default</i> (backup)</div>
+          </div>
+          <div class="note">Saberstaff needs a Two-Handed stance; the two strikes already include the Extra Attack.</div>
+        </div>
+
+        <div class="sec">
+          <h3>Defenses</h3>
+          <div class="defgrid">
+            <div class="def"><div class="k">Dodge</div><div class="v">14</div></div>
+            <div class="def"><div class="k">Parry</div><div class="v">22</div><div class="x">saberstaff</div></div>
+            <div class="def"><div class="k">Parry</div><div class="v">18</div><div class="x">unarmed</div></div>
+            <div class="def"><div class="k">DR</div><div class="v">3</div><div class="x">plate</div></div>
+          </div>
+          <div class="note special"><b>Precognition (Iktotchi):</b> visions of danger — GM may warn you, or use <b>Flash of Warning</b> below to blunt incoming attacks.</div>
+        </div>
+
+        <div class="sec">
+          <h3>Force <span class="roll">roll <b>3d6 ≤ DX 26</b></span></h3>
+          <div class="row"><div class="fp">1</div><div class="nm">Force Push</div><div class="ds">shove a target or loose object <b>1 hex per FP</b></div></div>
+          <div class="row"><div class="fp">1</div><div class="nm">Force Pull</div><div class="ds">drag a target or object toward you <b>1 hex per FP</b></div></div>
+          <div class="row"><div class="fp">1</div><div class="nm">Force Leap</div><div class="ds">leap <b>1 hex per FP</b> in any direction</div></div>
+          <div class="row"><div class="fp">2</div><div class="nm">Flash of Warning</div><div class="ds">reactive precog — <b>halve active-defence penalties</b> this turn</div></div>
+          <div class="row"><div class="fp">1</div><div class="nm">Force Brace</div><div class="ds"><b>+1 per FP</b> to resist knockback, sweeps &amp; forced movement</div></div>
+          <div class="row"><div class="fp">1</div><div class="nm">Force Focus</div><div class="ds"><b>+1 per FP</b> to one Will / mental-resistance roll</div></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ════════════════ CHATNI ════════════════ -->
+    <section class="card chatni">
+      <div class="chead">
+        <div class="nm">Chatni</div>
+        <div class="role">Dathomiri Nightsister · ghost-fire duelist &amp; alchemist · TL10</div>
+        <div class="traits">
+          <span class="tag">Weapon Master (saber)</span>
+          <span class="tag">Combat Reflexes</span>
+          <span class="tag">High Pain Threshold</span>
+          <span class="tag">Extra Attack</span>
+        </div>
+      </div>
+      <div class="body">
+
+        <div class="stats">
+          <div class="stat hot"><div class="k">HP</div><div class="v">33</div></div>
+          <div class="stat hot"><div class="k">FP</div><div class="v">69</div></div>
+          <div class="stat hot"><div class="k">Will</div><div class="v">35</div></div>
+          <div class="stat"><div class="k">Per</div><div class="v">18</div></div>
+          <div class="stat"><div class="k">ST</div><div class="v">13</div></div>
+          <div class="stat"><div class="k">DX</div><div class="v">10</div></div>
+          <div class="stat"><div class="k">IQ</div><div class="v">18</div></div>
+          <div class="stat"><div class="k">Move</div><div class="v">6</div></div>
+        </div>
+
+        <div class="sec">
+          <h3>Attacks</h3>
+          <div class="row">
+            <div class="hit">37</div><div class="nm">Lightsaber ×2</div>
+            <div class="ds"><b>8d+8</b> imp+burn · <b>AD 5</b> · reach 1–2 · two strikes/turn (Extra Attack), parry 0</div>
+          </div>
+          <div class="row">
+            <div class="hit">37</div><div class="nm">↳ silent mode</div>
+            <div class="ds"><b>6d+6</b> · foe is <b>−3 to Parry</b> (no sound or light to read)</div>
+          </div>
+          <div class="row">
+            <div class="fp">—</div><div class="nm">Alchemist's bag</div>
+            <div class="ds">thrown (GM's call): thermal detonator · implosion grenade · flash-bang · nerve / knockout / paralytic / caustic gas</div>
+          </div>
+          <div class="note">Backups: Blaster Pistol skill <b>15</b> (if armed) · can hurl the saber via <b>Saber Throw</b>.</div>
+        </div>
+
+        <div class="sec">
+          <h3>Defenses</h3>
+          <div class="defgrid">
+            <div class="def"><div class="k">Dodge</div><div class="v">10</div></div>
+            <div class="def"><div class="k">Parry</div><div class="v">22</div><div class="x">saber</div></div>
+            <div class="def"><div class="k">Block</div><div class="v">2</div><div class="x">cloak (man.)</div></div>
+            <div class="def"><div class="k">DR</div><div class="v">1/5</div><div class="x">heavy cloak</div></div>
+          </div>
+          <div class="note special"><b>Tutaminis (Energy Absorption) ≈ 32:</b> roll to soak an incoming <b>blaster / energy</b> hit. <b>Force Speed</b> can also add Dodge/Parry — see below.</div>
+        </div>
+
+        <div class="sec">
+          <h3>Force <span class="roll">roll <b>3d6 ≤ Will 35</b></span></h3>
+          <div class="row"><div class="fp">1</div><div class="nm">Hex of Agony</div><div class="ds">wrack one target with phantom <b>agony</b></div></div>
+          <div class="row"><div class="fp">3</div><div class="nm">Spirit Sever</div><div class="ds">briefly <b>cut a target's motor control</b></div></div>
+          <div class="row"><div class="fp">5</div><div class="nm">Force Wave</div><div class="ds">360° burst — foes w/in 4 who fail ST are <b>pushed 2 hexes + 2 cr</b></div></div>
+          <div class="row"><div class="fp">2</div><div class="nm">Force Deflection</div><div class="ds">bat aside an incoming <b>blaster bolt</b></div></div>
+          <div class="row"><div class="fp">1</div><div class="nm">Force Speed</div><div class="ds"><b>+1 Move/FP</b> (max 4), or <b>+1 Dodge/Parry per 2 FP</b> (max 2)</div></div>
+          <div class="row"><div class="fp">2</div><div class="nm">Phantom Stride</div><div class="ds"><b>teleport</b> to any visible hex within 8</div></div>
+          <div class="row"><div class="fp">1</div><div class="nm">Witch Smoke</div><div class="ds">dense concealing smoke · <b>Force Push/Pull (1)</b> shove or drag 1 hex/FP</div></div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+  <div class="legend">
+    <b>Rolling:</b> all attacks &amp; powers use <code>3d6</code>, succeed on a roll <b>at or under</b> the number. <b>3–4</b> crit, <b>17–18</b> fumble. ·
+    <b>Damage:</b> e.g. <code>8d+8</code> = 8 dice + 8. <b>imp</b> ×2 injury, <b>burn</b>/<b>cr</b> ×1, <b>ion</b> wrecks droids/electronics. ·
+    <b>AD</b> = armour divisor (divide the target's DR before it soaks). ·
+    More manoeuvres (All-Out / Rapid Strike / Deceptive / Feint) are on the <b>A3 combat cheatsheet</b>.
+  </div>
+
+</div>
+
+<script>
+  function paintBtn(){
+    var d=document.documentElement.classList.contains('dark');
+    var b=document.getElementById('themeBtn');
+    if(b)b.textContent=d?'☀ Light':'☾ Dark';
+  }
+  function toggleTheme(){
+    var d=document.documentElement.classList.toggle('dark');
+    try{localStorage.setItem('kotorTheme',d?'dark':'light');}catch(e){}
+    paintBtn();
+  }
+  paintBtn();
+</script>
+</body>
+</html>
