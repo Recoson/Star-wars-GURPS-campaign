@@ -730,7 +730,7 @@ function blankChar(){
   credits:0,creditLog:[],
   jetpack:{pack:'std',massKg:0,burstsUsed:0,spareCells:0,userPack:false},
   combat:{hp:null,fp:null,statuses:[],concentrations:[],charges:[],turn:0,log:[]},
-  notes:'',trainRate:200,trainHoursTotal:0,trainHoursAvail:0,study:[],ptTarget:150,languages:'',languages2:null,
+  notes:'',trainRate:200,trainHoursTotal:0,trainHoursAvail:0,study:[],forceStudy:[],ptTarget:150,languages:'',languages2:null,
   layout:{}
  };
 }
@@ -4491,7 +4491,7 @@ function renderForce(){ migratePowerSkills();
  ${bookLevelSelector(aBook)}
  ${forceBookChecklist(aBook)}
  ${aBook==='Inscribed Voice'?holocronSection():''}`:`<div class="dim" style="padding:10px 2px">Tick a book under <b>Active Books</b> above and its powers — grouped by tier — will appear here to select.</div>`}
- <div class="dim" style="font-size:11px;margin-top:10px">Lightsaber Forms &amp; form-neutral Techniques are managed on the <b style="color:var(--cyan)">Stances &amp; Forms</b> tab — learn them, set their tier, and activate them there. Active modifiers flow into your sheet automatically.</div>${forceTrainingSection()}${customForcePowersSection()}`;
+ <div class="dim" style="font-size:11px;margin-top:10px">Lightsaber Forms &amp; form-neutral Techniques are managed on the <b style="color:var(--cyan)">Stances &amp; Forms</b> tab — learn them, set their tier, and activate them there. Active modifiers flow into your sheet automatically.</div>${forceStudySection()}${customForcePowersSection()}`;
 }
 function setForceBook(b){C.force.viewBook=b;touch();renderForce();}
 
@@ -6876,64 +6876,161 @@ function customSpeciesSection(){
   ${rows}<button class="btn-add" onclick="addCustomSpecies()">+ Custom Species</button></details>`;
 }
 
-// ═══ FORCE TRAINING TRACKER (canon Doc IX) ═══
-const FORCE_TIERS=[
- {n:1,name:'Initiate',weeks:1,hours:40,capstone:'None — the door is open'},
- {n:2,name:'Knight',weeks:3,hours:160,capstone:'1 Mastery, or +10 pts'},
- {n:3,name:'Master',weeks:6,hours:300,capstone:'2 Masteries, or +15 pts'},
- {n:4,name:'Grandmaster',weeks:12,hours:600,capstone:'3 Masteries, or +20 pts'},
- {n:5,name:'Legend',weeks:'season+',hours:1200,capstone:'The Crossing — unbuyable, lived in play'}
-];
-const FORCE_REGIMENS=[
- {n:'Open Hours',hpd:4,note:'2h meditation · 1h Form · 1h Power study. Standard Jedi.'},
- {n:'Working Apprentice',hpd:2,note:'1h meditation · 1h Form. Other duties.'},
- {n:'Battlefield Initiate',hpd:1,note:'30min meditation · 30min Form. Wartime cadence.'},
- {n:'Meditative Retreat',hpd:8,note:'Seclusion · stillness. Hours count at full value even under hardship.'},
- {n:'Sparring Circle',hpd:5,note:'Form/Lightsaber hours count 25% faster.'},
- {n:'Apprenticeship',hpd:4,note:'Under a named master. Power-skill hours count faster.'},
- {n:'Holocron Study',hpd:3,note:'Communion with gatekeeper memory. Access to powers no living teacher offers.'},
- {n:'Trial by Ordeal',hpd:6,note:'Deliberately seeking hardship. Can be a Crossing if survived.'}
-];
-function _ftrack(){C.force=C.force||{};C.force.training=C.force.training||{};return C.force.training;}
-function _ftrackBook(b){const t=_ftrack();t[b]=t[b]||{tier:1,hours:0,regimen:'Open Hours',mentor:'',log:[]};return t[b];}
-function setFTrackField(book,f,v){const e=_ftrackBook(book);e[f]=(f==='tier'||f==='hours')?+v||0:v;touch();renderForce();}
-function logFTrainSession(book,h){const e=_ftrackBook(book);e.hours=(+e.hours||0)+(+h||0);e.log=e.log||[];e.log.push({d:new Date().toISOString().slice(0,10),h:+h||0,r:e.regimen});if(e.log.length>20)e.log.shift();touch();renderForce();}
-function nextFTier(book){const e=_ftrackBook(book);if(e.tier<5){e.tier+=1;e.hours=0;touch();renderForce();}}
-function prevFTier(book){const e=_ftrackBook(book);if(e.tier>1){e.tier-=1;e.hours=0;touch();renderForce();}}
+// ═══ FORCE-POWER TRAINING (compendium Doc V — the Force-Learning Standard) ═══
+// A Force power is a binary unlock: it is learned by training time alone and never
+// by in-use levelling. Its learning time is set by its TIER, not a difficulty column:
+//   Tier I ≈ 1 wk · II ≈ 3 wk · III ≈ 6 wk · IV ≈ 12 wk · V ≈ a season / a singular
+//   deed (Legendary powers are earned by a capstone deed in play, NOT trained — so
+//   Tier V is excluded from this tracker).
+// Codex modifiers: attribute-alignment (the power's governing attribute = your Force
+//   Primary) halves the time; a teacher who knows it halves it again; self-taught
+//   (no teacher, no text) doubles it and needs a Force roll at −4 to begin; the
+//   Hollowing admits no teacher, so its workings are always self-derived (×2).
+// Hours draw from the same downtime pool as skill study (C.trainHoursAvail) — one
+// economy, exactly as the Codex intends. (The Force *skill* behind the roll is an
+// ordinary skill and is trained on the Skills tab; the powers it fires are not.)
+const FORCE_LEARN_WEEKS={1:1,2:3,3:6,4:12};   // Tier V is deed-gated, not trained here
+const FORCE_HOURS_PER_WEEK=28;                 // Open Hours standard: 4 h/day x 7 days
+function _forceStudy(){C.forceStudy=C.forceStudy||[];return C.forceStudy;}
+function forcePowerDef(name){return FORCE_POWERS.find(p=>p.name===name)||null;}
+// hours to learn one power, applying alignment / teacher / self-taught / Hollowing
+function forceLearnHours(name,opts){
+ opts=opts||{};
+ const p=forcePowerDef(name);
+ if(!p)return {hours:200,weeks:0,detail:'unknown power — default 200 h',gated:false};
+ const wk=FORCE_LEARN_WEEKS[+p.tier];
+ if(!wk)return {hours:0,weeks:0,detail:`Tier ${ROMAN[+p.tier]||p.tier} is earned by a deed in play, not trained`,gated:true};
+ let h=wk*FORCE_HOURS_PER_WEEK, mult=1;
+ const parts=[`Tier ${ROMAN[+p.tier]} ${wk} wk x ${FORCE_HOURS_PER_WEEK} h`];
+ const aligned=!!(p.aff && p.aff===forcePrimaryAttr());
+ if(aligned){mult*=0.5;parts.push('attribute-aligned x0.5');}
+ const hollow=(p.book==='The Hollowing');
+ if(hollow){mult*=2;parts.push('Hollowing self-derived x2');}
+ else if(opts.teacher){mult*=0.5;parts.push('teacher x0.5');}
+ else if(opts.selfTaught){mult*=2;parts.push('self-taught x2 (-4 Force roll to begin)');}
+ const hours=Math.max(1,Math.round(h*mult));
+ return {hours,weeks:wk,aligned,hollow,selfNote:(!hollow&&!!opts.selfTaught),detail:parts.join(' · ')+(mult!==1?` -> ${hours} h`:''),gated:false};
+}
+// learnable = enabled book · tier <= your tier in that book · tier <= IV · not known · primary rules allow
+function forceLearnable(){
+ const books=Object.keys(C.force.books||{}).filter(b=>C.force.books[b]);
+ const known=new Set((C.force.powers||[]).map(p=>p.name));
+ const rules=forceRules();
+ const out=[];
+ books.forEach(b=>{
+  const lvl=bookLevel(b);
+  FORCE_POWERS.filter(p=>p.book===b).forEach(p=>{
+   if(known.has(p.name))return;
+   if(+p.tier>4)return;            // Tier V is earned by a deed, not trained
+   if(+p.tier>lvl)return;          // your tradition tier must already permit it
+   if(rules){const a=powerAllowed(p,rules);if(!a.ok)return;}
+   out.push(p);
+  });
+ });
+ return out;
+}
+function forceStudyTarget(){return _attrVal(forcePrimaryAttr());}  // you always roll your Force attribute (Primary)
+function syncForceStudy(i){
+ const p=_forceStudy()[i]; if(!p||!p.power)return;
+ const r=forceLearnHours(p.power,{teacher:p.teacher,selfTaught:p.selfTaught});
+ p.req=r.hours; if(p.target==null)p.target=forceStudyTarget();
+ const d=forcePowerDef(p.power); p.book=d?d.book:'';
+ p.lastSync=r.detail; touch();renderForce();
+}
+function addForceStudy(){_forceStudy().push({power:'',book:'',target:forceStudyTarget(),req:0,done:0,hpm:10,teacher:false,selfTaught:false});touch();renderForce();}
+function setForceStudyPower(i,name){
+ const p=_forceStudy()[i]; if(!p)return;
+ p.power=name; p.done=0; p.last=''; p.lastKind='';
+ if(name){const r=forceLearnHours(name,{teacher:p.teacher,selfTaught:p.selfTaught});p.req=r.hours;p.lastSync=r.detail;const d=forcePowerDef(name);p.book=d?d.book:'';if(p.target==null)p.target=forceStudyTarget();}
+ else {p.req=0;p.book='';p.lastSync='';}
+ touch();renderForce();
+}
+function setForceStudyDone(i,v){const p=_forceStudy()[i];if(!p)return;const nv=Math.max(0,+v||0);const d=nv-(+p.done||0);if(d>0){C.trainHoursTotal=(+C.trainHoursTotal||0)+d;C.trainHoursAvail=(+C.trainHoursAvail||0)-d;}p.done=nv;touch();renderForce();}
+function learnForcePower(i){
+ const p=_forceStudy()[i]; if(!p)return;
+ if(!p.power){alert('Pick a power to learn first.');return;}
+ const name=p.power, d=forcePowerDef(name), book=d?d.book:(p.book||'');
+ _forceStudy().splice(i,1);                       // one-and-done: drop the finished project
+ toggleForcePower(book,name,true);                // tick it known (also re-renders the Force tab)
+ if(typeof _fxToast==='function')_fxToast(esc(name)+' learned');
+}
+function setForceTrainAvail(v){C.trainHoursAvail=Math.round(+v||0);touch();renderForce();}
+function addForceTrainAvail(n){C.trainHoursAvail=Math.round((+C.trainHoursAvail||0)+(+n||0));touch();renderForce();}
+function rollForceStudy(i){
+ const p=_forceStudy()[i]; if(!p)return;
+ if(!p.power){alert('Pick a power to learn first.');return;}
+ const t=Math.max(3,+p.target||10), hpm=Math.max(1,+p.hpm||10), req=Math.max(0,+p.req||0);
+ let done=Math.max(0,+p.done||0);
+ const dr=()=>1+Math.floor(Math.random()*6), a=dr(),b=dr(),c=dr(), roll=a+b+c, dice=`${a}+${b}+${c}=${roll}`;
+ let critS=roll<=4||(roll===5&&t>=15)||(roll===6&&t>=16);
+ let critF=roll===18||(roll===17&&t<=15)||(roll>=t+10);
+ if(critS&&critF)critF=false;
+ let kind,msg;
+ if(critF){const loss=Math.min(done,20);done-=loss;kind='critfail';msg=`✕ Critical failure (${dice}). A setback — lose ${loss} h.`;}
+ else if(critS){done=req>0?req:done+FORCE_HOURS_PER_WEEK;kind='crit';msg=`★ CRITICAL (${dice})! The power opens to you at once.`;}
+ else if(roll<=t){const m=t-roll,gain=m*hpm;done=req>0?Math.min(req,done+gain):done+gain;kind='ok';msg=`✓ Success by ${m} (${dice} vs ${t}) — ${gain} h off (${m}×${hpm}).`;}
+ else {kind='fail';msg=`✗ Failed (${dice} vs ${t}). No progress this session.`;}
+ if(req>0&&done>=req&&kind!=='critfail')msg+=' Power learned!';
+ if(typeof _rollLog!=='undefined'){(_rollCount++,_rollLog).unshift({label:'Force study'+(p.power?': '+p.power:''),target:t,dice:[a,b,c],sum:roll,outcome:(kind==='crit'?'CRIT':kind==='critfail'?'CRIT FAIL':(roll<=t?'Success':'Failure')),cls:(kind==='crit'?'crit-s':kind==='critfail'?'crit-f':(roll<=t?'succ':'fail')),margin:Math.abs(t-roll)});if(_rollLog.length>14)_rollLog.pop();if(typeof _renderRollPanel==='function')_renderRollPanel();}
+ const gd=done-(+p.done||0);if(gd>0){C.trainHoursTotal=(+C.trainHoursTotal||0)+gd;C.trainHoursAvail=(+C.trainHoursAvail||0)-gd;}
+ p.done=done;p.last=msg;p.lastKind=kind;
+ if(req>0&&done>=req&&kind!=='critfail'){learnForcePower(i);return;}   // auto-learn on completion
+ touch();renderForce();
+}
 
-function forceTrainingSection(){
- const enabledBooks=Object.keys(C.force.books||{}).filter(b=>C.force.books[b]);
- if(!enabledBooks.length)return '';
- const cards=enabledBooks.map(b=>{
-   const e=_ftrackBook(b);
-   const tier=FORCE_TIERS.find(t=>t.n===+e.tier)||FORCE_TIERS[0];
-   const next=FORCE_TIERS.find(t=>t.n===+e.tier+1);
-   const reg=FORCE_REGIMENS.find(r=>r.n===e.regimen)||FORCE_REGIMENS[0];
-   const need=next?next.hours-(+e.hours||0):0;
-   const days=reg.hpd>0?Math.ceil(need/reg.hpd):0;
-   const pct=next?Math.min(100,Math.round(100*(+e.hours||0)/next.hours)):100;
-   const col=pct<33?'var(--red)':pct<66?'var(--amber)':'var(--green)';
-   return `<div class="section" data-size="md" style="margin:0">
-    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-     <b style="color:var(--cyan)">${esc(b)}</b>
-     <span class="dim" style="font-size:10px">Tier ${tier.n} · ${esc(tier.name)}</span>
-     <div style="margin-left:auto;display:flex;align-items:center;gap:4px">
-      <button onclick="prevFTier('${esc(b).replace(/\\u0027/g,'')}')" title="Drop tier">↓</button>
-      <button onclick="nextFTier('${esc(b).replace(/\\u0027/g,'')}')" title="Promote tier (resets hours)">↑</button>
-     </div>
-    </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;font-size:10.5px;align-items:flex-end">
-     <label class="ci">Regimen<select class="cell" onchange="setFTrackField('${esc(b).replace(/\\u0027/g,'')}','regimen',this.value)" style="width:170px">${FORCE_REGIMENS.map(r=>`<option title="${esc(r.note)}"${r.n===e.regimen?' selected':''}>${r.n} (${r.hpd}h/d)</option>`).join('')}</select></label>
-     <label class="ci">Mentor / source<input class="cell" value="${esc(e.mentor||'')}" placeholder="master / holocron" onchange="setFTrackField('${esc(b).replace(/\\u0027/g,'')}','mentor',this.value)" style="width:170px"></label>
-     <label class="ci">Hours logged<input class="cell" type="number" value="${e.hours||0}" onchange="setFTrackField('${esc(b).replace(/\\u0027/g,'')}','hours',this.value)" style="width:70px"></label>
-     <button class="btn-add" onclick="(()=>{const h=prompt('Hours this session?','1');if(h)logFTrainSession('${esc(b).replace(/\\u0027/g,'')}',h);})()" style="margin:0">+ Log session</button>
-    </div>
-    ${next?`<div style="margin-top:4px"><div style="height:6px;background:var(--bg);border-radius:3px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${col}"></div></div>
-     <div class="dim" style="font-size:10px;margin-top:2px">${e.hours||0} / ${next.hours} hrs to <b style="color:var(--text)">Tier ${next.n} ${next.name}</b> · ~${days} days at ${reg.hpd}h/day · capstone: ${esc(next.capstone)}</div></div>`:`<div class="dim" style="font-size:10px;margin-top:4px;color:var(--green)">At maximum tier — Tier V Legend.</div>`}
-    <div class="dim" style="font-size:9.5px;margin-top:3px;font-style:italic">${esc(reg.note)}</div>
-   </div>`;
- }).join('');
- return `<div class="sec-head" style="margin-top:18px">Force Training <span class="dim" style="font-weight:400;font-size:10px">— Document IX · tier progression, regimen, hours per book</span></div><div class="char-grid">${cards}</div>`;
+function forceStudySection(){
+ const books=Object.keys(C.force.books||{}).filter(b=>C.force.books[b]);
+ const learn=forceLearnable();
+ const byBook={}; learn.forEach(p=>{(byBook[p.book]=byBook[p.book]||[]).push(p);});
+ const projects=_forceStudy();
+ const pri=forcePrimaryAttr();
+ const optsFor=(cur)=>{
+  let o='<option value="">— pick a power —</option>';
+  books.forEach(b=>{
+   let list=(byBook[b]||[]).slice().sort((x,y)=>(x.tier-y.tier)||x.name.localeCompare(y.name));
+   if(cur&&!list.some(p=>p.name===cur)){const d=forcePowerDef(cur);if(d&&d.book===b)list=list.concat([d]);}
+   if(!list.length)return;
+   o+=`<optgroup label="${esc(b)}">`+list.map(p=>`<option value="${esc(p.name)}"${p.name===cur?' selected':''}>${esc(p.name)} — T${p.tier}${p.trad?' ['+esc(p.trad)+']':''}${p.aff&&p.aff===pri?' ◆':''}</option>`).join('')+'</optgroup>';
+  });
+  return o;
+ };
+ const av=(+C.trainHoursAvail||0), th=(+C.trainHoursTotal||0);
+ const rows=projects.map((p,i)=>{
+  const req=+p.req||0, done=+p.done||0;
+  const pct=req?Math.min(100,Math.round(done/req*100)):0;
+  const complete=req>0&&done>=req;
+  const col=p.lastKind==='crit'?'var(--green)':p.lastKind==='critfail'?'var(--red)':p.lastKind==='ok'?'var(--cyan)':'var(--text2)';
+  const d=forcePowerDef(p.power);
+  const hollow=!!(d&&d.book==='The Hollowing');
+  const tdis=hollow?'disabled':'';
+  const aligned=!!(d&&d.aff&&d.aff===pri);
+  return `<tr>
+   <td><select class="cell" onchange="setForceStudyPower(${i},this.value)" style="width:100%">${optsFor(p.power)}</select></td>
+   <td class="ctr dim">${d?('T'+d.tier):'—'}</td>
+   <td class="ctr dim" style="font-size:10px">${d?esc(d.aff||d.skill):'—'}${aligned?' <span title="attribute-aligned: half learning time" style="color:var(--gold)">◆</span>':''}</td>
+   <td><input class="cell" type="number" value="${p.target==null?forceStudyTarget():p.target}" onchange="C.forceStudy[${i}].target=+this.value;touch()" style="width:36px"></td>
+   <td><input class="cell" type="number" min="0" value="${req}" onchange="C.forceStudy[${i}].req=+this.value;touch();renderForce()" style="width:46px"></td>
+   <td><input class="cell" type="number" min="0" value="${done}" onchange="setForceStudyDone(${i},this.value)" style="width:46px"></td>
+   <td><input class="cell" type="number" min="1" value="${p.hpm==null?10:p.hpm}" onchange="C.forceStudy[${i}].hpm=+this.value;touch()" style="width:36px"></td>
+   <td class="ctr"><input type="checkbox" ${p.teacher?'checked':''} ${tdis} title="${hollow?'The Hollowing admits no teacher':'Teacher who knows it — half time'}" onchange="C.forceStudy[${i}].teacher=this.checked;if(this.checked)C.forceStudy[${i}].selfTaught=false;syncForceStudy(${i})"></td>
+   <td class="ctr"><input type="checkbox" ${p.selfTaught?'checked':''} ${tdis} title="${hollow?'Hollowing is always self-derived (x2)':'Self-taught — x2 time, -4 Force roll to begin'}" onchange="C.forceStudy[${i}].selfTaught=this.checked;if(this.checked)C.forceStudy[${i}].teacher=false;syncForceStudy(${i})"></td>
+   <td class="dim" style="font-size:10px">${complete?'<b style="color:var(--green)">Learned!</b>':(req?done+' / '+req+' <span style="color:var(--text2)">('+pct+'%)</span>':done+' h')}</td>
+   <td><button class="btn-add" style="margin:0;padding:2px 6px;font-size:10px" onclick="rollForceStudy(${i})" title="Roll a study session">⚄ Roll</button> ${p.power?`<button class="btn-add" style="margin:0;padding:2px 6px;font-size:10px" onclick="syncForceStudy(${i})" title="Recompute hours from the Force-Learning Standard">↻</button>`:''}${complete&&p.power?` <button class="btn-add" style="margin:0;padding:2px 6px;font-size:10px;background:var(--green)" onclick="learnForcePower(${i})" title="Mark this power known">+ Learn it</button>`:''} <button class="btn-del" onclick="C.forceStudy.splice(${i},1);touch();renderForce()">✕</button></td>
+  </tr>${p.lastSync?`<tr><td colspan="11" style="font-size:10px;padding:0 8px 2px;color:var(--text2);font-style:italic">↻ ${esc(p.lastSync)}</td></tr>`:''}${p.last?`<tr><td colspan="11" style="font-size:10.5px;padding:1px 8px 6px;color:${col}">${esc(p.last)}</td></tr>`:''}`;
+ }).join('')||'<tr><td colspan="11" class="dim" style="padding:8px">No training underway — add a project and pick a power from a book you know to begin.</td></tr>';
+ const note=!books.length
+  ?'<div class="dim" style="font-size:11px;padding:6px 2px">Enable a book under <b>Active Books</b> above; its powers become trainable here.</div>'
+  :(!learn.length?'<div class="dim" style="font-size:11px;padding:4px 2px">Every power you can currently reach is already known — advance a tradition tier to open higher powers.</div>':'');
+ return `<div class="sec-head" style="margin-top:18px">Force Training <button class="btn-add" onclick="addForceStudy()">+ Train a Power</button>
+   <span class="dim" style="float:right;font-weight:400;font-size:10px">Compendium Doc V · learned by training time (tier), never by use</span></div>
+  <div class="dim" style="font-size:11px;margin:2px 0 8px">Pick a power from a book you know — its hours come from its <b>tier</b> (I≈1 wk · II≈3 · III≈6 · IV≈12, at ${FORCE_HOURS_PER_WEEK} h/wk). <b style="color:var(--gold)">◆ Attribute-aligned</b> powers (governing attribute = your Force Primary) halve the time; a <b style="color:var(--cyan)">teacher</b> halves it again; <b style="color:var(--amber)">self-taught</b> doubles it and needs a Force roll at −4 to begin. Each session, roll <b>3d6 ≤ Tgt</b> (your Force attribute): success shaves <b>/Marg</b> hours per point of margin; a <span style="color:var(--green)">critical</span> learns it outright. <b>Learned!</b> → the power is ticked known above. <b style="color:var(--text2)">Tier V powers are earned by a deed in play, not trained.</b></div>
+  <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 8px;font-size:12px"><b>⏳ Hours available to train:</b><input class="cell" type="number" style="width:84px" value="${av}" onchange="setForceTrainAvail(this.value)"><button class="btn-sm" onclick="addForceTrainAvail(8)">+8h</button><button class="btn-sm" onclick="addForceTrainAvail(40)">+40h</button><button class="btn-sm" onclick="addForceTrainAvail(200)">+200h</button><span class="dim" style="font-size:10.5px">shared with skill study; rolling sessions spends them</span></div>
+  ${note}
+  <table class="g">
+   <tr><th style="width:200px">Power to learn</th><th style="width:30px" title="Tier">Tr</th><th style="width:56px" title="Governing / learning attribute">Attr</th><th style="width:40px" title="Roll target — your Force attribute">Tgt</th><th style="width:50px" title="Required hours (tier + modifiers)">Req</th><th style="width:50px">Done</th><th style="width:38px" title="Hours off per point of margin">/Marg</th><th style="width:30px" title="Teacher who knows it — half time"><span style="color:var(--cyan)">T</span></th><th style="width:30px" title="Self-taught — double time"><span style="color:var(--amber)">S</span></th><th style="width:90px">Progress</th><th style="width:170px"></th></tr>
+   ${rows}
+  </table>
+  <div class="dim" style="font-size:11px;margin:6px 0 2px">⏳ <b style="color:${av>0?'var(--cyan)':'var(--red)'}">${av} h available</b> · ⏱ Total logged <b style="color:var(--text)">${th} h</b><span style="opacity:.6"> (shared downtime pool)</span></div>`;
 }
 
 function customForcePowersSection(){
