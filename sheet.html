@@ -4513,7 +4513,7 @@ function renderForce(){ migratePowerSkills();
  ${bookLevelSelector(aBook)}
  ${forceBookChecklist(aBook)}
  ${aBook==='Inscribed Voice'?holocronSection():''}`:`<div class="dim" style="padding:10px 2px">Tick a book under <b>Active Books</b> above and its powers — grouped by tier — will appear here to select.</div>`}
- <div class="dim" style="font-size:11px;margin-top:10px">Lightsaber Forms &amp; form-neutral Techniques are managed on the <b style="color:var(--cyan)">Stances &amp; Forms</b> tab — learn them, set their tier, and activate them there. Active modifiers flow into your sheet automatically.</div>${forceStudySection()}${customForcePowersSection()}`;
+ <div class="dim" style="font-size:11px;margin-top:10px">Lightsaber Forms &amp; form-neutral Techniques are managed on the <b style="color:var(--cyan)">Stances &amp; Forms</b> tab — learn them, set their tier, and activate them there. Active modifiers flow into your sheet automatically.</div>${forceStudySection()}${customForcePowersSection()}${forceLearnRefSection()}`;
 }
 function setForceBook(b){C.force.viewBook=b;touch();renderForce();}
 
@@ -7053,6 +7053,34 @@ function forceStudySection(){
    ${rows}
   </table>
   <div class="dim" style="font-size:11px;margin:6px 0 2px">⏳ <b style="color:${av>0?'var(--cyan)':'var(--red)'}">${av} h available</b> · ⏱ Total logged <b style="color:var(--text)">${th} h</b><span style="opacity:.6"> (shared downtime pool)</span></div>`;
+}
+
+function forceLearnRefSection(){
+ const tiers=[1,2,3,4];
+ const H=FORCE_HOURS_PER_WEEK;
+ const row=t=>{
+  const wk=FORCE_LEARN_WEEKS[t], base=wk*H;
+  return `<tr><td class="ctr"><b>${ROMAN[t]}</b></td><td class="ctr dim">${wk} wk</td><td class="ctr"><b>${base} h</b></td><td class="ctr" style="color:var(--gold)">${Math.round(base/2)} h</td><td class="ctr" style="color:var(--cyan)">${Math.round(base/4)} h</td><td class="ctr" style="color:var(--amber)">${base*2} h</td><td class="ctr dim">${TIER_PTS[t]} pts</td></tr>`;
+ };
+ const vRow=`<tr><td class="ctr"><b>${ROMAN[5]}</b></td><td class="dim" colspan="5" style="text-align:center;font-style:italic;color:var(--text2)">earned by a capstone deed in play — not trained</td><td class="ctr dim">${TIER_PTS[5]} pts</td></tr>`;
+ const t3=FORCE_LEARN_WEEKS[3]*H;
+ return `<div class="sec-head" style="margin-top:18px">Learning-Time Reference <span class="dim" style="float:right;font-weight:400;font-size:10px">Compendium Doc V · time set by tier, not difficulty</span></div>
+  <div class="dim" style="font-size:11px;margin:2px 0 8px">How long a Force power takes to learn, by <b>tier</b> — at this tool's ${H} h per training-week. The right-hand columns are the same hours after each learning modifier; the modifiers stack.</div>
+  <table class="g">
+   <tr><th style="width:44px">Tier</th><th style="width:48px" title="Compendium learning time">~Wks</th><th style="width:56px" title="Base hours at ${H} h/wk">Base</th><th style="width:56px" title="Attribute-aligned OR a teacher — either one halves it">×½</th><th style="width:56px" title="Attribute-aligned AND a teacher — both, stacked">×¼</th><th style="width:56px" title="Self-taught (no teacher, no text) — also a −4 Force roll to begin; The Hollowing is always this">×2</th><th style="width:52px" title="Buy it outright instead — flat character-point cost, no training">Buy</th></tr>
+   ${tiers.map(row).join('')}
+   ${vRow}
+  </table>
+  <div class="dim" style="font-size:10.5px;margin:6px 0 2px;line-height:1.55">
+   <b style="color:var(--gold)">◆ Aligned ×½</b> — the power's governing attribute is your Force Primary. &nbsp;
+   <b style="color:var(--cyan)">Teacher ×½</b> — someone who already knows it trains you; stacks with aligned → <b>×¼</b>. &nbsp;
+   <b style="color:var(--amber)">Self-taught ×2</b> — no teacher and no text, plus a Force roll at −4 just to begin. &nbsp;
+   <b style="color:var(--amber)">The Hollowing</b> is always self-derived (×2) and admits no teacher.
+  </div>
+  <div class="dim" style="font-size:10.5px;margin:5px 0 2px;line-height:1.55"><b>Worked example — Tier III:</b> <b>${t3} h</b> base → <span style="color:var(--gold)">${Math.round(t3/2)} h</span> aligned → <span style="color:var(--cyan)">${Math.round(t3/4)} h</span> aligned + taught → <span style="color:var(--amber)">${t3*2} h</span> self-taught.</div>
+  <div class="dim" style="font-size:10px;margin:5px 0 0;line-height:1.55;opacity:.85">
+   <b>Two caveats.</b> The ${H} h/week is this tool's reading of a training-week (4 h/day × 7); the compendium states the tiers in weeks only (I≈1 · II≈3 · III≈6 · IV≈12), so if your table counts a week differently the hours scale with it. And time is just one ledger — <b>buying</b> a power is the always-available alternative at a flat ${TIER_PTS[1]}/${TIER_PTS[2]}/${TIER_PTS[3]}/${TIER_PTS[4]}/${TIER_PTS[5]} pts by tier, which is <i>not</i> hours ÷ 200 (Force powers are the deliberate exception to the 200 h = 1 pt rule).
+  </div>`;
 }
 
 function customForcePowersSection(){
