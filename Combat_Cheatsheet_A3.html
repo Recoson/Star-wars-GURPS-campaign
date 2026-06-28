@@ -201,8 +201,10 @@ table.flow th{font-size:4.45pt; padding:.26mm .88mm;}
 .page:first-of-type img{max-height:95mm; width:auto; display:block; margin:0 auto;}
 .legendstrip .legend{font-size:4.7pt; line-height:1.25;}
 </style>
+<script>(function(){try{if(localStorage.getItem('kotorTheme')==='dark'){document.documentElement.classList.add('dark');}}catch(e){}})();</script>
 </head><body>
 <a class="hub-link" href="index.html" title="KOTOR Campaign Database — back to the hub" style="position:fixed;top:10px;right:12px;z-index:99;font:600 12px/1 system-ui,sans-serif;color:#c8b273;background:rgba(12,16,28,.88);border:1px solid #4a4030;border-radius:6px;padding:7px 11px;text-decoration:none;">&#8962; Database</a>
+<button class="theme-toggle" id="themeToggle" type="button" title="Toggle dark mode (screen only — printing always uses the paper theme)" style="position:fixed;top:10px;right:120px;z-index:99;font:600 12px/1 system-ui,sans-serif;color:#c8b273;background:rgba(12,16,28,.88);border:1px solid #4a4030;border-radius:6px;padding:7px 11px;cursor:pointer;">&#9790; Dark</button>
 <style>@media print{.hub-link{display:none!important}}</style>
 <style>
 /* ===== REV4 combat-flow re-architecture ===== */
@@ -241,6 +243,39 @@ table.flow th{font-size:4.45pt; padding:.26mm .88mm;}
 .page:first-of-type .note{font-size:5.45pt; line-height:1.2; padding:.4mm 1.4mm .3mm;}
 /* REV9 — page 1 packs to full height; its footer rule sat 2px under col-1's last row, reading as a stray line across the page bottom. Drop the rule on page 1 only (pages 2-3 keep it — they have clear whitespace above it). */
 .page:first-of-type .foot{border-top:none;}
+</style>
+<style>
+/* ===== Dark mode (screen only — print always uses the paper theme) ===== */
+@media print{ .theme-toggle{ display:none !important; } }
+@media screen{
+  html.dark{
+    --ink:#e9e5da; --soft:#a7a298; --line:#3a3a42; --line2:#2b2b32;
+    --paper:#17171b; --panel:#212128; --band:#0e0f13; --bandtext:#f2efe6;
+    --crimson:#c0392f; --crimson-d:#e0655d; --steel:#7fa9cc; --steel-l:#1f2730;
+    --gold:#d2a531;
+  }
+  html.dark body{ background:#0a0a0c; }
+  html.dark .page{ background:linear-gradient(180deg, rgba(255,255,255,.025), rgba(0,0,0,.20)), var(--paper); }
+  /* zebra striping flips to a faint light tint on dark */
+  html.dark tr:nth-child(even) td{ background:rgba(255,255,255,.022); }
+  /* highlighted ("updated") cells → dark-amber wash, text stays light */
+  html.dark .upd{ background:rgba(210,165,49,.15); }
+  /* the SW pill is a steel-bg/white-text chip — keep its fill deep so the text reads */
+  html.dark .sw{ background:#345572; }
+  /* --crimson-d / --steel are lifted for TEXT legibility; restore deep fills for the white-text bands */
+  html.dark .sec.crim > h2,
+  html.dark table.ssr.rg th{ background:linear-gradient(90deg,#7a1c20,#a8302c); }
+  html.dark .seqbar .sh{ background:linear-gradient(160deg,#7a1c20,#a8302c); }
+  html.dark .sec.steel > h2,
+  html.dark table.ssr.sp th{ background:linear-gradient(90deg,#1c2b3a,#345572); }
+  /* green to-hit numbers in the size/speed/range tables */
+  html.dark table.ssr td.roll{ color:#6fb56a; }
+  /* the hit-location plate is a raster image — keep it on a light card so it (and its caption) stay legible */
+  html.dark .figwrap{ background:#f3efe6; border-color:#cbc6b9 !important; }
+  html.dark .figwrap .cap{ color:#5e1418; }
+  html.dark .figwrap .cap span{ color:#2c4a63; }
+  html.dark .figwrap .lock{ color:#5a5750; }
+}
 </style>
 <div class="page">
 <div class="masthead"><div class="title">The Combat Turn — Maneuver · Attack · Defend · Resolve<small>GURPS 4E · KNIGHTS OF THE OLD REPUBLIC · SIDE A · PAGE 1 OF 4</small></div><div class="subtitle">The whole melee exchange on one page: pick a maneuver → attack → defence → damage → wounds.<br>Every roll 3d6 ≤ effective skill · damage − DR, ×type → HP · 1 m = 1 hex<br><span class="flag">REV 4</span> Full resolution chain here · ranged → P2 · explosions &amp; velocity → P3</div></div><div class="seqbar"><div class="sh">ONE<br>TURN</div><div class="sx"><span class="num">①</span><b>Choose a maneuver.</b> Your move + your action (table at left).</div><div class="sx"><span class="num">②</span><b>Attacking? Roll 3d6.</b> You hit if the roll is ≤ your effective skill.</div><div class="sx"><span class="num">③</span><b>They defend.</b> Defender picks ONE — Dodge, Parry or Block — 3d6 ≤ it.</div><div class="sx"><span class="num">④</span><b>Undefended hit → roll damage</b> on the weapon’s dice.</div><div class="sx"><span class="num">⑤</span><b>−DR, ×type, apply to HP.</b> Then check shock / major wound.</div><div class="sx"><span class="num">↻</span><b>Next combatant</b> in Basic-Speed order.</div></div><div class="grid" style="grid-template-columns:1.5fr 1.05fr 1.05fr 1.3fr"><div class="col">      <div class="sec crim" style="flex:1; display:flex; flex-direction:column;">
@@ -733,5 +768,17 @@ table.flow th{font-size:4.45pt; padding:.26mm .88mm;}
 <div class="foot"><div>Source of truth: <b>Star Wars the Old Republic — GURPS 4E Conversion</b> (KOTOR). Where this sheet and the compendium differ, the compendium wins.</div><div><span class="flag">PAGE 4 / 4</span> REV 5 · condensed combat-flow layout · ranged+thrown · damage+area+velocity</div></div>
 </div>
 
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('themeToggle');
+  function paint(){ if(btn) btn.innerHTML = root.classList.contains('dark') ? '\u2600 Light' : '\u263e Dark'; }
+  paint();
+  if(btn) btn.addEventListener('click', function(){
+    var d = root.classList.toggle('dark');
+    try{ localStorage.setItem('kotorTheme', d?'dark':'light'); }catch(e){}
+    paint();
+  });
+})();
+</script>
 </body>
 </html>
