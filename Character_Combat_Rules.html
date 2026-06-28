@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Combat Rules — Tylo &amp; Chatni</title>
+<script>try{if((localStorage.getItem('kotorTheme')||'')==='dark')document.documentElement.classList.add('dark');}catch(e){}</script>
+<style>
+  :root{
+    --ink:#1a1a1c; --soft:#4a4a50; --line:#c9c4b8; --line2:#e3ddd0;
+    --paper:#f6f2e9; --panel:#fffdf8; --band:#23272e; --bandtext:#f2efe6;
+    --crimson:#8c2026; --crimson-d:#5e1418; --steel:#2c4a63; --steel-d:#1f3445; --steel-l:#e7eef3;
+    --aoa:#8c2026; --aoa-bg:#f8ebe9; --aod:#2c4a63; --aod-bg:#e9eff4;
+    --std:#5a5750; --std-bg:#f0ede4; --mod:#8a6a16; --mod-bg:#f7f0dd;
+    --def:#3d6b3a; --def-bg:#ebf2e8; --house:#a23a2e; --house-bg:#fbeeea;
+    --gold:#b08400; --shade:rgba(0,0,0,.018);
+    --con:'Oswald','Barlow Semi Condensed','Arial Narrow',sans-serif;
+    --body:'Barlow Semi Condensed','Segoe UI',-apple-system,'DejaVu Sans Condensed',sans-serif;
+  }
+  html.dark{
+    --ink:#e8e4d9; --soft:#a29c90; --line:#3a3a42; --line2:#2b2b32;
+    --paper:#14151a; --panel:#1f2026; --band:#0c0d11; --bandtext:#eee9dc;
+    --crimson:#cf4b40; --crimson-d:#e0655d; --steel:#7fa9cc; --steel-d:#1a2733; --steel-l:#1c2a36;
+    --aoa-bg:#2a1715; --aod-bg:#13202b; --std-bg:#23231f; --mod-bg:#241f12;
+    --def-bg:#15231a; --house-bg:#2a1612; --gold:#d2a531; --shade:rgba(255,255,255,.02);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:var(--paper);}
+  body{color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.35;-webkit-text-size-adjust:100%;}
+  .wrap{max-width:1180px;margin:0 auto;padding:16px 14px 70px;}
+
+  .top{display:flex;align-items:center;gap:11px;margin:0 0 14px;flex-wrap:wrap;}
+  .top h1{font-family:var(--con);font-weight:700;font-size:17px;letter-spacing:.06em;
+    text-transform:uppercase;margin:0;flex:1;color:var(--crimson-d);}
+  .top h1 small{font-weight:400;color:var(--soft);font-size:11px;letter-spacing:.04em;text-transform:none;}
+  .btn{font:inherit;font-size:12px;letter-spacing:.03em;cursor:pointer;border:1px solid var(--line);
+    background:var(--panel);color:var(--ink);padding:6px 12px;border-radius:6px;font-family:var(--con);}
+  .btn:hover{border-color:var(--soft);}
+
+  /* one character = one sheet */
+  .sheet{background:var(--panel);border:1px solid var(--line);border-radius:6px;
+    overflow:hidden;margin-bottom:22px;}
+  .mast{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;
+    padding:11px 16px 9px;border-bottom:1.5mm solid var(--accent);position:relative;
+    background:var(--band);-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .sheet.tylo{--accent:var(--steel);}
+  .sheet.chatni{--accent:var(--crimson);}
+  .sheet.tylo .nm b{color:#9ec4e6;} .sheet.chatni .nm b{color:#e8978f;}
+  .mast .nm{font-family:var(--con);font-weight:700;font-size:25px;letter-spacing:.04em;
+    text-transform:uppercase;color:var(--bandtext);line-height:.95;}
+  .mast .nm small{display:block;font-family:var(--con);font-weight:300;font-size:9.5px;
+    letter-spacing:.22em;color:#cfc8bb;margin-top:3px;text-transform:uppercase;}
+  .mast .vit{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;}
+  .chip{font-family:var(--con);background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.14);
+    border-radius:4px;padding:3px 8px 2px;text-align:center;min-width:46px;}
+  html.dark .chip{background:rgba(255,255,255,.05);}
+  .chip .k{display:block;font-size:8px;letter-spacing:.12em;color:#bdb6a8;text-transform:uppercase;}
+  .chip .v{font-family:var(--con);font-weight:700;font-size:16px;color:#fff;line-height:1.05;}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;padding:12px 14px 14px;}
+  @media(max-width:760px){.grid{grid-template-columns:1fr;}}
+  .col{display:flex;flex-direction:column;gap:11px;min-width:0;}
+
+  .sec{border:1px solid var(--line);border-radius:5px;overflow:hidden;background:var(--paper);}
+  .sec > h2{font-family:var(--con);font-weight:600;text-transform:uppercase;font-size:11px;
+    letter-spacing:.05em;color:var(--bandtext);background:var(--band);
+    padding:5px 10px 4px;display:flex;align-items:center;gap:8px;border-bottom:2px solid var(--accent);}
+  .sec > h2 .n{font-family:var(--con);font-weight:300;font-size:9px;opacity:.7;letter-spacing:.16em;
+    border:1px solid rgba(255,255,255,.25);border-radius:3px;padding:0 4px;}
+  .sec > h2 .rt{margin-left:auto;font-weight:400;font-size:10px;letter-spacing:.02em;opacity:.85;text-transform:none;}
+
+  table{width:100%;border-collapse:collapse;font-size:12px;line-height:1.25;}
+  th{font-family:var(--con);font-weight:600;text-transform:uppercase;letter-spacing:.02em;font-size:10px;
+    color:var(--steel);text-align:left;padding:4px 8px 3px;background:var(--steel-l);
+    border-bottom:1.5px solid var(--steel);}
+  td{padding:3px 8px;border-bottom:1px solid var(--line2);vertical-align:top;color:var(--ink);}
+  tr:last-child td{border-bottom:0;}
+  tbody tr:nth-child(even) td{background:var(--shade);}
+  .c{text-align:center;} .r{text-align:right;}
+  .hit{font-family:var(--con);font-weight:700;color:var(--crimson-d);white-space:nowrap;font-size:14px;}
+  .pen{font-family:var(--con);font-weight:600;color:var(--steel);white-space:nowrap;}
+  .k{font-family:var(--con);font-weight:500;white-space:nowrap;}
+  .dim{color:var(--soft);} .nb{white-space:nowrap;}
+  b,strong{color:var(--crimson-d);} html.dark b, html.dark strong{color:var(--crimson);}
+  td .mn{font-family:var(--con);font-weight:600;color:var(--ink);}
+
+  /* category band rows inside attack table */
+  .band-row td{background:var(--accent)!important;color:#fff;font-family:var(--con);font-weight:600;
+    text-transform:uppercase;font-size:9.5px;letter-spacing:.06em;padding:4px 8px 3px;border-bottom:0;}
+  .band-row td .sub{font-weight:300;text-transform:none;opacity:.85;letter-spacing:0;}
+
+  .lead{font-size:11.5px;line-height:1.3;color:var(--soft);padding:6px 10px 7px;}
+  .lead b{color:var(--ink);}
+  .ho,.sw{display:inline-block;font-family:var(--con);font-weight:600;font-size:9px;letter-spacing:.04em;
+    color:#fff;padding:0 4px;border-radius:3px;vertical-align:1px;}
+  .ho{background:var(--house);} .sw{background:var(--steel);}
+
+  .legend{margin-top:6px;border-top:1px solid var(--line2);padding-top:11px;color:var(--soft);
+    font-size:11.5px;line-height:1.55;}
+  .legend b{color:var(--ink);} .legend code{font-family:var(--con);color:var(--ink);font-weight:700;}
+
+  @media print{
+    .noprint{display:none!important;}
+    body{background:#fff;font-size:9.6px;}
+    .wrap{max-width:none;padding:0;}
+    .sheet{border:1px solid #999;margin:0 0 8px;break-inside:avoid;}
+    .sheet + .sheet{break-before:page;}
+    .grid{padding:8px 9px 9px;gap:7px;}
+    .col{gap:7px;}
+    th{font-size:8.4px;} td{padding:2px 6px;}
+    @page{size:A4 portrait;margin:9mm;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top noprint">
+    <h1>Combat Rules <small>— per character · 3d6 roll-under · numbers are yours</small></h1>
+    <button class="btn" id="themeBtn" onclick="toggleTheme()">☾ Dark</button>
+    <button class="btn" onclick="window.print()">⎙ Print</button>
+  </div>
+
+  <!-- ═══════════════════════ TYLO ═══════════════════════ -->
+  <section class="sheet tylo">
+    <div class="mast">
+      <div class="nm"><b>Tylo</b> Dara
+        <small>Iktotchi saberstaff duelist · Lightsaber skill 32 · DX 26</small></div>
+      <div class="vit">
+        <div class="chip"><span class="k">HP</span><span class="v">36</span></div>
+        <div class="chip"><span class="k">FP</span><span class="v">30</span></div>
+        <div class="chip"><span class="k">Dodge</span><span class="v">14</span></div>
+        <div class="chip"><span class="k">Parry</span><span class="v">22</span></div>
+        <div class="chip"><span class="k">DR</span><span class="v">3</span></div>
+        <div class="chip"><span class="k">Move</span><span class="v">10</span></div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT COLUMN -->
+      <div class="col">
+
+        <div class="sec">
+          <h2><span class="n">ATK</span> Your Attacks <span class="rt">roll 3d6 ≤ number</span></h2>
+          <div class="lead"><b>Default — Saberstaff:</b> <span class="hit">30</span> ×2 strikes/turn (skill 32, −2 dual-grip). Brawling <span class="hit">29</span> (punch 1d cr). All options below are off Lightsaber <b>32</b>.</div>
+          <table>
+            <tr class="band-row"><td colspan="3">All-Out Attack <span class="sub">— no active defence until your next turn</span></td></tr>
+            <tr><td class="mn">Determined</td><td class="hit">36</td><td class="dim">+4 hit · one strike</td></tr>
+            <tr><td class="mn">Double</td><td class="hit">30 ×2</td><td class="dim">two strikes (same/diff targets)</td></tr>
+            <tr><td class="dim" colspan="3" style="font-size:10.5px"><i>Strong does not apply — force swords can't add swing/thrust damage.</i></td></tr>
+            <tr class="band-row"><td colspan="3">Committed / Defensive <span class="sub">— keep some defence</span></td></tr>
+            <tr><td class="mn">Committed (Det.)</td><td class="hit">34</td><td class="dim">+2 hit · step×2 · other defences −2, blade can't parry</td></tr>
+            <tr><td class="mn">Defensive Attack</td><td class="hit">30</td><td class="dim">−2 dmg · +1 to one defence</td></tr>
+            <tr class="band-row"><td colspan="3">Skill Tricks <span class="sub">— spend your huge skill</span></td></tr>
+            <tr><td class="mn">Deceptive</td><td class="hit">30</td><td class="dim">−2 hit → foe <b>−1</b> defence. Go <span class="pen">−8</span>→ foe −4, still hit <b>24</b></td></tr>
+            <tr><td class="mn">Telegraphic</td><td class="hit">36</td><td class="dim">+4 hit · but foe <b>+2</b> defence</td></tr>
+            <tr><td class="mn">Rapid Strike</td><td class="hit">26 ×2</td><td class="dim">−6 each · one blade (no WM)</td></tr>
+            <tr><td class="mn">Move &amp; Attack</td><td class="hit">9</td><td class="dim">−4, <b>capped 9</b> · full Move · no retreat <span class="sw">RAW</span></td></tr>
+            <tr><td class="mn">Evaluate → hit</td><td class="hit">33</td><td class="dim">+1/+2/<b>+3</b> after 1–3 turns sizing up</td></tr>
+            <tr><td class="mn">Feint</td><td class="hit">32</td><td class="dim">vs foe's best defence · win → foe −margin to defend you</td></tr>
+          </table>
+        </div>
+
+        <div class="sec">
+          <h2><span class="n">LOC</span> Targeted Hits <span class="rt">from saberstaff 30</span></h2>
+          <table>
+            <tr><th>Aim at</th><th class="c">Hit</th><th>What it does (saber reaches all)</th></tr>
+            <tr><td class="k">Vitals</td><td class="c hit">27</td><td class="dim"><b>×3</b> injury — the kill shot</td></tr>
+            <tr><td class="k">Skull</td><td class="c hit">23</td><td class="dim"><b>×4</b> injury (DR 2) · major → KO</td></tr>
+            <tr><td class="k">Eye</td><td class="c hit">21</td><td class="dim"><b>×4</b>, ignores DR · blinds</td></tr>
+            <tr><td class="k">Neck</td><td class="c hit">25</td><td class="dim">cut = severance risk</td></tr>
+            <tr><td class="k">Face</td><td class="c hit">25</td><td class="dim">crits read one row better</td></tr>
+            <tr><td class="k">Arm / Leg</td><td class="c hit">28</td><td class="dim">cripple at HP/2 · disarm / drop</td></tr>
+            <tr><td class="k">Hand / Foot</td><td class="c hit">26</td><td class="dim">cripple · drops weapon</td></tr>
+            <tr><td class="k">Groin</td><td class="c hit">27</td><td class="dim">auto major wound</td></tr>
+          </table>
+          <div class="lead">Repeating the same target → foe <b>+1</b> defence on the 3rd+ try.</div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="col">
+
+        <div class="sec">
+          <h2><span class="n">DEF</span> Your Defences</h2>
+          <table>
+            <tr><th>Defence</th><th class="c">#</th><th>Notes</th></tr>
+            <tr><td class="k">Dodge</td><td class="c hit">14</td><td class="dim">retreat → <b>17</b> · acrobatic → 16/12</td></tr>
+            <tr><td class="k">Parry (saber)</td><td class="c hit">22</td><td class="dim">retreat → <b>23</b> · <b>also parries blaster bolts</b> <span class="ho">HOUSE</span></td></tr>
+            <tr><td class="k">Parry (unarmed)</td><td class="c hit">18</td><td class="dim">Brawling</td></tr>
+          </table>
+          <table style="margin-top:2px">
+            <tr><th colspan="2">Extra options</th></tr>
+            <tr><td class="mn">All-Out Defence</td><td class="dim">+2 to one (Dodge 16 / Parry 24), <b>or</b> two different defences</td></tr>
+            <tr><td class="mn">Feverish Def.</td><td class="dim">1 FP → +2 to one defence (once/turn)</td></tr>
+            <tr><td class="mn">Acrobatic Dodge</td><td class="dim">roll Acrobatics <b>29</b> → +2 / fail −2 (very reliable)</td></tr>
+            <tr><td class="mn">2nd / 3rd defence</td><td class="dim"><b>−4 each</b>: parry 22 → 18 → 14 (no Weapon Master)</td></tr>
+            <tr><td class="mn">Facing</td><td class="dim">side <b>−2</b> · rear &amp; aware −4 · rear unaware = <b>none</b></td></tr>
+          </table>
+        </div>
+
+        <div class="sec">
+          <h2><span class="n">CRIT</span> Your Crit Range</h2>
+          <div class="lead">At skill 30 you <b>crit on a 3, 4, 5 or 6</b>, and you <b>never</b> crit-fail on a 17 — only 18 (or miss by 10+).</div>
+          <table>
+            <tr><th class="c">3d</th><th>On a critical hit</th></tr>
+            <tr><td class="c hit">3</td><td class="dim">max damage + auto major wound</td></tr>
+            <tr><td class="c hit">4</td><td class="dim">triple damage</td></tr>
+            <tr><td class="c hit">5</td><td class="dim">double damage</td></tr>
+            <tr><td class="c hit">6</td><td class="dim">damage ignores DR</td></tr>
+          </table>
+        </div>
+
+        <div class="sec">
+          <h2><span class="n">DMG</span> Your Damage</h2>
+          <div class="lead"><b>8d+8</b> imp+burn · <b>AD 5</b> (divide foe DR by 5, then injury). <b>imp ×2</b> on the body · <b>×3</b> vitals · <b>×4</b> skull. Burn cauterises; impaling gives <b>no knockback</b> (punches through).</div>
+        </div>
+
+        <div class="sec">
+          <h2><span class="n">EDGE</span> Combat Traits</h2>
+          <table>
+            <tr><td class="mn nb">Combat Reflexes</td><td class="dim">+1 all defences (already in) · +6 to shake stun/surprise · never frozen on surprise</td></tr>
+            <tr><td class="mn nb">High Pain Thr.</td><td class="dim">ignore shock penalties · +3 HT vs stun &amp; knockdown</td></tr>
+            <tr><td class="mn nb">Extra Attack</td><td class="dim">one extra attack/turn</td></tr>
+            <tr><td class="mn nb">Ambidexterity</td><td class="dim">no off-hand −4</td></tr>
+            <tr><td class="mn nb">Precognition</td><td class="dim">GM warns of danger — read the room before it happens</td></tr>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ CHATNI ═══════════════════════ -->
+  <section class="sheet chatni">
+    <div class="mast">
+      <div class="nm"><b>Chatni</b>
+        <small>Dathomiri Nightsister · Weapon Master saber · Lightsaber skill 37</small></div>
+      <div class="vit">
+        <div class="chip"><span class="k">HP</span><span class="v">33</span></div>
+        <div class="chip"><span class="k">FP</span><span class="v">69</span></div>
+        <div class="chip"><span class="k">Dodge</span><span class="v">10</span></div>
+        <div class="chip"><span class="k">Parry</span><span class="v">22</span></div>
+        <div class="chip"><span class="k">DR</span><span class="v">1/5</span></div>
+        <div class="chip"><span class="k">Move</span><span class="v">6</span></div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT COLUMN -->
+      <div class="col">
+
+        <div class="sec">
+          <h2><span class="n">ATK</span> Your Attacks <span class="rt">roll 3d6 ≤ number</span></h2>
+          <div class="lead"><b>Default — Lightsaber:</b> <span class="hit">37</span> ×2 strikes/turn (Extra Attack, no penalty). <b>Silent mode:</b> 6d+6, foe <b>−3 Parry</b>. All options below are off skill <b>37</b>.</div>
+          <table>
+            <tr class="band-row"><td colspan="3">All-Out Attack <span class="sub">— no active defence until your next turn</span></td></tr>
+            <tr><td class="mn">Determined</td><td class="hit">41</td><td class="dim">+4 hit · one strike</td></tr>
+            <tr><td class="mn">Double</td><td class="hit">37 ×2</td><td class="dim">two strikes (same/diff targets)</td></tr>
+            <tr><td class="dim" colspan="3" style="font-size:10.5px"><i>Strong does not apply — force swords can't add swing/thrust damage.</i></td></tr>
+            <tr class="band-row"><td colspan="3">Committed / Defensive <span class="sub">— keep some defence</span></td></tr>
+            <tr><td class="mn">Committed (Det.)</td><td class="hit">39</td><td class="dim">+2 hit · step×2 · other defences −2, blade can't parry</td></tr>
+            <tr><td class="mn">Defensive Attack</td><td class="hit">37</td><td class="dim">−2 dmg · +1 to one defence</td></tr>
+            <tr class="band-row"><td colspan="3">Skill Tricks <span class="sub">— huge skill + Weapon Master</span></td></tr>
+            <tr><td class="mn">Deceptive</td><td class="hit">35</td><td class="dim">−2 hit → foe <b>−1</b> defence. Go <span class="pen">−16</span>→ foe −8, still hit <b>21</b></td></tr>
+            <tr><td class="mn">Telegraphic</td><td class="hit">41</td><td class="dim">+4 hit · but foe <b>+2</b> defence</td></tr>
+            <tr><td class="mn">Rapid Strike <span class="sw">WM</span></td><td class="hit">34 ×2</td><td class="dim">−3 each (Weapon Master halves it)</td></tr>
+            <tr><td class="mn">Move &amp; Attack</td><td class="hit">9</td><td class="dim">−4, <b>capped 9</b> · full Move · no retreat <span class="sw">RAW</span></td></tr>
+            <tr><td class="mn">Evaluate → hit</td><td class="hit">40</td><td class="dim">+1/+2/<b>+3</b> after 1–3 turns sizing up</td></tr>
+            <tr><td class="mn">Feint</td><td class="hit">37</td><td class="dim">vs foe's best defence · win → foe −margin to defend you</td></tr>
+          </table>
+        </div>
+
+        <div class="sec">
+          <h2><span class="n">LOC</span> Targeted Hits <span class="rt">from saber 37</span></h2>
+          <table>
+            <tr><th>Aim at</th><th class="c">Hit</th><th>What it does (saber reaches all)</th></tr>
+            <tr><td class="k">Vitals</td><td class="c hit">34</td><td class="dim"><b>×3</b> injury — the kill shot</td></tr>
+            <tr><td class="k">Skull</td><td class="c hit">30</td><td class="dim"><b>×4</b> injury (DR 2) · major → KO</td></tr>
+            <tr><td class="k">Eye</td><td class="c hit">28</td><td class="dim"><b>×4</b>, ignores DR · blinds</td></tr>
+            <tr><td class="k">Neck</td><td class="c hit">32</td><td class="dim">cut = severance risk</td></tr>
+            <tr><td class="k">Face</td><td class="c hit">32</td><td class="dim">crits read one row better</td></tr>
+            <tr><td class="k">Arm / Leg</td><td class="c hit">35</td><td class="dim">cripple at HP/2 · disarm / drop</td></tr>
+            <tr><td class="k">Hand / Foot</td><td class="c hit">33</td><td class="dim">cripple · drops weapon</td></tr>
+            <tr><td class="k">Groin</td><td class="c hit">34</td><td class="dim">auto major wound</td></tr>
+          </table>
+          <div class="lead">Repeating the same target → foe <b>+1</b> defence on the 3rd+ try.</div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="col">
+
+        <div class="sec">
+          <h2><span class="n">DEF</span> Your Defences</h2>
+          <table>
+            <tr><th>Defence</th><th class="c">#</th><th>Notes</th></tr>
+            <tr><td class="k">Dodge</td><td class="c hit">10</td><td class="dim">retreat → <b>13</b> · acrobatic → 12/8</td></tr>
+            <tr><td class="k">Parry (saber)</td><td class="c hit">22</td><td class="dim">retreat → <b>23</b> · <b>also parries blaster bolts</b> <span class="ho">HOUSE</span></td></tr>
+            <tr><td class="k">Block (cloak)</td><td class="c hit">2</td><td class="dim">heavy cloak, tracked by hand</td></tr>
+          </table>
+          <table style="margin-top:2px">
+            <tr><th colspan="2">Extra options</th></tr>
+            <tr><td class="mn">All-Out Defence</td><td class="dim">+2 to one (Dodge 12 / Parry 24), <b>or</b> two different defences</td></tr>
+            <tr><td class="mn">Feverish Def.</td><td class="dim">1 FP → +2 to one defence (once/turn) — you have FP to burn</td></tr>
+            <tr><td class="mn">Acrobatic Dodge</td><td class="dim">roll Acrobatics <b>12</b> → +2 / fail −2 (risky — half the time)</td></tr>
+            <tr><td class="mn">2nd / 3rd parry <span class="sw">WM</span></td><td class="dim"><b>−2 each</b>: 22 → 20 → 18 (Weapon Master)</td></tr>
+            <tr><td class="mn">Facing</td><td class="dim">side <b>−2</b> · rear &amp; aware −4 · rear unaware = <b>none</b></td></tr>
+          </table>
+        </div>
+
+        <div class="sec">
+          <h2><span class="n">CRIT</span> Your Crit Range</h2>
+          <div class="lead">At skill 37 you <b>crit on a 3, 4, 5 or 6</b>, and you <b>never</b> crit-fail on a 17 — only 18 (or miss by 10+).</div>
+          <table>
+            <tr><th class="c">3d</th><th>On a critical hit</th></tr>
+            <tr><td class="c hit">3</td><td class="dim">max damage + auto major wound</td></tr>
+            <tr><td class="c hit">4</td><td class="dim">triple damage</td></tr>
+            <tr><td class="c hit">5</td><td class="dim">double damage</td></tr>
+            <tr><td class="c hit">6</td><td class="dim">damage ignores DR</td></tr>
+          </table>
+        </div>
+
+        <div class="sec">
+          <h2><span class="n">DMG</span> Your Damage</h2>
+          <div class="lead"><b>8d+8</b> imp+burn · <b>AD 5</b> (divide foe DR by 5, then injury). <b>imp ×2</b> on the body · <b>×3</b> vitals · <b>×4</b> skull. Silent mode <b>6d+6</b>. Burn cauterises; impaling gives <b>no knockback</b>.</div>
+        </div>
+
+        <div class="sec">
+          <h2><span class="n">EDGE</span> Combat Traits</h2>
+          <table>
+            <tr><td class="mn nb">Weapon Master</td><td class="dim">Rapid Strike −3 (not −6) · extra parries −2 (not −4) · +damage baked into 8d+8</td></tr>
+            <tr><td class="mn nb">Combat Reflexes</td><td class="dim">+1 all defences (already in) · +6 to shake stun/surprise · never frozen on surprise</td></tr>
+            <tr><td class="mn nb">High Pain Thr.</td><td class="dim">ignore shock penalties · +3 HT vs stun &amp; knockdown</td></tr>
+            <tr><td class="mn nb">Extra Attack</td><td class="dim">two saber strikes/turn at full skill</td></tr>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="legend">
+    <b>How to read this:</b> every number is <i>this character's</i> effective skill — roll <code>3d6</code> and succeed at or under it. Modifiers stack onto the base, then layer one Attack modifier (Deceptive, Telegraphic, Targeted…) on top. ·
+    <b>Defending:</b> you get <b>one</b> free defence per attack; each extra costs the multi-defence penalty. ·
+    <span class="ho">HOUSE</span>/<span class="sw">RAW</span> mark where this table follows a house ruling or strict Basic-Set rules. ·
+    The full ruleset (grappling, ranged, explosions, status effects) lives on the <b>A3 combat cheatsheet</b>.
+  </div>
+
+</div>
+
+<script>
+  function paintBtn(){
+    var d=document.documentElement.classList.contains('dark');
+    var b=document.getElementById('themeBtn');
+    if(b)b.textContent=d?'☀ Light':'☾ Dark';
+  }
+  function toggleTheme(){
+    var d=document.documentElement.classList.toggle('dark');
+    try{localStorage.setItem('kotorTheme',d?'dark':'light');}catch(e){}
+    paintBtn();
+  }
+  paintBtn();
+</script>
+</body>
+</html>
