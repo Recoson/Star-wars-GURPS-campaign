@@ -6968,13 +6968,13 @@ function setForceStudyPower(i,name){
  touch();renderForce();
 }
 function setForceStudyDone(i,v){const p=_forceStudy()[i];if(!p)return;const nv=Math.max(0,+v||0);const d=nv-(+p.done||0);if(d>0){C.trainHoursTotal=(+C.trainHoursTotal||0)+d;C.trainHoursAvail=(+C.trainHoursAvail||0)-d;}p.done=nv;touch();renderForce();}
-function learnForcePower(i){
+function learnForcePower(i,viaPoints){
  const p=_forceStudy()[i]; if(!p)return;
  if(!p.power){alert('Pick a power to learn first.');return;}
  const name=p.power, d=forcePowerDef(name), book=d?d.book:(p.book||'');
  _forceStudy().splice(i,1);                       // one-and-done: drop the finished project
  toggleForcePower(book,name,true);                // tick it known (also re-renders the Force tab)
- if(typeof _fxToast==='function')_fxToast(esc(name)+' learned');
+ if(typeof _fxToast==='function')_fxToast(esc(name)+(viaPoints?(' bought — '+(d?d.pts:0)+' pts'):' learned'));
 }
 function setForceTrainAvail(v){C.trainHoursAvail=Math.round(+v||0);touch();renderForce();}
 function addForceTrainAvail(n){C.trainHoursAvail=Math.round((+C.trainHoursAvail||0)+(+n||0));touch();renderForce();}
@@ -7012,7 +7012,7 @@ function forceStudySection(){
    let list=(byBook[b]||[]).slice().sort((x,y)=>(x.tier-y.tier)||x.name.localeCompare(y.name));
    if(cur&&!list.some(p=>p.name===cur)){const d=forcePowerDef(cur);if(d&&d.book===b)list=list.concat([d]);}
    if(!list.length)return;
-   o+=`<optgroup label="${esc(b)}">`+list.map(p=>`<option value="${esc(p.name)}"${p.name===cur?' selected':''}>${esc(p.name)} — T${p.tier}${p.trad?' ['+esc(p.trad)+']':''}${p.aff&&p.aff===pri?' ◆':''}</option>`).join('')+'</optgroup>';
+   o+=`<optgroup label="${esc(b)}">`+list.map(p=>`<option value="${esc(p.name)}"${p.name===cur?' selected':''}>${esc(p.name)} — T${p.tier} · ${p.pts}p${p.trad?' ['+esc(p.trad)+']':''}${p.aff&&p.aff===pri?' ◆':''}</option>`).join('')+'</optgroup>';
   });
   return o;
  };
@@ -7037,7 +7037,7 @@ function forceStudySection(){
    <td class="ctr"><input type="checkbox" ${p.teacher?'checked':''} ${tdis} title="${hollow?'The Hollowing admits no teacher':'Teacher who knows it — half time'}" onchange="C.forceStudy[${i}].teacher=this.checked;if(this.checked)C.forceStudy[${i}].selfTaught=false;syncForceStudy(${i})"></td>
    <td class="ctr"><input type="checkbox" ${p.selfTaught?'checked':''} ${tdis} title="${hollow?'Hollowing is always self-derived (x2)':'Self-taught — x2 time, -4 Force roll to begin'}" onchange="C.forceStudy[${i}].selfTaught=this.checked;if(this.checked)C.forceStudy[${i}].teacher=false;syncForceStudy(${i})"></td>
    <td class="dim" style="font-size:10px">${complete?'<b style="color:var(--green)">Learned!</b>':(req?done+' / '+req+' <span style="color:var(--text2)">('+pct+'%)</span>':done+' h')}</td>
-   <td><button class="btn-add" style="margin:0;padding:2px 6px;font-size:10px" onclick="rollForceStudy(${i})" title="Roll a study session">⚄ Roll</button> ${p.power?`<button class="btn-add" style="margin:0;padding:2px 6px;font-size:10px" onclick="syncForceStudy(${i})" title="Recompute hours from the Force-Learning Standard">↻</button>`:''}${complete&&p.power?` <button class="btn-add" style="margin:0;padding:2px 6px;font-size:10px;background:var(--green)" onclick="learnForcePower(${i})" title="Mark this power known">+ Learn it</button>`:''} <button class="btn-del" onclick="C.forceStudy.splice(${i},1);touch();renderForce()">✕</button></td>
+   <td><button class="btn-add" style="margin:0;padding:2px 6px;font-size:10px" onclick="rollForceStudy(${i})" title="Roll a study session">⚄ Roll</button> ${p.power?`<button class="btn-add" style="margin:0;padding:2px 6px;font-size:10px" onclick="syncForceStudy(${i})" title="Recompute hours from the Force-Learning Standard">↻</button>`:''}${p.power&&!complete?` <button class="btn-add" style="margin:0;padding:2px 6px;font-size:10px;background:var(--amber);color:#1a1206;font-weight:600" onclick="learnForcePower(${i},true)" title="Buy it outright with character points — the always-available alternative to training (Master Cost Reference)">⟐ Buy ${d?d.pts:0}p</button>`:''}${complete&&p.power?` <button class="btn-add" style="margin:0;padding:2px 6px;font-size:10px;background:var(--green)" onclick="learnForcePower(${i})" title="Mark this power known">+ Learn it</button>`:''} <button class="btn-del" onclick="C.forceStudy.splice(${i},1);touch();renderForce()">✕</button></td>
   </tr>${p.lastSync?`<tr><td colspan="11" style="font-size:10px;padding:0 8px 2px;color:var(--text2);font-style:italic">↻ ${esc(p.lastSync)}</td></tr>`:''}${p.last?`<tr><td colspan="11" style="font-size:10.5px;padding:1px 8px 6px;color:${col}">${esc(p.last)}</td></tr>`:''}`;
  }).join('')||'<tr><td colspan="11" class="dim" style="padding:8px">No training underway — add a project and pick a power from a book you know to begin.</td></tr>';
  const note=!books.length
@@ -7045,7 +7045,7 @@ function forceStudySection(){
   :(!learn.length?'<div class="dim" style="font-size:11px;padding:4px 2px">Every power you can currently reach is already known — advance a tradition tier to open higher powers.</div>':'');
  return `<div class="sec-head" style="margin-top:18px">Force Training <button class="btn-add" onclick="addForceStudy()">+ Train a Power</button>
    <span class="dim" style="float:right;font-weight:400;font-size:10px">Compendium Doc V · learned by training time (tier), never by use</span></div>
-  <div class="dim" style="font-size:11px;margin:2px 0 8px">Pick a power from a book you know — its hours come from its <b>tier</b> (I≈1 wk · II≈3 · III≈6 · IV≈12, at ${FORCE_HOURS_PER_WEEK} h/wk). <b style="color:var(--gold)">◆ Attribute-aligned</b> powers (governing attribute = your Force Primary) halve the time; a <b style="color:var(--cyan)">teacher</b> halves it again; <b style="color:var(--amber)">self-taught</b> doubles it and needs a Force roll at −4 to begin. Each session, roll <b>3d6 ≤ Tgt</b> (your Force attribute): success shaves <b>/Marg</b> hours per point of margin; a <span style="color:var(--green)">critical</span> learns it outright. <b>Learned!</b> → the power is ticked known above. <b style="color:var(--text2)">Tier V powers are earned by a deed in play, not trained.</b></div>
+  <div class="dim" style="font-size:11px;margin:2px 0 8px">Pick a power from a book you know — its hours come from its <b>tier</b> (I≈1 wk · II≈3 · III≈6 · IV≈12, at ${FORCE_HOURS_PER_WEEK} h/wk). <b style="color:var(--gold)">◆ Attribute-aligned</b> powers (governing attribute = your Force Primary) halve the time; a <b style="color:var(--cyan)">teacher</b> halves it again; <b style="color:var(--amber)">self-taught</b> doubles it and needs a Force roll at −4 to begin. Each session, roll <b>3d6 ≤ Tgt</b> (your Force attribute): success shaves <b>/Marg</b> hours per point of margin; a <span style="color:var(--green)">critical</span> learns it outright. <b>Learned!</b> → the power is ticked known above. <b style="color:var(--text2)">Tier V powers are earned by a deed in play, not trained.</b> <b style="color:var(--amber)">Or skip the grind</b> and buy a power outright with character points — the always-available alternative (Tier I/II/III/IV/V = 5/10/20/35/60 pts); either route lands the power in your point budget.</div>
   <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 8px;font-size:12px"><b>⏳ Hours available to train:</b><input class="cell" type="number" style="width:84px" value="${av}" onchange="setForceTrainAvail(this.value)"><button class="btn-sm" onclick="addForceTrainAvail(8)">+8h</button><button class="btn-sm" onclick="addForceTrainAvail(40)">+40h</button><button class="btn-sm" onclick="addForceTrainAvail(200)">+200h</button><span class="dim" style="font-size:10.5px">shared with skill study; rolling sessions spends them</span></div>
   ${note}
   <table class="g">
