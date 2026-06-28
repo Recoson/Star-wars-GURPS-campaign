@@ -6922,27 +6922,27 @@ function customSpeciesSection(){
 // Hours draw from the same downtime pool as skill study (C.trainHoursAvail) — one
 // economy, exactly as the Codex intends. (The Force *skill* behind the roll is an
 // ordinary skill and is trained on the Skills tab; the powers it fires are not.)
-const FORCE_LEARN_WEEKS={1:1,2:3,3:6,4:12};   // Tier V is deed-gated, not trained here
-const FORCE_HOURS_PER_WEEK=28;                 // Open Hours standard: 4 h/day x 7 days
+const FORCE_HOURS_PER_POINT=200;   // canon: 200 h of study/practice = 1 character point (Doc V §3 — the unified study-hour)
+const FORCE_MENTOR_RATE=150;        // under a willing master ≥1 tier above you (Doc V §5.5)
 function _forceStudy(){C.forceStudy=C.forceStudy||[];return C.forceStudy;}
 function forcePowerDef(name){return FORCE_POWERS.find(p=>p.name===name)||null;}
 // hours to learn one power, applying alignment / teacher / self-taught / Hollowing
 function forceLearnHours(name,opts){
  opts=opts||{};
  const p=forcePowerDef(name);
- if(!p)return {hours:200,weeks:0,detail:'unknown power — default 200 h',gated:false};
- const wk=FORCE_LEARN_WEEKS[+p.tier];
- if(!wk)return {hours:0,weeks:0,detail:`Tier ${ROMAN[+p.tier]||p.tier} is earned by a deed in play, not trained`,gated:true};
- let h=wk*FORCE_HOURS_PER_WEEK, mult=1;
- const parts=[`Tier ${ROMAN[+p.tier]} ${wk} wk x ${FORCE_HOURS_PER_WEEK} h`];
- const aligned=!!(p.aff && p.aff===forcePrimaryAttr());
- if(aligned){mult*=0.5;parts.push('attribute-aligned x0.5');}
+ if(!p)return {hours:200,detail:'unknown power — default 200 h',gated:false};
+ if(+p.tier>=5)return {hours:0,detail:`Tier ${ROMAN[+p.tier]||p.tier} is earned by a deed in play (the Crossing), not trained`,gated:true};
+ const pts=+p.pts||TIER_PTS[+p.tier]||0;
  const hollow=(p.book==='The Hollowing');
- if(hollow){mult*=2;parts.push('Hollowing self-derived x2');}
- else if(opts.teacher){mult*=0.5;parts.push('teacher x0.5');}
- else if(opts.selfTaught){mult*=2;parts.push('self-taught x2 (-4 Force roll to begin)');}
+ const mentored=!!opts.teacher && !hollow;
+ const rate=mentored?FORCE_MENTOR_RATE:FORCE_HOURS_PER_POINT;
+ const aligned=!!(p.aff && p.aff===forcePrimaryAttr());
+ const affMult=aligned?0.25:0.5;
+ let h=pts*rate*affMult, mult=1;
+ const parts=[`${pts} pt × ${rate} h/pt${mentored?' (mentor)':''}`, aligned?'affinity matched ×¼':'affinity ×½'];
+ if(opts.selfTaught && !mentored){mult*=1.5;parts.push('no guidance ×1.5');}
  const hours=Math.max(1,Math.round(h*mult));
- return {hours,weeks:wk,aligned,hollow,selfNote:(!hollow&&!!opts.selfTaught),detail:parts.join(' · ')+(mult!==1?` -> ${hours} h`:''),gated:false};
+ return {hours,pts,rate,aligned,hollow,mentored,detail:parts.join(' · ')+` → ${hours} h`,gated:false};
 }
 // learnable = enabled book · tier <= your tier in that book · tier <= IV · not known · primary rules allow
 function forceLearnable(){
@@ -6999,7 +6999,7 @@ function rollForceStudy(i){
  if(critS&&critF)critF=false;
  let kind,msg;
  if(critF){const loss=Math.min(done,20);done-=loss;kind='critfail';msg=`✕ Critical failure (${dice}). A setback — lose ${loss} h.`;}
- else if(critS){done=req>0?req:done+FORCE_HOURS_PER_WEEK;kind='crit';msg=`★ CRITICAL (${dice})! The power opens to you at once.`;}
+ else if(critS){done=req>0?req:done+FORCE_HOURS_PER_POINT;kind='crit';msg=`★ CRITICAL (${dice})! The power opens to you at once.`;}
  else if(roll<=t){const m=t-roll,gain=m*hpm;done=req>0?Math.min(req,done+gain):done+gain;kind='ok';msg=`✓ Success by ${m} (${dice} vs ${t}) — ${gain} h off (${m}×${hpm}).`;}
  else {kind='fail';msg=`✗ Failed (${dice} vs ${t}). No progress this session.`;}
  if(req>0&&done>=req&&kind!=='critfail')msg+=p.power?' Power learned!':' Complete!';
@@ -7056,7 +7056,7 @@ function forceStudySection(){
   :(!learn.length?'<div class="dim" style="font-size:11px;padding:4px 2px">Every power you can currently reach is already known — advance a tradition tier to open higher powers.</div>':'');
  return `<div class="sec-head" style="margin-top:18px">Force Training <button class="btn-add" onclick="addForceStudy()">+ Train a Power</button>
    <span class="dim" style="float:right;font-weight:400;font-size:10px">Compendium Doc V · learned by training time (tier), never by use</span></div>
-  <div class="dim" style="font-size:11px;margin:2px 0 8px">Pick a power from a book you know — its hours come from its <b>tier</b> (I≈1 wk · II≈3 · III≈6 · IV≈12, at ${FORCE_HOURS_PER_WEEK} h/wk). <b style="color:var(--gold)">◆ Attribute-aligned</b> powers (governing attribute = your Force Primary) halve the time; a <b style="color:var(--cyan)">teacher</b> halves it again; <b style="color:var(--amber)">self-taught</b> doubles it and needs a Force roll at −4 to begin. Each session, roll <b>3d6 ≤ Tgt</b> (your Force attribute): success shaves <b>/Marg</b> hours per point of margin; a <span style="color:var(--green)">critical</span> learns it outright. <b>Learned!</b> → the power is ticked known above. <b style="color:var(--text2)">Tier V powers are earned by a deed in play, not trained.</b> <b style="color:var(--amber)">Or skip the grind</b> and buy a power outright with character points — the always-available alternative (Tier I/II/III/IV/V = 5/10/20/35/60 pts); either route lands the power in your point budget. Leave the <b>power</b> blank for a <b>free-study</b> project — set your own Req and label and roll sessions (it just won't auto-tick a power).</div>
+  <div class="dim" style="font-size:11px;margin:2px 0 8px">Pick a power from a book you know. Its training time is its <b>point cost × ${FORCE_HOURS_PER_POINT} h</b> (the campaign’s 200 h = 1 pt), shaped by <b style="color:var(--gold)">◆ affinity</b>: if the power’s governing attribute is your Force Primary you learn it in <b>¼</b> the hours, otherwise <b>½</b>. A <b style="color:var(--cyan)">mentor</b> (a master a tier above you) drops the rate to ${FORCE_MENTOR_RATE} h/pt; learning with <b style="color:var(--amber)">no guidance</b> lengthens it. Each session, roll <b>3d6 ≤ Tgt</b> (your Force attribute): success shaves <b>/Marg</b> hours per point of margin; a <span style="color:var(--green)">critical</span> learns it outright. <b>Learned!</b> → the power is ticked known above. <b style="color:var(--text2)">Tier V powers are earned by a deed in play (the Crossing), not trained.</b> <b style="color:var(--amber)">Or skip the grind</b> and buy a power outright for its flat point cost (Tier I/II/III/IV/V = 5/10/20/35/60 pts) — the always-available alternative; train it or buy it, the price is the same. Leave the <b>power</b> blank for a <b>free-study</b> project — set your own Req and label and roll sessions (it just won’t auto-tick a power).</div>
   <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 8px;font-size:12px"><b>⏳ Hours available to train:</b><input class="cell" type="number" style="width:84px" value="${av}" onchange="setForceTrainAvail(this.value)"><button class="btn-sm" onclick="addForceTrainAvail(8)">+8h</button><button class="btn-sm" onclick="addForceTrainAvail(40)">+40h</button><button class="btn-sm" onclick="addForceTrainAvail(200)">+200h</button><span class="dim" style="font-size:10.5px">shared with skill study; rolling sessions spends them</span></div>
   ${note}
   <table class="g">
@@ -7068,29 +7068,28 @@ function forceStudySection(){
 
 function forceLearnRefSection(){
  const tiers=[1,2,3,4];
- const H=FORCE_HOURS_PER_WEEK;
+ const R=FORCE_HOURS_PER_POINT;
  const row=t=>{
-  const wk=FORCE_LEARN_WEEKS[t], base=wk*H;
-  return `<tr><td class="ctr"><b>${ROMAN[t]}</b></td><td class="ctr dim">${wk} wk</td><td class="ctr"><b>${base} h</b></td><td class="ctr" style="color:var(--gold)">${Math.round(base/2)} h</td><td class="ctr" style="color:var(--cyan)">${Math.round(base/4)} h</td><td class="ctr" style="color:var(--amber)">${base*2} h</td><td class="ctr dim">${TIER_PTS[t]} pts</td></tr>`;
+  const pts=TIER_PTS[t], full=pts*R;
+  return `<tr><td class="ctr"><b>${ROMAN[t]}</b></td><td class="ctr dim">${pts} pts</td><td class="ctr"><b>${Math.round(full/2)} h</b></td><td class="ctr" style="color:var(--gold)">${Math.round(full/4)} h</td></tr>`;
  };
- const vRow=`<tr><td class="ctr"><b>${ROMAN[5]}</b></td><td class="dim" colspan="5" style="text-align:center;font-style:italic;color:var(--text2)">earned by a capstone deed in play — not trained</td><td class="ctr dim">${TIER_PTS[5]} pts</td></tr>`;
- const t3=FORCE_LEARN_WEEKS[3]*H;
- return `<div class="sec-head" style="margin-top:18px">Learning-Time Reference <span class="dim" style="float:right;font-weight:400;font-size:10px">Compendium Doc V · time set by tier, not difficulty</span></div>
-  <div class="dim" style="font-size:11px;margin:2px 0 8px">How long a Force power takes to learn, by <b>tier</b> — at this tool's ${H} h per training-week. The right-hand columns are the same hours after each learning modifier; the modifiers stack.</div>
+ const vRow=`<tr><td class="ctr"><b>${ROMAN[5]}</b></td><td class="ctr dim">${TIER_PTS[5]} pts</td><td class="dim" colspan="2" style="text-align:center;font-style:italic;color:var(--text2)">earned by a deed in play (the Crossing) — never trained or bought</td></tr>`;
+ const t3=TIER_PTS[3]*R, t3m=Math.round(TIER_PTS[3]*FORCE_MENTOR_RATE*0.25);
+ return `<div class="sec-head" style="margin-top:18px">Learning-Time Reference <span class="dim" style="float:right;font-weight:400;font-size:10px">Compendium Doc V §3 · 200 h = 1 point</span></div>
+  <div class="dim" style="font-size:11px;margin:2px 0 8px">A power’s training time is its <b>point cost × ${R} h</b> (the unified 200 h = 1 pt), then <b>affinity</b>: <b>½</b> the hours by default, <b>¼</b> if the power’s governing attribute is your Force Primary. A mentor cuts the rate to ${FORCE_MENTOR_RATE} h/pt.</div>
   <table class="g">
-   <tr><th style="width:44px">Tier</th><th style="width:48px" title="Compendium learning time">~Wks</th><th style="width:56px" title="Base hours at ${H} h/wk">Base</th><th style="width:56px" title="Attribute-aligned OR a teacher — either one halves it">×½</th><th style="width:56px" title="Attribute-aligned AND a teacher — both, stacked">×¼</th><th style="width:56px" title="Self-taught (no teacher, no text) — also a −4 Force roll to begin; The Hollowing is always this">×2</th><th style="width:52px" title="Buy it outright instead — flat character-point cost, no training">Buy</th></tr>
+   <tr><th style="width:48px">Tier</th><th style="width:60px" title="Flat point cost — also the buy price">Cost</th><th style="width:66px" title="Mismatched affinity — ½ of cost × 200 h">Train ½</th><th style="width:66px" title="Matched affinity (governing attr = your Force Primary) — ¼ of cost × 200 h">Train ¼</th></tr>
    ${tiers.map(row).join('')}
    ${vRow}
   </table>
   <div class="dim" style="font-size:10.5px;margin:6px 0 2px;line-height:1.55">
-   <b style="color:var(--gold)">◆ Aligned ×½</b> — the power's governing attribute is your Force Primary. &nbsp;
-   <b style="color:var(--cyan)">Teacher ×½</b> — someone who already knows it trains you; stacks with aligned → <b>×¼</b>. &nbsp;
-   <b style="color:var(--amber)">Self-taught ×2</b> — no teacher and no text, plus a Force roll at −4 just to begin. &nbsp;
-   <b style="color:var(--amber)">The Hollowing</b> is always self-derived (×2) and admits no teacher.
+   <b style="color:var(--gold)">◆ Affinity</b> — the power’s governing attribute vs your Force Primary: <b>matched ×¼</b>, otherwise <b>×½</b> (the two hour columns). &nbsp;
+   <b style="color:var(--cyan)">Mentor</b> — a master ≥1 tier above you cuts the rate to ${FORCE_MENTOR_RATE} h/pt; a matched power under a master ≈ <b>${Math.round(FORCE_MENTOR_RATE*0.25)} h/pt</b> (Tier III ≈ ${t3m} h). The Hollowing admits no teacher. &nbsp;
+   <b style="color:var(--amber)">No guidance</b> — learning unaided lengthens it (×1.5 here; GM-tunable).
   </div>
-  <div class="dim" style="font-size:10.5px;margin:5px 0 2px;line-height:1.55"><b>Worked example — Tier III:</b> <b>${t3} h</b> base → <span style="color:var(--gold)">${Math.round(t3/2)} h</span> aligned → <span style="color:var(--cyan)">${Math.round(t3/4)} h</span> aligned + taught → <span style="color:var(--amber)">${t3*2} h</span> self-taught.</div>
+  <div class="dim" style="font-size:10.5px;margin:5px 0 2px;line-height:1.55"><b>Worked example — Tier III (${TIER_PTS[3]} pts):</b> <b>${t3} h</b> full rate → <span style="color:var(--gold)">${Math.round(t3/2)} h</span> ½-affinity → <span style="color:var(--cyan)">${Math.round(t3/4)} h</span> matched → <span style="color:var(--cyan)">${t3m} h</span> matched under a master. Or <b>buy</b> it for ${TIER_PTS[3]} pts.</div>
   <div class="dim" style="font-size:10px;margin:5px 0 0;line-height:1.55;opacity:.85">
-   <b>Two caveats.</b> The ${H} h/week is this tool's reading of a training-week (4 h/day × 7); the compendium states the tiers in weeks only (I≈1 · II≈3 · III≈6 · IV≈12), so if your table counts a week differently the hours scale with it. And time is just one ledger — <b>buying</b> a power is the always-available alternative at a flat ${TIER_PTS[1]}/${TIER_PTS[2]}/${TIER_PTS[3]}/${TIER_PTS[4]}/${TIER_PTS[5]} pts by tier, which is <i>not</i> hours ÷ 200 (Force powers are the deliberate exception to the 200 h = 1 pt rule).
+   <b>Two notes.</b> The ${R} h/point is the campaign default (Doc V §3); a GM may shorten it for an intensive retreat or lengthen it for poor conditions — the sheet’s rate is the lever. And <b>train it or buy it, the price is the same</b>: ${R} h = 1 pt, so a power costs its flat ${TIER_PTS[1]}/${TIER_PTS[2]}/${TIER_PTS[3]}/${TIER_PTS[4]}/${TIER_PTS[5]} pts either way — Tier V’s deed is the one thing points can’t buy.
   </div>`;
 }
 
