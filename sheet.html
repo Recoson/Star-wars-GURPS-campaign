@@ -3238,27 +3238,37 @@ function modPanel(cat,i,it,cfg){
    ${cards||'<div class="dim" style="font-size:11px;padding:3px 0">No attachments yet.</div>'}
    <button class="btn-add" onclick="addMod('${cat}',${i})">+ Add attachment</button></details>`;
 }
-/* weaponCharge — full-cell recharge time per the compendium Charge-Time table:
-   standard cell (pistols/carbines/sidearms) ~2h; heavy core (rifles/heavy pistols/repeaters) ~4h;
-   sonic ~3h; ion ~6h; disruptor & crew/emplaced ~8h. Kinetic/fuel/munition feeds do not recharge
-   (mag = magazine/clip, cartridge = consumable fuel cell, per-shot = single-load munition). */
-function weaponCharge(w){
- if(!w||(w.cls||'')==='Melee')return'';
+/* weaponCell — classify a weapon's power source. Single source of truth for BOTH the drained-cell
+   Charge time and the in-combat trickle, so the two can never drift. Mirrors the compendium
+   "Charge Time" + "Trickle by Cell" tables. Returns a cell-type key consumed by weaponCharge(). */
+function weaponCell(w){
+ if(!w||(w.cls||'')==='Melee')return'melee';
  var n=(w.name||'').toLowerCase(),d=(w.dtype||'').toLowerCase(),cat=(w.cat||'').toLowerCase();
- if(/rocket|missile|grenade|launcher|lanvarok/.test(n))return'per-shot';
+ if(/rocket|missile|grenade|launcher|lanvarok/.test(n))return'munition';
  if(/flame|cryoban|carbonite/.test(n))return'cartridge';
  if(/bowcaster|slug|needler|ripper|harpoon|\bdart/.test(n))return'mag';
  if(cat.indexOf('guns')===0)return'mag';
- if(d.indexOf('ion')>=0)return'~6h';
- if(d.indexOf('son')>=0||n.indexOf('sonic')>=0)return'~3h';
- if(d.indexOf('cor')>=0)return'~8h';
+ if(d.indexOf('ion')>=0)return'ion';
+ if(d.indexOf('son')>=0||n.indexOf('sonic')>=0)return'sonic';
+ if(d.indexOf('cor')>=0)return'disruptor';
  if(/\bpi\b|pi[-+]|imp|cut|\bcr\b/.test(d)&&d.indexOf('burn')<0)return'mag';
- if(/cannon|emplaced/.test(n))return'~8h';
- if(/repeating|repeater/.test(n))return'~4h';
- if(n.indexOf('carbine')>=0)return'~2h';
- if(/rifle|sniper|lance/.test(n))return'~4h';
- if(n.indexOf('heavy')>=0&&n.indexOf('pistol')>=0)return'~4h';
- return'~2h';
+ if(/cannon|emplaced/.test(n))return'crew';
+ if(/repeating|repeater/.test(n))return'heavy';
+ if(n.indexOf('carbine')>=0)return'standard';
+ if(/rifle|sniper|lance/.test(n))return'heavy';
+ if(n.indexOf('heavy')>=0&&n.indexOf('pistol')>=0)return'heavy';
+ return'standard';
+}
+/* weaponCharge — display string: full drained-cell charge time, plus the in-combat trickle in
+   parentheses (per compendium). Charge tiers: standard ~2h, heavy ~4h, sonic ~3h, ion ~6h,
+   disruptor & crew/emplaced ~8h. Trickle: blaster cores +2/t, sonic & crew/emplaced +1/t,
+   ion +1/2t, disruptor +1/4t. Kinetic/fuel/munition feeds (mag/cartridge/per-shot) have no cell
+   and no trickle; melee is blank. Call sites interpolate ${weaponCharge(w)||'-'}. */
+function weaponCharge(w){
+ var cell=weaponCell(w);
+ var charge={melee:'',munition:'per-shot',cartridge:'cartridge',mag:'mag',standard:'~2h',heavy:'~4h',sonic:'~3h',ion:'~6h',disruptor:'~8h',crew:'~8h'}[cell]||'';
+ var trickle={ion:'+1/2t',sonic:'+1/t',disruptor:'+1/4t',crew:'+1/t',standard:'+2/t',heavy:'+2/t'}[cell]||'';
+ return charge+(trickle?' ('+trickle+')':'');
 }
 function eqStatLine(kind,i,rec){
  const it=C[kind][i];
