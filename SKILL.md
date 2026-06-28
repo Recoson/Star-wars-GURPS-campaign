@@ -255,7 +255,6 @@ live number in the compendium rather than trusting this table.
 | Damage types | lightsaber, disruptor, ion treated as **distinct** types | Combat resolver branches on these. |
 | Hyperdrive (galaxy-crossing baseline) | ~24 h @ Class 0.5 · ~48 h @ Class 1.0 · ~96 h @ Class 2.0 | Class labels in-tool: 0.5 = elite courier/Jedi scout, 1.0 = military/fine freighter, 2.0 = standard freighter. The Galaxy Map's own formula is authoritative — reconfirm there before changing. |
 | Hyperfuel | ~50 credits / unit | Used by the refuelling integration. |
-| Crew/emplaced blaster trickle | **+2/turn** (not the "Trickle by Cell" table's +1/t) | The compendium conflicts with itself: the *Trickle by Cell* table lists crew/emplaced cores at +1/t, but *Overcharge & Drain* says cannons draw larger cores with "the same +2 blaster trickle — proportionally a smaller top-up." The sheet's per-weapon Charge field (`weaponCell`/`weaponCharge`) follows the latter: crew blaster cannons show **~8h (+2/t)** — blaster trickle, but the longer ~8h crew-core charge time (larger core). Sonic stays +1/t per the table. |
 
 ## Known quirks worth flagging (observed in the current sheet)
 
