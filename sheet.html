@@ -3238,11 +3238,33 @@ function modPanel(cat,i,it,cfg){
    ${cards||'<div class="dim" style="font-size:11px;padding:3px 0">No attachments yet.</div>'}
    <button class="btn-add" onclick="addMod('${cat}',${i})">+ Add attachment</button></details>`;
 }
+/* weaponCharge — full-cell recharge time per the compendium Charge-Time table:
+   standard cell (pistols/carbines/sidearms) ~2h; heavy core (rifles/heavy pistols/repeaters) ~4h;
+   sonic ~3h; ion ~6h; disruptor & crew/emplaced ~8h. Kinetic/fuel/munition feeds do not recharge
+   (mag = magazine/clip, cartridge = consumable fuel cell, per-shot = single-load munition). */
+function weaponCharge(w){
+ if(!w||(w.cls||'')==='Melee')return'';
+ var n=(w.name||'').toLowerCase(),d=(w.dtype||'').toLowerCase(),cat=(w.cat||'').toLowerCase();
+ if(/rocket|missile|grenade|launcher|lanvarok/.test(n))return'per-shot';
+ if(/flame|cryoban|carbonite/.test(n))return'cartridge';
+ if(/bowcaster|slug|needler|ripper|harpoon|\bdart/.test(n))return'mag';
+ if(cat.indexOf('guns')===0)return'mag';
+ if(d.indexOf('ion')>=0)return'~6h';
+ if(d.indexOf('son')>=0||n.indexOf('sonic')>=0)return'~3h';
+ if(d.indexOf('cor')>=0)return'~8h';
+ if(/\bpi\b|pi[-+]|imp|cut|\bcr\b/.test(d)&&d.indexOf('burn')<0)return'mag';
+ if(/cannon|emplaced/.test(n))return'~8h';
+ if(/repeating|repeater/.test(n))return'~4h';
+ if(n.indexOf('carbine')>=0)return'~2h';
+ if(/rifle|sniper|lance/.test(n))return'~4h';
+ if(n.indexOf('heavy')>=0&&n.indexOf('pistol')>=0)return'~4h';
+ return'~2h';
+}
 function eqStatLine(kind,i,rec){
  const it=C[kind][i];
  if(kind==='weapons'){ const w=effWeapon(it); if(!w)return''; const wt=((+w.wt||0)+modSum(it,'wt')); const dmg=wpnDamage(w,wDmgBonus(it,w))||'-';
    if((it.cls||w.cls)==='Melee') return `<div class="eq-stat"><b>Dmg</b> ${dmg} &nbsp; <b>Reach</b> ${w.reach||'-'} &nbsp; <b>Parry</b> ${weaponParry(w,wParryBonus(it))} &nbsp; <b>ST</b> ${w.st||'-'} &nbsp; <b>Wt</b> ${wt||'-'} &nbsp; <b>Skill</b> ${weaponSkillLevel(w.name)||'-'}</div>`;
-   return `<div class="eq-stat"><b>Dmg</b> ${dmg} &nbsp; <b>Acc</b> ${w.acc||'-'} &nbsp; <b>Rng</b> ${w.r12||'-'}/${w.rmax||'-'} &nbsp; <b>RoF</b> ${w.rof||'-'} &nbsp; <b>Shots</b> ${w.shots||'-'} &nbsp; <b>Rcl</b> ${w.rcl||'-'} &nbsp; <b>Wt</b> ${wt||'-'} &nbsp; <b>Skill</b> ${weaponSkillLevel(w.name)||'-'}</div>`;
+   return `<div class="eq-stat"><b>Dmg</b> ${dmg} &nbsp; <b>Acc</b> ${w.acc||'-'} &nbsp; <b>Rng</b> ${w.r12||'-'}/${w.rmax||'-'} &nbsp; <b>RoF</b> ${w.rof||'-'} &nbsp; <b>Shots</b> ${w.shots||'-'} &nbsp; <b>Charge</b> ${weaponCharge(w)||'-'} &nbsp; <b>Rcl</b> ${w.rcl||'-'} &nbsp; <b>Wt</b> ${wt||'-'} &nbsp; <b>Skill</b> ${weaponSkillLevel(w.name)||'-'}</div>`;
  }
  if(kind==='armour'){ if(!rec)return''; const a=effItem(rec,it); const qm=(+it.quality||0)+(+it.material||0); const bE=qm+modSum(it,'drE'),bK=qm+modSum(it,'drK');
    const _ewt=armourEffWeight(it,a);const _full=(+a.wt||0)+modSum(it,'wt');const _partial=Array.isArray(it.cover)&&Math.abs(_ewt-_full)>0.05;
@@ -3574,7 +3596,7 @@ function _vaultStatLine(u){
       bits.push('Acc '+((+b.acc||0)+(fx.acc||0))+(fx.acc?'*':''));
       if(b.r12)bits.push('Range '+b.r12+'/'+b.rmax);
       bits.push('RoF '+((parseInt(b.rof)||1)+(fx.rof||0))+(fx.rof?'*':''));
-      if(b.shots)bits.push('Shots '+b.shots);
+      if(b.shots)bits.push('Shots '+b.shots);bits.push('Charge '+(weaponCharge(b)||'-'));
       bits.push('Bulk '+(b.bulk!=null?b.bulk:'—'));
     } else {
       if(b.reach)bits.push('Reach '+b.reach);
