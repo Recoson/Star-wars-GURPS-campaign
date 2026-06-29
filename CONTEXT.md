@@ -625,3 +625,14 @@ Audited skill/attribute/Force training math against the compendium (§3.1–3.2)
 - **`/Marg` stays flat at 10** — the margin-cut has no compendium basis to scale by difficulty; difficulty already lives in required hours (cost × 200, §3.2a discounts / Force affinity ¼·½ + mentor 150-rate, all verified correct).
 
 Tunable knobs for James: `STUDY_MARGIN_CAP` (6), crit fraction (25%) / floor (500). All three commits verified by jsdom smoke tests (margin add, bank-drain-by-4, crit bounded + bank-safe, cap binds at 30-attr, cheap-crit completes) + `check.py` green. Force-training picker "only shows known" report (earlier this session) was NOT a bug — `forceLearnable()` returns 60 unknown powers for Chatni; it was a stale GitHub Pages/browser cache (hard-refresh).
+
+### 2026-06-27 (cont.) — Zero-touch GM live-write path (tools/gm_push.py) VERIFIED
+
+James chose option 2 (zero-touch). Built `tools/gm_push.py` — signs in via Identity Toolkit REST (signInWithPassword + public apiKey) → idToken → reads/writes the live Firestore doc via REST on the NAMED `kotor` DB (`projects/kotor-gurps/databases/kotor/documents/characters/<id>`). Writes per-key patches with `updateMask.fieldPaths=f.<key>` → field-level merge matching v5's `f`-map shape → GM/Claude edits coexist with players' concurrent edits (cloud-priority on same key). Auto-migrates a still-legacy (`data` blob) doc to the f-map before patching. NO secrets in the script (reads ~/.gmcreds line1=email/line2=pw, or env GM_EMAIL/GM_PW; James supplies the dedicated throwaway GM account).
+
+VERIFIED end-to-end vs live Firestore: auth OK; write 2 keys + read back; FIELD-LEVEL MERGE (patch one key, the other survives untouched); legacy data-blob → f-map migration + patch; delete. All on throwaway docs (synctest/synctest2), no real char touched.
+
+**GM-edit workflow now:** `python3 tools/gm_push.py get <charId>` to inspect the live f-map, edit the relevant section, then `python3 tools/gm_push.py patch <charId> patch.json` (patch.json = {topKey: value, ...} for changed keys only) → live-syncs to every signed-in device, merging with players' in-flight edits.
+
+**Creds across sessions:** ~/.gmcreds is sandbox-only (resets each session) — James must re-provide the GM login each session (add to project instructions like the PAT — throwaway account, Firestore-only write, low blast radius — or paste per session) for gm_push to run.
+cmds: `gm_push.py get|patch|delete|seed-legacy <charId> [file]`
