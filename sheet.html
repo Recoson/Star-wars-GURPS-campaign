@@ -1877,21 +1877,6 @@ function renderSheet(){
    </div>
    ${_defResultHTML()}
   </div>
-</div>
-  <div class="section" data-size="md" style="grid-column:span 5">
-   <h3>Skills (quick ref) <span class="dim" style="font-weight:400;font-size:10px">— all purchased skills</span></h3>
-   <table class="g">
-    <tr><th>Skill</th><th style="width:40px">A/D</th><th style="width:30px">Pts</th><th style="width:40px">Lvl</th></tr>
-    ${(C.skills||[]).map(sk=>{const _lv=skillLevel(sk);const _sn=esc(skillDisplay(sk)).replace(/"/g,'&quot;');const _rb=(_lv!=='-'&&!isNaN(+_lv))?` <button class="btn-sm" style="padding:0 5px" title="Roll 3d6 vs ${+_lv}" data-sn="${_sn}" onclick="gurpsRoll(${+_lv},'Skill: '+this.getAttribute('data-sn'))">🎲</button>`:'';return `<tr>
-     <td>${esc(skillDisplay(sk))}</td><td class="ctr dim">${skillAttrLabel(sk.attr||(DATA.skills.find(s=>s[0]===sk.name)||[])[1])}/${sk.diff||'-'}</td>
-     <td class="num">${sk.pts||0}</td><td class="num val">${_lv}${_rb}</td>
-    </tr>`;}).join('')||'<tr><td colspan="4" class="dim">No skills purchased</td></tr>'}
-    
-   </table>
-  </div>
- </div>
-
- <div class="char-grid" style="margin-top:10px">
   <div class="section" style="grid-column:1/-1" data-size="full"><h3>Attacks <span class="dim" style="font-weight:400;font-size:10px">— roll 3d6 ≤ Skill to hit (use the 🎲 panel, bottom-right). Damage shown with type.</span></h3>
    <table class="g">
     <tr><th>Weapon</th><th style="width:46px">Skill</th><th style="width:120px">Damage</th><th style="width:90px">Reach / Range</th><th style="width:50px">Parry</th><th>Acc / RoF / Shots · notes</th></tr>
@@ -1912,9 +1897,6 @@ function renderSheet(){
     })()}
    </table>
   </div>
- </div>
-
- <div class="char-grid" style="margin-top:10px">
   <div class="section" data-size="full" style="grid-column:1/-1"><h3>Active Styles <span class="dim" style="font-weight:400;font-size:10px">— toggle on/off here; learn new ones on the Stances &amp; Forms tab</span></h3>
    ${(()=>{
     const sts=(C.stances||[]),fms=(C.forms||[]),tcs=(C.techniques||[]);
@@ -1929,6 +1911,18 @@ function renderSheet(){
     o+=`<div style="font-size:11px;margin-top:4px"><b style="color:var(--amber)">Applied now: </b>${ks.length?ks.map(k=>`<span class="val">${L[k]||k} ${fx[k]>=0?'+':''}${fx[k]}</span>`).join(' · '):'<span class="dim">situational only</span>'}</div>`;
     return o;
    })()}
+  </div>
+</div>
+  <div class="section" data-size="md" style="grid-column:span 5">
+   <h3>Skills (quick ref) <span class="dim" style="font-weight:400;font-size:10px">— all purchased skills</span></h3>
+   <table class="g">
+    <tr><th>Skill</th><th style="width:40px">A/D</th><th style="width:30px">Pts</th><th style="width:40px">Lvl</th></tr>
+    ${(C.skills||[]).map(sk=>{const _lv=skillLevel(sk);const _sn=esc(skillDisplay(sk)).replace(/"/g,'&quot;');const _rb=(_lv!=='-'&&!isNaN(+_lv))?` <button class="btn-sm" style="padding:0 5px" title="Roll 3d6 vs ${+_lv}" data-sn="${_sn}" onclick="gurpsRoll(${+_lv},'Skill: '+this.getAttribute('data-sn'))">🎲</button>`:'';return `<tr>
+     <td>${esc(skillDisplay(sk))}</td><td class="ctr dim">${skillAttrLabel(sk.attr||(DATA.skills.find(s=>s[0]===sk.name)||[])[1])}/${sk.diff||'-'}</td>
+     <td class="num">${sk.pts||0}</td><td class="num val">${_lv}${_rb}</td>
+    </tr>`;}).join('')||'<tr><td colspan="4" class="dim">No skills purchased</td></tr>'}
+    
+   </table>
   </div>
  </div>
 
