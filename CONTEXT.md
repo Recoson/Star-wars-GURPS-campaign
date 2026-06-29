@@ -636,3 +636,13 @@ VERIFIED end-to-end vs live Firestore: auth OK; write 2 keys + read back; FIELD-
 
 **Creds across sessions:** ~/.gmcreds is sandbox-only (resets each session) — James must re-provide the GM login each session (add to project instructions like the PAT — throwaway account, Firestore-only write, low blast radius — or paste per session) for gm_push to run.
 cmds: `gm_push.py get|patch|delete|seed-legacy <charId> [file]`
+
+### 2026-06-29 (cont.) — Training completion auto-credits the trained-XP pools
+
+`sheet.html` (commit 58f124c). Wired every training completion to the XP tracking so build XP is no longer silently eaten. On grant (auto-fires at the hour threshold AND via the manual grant button, since the credit lives inside the grant functions): skill → `C.xpSkillTrained += needed` (grantStudyPoint); attribute → `C.xpAttrTrained += cost` (grantAttrPoint); Force power → `C.xpForceTrained += d.pts` (learnForcePower, both the auto-learn and the buy-with-points paths). Each grant message/toast now shows the credit (e.g. "· +4 Tr. Skills XP") and calls renderSheet() so the Identity XP tally refreshes live.
+
+NEW field `C.xpAttrTrained` (Tr. Attr) — defaults via `||0` guards like the other xp* fields (not in blankChar; mergeChar-safe, char JSONs untouched). `xpFree()` now nets all three trained pools: `xpEarned − (skill+force+attr trained)`. UI: the standalone "XP Free" cell in the Identity XP row was replaced by a Tr. Attr ± counter (modeled on Tr. Force); the free total now shows inline at the end of that cell (red when negative). Row stays 8-col (table width unchanged).
+
+Model is consistent: Game XP (`xpEarned`) is the only manual input (income earned in play); training spends it, tracked per-category by the Tr. pools; budget stays Build + Game XP (Tr. pools are spends already counted in totalPts — NOT added to the budget). Trace: earn 20 GameXP → train 4-pt skill → totalPts +4, Tr. Skills +4, xpFree 16 = budget-unspent 16. Verified: jsdom smoke (skill +1, attr +20 IQ, Force +5 Force Torrent, xpFree 100−26=74) + Tr. Attr counter renders + check.py green.
+
+Open design forks flagged to James: (a) attributes credit a NEW Tr. Attr pool (he named "game/trained/force xp" — confirm Tr. Attr is the right home vs folding into Tr. Skills); (b) buy-with-points also credits Tr. Force — if used for build-time powers it over-credits, can gate to training-only; (c) budget is Build+GameXP (training is NOT self-funding) — flag if training should instead generate its own budget room.
