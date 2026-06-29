@@ -1,4 +1,4 @@
-/* Dara Dara — Firebase live character sync  (v4.1 — per-SESSION echo id; fixes multi-device rollback war) */
+/* Dara Dara — Firebase live character sync  (v5 — per-KEY field-level merge: concurrent multi-device edits, cloud-priority) */
 import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, onSnapshot, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -23,7 +23,7 @@ import { getFirestore, doc, onSnapshot, setDoc, serverTimestamp } from "https://
   var charId = (new URLSearchParams(location.search).get('char') || 'default')
                  .toLowerCase().replace(/[^a-z0-9_-]/g, '') || 'default';
   var ref = doc(db, 'characters', charId);
-  var applyingRemote = false, ready = false, writeTimer = null, lastJSON = '', clientId = Math.random().toString(36).slice(2) + '.' + Date.now().toString(36);
+  var applyingRemote = false, ready = false, writeTimer = null, base = {}, clientId = Math.random().toString(36).slice(2) + '.' + Date.now().toString(36);
 
   function getChar() {
     try { if (typeof C !== 'undefined' && C && typeof C === 'object') return C; } catch (e) {}
@@ -43,52 +43,76 @@ import { getFirestore, doc, onSnapshot, setDoc, serverTimestamp } from "https://
     });
     try { if (typeof saveLocal === 'function') saveLocal(); } catch (e) {}
   }
-  function applyRemote(obj) {
-    var C = getChar(); if (!C) return;
+    function keyJSON(C) {
+    var m = {};
+    for (var k in C) { if (Object.prototype.hasOwnProperty.call(C, k)) { try { m[k] = JSON.stringify(C[k]); } catch (e) {} } }
+    return m;
+  }
+  // Patch = only the top-level keys whose value changed since our last-synced ancestor (base).
+  function computePatch(C) {
+    var cur = keyJSON(C), f = {}, changed = false;
+    for (var k in cur) { if (cur[k] !== base[k]) { f[k] = cur[k]; changed = true; } }
+    return changed ? f : null;
+  }
+  // Apply a remote field map key-by-key. A key whose cloud value differs from local is overwritten (CLOUD PRIORITY);
+  // keys neither we nor the cloud changed are left untouched -> concurrent edits to different keys coexist.
+  function applyRemoteKeys(remoteF) {
+    var C = getChar(); if (!C || !remoteF) return;
+    var cur = keyJSON(C), touched = false;
+    applyingRemote = true;
+    try {
+      for (var k in remoteF) {
+        var rv = remoteF[k];
+        if (rv === base[k]) continue;                 // cloud unchanged vs our ancestor
+        if (rv === cur[k]) { base[k] = rv; continue; } // already equals local (our own echo) -> just advance ancestor
+        try { C[k] = JSON.parse(rv); base[k] = rv; touched = true; } catch (e) {}
+      }
+      if (touched) redraw();
+    } finally { applyingRemote = false; }
+  }
+  // Legacy whole-blob doc ({data:"..."} from <=v4.1): adopt fully, then reseed in per-key shape on next push.
+  function applyLegacyBlob(obj) {
+    var C = getChar(); if (!C || !obj) return;
     applyingRemote = true;
     try {
       Object.keys(C).forEach(function (k) { delete C[k]; });
       Object.assign(C, obj);
+      base = {};
       redraw();
-      try { lastJSON = JSON.stringify(C); } catch (e) {}
     } finally { applyingRemote = false; }
   }
-  function scheduleSave(delay) {
-    if (applyingRemote || !ready) return;
-    clearTimeout(writeTimer);
-    writeTimer = setTimeout(function () {
-      setDoc(ref, { data: lastJSON, char: charId,
-                    updatedAt: serverTimestamp(),
-                    updatedBy: auth.currentUser ? auth.currentUser.uid : null, writer: clientId }, { merge: true })
-        .catch(function (e) { console.warn('[sync] write', e.code || e.message); });
-    }, delay || 150);
-  }
-  function quickSync() {
+  function pushDelta() {
     if (applyingRemote || !ready) return;
     var C = getChar(); if (!C) return;
-    var cur; try { cur = JSON.stringify(C); } catch (e) { return; }
-    if (cur !== lastJSON) { lastJSON = cur; scheduleSave(120); }
+    var f = computePatch(C); if (!f) return;
+    var keys = Object.keys(f);
+    setDoc(ref, { f: f, char: charId, updatedAt: serverTimestamp(),
+                  updatedBy: auth.currentUser ? auth.currentUser.uid : null, writer: clientId }, { merge: true })
+      .then(function () { for (var i = 0; i < keys.length; i++) base[keys[i]] = f[keys[i]]; })   // ack -> advance ancestor
+      .catch(function (e) { console.warn('[sync] write', e.code || e.message); });
   }
-  function touch() { setTimeout(quickSync, 0); }
+  function schedulePush(delay) {
+    if (applyingRemote || !ready) return;
+    clearTimeout(writeTimer);
+    writeTimer = setTimeout(pushDelta, delay || 150);
+  }
+  function onEdit() { setTimeout(function () { schedulePush(120); }, 0); }
   ['input', 'change', 'keyup', 'click'].forEach(function (ev) {
-    document.addEventListener(ev, touch, true);
+    document.addEventListener(ev, onEdit, true);
   });
-  setInterval(quickSync, 2000);
+  setInterval(function () { if (!applyingRemote && ready) pushDelta(); }, 2000);
 
   function subscribe() {
     onSnapshot(ref, function (snap) {
       var C = getChar();
       if (!snap.exists()) {
-        if (C) { try { lastJSON = JSON.stringify(C); } catch (e) { lastJSON = ''; } ready = true; scheduleSave(150); }
+        if (C) { base = {}; ready = true; schedulePush(150); }
         else { ready = true; }
         pill('live · seeded'); return;
       }
-      var d = snap.data() || {};
-      if (d.writer && d.writer === clientId) {
-        lastJSON = d.data || lastJSON; ready = true; pill('live'); return;
-      }
-      try { if (d.data) applyRemote(JSON.parse(d.data)); }
-      catch (e) { console.warn('[sync] parse', e); }
+            var d = snap.data() || {};
+      if (d.f) { applyRemoteKeys(d.f); }
+      else if (d.data) { try { applyLegacyBlob(JSON.parse(d.data)); } catch (e) { console.warn('[sync] legacy parse', e); } ready = true; schedulePush(150); return; }
       ready = true; pill('live');
     }, function (err) { console.warn('[sync] snapshot', err.code || err.message); pill('error'); });
   }
@@ -173,7 +197,7 @@ import { getFirestore, doc, onSnapshot, setDoc, serverTimestamp } from "https://
   (function start() {
     if (!getChar()) return setTimeout(start, 300);
     onAuthStateChanged(auth, function (user) {
-      if (user) { gate(false); ready = false; lastJSON = ''; console.log('[sync] v4.1 · client', clientId, '· char', charId); subscribe(); }
+      if (user) { gate(false); ready = false; base = {}; console.log('[sync] v5 · client', clientId, '· char', charId); subscribe(); }
       else { ready = false; pill('sign in for live sync'); }  // pill is clickable to open sign-in; no forced modal on load
     });
   })();

@@ -660,6 +660,8 @@ document.addEventListener("click",close);window.addEventListener("keydown",funct
   <button onclick="exportChar()">Export</button>
   <button onclick="document.getElementById('importFile').click()">Import</button>
   <input type="file" id="importFile" accept=".json" style="display:none" onchange="importChar(event)">
+  <button onclick="document.getElementById('mergeFile').click()" title="Apply a GM/Claude patch — only the fields present in the file change; everything else is left intact and it live-syncs to everyone signed in">Merge patch</button>
+  <input type="file" id="mergeFile" accept=".json" style="display:none" onchange="importCharMerge(event)">
   <button onclick="openCharPicker()" title="Browse campaign characters stored in the cloud">☁ Characters</button>
   <button onclick="(window.daraCloud&&daraCloud.signIn())" title="Sign in for live cloud sync (auto-saves across all your devices)">☁ Live Sync</button>
   <button onclick="location.href='index.html'" title="Open the campaign database hub">⌂ Hub</button>
@@ -758,6 +760,17 @@ function importChar(e){
  const f=e.target.files[0];if(!f)return;
  const r=new FileReader();r.onload=ev=>{
   try{C=mergeChar(JSON.parse(ev.target.result));save();renderAll()}catch(err){alert('Bad file: '+err.message)}
+ };r.readAsText(f);e.target.value='';
+}
+function applyCharPatch(patch){
+ let n=0; for(const k in patch){ if(Object.prototype.hasOwnProperty.call(patch,k)){ C[k]=patch[k]; n++; } }
+ save(); if(typeof renderAll==='function')renderAll(); return n;
+}
+function importCharMerge(e){
+ const f=e.target.files[0];if(!f)return;
+ const r=new FileReader();r.onload=ev=>{
+  try{ const n=applyCharPatch(JSON.parse(ev.target.result)); alert('Merged '+n+' field(s) from the update — live-syncs to everyone signed in.'); }
+  catch(err){ alert('Bad file: '+err.message); }
  };r.readAsText(f);e.target.value='';
 }
 function newChar(){if(confirm('Start new character?')){C=blankChar();save();renderAll()}}
