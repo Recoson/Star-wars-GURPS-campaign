@@ -1375,7 +1375,7 @@ function renderLanguages(){
    </div></div>`;
 }
 // ── experience ledger (in-play growth, separate from the creation point budget) ──
-function xpFree(){return (+C.xpEarned||0)-(+C.xpSkillTrained||0)-(+C.xpForceTrained||0);}
+function xpFree(){return (+C.xpEarned||0)-(+C.xpSkillTrained||0)-(+C.xpForceTrained||0)-(+C.xpAttrTrained||0);}
 function adjXP(field,d){C[field]=Math.max(0,(+C[field]||0)+d);touch();if(typeof renderSheet==='function')renderSheet();}
 
 // ─────────────────────────────────────────────────────
@@ -1734,8 +1734,12 @@ function renderSheet(){
      <button onclick="adjXP('xpForceTrained',-1)" style="padding:0 6px">−</button>
      <input class="cell" type="number" value="${+C.xpForceTrained||0}" onchange="C.xpForceTrained=Math.max(0,+this.value||0);touch();renderSheet()" style="width:48px;text-align:center">
      <button onclick="adjXP('xpForceTrained',1)" style="padding:0 6px">+</button></span></td>
-    <td class="label" style="white-space:nowrap" title="Game XP earned minus what you've logged against skill & Force training">XP Free</td>
-    <td><b${(xpFree()<0?' style="color:var(--red)"':'')}>${xpFree()}</b></td>
+    <td class="label" style="white-space:nowrap" title="XP logged as spent raising attributes (auto-credited on training)">Tr. Attr</td>
+    <td><span style="display:inline-flex;align-items:center;gap:3px">
+     <button onclick="adjXP('xpAttrTrained',-1)" style="padding:0 6px">−</button>
+     <input class="cell" type="number" value="${+C.xpAttrTrained||0}" onchange="C.xpAttrTrained=Math.max(0,+this.value||0);touch();renderSheet()" style="width:48px;text-align:center">
+     <button onclick="adjXP('xpAttrTrained',1)" style="padding:0 6px">+</button>
+     <b title="Free = Game XP − all training (skills + Force + attributes)"${(xpFree()<0?' style="color:var(--red);margin-left:8px"':' style="margin-left:8px;opacity:.75"')}>free ${xpFree()}</b></span></td>
    </tr>
    <tr>
     <td class="label">Languages</td>
@@ -2308,13 +2312,14 @@ function grantStudyPoint(i){
  const oldPts=+sk.pts||0;
  const needed=pointsToNextLevel(oldPts);
  sk.pts=oldPts+needed;
+ C.xpSkillTrained=(+C.xpSkillTrained||0)+needed;  // auto-log training spend → Tr. Skills XP
  // Reset progress; auto-recompute next-level hours
  p.done=0;
  const r=computeStudyHours(p.linkedSkill,{teacher:p.teacher,selfTeach:p.selfTeach,talent:p.talent});
  p.req=r.hours; p.target=r.target;
- p.last=`✓ Granted ${needed} pt to ${p.linkedSkill} (now ${sk.pts} pts → lvl ${skillLevel(sk)}). New target: ${r.hours} hrs.`;
+ p.last=`✓ Granted ${needed} pt to ${p.linkedSkill} (now ${sk.pts} pts → lvl ${skillLevel(sk)}) · +${needed} Tr. Skills XP. New target: ${r.hours} hrs.`;
  p.lastKind='crit';
- touch();renderSkills();
+ touch();renderSkills();if(typeof renderSheet==='function')renderSheet();
 }
 
 function setTrainAvail(v){C.trainHoursAvail=Math.round(+v||0);touch();renderSkills();}
@@ -2386,11 +2391,12 @@ function grantAttrPoint(i){
   var p=(C.attrStudy||[])[i]; if(!p)return;
   var attr=p.attr, cost=ATTR_TRAIN_PER[attr]||10, bag=_attrTrainStore(attr);
   C[bag]=C[bag]||{}; C[bag][attr]=(+C[bag][attr]||0)+cost;
+  C.xpAttrTrained=(+C.xpAttrTrained||0)+cost;  // auto-log training spend → Tr. Attr XP
   var nl=_attrTrainLevel(attr);
   p.done=0;
   var r=computeAttrHours(attr,{teacher:p.teacher,selfTeach:p.selfTeach});
   p.req=r.hours; p.target=r.target;
-  p.last='✓ Raised '+attr+' to '+nl+' (+'+cost+' pts). New target: '+r.hours+' hrs.';
+  p.last='✓ Raised '+attr+' to '+nl+' (+'+cost+' pts) · +'+cost+' Tr. Attr XP. New target: '+r.hours+' hrs.';
   p.lastKind='crit';
   touch(); renderSkills(); if(typeof renderSheet==='function')renderSheet();
 }
@@ -7099,10 +7105,12 @@ function setForceStudyDone(i,v){const p=_forceStudy()[i];if(!p)return;const nv=M
 function learnForcePower(i,viaPoints){
  const p=_forceStudy()[i]; if(!p)return;
  if(!p.power){alert('Pick a power to learn first.');return;}
- const name=p.power, d=forcePowerDef(name), book=d?d.book:(p.book||'');
+ const name=p.power, d=forcePowerDef(name), book=d?d.book:(p.book||''), fpts=d?+d.pts||0:0;
+ C.xpForceTrained=(+C.xpForceTrained||0)+fpts;    // auto-log Force-power spend → Tr. Force XP
  _forceStudy().splice(i,1);                       // one-and-done: drop the finished project
  toggleForcePower(book,name,true);                // tick it known (also re-renders the Force tab)
- if(typeof _fxToast==='function')_fxToast(esc(name)+(viaPoints?(' bought — '+(d?d.pts:0)+' pts'):' learned'));
+ if(typeof _fxToast==='function')_fxToast(esc(name)+(viaPoints?(' bought — '+fpts+' pts'):' learned')+' · +'+fpts+' Tr. Force XP');
+ if(typeof renderSheet==='function')renderSheet();
 }
 function setForceTrainAvail(v){C.trainHoursAvail=Math.round(+v||0);touch();renderForce();}
 function addForceTrainAvail(n){C.trainHoursAvail=Math.round((+C.trainHoursAvail||0)+(+n||0));touch();renderForce();}
