@@ -730,7 +730,7 @@ function blankChar(){
   credits:0,creditLog:[],
   jetpack:{pack:'std',massKg:0,burstsUsed:0,spareCells:0,userPack:false},
   combat:{hp:null,fp:null,statuses:[],concentrations:[],charges:[],turn:0,log:[]},
-  notes:'',trainRate:200,trainHoursTotal:0,trainHoursAvail:0,study:[],forceStudy:[],ptTarget:150,languages:'',languages2:null,
+  notes:'',trainRate:200,trainHoursTotal:0,trainHoursAvail:0,study:[],forceStudy:[],attrStudy:[],ptTarget:150,languages:'',languages2:null,
   layout:{}
  };
 }
@@ -1664,14 +1664,14 @@ function renderSheet(){
  <!-- POINT BUDGET -->
  <div class="budget-bar">
   <div class="item"><span class="lbl">Total Pts:</span>${(()=>{
-       const sp=totalPts(); const t=C.ptTarget==null?150:+C.ptTarget;
+       const sp=totalPts(); const _base=C.ptTarget==null?150:+C.ptTarget; const _xp=+C.xpEarned||0; const t=_base+_xp;
        if(!t) return `<span class="v">${sp}</span>`;
        const d=sp-t;
        const col = d>0?'var(--red)':(d<0?'var(--text2)':'var(--green,#5fb85f)');
        const tag = d>0?`<span style="color:var(--red);font-size:10.5px;margin-left:5px">${d} over</span>`
                  : d<0?`<span style="color:var(--text2);font-size:10.5px;margin-left:5px">${-d} unspent</span>`
                  : `<span style="color:var(--cyan);font-size:10.5px;margin-left:5px">on budget</span>`;
-       return `<span class="v" style="color:${col}">${sp} / ${t}</span>${tag}`;
+       return `<span class="v" style="color:${col}">${sp} / ${t}</span>${_xp>0?` <span class="lbl" style="font-size:9px;opacity:.65" title="Build ${_base} + earned Game XP ${_xp}">(${_base}+${_xp} XP)</span>`:''}${tag}`;
      })()}</div>
   <div class="item"><span class="lbl">Attr:</span><span class="v">${attrPts()}</span></div>
   <div class="item"><span class="lbl">Sec:</span><span class="v">${secPts()}</span></div>
@@ -2229,7 +2229,7 @@ function renderSkills(){
     </tr>${p.lastSync?`<tr><td colspan="11" style="font-size:10px;padding:0 8px 2px;color:var(--text2);font-style:italic">↻ ${esc(p.lastSync)}</td></tr>`:''}${p.last?`<tr><td colspan="11" style="font-size:10.5px;padding:1px 8px 6px;color:${col}">${esc(p.last)}</td></tr>`:''}`;
   }).join('')||'<tr><td colspan="11" class="dim" style="padding:8px">No study projects yet — add one and link it to a skill to begin earning study-hours.</td></tr>'}
  </table> ${(function(){var av=(+C.trainHoursAvail||0);var th=(+C.trainHoursTotal||0);var inprog=(C.study||[]).reduce(function(s,p){return s+(+p.done||0);},0);var pts=Math.floor(th/200);return '<div class="dim" style="font-size:11px;margin:6px 0 2px">⏳ <b style="color:'+(av>0?'var(--cyan,#39b6c8)':'var(--red,#e5544b)')+'">'+av+' hrs available</b> &nbsp;·&nbsp; ⏱ Total logged <b style="color:var(--text)">'+th+' hrs</b>'+(pts?(' · ≈ '+pts+' pt'+(pts>1?'s':'')+' earned'):'')+(inprog?(' &nbsp;·&nbsp; '+inprog+' hrs toward current projects'):'')+' <span style="opacity:.6">(200 hrs = 1 pt)</span></div>';})()}
- ${customSkillsSection()}`;
+ ${attrTrainingSection()} ${customSkillsSection()}`;
 
  if(_skillFilter)filterSkillRows(_skillFilter);
 }
@@ -2329,6 +2329,114 @@ function rollStudy(i){
  if(p.linkedSkill && req>0 && done>=req && kind!=='critfail'){grantStudyPoint(i);return;}
  touch(); renderSkills();
 }
+/* ═══ Attribute Training — mirrors Study & Training; raises an attribute on completion ═══ */
+const ATTR_TRAIN_PER={ST:10,DX:20,IQ:20,HT:10,HP:2,Will:5,Per:5,FP:3};
+function _attrTrainStore(a){ return (a==='ST'||a==='DX'||a==='IQ'||a==='HT')?'attr':'sec'; }
+function _attrTrainLevel(a){
+  var fns={ST:ST,DX:DX,IQ:IQ,HT:HT,HP:HP,Will:Will,Per:Per,FP:FP};
+  try{ return (typeof fns[a]==='function')?fns[a]():10; }catch(e){ return 10; }
+}
+function computeAttrHours(attr,opts){
+  opts=opts||{};
+  var cost=ATTR_TRAIN_PER[attr]||10;
+  var hrs=cost*200;
+  var lvl=_attrTrainLevel(attr);
+  var scale=1, parts=[cost+' pt × 200 hr = '+hrs];
+  if(lvl>=19){scale*=0.7;parts.push(attr+' '+lvl+'+ × 0.7');}
+  else if(lvl>=16){scale*=0.8;parts.push(attr+' 16-18 × 0.8');}
+  else if(lvl>=13){scale*=0.9;parts.push(attr+' 13-15 × 0.9');}
+  if(opts.teacher){scale*=0.75;parts.push('teacher × 0.75');}
+  if(opts.selfTeach){scale*=1.5;parts.push('self-teach × 1.5');}
+  var finalHrs=Math.round(hrs*scale);
+  return {hours:finalHrs, cost:cost, target:lvl, detail:parts.join(' · ')+(scale!==1?' → '+finalHrs:'')};
+}
+function addAttrProject(){
+  C.attrStudy=C.attrStudy||[];
+  var r=computeAttrHours('ST',{});
+  C.attrStudy.push({attr:'ST',label:'ST',target:r.target,req:r.hours,done:0,hpm:10,monumental:false,teacher:false,selfTeach:false});
+  touch();renderSkills();
+}
+function syncAttrHours(i){
+  var p=(C.attrStudy||[])[i]; if(!p)return;
+  var r=computeAttrHours(p.attr,{teacher:p.teacher,selfTeach:p.selfTeach});
+  p.req=r.hours; p.target=r.target;
+  p.label=p.attr+(p.teacher?' (with teacher)':p.selfTeach?' (self-taught)':'');
+  p.lastSync=r.detail;
+  touch();renderSkills();
+}
+function setAttrDone(i,v){
+  var p=(C.attrStudy||[])[i]; if(!p)return;
+  var nv=Math.max(0,+v||0); var d=nv-(+p.done||0);
+  if(d>0){C.trainHoursTotal=(+C.trainHoursTotal||0)+d;C.trainHoursAvail=(+C.trainHoursAvail||0)-d;}
+  p.done=nv; touch();renderSkills();
+}
+function grantAttrPoint(i){
+  var p=(C.attrStudy||[])[i]; if(!p)return;
+  var attr=p.attr, cost=ATTR_TRAIN_PER[attr]||10, bag=_attrTrainStore(attr);
+  C[bag]=C[bag]||{}; C[bag][attr]=(+C[bag][attr]||0)+cost;
+  var nl=_attrTrainLevel(attr);
+  p.done=0;
+  var r=computeAttrHours(attr,{teacher:p.teacher,selfTeach:p.selfTeach});
+  p.req=r.hours; p.target=r.target;
+  p.last='✓ Raised '+attr+' to '+nl+' (+'+cost+' pts). New target: '+r.hours+' hrs.';
+  p.lastKind='crit';
+  touch(); renderSkills(); if(typeof renderSheet==='function')renderSheet();
+}
+function rollAttrStudy(i){
+  var p=(C.attrStudy||[])[i]; if(!p)return;
+  var t=Math.max(3,+p.target||10), hpm=Math.max(1,+p.hpm||10), req=Math.max(0,+p.req||0);
+  var done=Math.max(0,+p.done||0);
+  var roll1=function(){return 1+Math.floor(Math.random()*6);};
+  var a=roll1(),b=roll1(),c=roll1(), roll=a+b+c, dice=a+'+'+b+'+'+c+'='+roll;
+  var critS=roll<=4||(roll===5&&t>=15)||(roll===6&&t>=16);
+  var critF=roll===18||(roll===17&&t<=15)||(roll>=t+10);
+  if(critS&&critF)critF=false;
+  var kind,msg;
+  if(critF){ var loss=Math.min(done,20); done-=loss; kind='critfail'; msg='✕ Critical failure ('+dice+'). A setback — lose '+loss+' hrs.'; }
+  else if(critS){
+    if(p.monumental&&req>0){ var gain=Math.max(500,Math.round(req*0.25)); var nd=Math.min(req,done+gain); kind='crit'; msg='★ CRITICAL ('+dice+')! A breakthrough — '+(nd-done)+' hrs of progress.'; done=nd; }
+    else { var g2=req>0?Math.max(0,req-done):200; done=req>0?req:done+g2; kind='crit'; msg='★ CRITICAL ('+dice+')! It clicks into place — learned outright.'; }
+  }
+  else if(roll<=t){ var m=t-roll, gn=m*hpm; done=req>0?Math.min(req,done+gn):done+gn; kind='ok'; msg='✓ Success by '+m+' ('+dice+' vs '+t+') — '+gn+' hrs off ('+m+'×'+hpm+').'; }
+  else { kind='fail'; msg='✗ Failed ('+dice+' vs '+t+'). No progress this session.'; }
+  if(req>0&&done>=req&&kind!=='critfail') msg+=' Training complete!';
+  if(typeof _rollLog!=='undefined'){ (_rollCount++,_rollLog).unshift({label:'Train: '+p.attr,target:t,dice:[a,b,c],sum:roll,outcome:(kind==='crit'?'CRIT':kind==='critfail'?'CRIT FAIL':(roll<=t?'Success':'Failure')),cls:(kind==='crit'?'crit-s':kind==='critfail'?'crit-f':(roll<=t?'ok':'fail'))}); }
+  var gd=done-(+p.done||0); if(gd>0){C.trainHoursTotal=(+C.trainHoursTotal||0)+gd;C.trainHoursAvail=(+C.trainHoursAvail||0)-gd;}
+  p.done=done; p.last=msg; p.lastKind=kind;
+  if(req>0&&done>=req&&kind!=='critfail'){grantAttrPoint(i);return;}
+  touch(); renderSkills();
+}
+function attrTrainingSection(){
+  var rows=(C.attrStudy||[]).map(function(p,i){
+    var req=+p.req||0, done=+p.done||0;
+    var pct=req?Math.min(100,Math.round(done/req*100)):0;
+    var complete=req>0&&done>=req;
+    var col=p.lastKind==='crit'?'var(--green)':p.lastKind==='critfail'?'var(--red)':p.lastKind==='ok'?'var(--cyan)':'var(--text2)';
+    var lvl=_attrTrainLevel(p.attr);
+    var opts=['ST','DX','IQ','HT','HP','Will','Per','FP'].map(function(an){return '<option value="'+an+'"'+(p.attr===an?' selected':'')+'>'+an+'</option>';}).join('');
+    return '<tr>'+
+      '<td><select class="cell" onchange="C.attrStudy['+i+'].attr=this.value;syncAttrHours('+i+')" style="width:100%">'+opts+'</select></td>'+
+      '<td class="ctr dim" style="font-size:10px" title="Current level">'+lvl+'</td>'+
+      '<td><input class="cell" type="number" value="'+(p.target==null?lvl:p.target)+'" onchange="C.attrStudy['+i+'].target=+this.value;touch()" style="width:36px"></td>'+
+      '<td><input class="cell" type="number" min="0" value="'+(p.req||0)+'" onchange="C.attrStudy['+i+'].req=+this.value;touch();renderSkills()" style="width:54px"></td>'+
+      '<td><input class="cell" type="number" min="0" value="'+(p.done||0)+'" onchange="setAttrDone('+i+',this.value)" style="width:54px"></td>'+
+      '<td><input class="cell" type="number" min="1" value="'+(p.hpm==null?10:p.hpm)+'" onchange="C.attrStudy['+i+'].hpm=+this.value;touch()" style="width:36px"></td>'+
+      '<td class="ctr"><input type="checkbox" '+(p.teacher?'checked':'')+' title="Teacher present (×0.75 hours)" onchange="C.attrStudy['+i+'].teacher=this.checked;syncAttrHours('+i+')"></td>'+
+      '<td class="ctr"><input type="checkbox" '+(p.selfTeach?'checked':'')+' title="Self-teaching (×1.5 hours)" onchange="C.attrStudy['+i+'].selfTeach=this.checked;syncAttrHours('+i+')"></td>'+
+      '<td class="ctr"><input type="checkbox" '+(p.monumental?'checked':'')+' title="Monumental work (crit = huge leap)" onchange="C.attrStudy['+i+'].monumental=this.checked;touch()"></td>'+
+      '<td class="dim" style="font-size:10px">'+(complete?'<b style="color:var(--green)">Complete!</b>':(req?done+' / '+req+' <span style="color:var(--text2)">('+pct+'%)</span>':done+' hrs'))+'</td>'+
+      '<td><button class="btn-add" style="margin:0;padding:2px 6px;font-size:10px" onclick="rollAttrStudy('+i+')" title="Roll a training session">⚄ Roll</button> <button class="btn-add" style="margin:0;padding:2px 6px;font-size:10px" onclick="syncAttrHours('+i+')" title="Recompute hours from current level">↻</button> <button class="btn-del" onclick="C.attrStudy.splice('+i+',1);touch();renderSkills()">✕</button></td>'+
+      '</tr>'+
+      (p.lastSync?'<tr><td colspan="11" style="font-size:10px;padding:0 8px 2px;color:var(--text2);font-style:italic">↻ '+esc(p.lastSync)+'</td></tr>':'')+
+      (p.last?'<tr><td colspan="11" style="font-size:10.5px;padding:1px 8px 6px;color:'+col+'">'+esc(p.last)+'</td></tr>':'');
+  }).join('')||'<tr><td colspan="11" class="dim" style="padding:8px">No attribute training yet — add one and pick an attribute (ST, DX, IQ, HT, HP, Will, Per, FP).</td></tr>';
+  return '<div class="sec-head" style="margin-top:18px">Attribute Training Sessions <button class="btn-add" onclick="addAttrProject()">+ Add Attribute</button>'+
+    '<span class="dim" style="float:right;font-size:10px;font-weight:400">Canon: 200 hrs = 1 pt · shares the hours pool above</span></div>'+
+    '<div class="dim" style="font-size:11px;margin:2px 0 8px">Pick an attribute to auto-compute hours (per-level cost × 200) with level/teacher modifiers. Each session, roll 3d6 vs <b>Tgt</b> (its current level): success shaves <b>/Marg</b> hrs per point of margin; a crit learns it outright. At <b>Req</b> hours it raises one level and spends the points — covered by your Game XP budget.</div>'+
+    '<table class="g"><tr><th style="width:118px">Attribute</th><th style="width:34px" title="Current level">Lvl</th><th style="width:42px" title="Roll target = current level">Tgt</th><th style="width:56px" title="Required hours">Req</th><th style="width:56px">Done</th><th style="width:42px" title="Hours off per point of margin">/Marg</th><th style="width:30px" title="Teacher present">Tch</th><th style="width:30px" title="Self-taught">Slf</th><th style="width:30px" title="Monumental">Mon</th><th>Progress</th><th style="width:150px">Session</th></tr>'+
+    rows+'</table>';
+}
+
 function addSkill(){C.skills=C.skills||[];C.skills.unshift({name:'',pts:1,attr:'',diff:''});touch();renderSkills()}
 let _skillFilter='';
 function filterSkillRows(v){_skillFilter=(v||'').trim().toLowerCase();
