@@ -1,4 +1,4 @@
-/* Dara Dara — Firebase live character sync  (v4 — modular SDK, named 'kotor' database) */
+/* Dara Dara — Firebase live character sync  (v4.1 — per-SESSION echo id; fixes multi-device rollback war) */
 import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, onSnapshot, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -23,7 +23,7 @@ import { getFirestore, doc, onSnapshot, setDoc, serverTimestamp } from "https://
   var charId = (new URLSearchParams(location.search).get('char') || 'default')
                  .toLowerCase().replace(/[^a-z0-9_-]/g, '') || 'default';
   var ref = doc(db, 'characters', charId);
-  var applyingRemote = false, ready = false, writeTimer = null, lastJSON = '';
+  var applyingRemote = false, ready = false, writeTimer = null, lastJSON = '', clientId = Math.random().toString(36).slice(2) + '.' + Date.now().toString(36);
 
   function getChar() {
     try { if (typeof C !== 'undefined' && C && typeof C === 'object') return C; } catch (e) {}
@@ -59,7 +59,7 @@ import { getFirestore, doc, onSnapshot, setDoc, serverTimestamp } from "https://
     writeTimer = setTimeout(function () {
       setDoc(ref, { data: lastJSON, char: charId,
                     updatedAt: serverTimestamp(),
-                    updatedBy: auth.currentUser ? auth.currentUser.uid : null }, { merge: true })
+                    updatedBy: auth.currentUser ? auth.currentUser.uid : null, writer: clientId }, { merge: true })
         .catch(function (e) { console.warn('[sync] write', e.code || e.message); });
     }, delay || 150);
   }
@@ -84,7 +84,7 @@ import { getFirestore, doc, onSnapshot, setDoc, serverTimestamp } from "https://
         pill('live · seeded'); return;
       }
       var d = snap.data() || {};
-      if (d.updatedBy && auth.currentUser && d.updatedBy === auth.currentUser.uid) {
+      if (d.writer && d.writer === clientId) {
         lastJSON = d.data || lastJSON; ready = true; pill('live'); return;
       }
       try { if (d.data) applyRemote(JSON.parse(d.data)); }
@@ -173,7 +173,7 @@ import { getFirestore, doc, onSnapshot, setDoc, serverTimestamp } from "https://
   (function start() {
     if (!getChar()) return setTimeout(start, 300);
     onAuthStateChanged(auth, function (user) {
-      if (user) { gate(false); ready = false; lastJSON = ''; subscribe(); }
+      if (user) { gate(false); ready = false; lastJSON = ''; console.log('[sync] v4.1 · client', clientId, '· char', charId); subscribe(); }
       else { ready = false; pill('sign in for live sync'); }  // pill is clickable to open sign-in; no forced modal on load
     });
   })();

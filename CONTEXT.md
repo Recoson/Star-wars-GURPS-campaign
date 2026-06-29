@@ -584,3 +584,11 @@ Closed the real automation gap. **⚡ on every KNOWN power row** (Force tab, bes
 Deliberate scope: **no auto-metering** of ongoing FP (upkeep is a displayed reminder; the player meters it with the existing FP ± buttons). Sustained powers dedupe (no double-charge on re-click); one-shot powers just deduct. Playwright-tested (11 assertions: FP deduction, upkeep parse, dedupe, one-shot, drop, no console errors); check.py green.
 
 **v2 candidates (not built):** quick-cast list in the HUD (activate lives on the Force tab, see/drop on the combat HUD — split surfaces); subtract shock from to-hit rolls; FP recovery roll.
+
+### 2026-06-27 (cont.) — Firebase sync: multi-device rollback war FIXED (v4.1)
+
+Symptom (Chatni): point total flip-flopping 1150↔1485↔1501 across the iPad + other open tabs/devices; live sync rolling back yesterday's work. **Root cause in firebase-sync.js: echo-suppression keyed on the ACCOUNT (`updatedBy === auth.currentUser.uid`), not the device/session.** Two+ tabs/devices on the SAME login each saw the others' writes as their own echo → skipped applyRemote → kept stale local C and kept pushing it → infinite flip-flop between every open device's state. No newest-wins guard either.
+
+**Fix (v4.1):** suppress only THIS tab's echo via a per-page-load random `clientId`; writes from any other session (even same account) now applyRemote. A fresh/returning device's clientId never matches prior writes, so it always applies the current doc on connect and can't sit on stale local and push it. Model = Firestore doc is source of truth; last-write-wins on truly-simultaneous same-character edits (acceptable; not the bug). Added `writer: clientId` to the doc + a `[sync] v4.1 · client <id>` console marker to confirm a device reloaded the fix and see distinct ids.
+
+**Recovery given to James:** on the device showing the good 1501, hit Export (backup JSON); close/sign-out the stale tabs/devices so the doc settles on 1501; then hard-reload all devices on the v4.1 code. Export/Import = top of sheet (exportChar/importChar).
