@@ -5022,7 +5022,8 @@ function migrateVehicleStats(){
    v.shieldNow=Math.min(newCap,Math.round((+v.shieldNow||0)*ratio));
   }
  });
- (C.vehicles||[]).forEach(v=>{ // conform Hull HP pool to class every render
+ (C.vehicles||[]).forEach(v=>{ // conform Hull HP pool to class every render (unless the ship pins its own HP)
+  if(v.hpLock){ const _hm=+v.hpMax||0; v.hpNow=(v.hpNow==null)?_hm:Math.min(_hm,+v.hpNow||0); return; }
   const _Hh=v.core&&v.core.Hull&&SHIP_PARTS.find(function(x){return x.cat==='Hull'&&x.name===v.core.Hull;});
   const want=_Hh&&_Hh.hp?+_Hh.hp:hullHPForClass(v.hpClassHint||v.cat,v.hullDR);
   const cur=+v.hpMax||0;

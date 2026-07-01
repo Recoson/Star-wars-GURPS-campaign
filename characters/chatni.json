@@ -929,6 +929,7 @@
   "vehicles": [
     {
       "name": "X-70B Phantom-class prototype",
+      "hpLock": true,
       "cat": "Light Freighter",
       "hullDR": "62",
       "shieldDR": "85",

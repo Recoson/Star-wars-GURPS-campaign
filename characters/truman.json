@@ -575,6 +575,26 @@
   "vehicles": [
     {
       "name": "Dynamic-class light freighter",
+      "hpLock": true,
+      "custom": true,
+      "reactorMode": "normal",
+      "core": {
+        "Reactor": "Heavy Fusion Reactor",
+        "Sublight": "Military Ion Drive",
+        "Sensors": "Stealth-tuned Passive Array",
+        "Targeting": "Military Fire Control",
+        "ECM": "Military ECM Suite",
+        "Astrogation": "Premium Astromech Socket",
+        "Cargo": "Shielded Smuggling Compartment",
+        "Crew": "Bunk Module (4 berths)",
+        "Hyperdrive": "Class-1 Military Drive"
+      },
+      "modules": [
+        { "m": "Chaff / decoy launcher" },
+        { "m": "Chaff / decoy launcher" },
+        { "m": "Neuralyser array" },
+        { "m": "Stygium cloaking device", "off": true, "chargesNow": 40 }
+      ],
       "cat": "Light Freighter",
       "hullDR": "12",
       "shieldDR": "375",

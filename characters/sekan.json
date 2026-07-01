@@ -421,6 +421,7 @@
   "vehicles": [
     {
       "name": "D5-Mantis patrol craft",
+      "hpLock": true,
       "cat": "Shuttle",
       "hullDR": "11",
       "shieldDR": "300",
