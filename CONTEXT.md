@@ -683,3 +683,50 @@ this file's in-flight section) is fragile to parse.
 Open observation (not acted on): the sheet has **204 FORCE_DESC panels but 200 `skill:"Force"`
 catalogue entries** — 4 panels `regen_force_desc.py` would not reproduce. Worth pinning down which 4
 (stale, or legitimately hand-kept non-`Force`-skill panels) in a later pass.
+
+
+### 2026-07-01 (cont.) — Compendium ship-combat subsection reformat (Vehicles book)
+
+Fixed the formatting/UX defects James flagged (screenshot: dead column space, ragged text-wrap,
+inconsistent heads, unstyled tables) in the **Starship Combat** subsection — the worst offender in
+the Vehicles book. Scope was deliberately held to this subsection; the Force section was left
+untouched per instruction (its layout is dictated by the ability statgrid structure).
+
+Root causes, all localized to Scale & Scope / Starship Combat:
+- **3-column stranding.** The Scale & Scope PART sat in a `.body-3col` with `column-fill:balance`;
+  the many full-width spanners (h2 section-heads + tables) chopped the flow into short balanced
+  islands, stranding near-empty third columns and forcing brutal narrow-column wrapping.
+- **Ad-hoc inline-styled heads.** 8 `<h3 style="…color:#6a5a2a…">` (olive) + 1 `<h4 style="…#3a5a3a…">`
+  (green) instead of doc classes — off-palette AND invisible to the TOC/anchor system.
+- **4 bare `<table>`** (no `.tbl`, no `.tbl-scroll` wrapper) → browser-default unstyled tables:
+  the Ship-Block translation ("what is renamed"), the Modifiers table, the Systems Strain 3d table,
+  and the Weapon Ladder (ship-scale flat dmg / vs shields / vs person / trade-off).
+
+Fix (guarded Python patch, exact-count assertions on every substitution; net −840 code points):
+- Scale & Scope block `body-3col` → **`body-2col`** (GURPS-authentic 2-col; halves the stranding).
+- 8 inline `<h3>` + 1 inline `<h4>` → **`.subsection-head`** (Cormorant Title-Case; now on-palette and
+  TOC-visible; and since subsection-heads do NOT `column-span:all`, they no longer re-fragment the
+  column flow the way the old spanning heads did).
+- 4 bare tables → **`<div class="tbl-scroll"><table class="tbl tbl--compact">`** (transformed by
+  byte-offset inside the ship-combat region, not by retyping the glyph-heavy cell content).
+
+House style basis: GURPS **Space** + **Ultra-Tech** (2-col body, tiered heads CHAPTER → ALL-CAPS major
+head → Title-Case subsection → run-in bold lead-in, tables span the columns) — which maps cleanly onto
+the compendium's own `section-head` / `subsection-head` / `rule__name` system, so the fix is
+"use the doc's own ladder correctly", not a new style.
+
+Left intentional (per the don't-touch-deliberate-looking-things rule): olive caption color `#876b58`
+(55 captions doc-wide = the standard), the olive `<strong>` damage-number accents, and the tan
+`<tr style="background:#faf3e4">` warhead rows (they semantically flag ordnance).
+
+Verified: **check.py exit 0** (215 powers, headers unique, divs balanced, Kryze absent; only the 3
+known non-blocking character-JSON backfill warnings). WeasyPrint before/after render of the same
+fragment confirms the four tables now carry dark header rows + ruled/striped cells, the heads are
+consistent serif Title-Case, and the body flows clean 2-col. NB WeasyPrint is paged media, so the
+screen-continuous column-stranding improvement is reasoned (2-col strictly reduces it vs 3-col), not
+visually reproducible in-sandbox — eyeball on GitHub Pages / iPad (ship-then-correct).
+
+Flagged, NOT done (offered to extend): the same two defects live elsewhere — **17 more bare `<table>`
+across the rest of the compendium** (17 outside this section, of 21 total), plus likely other 3-col
+stranding and inline-styled heads in the wider Vehicles chapter. Same normalization can roll across
+the rest of Vehicles / the whole doc on a green light.
