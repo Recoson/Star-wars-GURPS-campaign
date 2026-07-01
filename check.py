@@ -20,7 +20,7 @@ Checks
                    expected attribute level for known point-cost inputs (incl. the
                    HT-at-10/level gotcha). Extend CASES freely.
 """
-import re, sys, glob, json, subprocess, tempfile, os
+import re, sys, glob, json, subprocess, tempfile, os, html
 
 REPO = os.path.dirname(os.path.abspath(__file__))
 def find(pat):
@@ -252,13 +252,63 @@ process.exit(bad?1:0);
     else:
         note(f"golden: attrRaw passes {len(CASES)} attribute-derivation cases (incl. HT 10/level)")
 
+# ---- B3. Force-catalogue coverage (complement of B's orphan direction) ---
+def check_force_catalogue_coverage(power_names):
+    """Coverage half of the sheet<->compendium naming pincer. check_sheet asserts
+    FORCE_DESC panels are a subset of real powers (no orphan panels); this asserts
+    the sheet's *catalogued* Force powers are a subset of compendium power blocks
+    (no catalogued power left without a rules block). It mirrors regen_force_desc.py's
+    own extraction -- entries with "skill": "Force" -- so a hit here is exactly the
+    'missing' set that generator reports, i.e. powers it can emit no panel for.
+    WARN (reconcile), matching the panel-subset severity."""
+    if not (SHEET and power_names):
+        return
+    s = open(SHEET, encoding="utf-8").read()
+    catalogue = sorted(set(re.findall(r'\{"name": "([^"]+)", "skill": "Force"', s)))
+    if not catalogue:
+        warn('coverage: no `"skill": "Force"` catalogue entries found in sheet -- '
+             "FORCE_POWERS format may have drifted from the extraction regex")
+        return
+    comp = {html.unescape(n) for n in power_names}
+    missing = [n for n in catalogue if html.unescape(n) not in comp]
+    if missing:
+        warn(f"coverage: {len(missing)} catalogued Force power(s) resolve to no compendium "
+             f"block (regen_force_desc.py would emit no panel for them): {missing[:12]}")
+    else:
+        note(f"coverage: all {len(catalogue)} catalogued Force powers resolve to a compendium block")
+
+# ---- E. Naming policy: the Kryze -> Krysla rename is absolute -------------
+def check_kryze_ban():
+    """Clan Kryze was renamed Krysla campaign-wide; the pre-rename string must
+    never appear in a shipped tool surface. Scans player/GM-facing files (*.html
+    + character JSON) but NOT the meta-docs (README/SKILL/CONTEXT), which name the
+    banned string legitimately when documenting this rule. FAIL: it is a bright-line
+    policy and a reintroduction should block the push."""
+    surfaces = sorted(glob.glob(os.path.join(REPO, "*.html")) +
+                      glob.glob(os.path.join(REPO, "characters", "*.json")))
+    hits = []
+    for p in surfaces:
+        try:
+            txt = open(p, encoding="utf-8", errors="ignore").read()
+        except Exception:
+            continue
+        for i, ln in enumerate(txt.splitlines(), 1):
+            if "kryze" in ln.lower():
+                hits.append(f"{os.path.basename(p)}:{i}")
+    if hits:
+        fail(f"naming: banned pre-rename string 'Kryze' in {len(hits)} line(s) -- use 'Krysla': {hits[:12]}")
+    else:
+        note(f"naming: 'Kryze' absent from all {len(surfaces)} shipped surfaces (Krysla rename intact)")
+
 # ---- run -----------------------------------------------------------------
 def main():
     names = check_compendium()
     check_sheet(names)
     check_panel_fidelity()
+    check_force_catalogue_coverage(names)
     check_characters()
     check_golden_math()
+    check_kryze_ban()
 
     print("\n".join("  · " + n for n in NOTES))
     if WARNS:

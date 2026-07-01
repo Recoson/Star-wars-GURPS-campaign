@@ -654,3 +654,32 @@ Open design forks flagged to James: (a) attributes credit a NEW Tr. Attr pool (h
 Fix: moved the Attacks and Active Styles sections *inside* `.char-left`, after Active Defenses, and deleted the two now-empty grid wrappers (9564→9558 lines). They're now flex children of the left column and sit directly under Active Defenses regardless of skill count. Verified (Playwright, 16-skill repro): Attacks x=18 w=721 y=1080, Active Styles x=18 w=721 y=1196 — both in the left column (w=721, matching Attributes/Ref/Defenses) right under Active Defenses (y=914); Skills stays right (x=751 w=511). tab-sheet height 1569→1467. check.py green (2 inline scripts parse, FP-fidelity 204/204). Moved sections' inline `grid-column:1/-1`/`data-size=full` are inert inside the flex column. Responsive unchanged (<980px → char-left full-width stack).
 
 Open: if the 6-col Attacks table feels cramped at span-7 width, widen char-left→span 8 / Skills→span 4 (one-line change).
+
+### 2026-07-01 — check.py consistency additions + safe-push ship script; live Kryze catch
+
+Extended the invariant harness with two cross-surface consistency checks — both follow the existing
+doctrine (assert relationships, never magic numbers), so they survive the growing corpus:
+- **Force-catalogue coverage** — the sheet's catalogued Force powers (`{"name":X,"skill":"Force"}`, the
+  exact set `tools/regen_force_desc.py` reads) must all resolve to a compendium power block. The
+  coverage complement to the existing FORCE_DESC-orphan check; together they pincer sheet↔compendium
+  Force naming from both directions. Currently clean (200 catalogued, 0 missing). WARN severity.
+- **Kryze-ban** — the pre-rename string `Kryze` must not appear in any shipped surface (`*.html` +
+  `characters/*.json`; meta-docs README/SKILL/CONTEXT excluded, since they name it to document the
+  rule). FAIL severity. **Caught a live violation on first run:** `KOTOR_GM_Console_v4.html`'s NPC
+  surname generator (`NAME_SUR`) still listed `"Kryze"` → fixed to `"Krysla"`. Negative-tested
+  (planted string → exit 1; removed → exit 0).
+
+New tool: **`tools/safe-push.sh`** — the ship step wrapped: [stage+commit] → check.py gate → fetch →
+rebase origin/main → re-gate → masked push, with conservative abort+hard-reset+handoff on ANY rebase
+conflict (re-apply patch fresh, re-run). dash-safe, exit codes captured without pipefail. Use:
+`sh tools/safe-push.sh "commit message"`.
+
+Deliberately NOT built (flagged): a compendium **index cache** — `tools/query_compendium.py` already
+reads the file in its own process and emits only the slice, so it already solves the context-budget
+problem; an index would save sub-second parse CPU, not context, and isn't worth a staleness surface.
+And a **bootstrap** script — marginal over `git log && check.py`; its one real value (auto-extracting
+this file's in-flight section) is fragile to parse.
+
+Open observation (not acted on): the sheet has **204 FORCE_DESC panels but 200 `skill:"Force"`
+catalogue entries** — 4 panels `regen_force_desc.py` would not reproduce. Worth pinning down which 4
+(stale, or legitimately hand-kept non-`Force`-skill panels) in a later pass.
