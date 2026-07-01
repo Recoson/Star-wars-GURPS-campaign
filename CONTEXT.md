@@ -878,3 +878,16 @@ callouts keep their break-inside:avoid. Specificity beats the base `.lore`/`p` r
 (A.1 columns now level, gap gone). This is intentional — do NOT re-add break-inside:avoid to column-body
 paragraphs. Note: the 2-col layout only shows >560px (phones collapse to 1-col via
 `@media screen and (max-width:560px)`), so this affects iPad/desktop, which is where the gap was seen.
+
+
+### 2026-07-01 (cont.) — Structural cleanups: Galaxy wrapper + Battle Stances fold (reorg prerequisite)
+
+Two long-standing structural defects fixed so all 14 books are now clean, contiguous <section class="book book--X"> containers (prerequisite for the guide reorg/numbering):
+
+1. **Galaxy had no book wrapper.** It was the only book with a `<section class="book-divider" id="book-galaxy">` but no outer `<section class="book book--galaxy">` — its content sat loose between makers(Skills) and factions. Wrapped it to match the droids pattern: `<section class="book book--galaxy" data-book="galaxy">` before the divider, `</section>` before factions. The `id="book-galaxy"` anchor already lived on the divider, so the 262 Doc-X cross-ref links are untouched. Effect: galaxy now inherits the generic `.book{padding}` side margins like every other book (was previously rendering flush) — a consistency win, verified via render. No `.book--galaxy`-specific CSS exists, so no surprise styling.
+
+2. **"Battle Stances — Fighting Styles" was orphaned** (a `<section id="sec-battle-stances" ... data-book="combat">` sitting between Combat's `</section>` and Ranged, outside any book). Folded into Combat (its rightful home — Doc I is "Core Combat & Martial Arts") by moving Combat's book-closing `</section>` from before the block to after it. Net section depth unchanged.
+
+Section balance: 139 -> 140 open/close (balanced; +1 is the new galaxy wrapper pair). check.py green. Assertion-guarded byte patch (uniqueness + balance + exactly-+1-pair). Both changes are pure section-boundary moves — no content touched.
+
+Reorg scope now finalised with James: SKIP the Skills-early move (biggest renumber churn for modest gain; char-gen A.6 primer covers first-read; keeps Docs I-X order stable = clean single-pass numbering). Remaining reorg = engine-first primer swap only (Core Game before Creating a Character). ·B appendices keep §7B/§10B numbering. Next: primer swap -> number all sections §N.k -> convert 295 refs to §N.k -> running-header section indicator.
