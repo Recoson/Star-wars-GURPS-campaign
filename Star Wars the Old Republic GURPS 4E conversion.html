@@ -401,12 +401,17 @@ html, body {
   text-align: justify;
   hyphens: auto;
 }
-/* let body paragraphs flow across the column break so short multi-col sections balance
-   instead of stranding a half-empty column (dead space). Scoped to column-body prose;
-   tables/statblocks/callouts keep their break-inside:avoid. */
-.body-2col .lore, .body-3col .lore,
-.body-2col .section-body > p, .body-3col .section-body > p
-{ break-inside: auto; page-break-inside: auto; }
+/* let body prose flow across the column break so short multi-col sections balance instead of
+   stranding a half-empty column (dead space). All flowing paragraphs in column bodies may split;
+   true boxes (backgrounds / full borders / drop-cap intro) stay whole. */
+.body-2col p, .body-3col p { break-inside: auto; page-break-inside: auto; }
+.body-2col .part-intro, .body-3col .part-intro,
+.body-2col .soma, .body-3col .soma,
+.body-2col .exposure, .body-3col .exposure,
+.body-2col .med, .body-3col .med,
+.body-2col .power-stats, .body-3col .power-stats,
+.body-2col .section-subtitle, .body-3col .section-subtitle
+{ break-inside: avoid; page-break-inside: avoid; }
 
 .body-3col .section-head,
 .body-2col .section-head { break-after: avoid-column; }

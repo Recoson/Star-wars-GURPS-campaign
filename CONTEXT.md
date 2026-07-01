@@ -891,3 +891,22 @@ Two long-standing structural defects fixed so all 14 books are now clean, contig
 Section balance: 139 -> 140 open/close (balanced; +1 is the new galaxy wrapper pair). check.py green. Assertion-guarded byte patch (uniqueness + balance + exactly-+1-pair). Both changes are pure section-boundary moves — no content touched.
 
 Reorg scope now finalised with James: SKIP the Skills-early move (biggest renumber churn for modest gain; char-gen A.6 primer covers first-read; keeps Docs I-X order stable = clean single-pass numbering). Remaining reorg = engine-first primer swap only (Core Game before Creating a Character). ·B appendices keep §7B/§10B numbering. Next: primer swap -> number all sections §N.k -> convert 295 refs to §N.k -> running-header section indicator.
+
+
+### 2026-07-01 (cont.) — Dead-space fix BROADENED (the first pass missed the main text class)
+
+The earlier column-balance fix only targeted `.lore` (123 paras) + `.section-body>p`. But the compendium's
+dominant body-text class is `.rule` (1213 paras) — plus `.effect`/`.flavor`/`.upkeep`/`.warn`/`.note`/etc. —
+none of which the narrow rule reached, so most multi-column sections (esp. body-3col) still stranded columns.
+James caught this on the numbering pilot render (3rd column dead space in Combat Part I sections).
+
+New rule (replaces the narrow one): flow-by-default for ALL paragraphs in column bodies, exclude only true
+boxes:
+  `.body-2col p, .body-3col p { break-inside:auto; page-break-inside:auto; }`
+  + `break-inside:avoid` kept for the six box-like `<p>` classes: `.part-intro` (drop-cap intro), `.soma`,
+    `.exposure`, `.med`, `.power-stats`, `.section-subtitle` (all have backgrounds / full or top-bottom
+    borders / drop-cap layout). `.lore` stays splittable (border-LEFT accent only — splits cleanly, verified).
+Specificity: `.body-Ncol .boxclass` (0,2,0) beats the allow rule `.body-Ncol p` (0,1,1) beats base `p` (0,0,1).
+Render-verified on Combat Part I (body-3col): sections now fill and balance all three columns. check.py green.
+DO NOT narrow this back to `.lore`-only. Classification method: scan `<p class>` CSS for background/border-
+radius/full-or-vertical border/vertical padding = box (exclude); border-left/padding-left only = splittable.
