@@ -730,3 +730,46 @@ Flagged, NOT done (offered to extend): the same two defects live elsewhere — *
 across the rest of the compendium** (17 outside this section, of 21 total), plus likely other 3-col
 stranding and inline-styled heads in the wider Vehicles chapter. Same normalization can roll across
 the rest of Vehicles / the whole doc on a green light.
+
+
+### 2026-07-01 (cont.) — Broader-scope formatting pass: table normalization doc-wide
+
+Follow-on to the ship-combat reformat. James greenlit rolling the same normalization across the
+whole compendium and asked about column balance too. Ran a full diagnostic sweep first (table
+classification, a div-depth matcher measuring every `.body-Ncol` block's spanner density, and an
+inline-header scan) before touching anything.
+
+**Done — 18 unstyled tables → styled** (guarded patch, +977 bytes; every substitution assertion-checked;
+div-balance verified via check.py):
+- **17 bare `<table>`** (no class) across the Learning / Capstones / Quick-Reference / Saber-Forms /
+  Named-Shields sections → `<div class="tbl-scroll"><table class="tbl tbl--compact">`. All confirmed
+  real data tables (each has `<thead>`/`<th>` + rows), same defect class as the 4 ship tables. The big
+  one was the **31-row × 7-col Named Energy Shields table** — was rendering browser-default, now has
+  dark header + striping + category band-rows. Rendered-verified.
+- **1 skills-quickref table** (`<table style="font-size:10pt">`, no class) → `.tbl` (NOT `--compact`,
+  to keep the author's 10pt + the 30%/auto/18% `<th>` widths), wrapped in `.tbl-scroll`. This is the
+  **~270-row** full skill list; striping matters enormously for scannability there. Rendered-verified.
+- Tables carrying a `.tbl*` class: 365 → 383. The specialized `.skilltbl` / `.bm-table` / `.tk-table`
+  tables (41 of them, all with real CSS definitions) were left untouched — they're purpose-built, not
+  defects.
+
+**Deliberately NOT done — column mass-conversion (honest pushback).** The diagnostic showed **`.body-3col`
+is the document's default body layout — 119 blocks vs 25 two-col.** The 54 blocks the spanner heuristic
+flagged are almost all multi-h2 *prose* runs with **zero tables**; only 12 tables sit inside 3-col
+blocks total, and none pile up the way ship-combat's four did. A styled `.tbl` inside a 3-col block just
+becomes a clean full-width band (the GURPS-standard look), so once the bare tables are styled the 3-col
+context reads fine. Ship-combat warranted 2-col specifically because of its unique 4-table pile-up.
+A blanket 3→2 would be a 119-block change against the author's clear default, and — because WeasyPrint
+is paged media — the screen-continuous stranding it'd target **can't even be verified in-sandbox**.
+Recommendation stands: leave the 3-col default; convert individual blocks only if a specific one is
+seen to strand on Pages/iPad. (The handful of table-bearing 3-col blocks are the only plausible
+candidates if we ever do: penetration-armour-2, starfighterscale-2, boardingactions-2, repair-
+maintenance-2 — each has just 1 table, so low priority.)
+
+**Header defect class — fully resolved, 0 further changes.** Only ONE inline-styled `<h*>` remained
+doc-wide after the ship fix: an `<h3 style="color:#2a3d2a">` inside a `.callout philosophy` box. That's
+**intentional** — the colour is a recurring palette value (5×) themed to the callout, not an off-palette
+fake of the doc's header hierarchy (which is what the ship-section olive heads were). Left alone.
+
+Verified: check.py exit 0 (215 powers, headers unique, div-balanced, Kryze absent; 3 known JSON warns).
+WeasyPrint render confirmed the Named-Shields and quickref tables specifically.
