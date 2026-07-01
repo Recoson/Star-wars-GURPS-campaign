@@ -23,6 +23,7 @@ import { getFirestore, doc, onSnapshot, setDoc, serverTimestamp } from "https://
   var charId = (new URLSearchParams(location.search).get('char') || 'default')
                  .toLowerCase().replace(/[^a-z0-9_-]/g, '') || 'default';
   var ref = doc(db, 'characters', charId);
+  var isScratch = (charId === 'default');   // no ?char= selected -> blank scratch doc; never sync real edits into it
   var applyingRemote = false, ready = false, writeTimer = null, base = {}, clientId = Math.random().toString(36).slice(2) + '.' + Date.now().toString(36);
 
   function getChar() {
@@ -82,7 +83,7 @@ import { getFirestore, doc, onSnapshot, setDoc, serverTimestamp } from "https://
     } finally { applyingRemote = false; }
   }
   function pushDelta() {
-    if (applyingRemote || !ready) return;
+    if (applyingRemote || !ready || isScratch) return;
     var C = getChar(); if (!C) return;
     var f = computePatch(C); if (!f) return;
     var keys = Object.keys(f);
@@ -96,7 +97,14 @@ import { getFirestore, doc, onSnapshot, setDoc, serverTimestamp } from "https://
     clearTimeout(writeTimer);
     writeTimer = setTimeout(pushDelta, delay || 150);
   }
-  function onEdit() { setTimeout(function () { schedulePush(120); }, 0); }
+  var lastNag = 0;
+  function onEdit() {
+    if (!isScratch && !(auth && auth.currentUser)) {
+      var now = Date.now();
+      if (now - lastNag > 20000) { lastNag = now; gate(true); }   // keep nudging sign-in while unsynced edits happen
+    }
+    setTimeout(function () { schedulePush(120); }, 0);
+  }
   ['input', 'change', 'keyup', 'click'].forEach(function (ev) {
     document.addEventListener(ev, onEdit, true);
   });
@@ -194,11 +202,24 @@ import { getFirestore, doc, onSnapshot, setDoc, serverTimestamp } from "https://
     }
     o.style.display = show ? 'flex' : 'none';
   }
+  function scratchWarn() {
+    if (document.getElementById('fb-scratch')) return;
+    var b = document.createElement('div'); b.id = 'fb-scratch';
+    b.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99997;background:#5a2b2b;color:#ffe9e9;padding:8px 12px;font:13px/1.4 system-ui,sans-serif;text-align:center;box-shadow:0 2px 10px #0008';
+    b.innerHTML = '\u26a0 No character selected \u2014 open your character link (e.g. <b>?char=chatni</b>). Changes here will <b>not</b> be saved or synced.';
+    document.body.appendChild(b);
+  }
   (function start() {
     if (!getChar()) return setTimeout(start, 300);
+    if (isScratch) scratchWarn();   // no character selected -> warn, never sync
     onAuthStateChanged(auth, function (user) {
-      if (user) { gate(false); ready = false; base = {}; console.log('[sync] v5 · client', clientId, '· char', charId); subscribe(); }
-      else { ready = false; pill('sign in for live sync'); }  // pill is clickable to open sign-in; no forced modal on load
+      if (user) {
+        if (isScratch) { pill('no character selected'); return; }        // signed in but on blank scratch doc -> do not sync
+        gate(false); ready = false; base = {}; console.log('[sync] v5 · client', clientId, '· char', charId); subscribe();
+      } else {
+        ready = false; pill('sign in for live sync');
+        if (!isScratch) gate(true);   // ALWAYS prompt login when signed out (dismissible for offline use + local export)
+      }
     });
   })();
   try { window.daraCloud = {
