@@ -1242,6 +1242,15 @@ function talentBonus(skillName){
  for(const tal in TALENT_SKILLS){ if(_talentCovers(TALENT_SKILLS[tal],skillName)){ const lv=talentLevelOwned(tal); if(lv>best)best=lv; } }
  return best;
 }
+// House rule (compendium): a Force-user's effective Lightsaber skill runs up to +20 above its raw
+// DX-based value, scaling off their Force-primary attribute. If the primary IS DX the uplift is 0
+// and DX drives the skill natively/uncapped; a non-DX primary gives clamp(attr-DX, 0, 20).
+function lightsaberForceBonus(){
+ var fp=forcePrimaryAttr();
+ var ATTRF={ST:ST,DX:DX,Will:Will,HT:HT};
+ var fv=(ATTRF[fp]||DX)();
+ return Math.max(0, Math.min(20, fv-DX()));
+}
 function skillLevel(sk){
  if(!sk||!sk.name)return'-';
  const pts=+sk.pts||0; if(pts<=0)return'-';
@@ -1264,7 +1273,7 @@ function skillLevel(sk){
  const DIFF_BASE={E:0,A:-1,H:-2,VH:-3};
  const steps=pts<=0?null:(pts===1?0:(pts<4?1:(pts<8?2:2+Math.floor((pts-8)/4)+1)));
  const bonus=steps==null?0:(DIFF_BASE[diff]!==undefined?DIFF_BASE[diff]:-1)+steps;
- return aval+bonus+(+sk.bonus||0)+talentBonus(sk.name);
+ return aval+bonus+((sk.name==='Lightsaber')?lightsaberForceBonus():(+sk.bonus||0))+talentBonus(sk.name);
 }
 
 // ─────────────────────────────────────────────────────
@@ -2128,7 +2137,7 @@ function forcePrimaryAttr(){const fp=(C.force&&C.force.primary);return ({ST:1,DX
 function skillAttrLabel(attr){return attr==='Force'?('Force→'+forcePrimaryAttr()):(attr||'-');}
 function skillLvlCellHTML(sk){
  let h=String(skillLevel(sk));
- if(+sk.bonus) h+=` <span style="color:var(--cyan);font-size:9px">(${(+sk.bonus)>0?'+':''}${+sk.bonus})</span>`;
+ if(sk.name==='Lightsaber'){var _lf=lightsaberForceBonus();if(_lf>0)h+=` <span style="color:var(--cyan);font-size:9px" title="Force-attribute scaling (max +20)">(F+${_lf})</span>`;}else if(+sk.bonus) h+=` <span style="color:var(--cyan);font-size:9px">(${(+sk.bonus)>0?'+':''}${+sk.bonus})</span>`;
  const _tb=talentBonus(sk.name); if(_tb>0) h+=` <span style="color:#6fcf97;font-size:9px" title="Talent bonus (+${_tb} to this skill group)">(T+${_tb})</span>`;
  const fc=forceSkillCap(sk);
  if(fc&&fc.capped) h+=` <span style="color:var(--amber);font-size:9px" title="Force cap: attribute contributes at most ${fc.baseAttr}+${FORCE_ATTR_CAP} (${fc.attrVal}→capped to ${fc.cap}); higher levels need invested points">▣cap</span>`;
