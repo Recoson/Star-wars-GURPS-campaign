@@ -822,3 +822,45 @@ table blocks the push. Asserts the relationship, not a count (per check.py's des
 attribute-order/extra-class tolerant (`<div ... tbl-scroll ...>`), and it names offenders by line +
 first header cell. Negative-tested (planted bare table → FAIL naming it; removed → exit 0). Note reads
 "tables: all N .tbl tables wrapped in .tbl-scroll (overflow-safe)".
+
+
+### 2026-07-01 (cont.) — GUIDE REORGANISATION workstream (ACTIVE, multi-session) — plan + numbering pilot
+
+Big IA job: reshape the compendium into a proper first-read rules/player guide (modern-TTRPG-guide
+pacing: intro → rulings → first-read relevance). **Living Force stays a SEALED UNIT — content never
+touched, but it MAY be moved as a whole block.** Not removing info unless doubled/unnecessary; rules
+first; concise-but-clear. James's confirmed decisions:
+- **Engine-first:** The Core Game (Primer B) moves ahead of Creating a Character (Primer A).
+- **Skills placement:** follow GURPS → Skills sits with the character-building material (GURPS order is
+  Create → Advantages(2) → Disadvantages(3) → **Skills(4)** → … → Combat much later), i.e. up from its
+  current book-12 slot to right after char-gen, before combat.
+- **Cross-references:** use **stable section numbers (§X.Y), NOT literal page numbers.** Page numbers
+  only exist in the A4 print/PDF view (CSS `counter(page)`), not the iPad/browser scroll build players
+  use, and they reflow on every edit (parallel pushes = perpetual staleness). §-numbers are stable,
+  work in both media, and keep the tap-to-jump nav. Add the current section number to the running
+  header (currently only shows the doc title) so a *printed* reader can find §X.Y.
+- **Target macro order:** front matter (Cover · How to Use · setting primer) → Core Game · Char · Skills
+  · Core Combat · Ranged · Damage → Living Force (sealed) · Force Training → Equipment · Vehicles ·
+  Droids · Trade → Galaxy · Factions.
+
+**Structure facts (recon):** 14 books = **2 Primers (A,B) + 12 Documents (I–XII)** (front matter's "Ten
+Documents" was stale → fixed to Twelve). 447 h2 `.section-head`; ~395 TOC number labels but only ~71
+align to section-heads — **the §-numbering is only PARTIAL and must be completed** (assign N.k = k-th
+section of Document N, primers keep A.x/B.x). 847 `<a href="#…">` links; **295 "Doc «Roman»" refs, 262
+linked — ALL point at stable `#book-<slug>` anchors (chargen/coregame/combat/ranged/damage/force/
+training/vehicles/equipment/makers/economy/droids/galaxy/factions).** KEY CONSEQUENCE: **reordering
+books breaks NO links** (slugs are position-independent) — only the positional "Document N" labels +
+"Doc N" visible ref text need renumbering. So the reorder is far safer than first feared; the ref
+LINKS are already reorder-proof.
+
+**Safe sequence:** (1) complete + surface §-numbering, convert the 295 book-level "Doc N" refs to
+section-level "§X.Y" (per-ref: resolve the named target, e.g. "Rate of Fire (Doc II)" → §2.k) + add
+running-header section indicator; (2) reorder books (mechanical: move blocks + reorder TOC/sidenav +
+renumber the 12 Document labels/refs to new order), Living Force moved as a sealed block; (3) per-book
+first-read pacing + dedup.
+
+**SHIPPED so far (this commit):** numbering PILOT — added `.secnum` style (accent-colour, exact-case
+so "A.5a" stays lc), surfaced the A.x/B.x numbers onto the 15 Primer headings, fixed the "Ten
+Documents" drift. Render-verified (headings read e.g. "A.1 HOW POINTS WORK", number in accent blue).
+**Awaiting James's sign-off on the heading-number + ref FORMAT before scaling to all 12 Documents +
+the 295-ref conversion.** check.py green.
