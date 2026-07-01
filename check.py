@@ -300,6 +300,33 @@ def check_kryze_ban():
     else:
         note(f"naming: 'Kryze' absent from all {len(surfaces)} shipped surfaces (Krysla rename intact)")
 
+# ---- F. Table overflow-safety: every .tbl is wrapped in .tbl-scroll ------
+def check_table_wrap():
+    """The compendium's own CSS mandates it ("tables never overflow the page:
+    wrap each in a horizontal scroll shell"), and .body-Ncol .tbl-scroll gets
+    column-span:all exactly like a bare table -- so the wrapper is free of any
+    layout cost and adds only the overflow-x shell. A .tbl left unwrapped
+    clips/overflows at iPad-portrait width. Assert the RELATIONSHIP (every .tbl
+    has a .tbl-scroll parent), never a count. FAIL: a newly-added bare table is
+    a real overflow regression, and the wrap-each rule is a bright-line invariant.
+    Detection is attribute-order/extra-class tolerant (matches <div ... tbl-scroll ...>)."""
+    if not COMP: return
+    s = open(COMP, encoding="utf-8").read()
+    WRAP = re.compile(r'<div[^>]*\btbl-scroll\b[^>]*>\s*$')
+    tbls = [m.start() for m in re.finditer(r'<table class="tbl', s)]
+    unwrapped = [p for p in tbls if not WRAP.search(s[max(0, p - 160):p])]
+    if unwrapped:
+        locs = []
+        for p in unwrapped[:8]:
+            ln = s.count('\n', 0, p) + 1
+            th = re.search(r'<th[^>]*>(.*?)</th>', s[p:p + 400], re.S)
+            tag = re.sub(r'<[^>]+>', '', th.group(1)).strip()[:24] if th else '?'
+            locs.append(f'L{ln}("{tag}")')
+        fail(f"tables: {len(unwrapped)} .tbl table(s) not wrapped in .tbl-scroll "
+             f'(overflow risk on iPad) -- wrap each in <div class="tbl-scroll">: {locs}')
+    else:
+        note(f"tables: all {len(tbls)} .tbl tables wrapped in .tbl-scroll (overflow-safe)")
+
 # ---- run -----------------------------------------------------------------
 def main():
     names = check_compendium()
@@ -309,6 +336,7 @@ def main():
     check_characters()
     check_golden_math()
     check_kryze_ban()
+    check_table_wrap()
 
     print("\n".join("  · " + n for n in NOTES))
     if WARNS:

@@ -816,6 +816,9 @@ Verified: check.py exit 0 (div-balanced, table count unchanged, 3 known JSON war
 (horizontal scroll on touch) is interactive/iPad and isn't reproducible in the paged WeasyPrint sandbox;
 verified structurally instead (spanning rule confirmed, 383/383 wrapped).
 
-**Offered, not done:** a check.py guard asserting every `.tbl` is `.tbl-scroll`-wrapped (would lock in
-the invariant and catch regressions from future table additions) — trivial to add on request; held off
-since it's a separate-file tooling change.
+**Follow-up (DONE):** added a check.py guard — `check_table_wrap()` — asserting every `.tbl` in the
+compendium has a `.tbl-scroll` parent. FAIL severity (bright-line, like the Kryze ban): a future bare
+table blocks the push. Asserts the relationship, not a count (per check.py's design rule); detection is
+attribute-order/extra-class tolerant (`<div ... tbl-scroll ...>`), and it names offenders by line +
+first header cell. Negative-tested (planted bare table → FAIL naming it; removed → exit 0). Note reads
+"tables: all N .tbl tables wrapped in .tbl-scroll (overflow-safe)".
