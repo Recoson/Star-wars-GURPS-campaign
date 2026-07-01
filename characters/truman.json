@@ -574,39 +574,21 @@
   "stances": [],
   "vehicles": [
     {
-      "name": "Dynamic-class light freighter",
-      "hpLock": true,
-      "custom": true,
-      "reactorMode": "normal",
-      "core": {
-        "Reactor": "Heavy Fusion Reactor",
-        "Sublight": "Military Ion Drive",
-        "Sensors": "Stealth-tuned Passive Array",
-        "Targeting": "Military Fire Control",
-        "ECM": "Military ECM Suite",
-        "Astrogation": "Premium Astromech Socket",
-        "Cargo": "Shielded Smuggling Compartment",
-        "Crew": "Bunk Module (4 berths)",
-        "Hyperdrive": "Class-1 Military Drive"
-      },
-      "modules": [
-        { "m": "Chaff / decoy launcher" },
-        { "m": "Chaff / decoy launcher" },
-        { "m": "Neuralyser array" },
-        { "m": "Stygium cloaking device", "off": true, "chargesNow": 40 }
-      ],
+      "name": "Ebon Hawk-class light freighter",
       "cat": "Light Freighter",
-      "hullDR": "12",
-      "shieldDR": "375",
-      "shieldNow": 375,
-      "hpMax": 1100,
-      "hpNow": 1100,
-      "weapons": "2× light blaster turrets",
-      "crew": "2",
-      "fuel": "30/6",
-      "cost": "450,000",
-      "lc": "Lic",
-      "notes": "YT-class equivalent. Stock-modifiable.",
+      "hullDR": "16",
+      "shieldDR": "350",
+      "shieldNow": 350,
+      "hpMax": 2400,
+      "hpNow": 2400,
+      "move": 34,
+      "hd": "1",
+      "weapons": "2× quad laser turrets; concussion missile launcher",
+      "crew": "2 + 4",
+      "fuel": "80/12",
+      "cost": "1,000,000",
+      "lc": "Res",
+      "notes": "The famed Dynamic-class light freighter of the era — fast, sturdy, and endlessly modified. Dual quad-laser turrets and a concealed concussion launcher ride under a courier’s manifest, and an exceptional hyperdrive outruns most pursuit. The smuggler’s dream hull.",
       "parts": [
         {
           "cat": "Hull",
@@ -681,15 +663,52 @@
           "hpPct": 100
         }
       ],
-      "rfNow": 30,
-      "hfNow": 6,
+      "rfNow": 80,
+      "hfNow": 12,
+      "core": {
+        "Sublight": "Cygnus Twin-Ion Drive",
+        "Shields": "Sith Shield Generator (light)",
+        "Hyperdrive": "Class-0.75 Verpine Drive",
+        "Sensors": "Military Sensor Array",
+        "Targeting": "Military Fire Control",
+        "ECM": "Military ECM Suite",
+        "Astrogation": "Premium Astromech Socket",
+        "Cargo": "Medium Cargo Bay",
+        "Crew": "Standard Crew Cabin",
+        "Reactor": "Heavy Fusion Reactor",
+        "Hull": "Medium Freighter frame",
+        "Armour": "Krath Armour Plating (light)"
+      },
       "mounts": [
         {
-          "label": "Light blaster turrets",
-          "w": "Light laser cannon",
+          "label": "Quad laser turrets",
+          "w": "Quad laser cannon",
           "n": 2,
           "shots": null,
           "shotsNow": null
+        },
+        {
+          "label": "Concussion missile launcher",
+          "w": "Concussion missile",
+          "n": 1,
+          "shots": 6,
+          "shotsNow": 6
+        }
+      ],
+      "modules": [
+        {
+          "m": "Chaff / decoy launcher"
+        },
+        {
+          "m": "Chaff / decoy launcher"
+        },
+        {
+          "m": "Neuralyser array"
+        },
+        {
+          "m": "Stygium cloaking device",
+          "off": true,
+          "chargesNow": 40
         }
       ]
     }
