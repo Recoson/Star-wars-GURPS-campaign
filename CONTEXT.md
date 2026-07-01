@@ -773,3 +773,49 @@ fake of the doc's header hierarchy (which is what the ship-section olive heads w
 
 Verified: check.py exit 0 (215 powers, headers unique, div-balanced, Kryze absent; 3 known JSON warns).
 WeasyPrint render confirmed the Named-Shields and quickref tables specifically.
+
+
+### 2026-07-01 (cont.) — Whole-compendium formatting audit + table-overflow / dead-anchor fixes
+
+James asked for a full audit of the compendium for defects of the kind we'd been fixing. Ran a broad
+multi-category scan (heading classes, `.tbl` scroll-wrap coverage + column width, inline-style clusters,
+empty/malformed elements, duplicate ids, broken internal anchors) and triaged before touching anything.
+
+**Fixed:**
+- **Table overflow (iPad).** 86 of 383 `.tbl` tables were NOT wrapped in `.tbl-scroll`; 45 of those were
+  wide (5–11 columns) — a real overflow/clip risk on iPad portrait. The CSS author's own comment says
+  *"tables never overflow the page: wrap each in a horizontal scroll shell"*, and the master rule
+  (`.body-Ncol .tbl-scroll, .body-Ncol table { column-span: all }`) makes BOTH bare tables and scroll
+  shells span all columns — so wrapping does **not** change spanning (no regression), it only adds the
+  `overflow-x:auto` shell. Wrapped **all 86** (45 wide + 41 narrow) so the whole doc satisfies the
+  documented wrap-each invariant. `.tbl` scroll-wrap coverage is now 383/383.
+- **Dead internal anchor.** `<a href="#sec-ship-countermeasures">Countermeasures</a>` (in the fighter
+  section) pointed at a non-existent id — the countermeasures table lives under an id-less
+  `<h3 class="subsection">Ship Countermeasures, Systems & Utility</h3>`. Gave that heading the
+  `id="sec-ship-countermeasures"`; the link now resolves. (Was the only genuinely broken anchor; the
+  other flagged "broken href" was `'#'+r.e.id+'` inside the quick-find JS — a false positive.)
+
+**Audited and deliberately left alone (with rationale):**
+- **Heading system — NOT a defect, do not refactor.** 199 "no-class" headings + competing classes
+  (`.section-head` 447 / `.section-h2` 38 / `.section` 9; `.subsection-head` 83 / `.subsection` 68) look
+  inconsistent but aren't: the doc is split into *books* (`.book--force`, `.book--makers`, `.path-doc`,
+  `.dark-section`, `.stance-header`…) each with its own heading styling via descendant selectors, plus a
+  global `h2,h3,h4{}` base. No-class headings are context-styled; the competing classes are genuinely
+  different tiers (13pt vs 22pt vs 11.5pt). Mass-normalising would break the per-book identity — same
+  call as the column default.
+- **Inline styles (2167 `<td>`, 507 `<span>`, 135 `<p>`, 81 `<div>`, …)** are the doc's authoring style
+  — cell widths/alignment, palette colours, `page-break` controls. Not defects. (The only inline-style
+  defect class — headers faking the doc hierarchy off-palette — was already cleared; the one remaining
+  inline-styled `<h3>` is an intentional themed `.callout` header.)
+- **Duplicate id `qf-empty`** — both occurrences are inside the quick-find JS as mutually-exclusive
+  `innerHTML` states ("Keep typing…" vs "No matches"); never two in the DOM at once. Not real.
+- **48 nested `<p>`, 4 empty `<div>`, 9 empty `<td>`** — non-strict markup, no visual effect (browsers
+  auto-close; empty cells are legitimate blanks). Left.
+
+Verified: check.py exit 0 (div-balanced, table count unchanged, 3 known JSON warns). The wrap benefit
+(horizontal scroll on touch) is interactive/iPad and isn't reproducible in the paged WeasyPrint sandbox;
+verified structurally instead (spanning rule confirmed, 383/383 wrapped).
+
+**Offered, not done:** a check.py guard asserting every `.tbl` is `.tbl-scroll`-wrapped (would lock in
+the invariant and catch regressions from future table additions) — trivial to add on request; held off
+since it's a separate-file tooling change.
