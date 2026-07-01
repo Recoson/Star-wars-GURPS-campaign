@@ -864,3 +864,17 @@ so "A.5a" stays lc), surfaced the A.x/B.x numbers onto the 15 Primer headings, f
 Documents" drift. Render-verified (headings read e.g. "A.1 HOW POINTS WORK", number in accent blue).
 **Awaiting James's sign-off on the heading-number + ref FORMAT before scaling to all 12 Documents +
 the 295-ref conversion.** check.py green.
+
+
+### 2026-07-01 (cont.) — Column-balance dead-space fix (doc-wide, intentional)
+
+James flagged dead space under short run-in paragraphs in 2-col sections (e.g. Primer A.1: "The Budget"
+alone in a short left column). Root cause: `p { break-inside: avoid }` + `.lore { break-inside: avoid }`
+pinned every paragraph whole, so N unbreakable paras placed 1|2 and stranded the short column. Fix: let
+BODY prose flow across the column break (how real 2-col books balance) — added
+`.body-2col .lore, .body-3col .lore, .body-2col .section-body>p, .body-3col .section-body>p
+{ break-inside:auto; page-break-inside:auto; }`. Scoped to column-body prose only — tables, statblocks,
+callouts keep their break-inside:avoid. Specificity beats the base `.lore`/`p` rules. Render-verified
+(A.1 columns now level, gap gone). This is intentional — do NOT re-add break-inside:avoid to column-body
+paragraphs. Note: the 2-col layout only shows >560px (phones collapse to 1-col via
+`@media screen and (max-width:560px)`), so this affects iPad/desktop, which is where the gap was seen.
