@@ -1,12 +1,184 @@
 {
- "attr": {
-  "ST": 110,
-  "DX": 220,
-  "IQ": 40,
-  "HT": 60
- },
- "manualInv": [],
- "conditions": {},
+ "bio": "",
+ "armour": [
+  {
+   "name": "Neo-Crusader armour",
+   "mods": [
+    {
+     "label": "Grapple & line spool",
+     "preset": "Grapple & line spool",
+     "slotLock": "wrist",
+     "tier": "pol",
+     "note": "20 m micro-line, 200 kg rated; swing/ascend at Move 4; doubles as a snare (DX roll to entangle).",
+     "wt": 2,
+     "cost": 2800
+    },
+    {
+     "label": "Multispectrum HUD",
+     "preset": "Multispectrum HUD",
+     "slotLock": "visor",
+     "tier": "mil",
+     "note": "+1 Acc with linked ranged weapons; thermal + ultrasonic overlay (−3 vs Stealth fields).",
+     "acc": 1,
+     "wt": 0.5,
+     "cost": 6400
+    },
+    {
+     "label": "Medisystem injector",
+     "preset": "Medisystem injector",
+     "slotLock": "systems",
+     "tier": "pol",
+     "note": "Auto-injects: 2 stim doses; as a free action once per fight, heal 2 HP or shrug one stun.",
+     "wt": 1,
+     "cost": 5200
+    },
+    {
+     "label": "Vacuum-seal underlay",
+     "preset": "Vacuum-seal underlay",
+     "slotLock": "underlay",
+     "tier": "mil",
+     "note": "10 minutes hard-vacuum survival; requires a sealed helmet system.",
+     "wt": 2,
+     "cost": 6200,
+     "prereq": "Sealed helmet/visor fitted"
+    }
+   ],
+   "cover": [
+    "neck",
+    "chest",
+    "vitals",
+    "groin",
+    "armR",
+    "armL",
+    "handR",
+    "handL",
+    "legR",
+    "legL",
+    "footR",
+    "footL",
+    "face",
+    "eyes"
+   ]
+  },
+  {
+   "name": "Beskar plate (single piece)",
+   "notes": "over the heart",
+   "cover": [
+    "vitals",
+    "chest"
+   ],
+   "ovr": {
+    "wt": "5.29"
+   }
+  },
+  {
+   "name": "Beskar plate (single piece)",
+   "cover": [
+    "skull"
+   ],
+   "notes": "helm crown"
+  }
+ ],
+ "layout": {},
+ "gear": [
+  {
+   "name": "Standard med pack",
+   "qty": 3
+  },
+  {
+   "name": "Binders / Restraints",
+   "qty": 3
+  },
+  {
+   "name": "Power Cell (spare)",
+   "qty": 2
+  },
+  {
+   "name": "Mandalorian battle jetpack",
+   "qty": 1
+  }
+ ],
+ "wealthLevel": "Average",
+ "age": "41",
+ "fright": "",
+ "forms": [
+  {
+   "name": "Form II: Makashi",
+   "tier": 1,
+   "active": false
+  }
+ ],
+ "trainRate": 200,
+ "explosives": [
+  {
+   "name": "Thermal detonator",
+   "qty": 3
+  }
+ ],
+ "stances": [
+  {
+   "name": "Mandalorian Supercommando",
+   "active": false
+  },
+  {
+   "name": "Mandalorian Iron Wall",
+   "active": false
+  },
+  {
+   "name": "Mandalorian Hunter's Crouch",
+   "active": false
+  },
+  {
+   "name": "Supercommando Sweep",
+   "active": false
+  },
+  {
+   "name": "Mandalorian Gunline",
+   "active": false
+  },
+  {
+   "name": "Death Watch Ambush",
+   "active": false
+  },
+  {
+   "name": "Bounty Hunter's Mark",
+   "active": false
+  }
+ ],
+ "creditLog": [
+  {
+   "d": -2750,
+   "l": "drinks"
+  },
+  {
+   "d": -5000,
+   "l": "information"
+  },
+  {
+   "d": -1000,
+   "l": "noodles"
+  },
+  {
+   "d": -2000,
+   "l": "docking"
+  },
+  {
+   "d": -3000,
+   "l": "food"
+  },
+  {
+   "d": -14250,
+   "l": "Spent"
+  },
+  {
+   "d": -3500,
+   "l": "cleaning fee"
+  },
+  {
+   "d": -7000,
+   "l": "Parking Fee"
+  }
+ ],
  "jetpack": {
   "pack": "assault",
   "massKg": 253,
@@ -14,7 +186,138 @@
   "spareCells": 0,
   "userPack": true
  },
- "gm": "James",
+ "force": {
+  "primary": "IQ",
+  "bonded": false,
+  "saberPoints": 0,
+  "powers": [],
+  "books": {},
+  "bookTiers": {},
+  "tradition": "",
+  "activeBook": "",
+  "viewBook": "",
+  "holocrons": [],
+  "holoRes": {
+   "frag": 0,
+   "frame": 0,
+   "kyber": 0
+  }
+ },
+ "combat": {
+  "hp": null,
+  "fp": null,
+  "statuses": [],
+  "concentrations": [],
+  "charges": [],
+  "turn": 0,
+  "log": [],
+  "wounds": {
+   "Skull": 0,
+   "Face": 0,
+   "Neck": 0,
+   "Torso": 0,
+   "Vitals": 0,
+   "Groin": 0,
+   "Right Arm": 0,
+   "Left Arm": 0,
+   "Right Hand": 0,
+   "Left Hand": 0,
+   "Right Leg": 0,
+   "Left Leg": 0,
+   "Right Foot": 0,
+   "Left Foot": 0
+  },
+  "inits": []
+ },
+ "trainHoursAvail": 0,
+ "languages2": [
+  {
+   "name": "",
+   "sp": 3,
+   "wr": 3
+  }
+ ],
+ "height": "2.0m",
+ "name": "Sekan Nightfall",
+ "gender": "Male",
+ "hand": "Ambidextrous",
+ "xpEarned": 200,
+ "manualInv": [],
+ "statusLevel": 0,
+ "sec": {
+  "HP": 40,
+  "Will": 0,
+  "Per": 0,
+  "FP": 0,
+  "Speed": 0,
+  "Move": 0
+ },
+ "concept": "Mandalorian — Protector of the clans, Tylo’s shadow, professional damage sponge",
+ "homeworld": "Mandalore",
+ "reputation": "",
+ "techniques": [],
+ "species": "Human",
+ "languages": "",
+ "droids": [
+  {
+   "name": "Service/Butler Droid",
+   "deg": "3rd",
+   "size": "SM 0",
+   "hp": 18,
+   "hpMax": 18,
+   "dr": 4,
+   "iq": 10,
+   "move": 4,
+   "weapons": "Savoir-Faire 13; Cooking 12",
+   "skills": "",
+   "cost": 14000,
+   "notes": "Affluent household standard.",
+   "fn": "Household service",
+   "parts": [
+    {
+     "cat": "Chassis",
+     "name": "Frame & shell",
+     "status": "ok"
+    },
+    {
+     "cat": "Core",
+     "name": "Logic core",
+     "status": "ok"
+    },
+    {
+     "cat": "Power",
+     "name": "Power cell",
+     "status": "ok"
+    },
+    {
+     "cat": "Mobility",
+     "name": "Locomotion system",
+     "status": "ok"
+    },
+    {
+     "cat": "Sensors",
+     "name": "Photoreceptor cluster",
+     "status": "ok"
+    },
+    {
+     "cat": "Manipulators",
+     "name": "Manipulator arms",
+     "status": "ok"
+    },
+    {
+     "cat": "Comms",
+     "name": "Comms suite",
+     "status": "ok"
+    },
+    {
+     "cat": "Programming",
+     "name": "Behavioral core",
+     "status": "ok"
+    }
+   ],
+   "wpns": []
+  }
+ ],
  "vehicles": [
   {
    "name": "D5-Mantis patrol craft",
@@ -137,13 +440,46 @@
    }
   }
  ],
- "_meta": {
-  "savedAt": "2026-06-21T13:21:48.596Z",
-  "savedBy": "Anthony"
+ "notes": "Imported from Sekan_Nightfall.or export 2026-05-23. Fixes: 2H Sword → Two-Handed Sword; Neo-Crusader armour (base) → Neo-Crusader armour; Blasters specs assigned 44→Rifle (carbine), 28→Pistol; 4-pt Blasters row left spec-blank — Anthony to assign; duplicate Code of Honor removed (points assumed counted once); Gunner → spec Beams (emplaced repeater). Beskar single pieces set to cover torso (vitals) and head (skull) zones. Vibrosword has no Broadsword skill behind it — Anthony: take Broadsword, or swap the blade to a Heavy vibrosword (Two-Handed Sword 12pts is ready) or shortsword-class vibroblade.",
+ "credits": 168500,
+ "tl": 10,
+ "attr": {
+  "ST": 110,
+  "DX": 220,
+  "IQ": 40,
+  "HT": 60
  },
- "xpEarned": 200,
- "species": "Human",
- "trainHoursTotal": 110,
+ "react": "",
+ "weight": "160",
+ "study": [
+  {
+   "label": "",
+   "linkedSkill": "",
+   "target": 10,
+   "req": 200,
+   "done": 0,
+   "hpm": 10,
+   "monumental": false,
+   "teacher": false,
+   "selfTeach": false
+  }
+ ],
+ "rank": "",
+ "cyber": [],
+ "customDB": {
+  "weapons": [],
+  "armour": [],
+  "shields": [],
+  "explosives": [],
+  "gear": [],
+  "skills": [],
+  "species": [],
+  "forcePowers": [],
+  "shipParts": [],
+  "droidParts": [],
+  "cyber": []
+ },
+ "player": "Anthony",
  "skills": [
   {
    "name": "Fast-Draw",
@@ -363,352 +699,35 @@
    "pts": 2
   }
  ],
- "fright": "",
- "statusLevel": 0,
- "shields": [
+ "weapons": [
   {
-   "name": "SoroSuub corporate guard shield"
-  }
- ],
- "languages": "",
- "creditLog": [
-  {
-   "d": -2750,
-   "l": "drinks"
+   "name": "Experimental greatsword (2H)",
+   "cls": "Melee",
+   "_cat": "Mandalorian",
+   "_bought": false,
+   "_type": ""
   },
   {
-   "d": -5000,
-   "l": "information"
-  },
-  {
-   "d": -1000,
-   "l": "noodles"
-  },
-  {
-   "d": -2000,
-   "l": "docking"
-  },
-  {
-   "d": -3000,
-   "l": "food"
-  },
-  {
-   "d": -14250,
-   "l": "Spent"
-  },
-  {
-   "d": -3500,
-   "l": "cleaning fee"
-  },
-  {
-   "d": -7000,
-   "l": "Parking Fee"
-  }
- ],
- "wealthLevel": "Average",
- "sec": {
-  "HP": 40,
-  "Will": 0,
-  "Per": 0,
-  "FP": 0,
-  "Speed": 0,
-  "Move": 0
- },
- "droids": [
-  {
-   "name": "Service/Butler Droid",
-   "deg": "3rd",
-   "size": "SM 0",
-   "hp": 18,
-   "hpMax": 18,
-   "dr": 4,
-   "iq": 10,
-   "move": 4,
-   "weapons": "Savoir-Faire 13; Cooking 12",
-   "skills": "",
-   "cost": 14000,
-   "notes": "Affluent household standard.",
-   "fn": "Household service",
-   "parts": [
-    {
-     "cat": "Chassis",
-     "name": "Frame & shell",
-     "status": "ok"
-    },
-    {
-     "cat": "Core",
-     "name": "Logic core",
-     "status": "ok"
-    },
-    {
-     "cat": "Power",
-     "name": "Power cell",
-     "status": "ok"
-    },
-    {
-     "cat": "Mobility",
-     "name": "Locomotion system",
-     "status": "ok"
-    },
-    {
-     "cat": "Sensors",
-     "name": "Photoreceptor cluster",
-     "status": "ok"
-    },
-    {
-     "cat": "Manipulators",
-     "name": "Manipulator arms",
-     "status": "ok"
-    },
-    {
-     "cat": "Comms",
-     "name": "Comms suite",
-     "status": "ok"
-    },
-    {
-     "cat": "Programming",
-     "name": "Behavioral core",
-     "status": "ok"
-    }
-   ],
-   "wpns": []
-  }
- ],
- "sm": 0,
- "rank": "",
- "appearance": "Average",
- "explosives": [
-  {
-   "name": "Thermal detonator",
-   "qty": 3
-  }
- ],
- "combat": {
-  "hp": null,
-  "fp": null,
-  "statuses": [],
-  "concentrations": [],
-  "charges": [],
-  "turn": 0,
-  "log": [],
-  "wounds": {
-   "Skull": 0,
-   "Face": 0,
-   "Neck": 0,
-   "Torso": 0,
-   "Vitals": 0,
-   "Groin": 0,
-   "Right Arm": 0,
-   "Left Arm": 0,
-   "Right Hand": 0,
-   "Left Hand": 0,
-   "Right Leg": 0,
-   "Left Leg": 0,
-   "Right Foot": 0,
-   "Left Foot": 0
-  },
-  "inits": []
- },
- "react": "",
- "techniques": [],
- "trainHoursAvail": 0,
- "languages2": [
-  {
-   "name": "",
-   "sp": 3,
-   "wr": 3
-  }
- ],
- "bio": "",
- "stances": [
-  {
-   "name": "Mandalorian Supercommando",
-   "active": false
-  },
-  {
-   "name": "Mandalorian Iron Wall",
-   "active": false
-  },
-  {
-   "name": "Mandalorian Hunter's Crouch",
-   "active": false
-  },
-  {
-   "name": "Supercommando Sweep",
-   "active": false
-  },
-  {
-   "name": "Mandalorian Gunline",
-   "active": false
-  },
-  {
-   "name": "Death Watch Ambush",
-   "active": false
-  },
-  {
-   "name": "Bounty Hunter's Mark",
-   "active": false
-  }
- ],
- "gear": [
-  {
-   "name": "Standard med pack",
-   "qty": 3
-  },
-  {
-   "name": "Binders / Restraints",
-   "qty": 3
-  },
-  {
-   "name": "Power Cell (spare)",
-   "qty": 2
-  },
-  {
-   "name": "Mandalorian battle jetpack",
-   "qty": 1
-  }
- ],
- "player": "Anthony",
- "hand": "Ambidextrous",
- "customDB": {
-  "weapons": [],
-  "armour": [],
-  "shields": [],
-  "explosives": [],
-  "gear": [],
-  "skills": [],
-  "species": [],
-  "forcePowers": [],
-  "shipParts": [],
-  "droidParts": [],
-  "cyber": []
- },
- "notes": "Imported from Sekan_Nightfall.or export 2026-05-23. Fixes: 2H Sword → Two-Handed Sword; Neo-Crusader armour (base) → Neo-Crusader armour; Blasters specs assigned 44→Rifle (carbine), 28→Pistol; 4-pt Blasters row left spec-blank — Anthony to assign; duplicate Code of Honor removed (points assumed counted once); Gunner → spec Beams (emplaced repeater). Beskar single pieces set to cover torso (vitals) and head (skull) zones. Vibrosword has no Broadsword skill behind it — Anthony: take Broadsword, or swap the blade to a Heavy vibrosword (Two-Handed Sword 12pts is ready) or shortsword-class vibroblade.",
- "study": [
-  {
-   "label": "",
-   "linkedSkill": "",
-   "target": 10,
-   "req": 200,
-   "done": 0,
-   "hpm": 10,
-   "monumental": false,
-   "teacher": false,
-   "selfTeach": false
-  }
- ],
- "credits": 168500,
- "forms": [
-  {
-   "name": "Form II: Makashi",
-   "tier": 1,
-   "active": false
-  }
- ],
- "name": "Sekan Nightfall",
- "tl": 10,
- "reputation": "",
- "gender": "Male",
- "armour": [
-  {
-   "name": "Neo-Crusader armour",
+   "name": "Mandalorian blaster rifle",
+   "cls": "Ranged",
+   "_cat": "Mandalorian",
+   "_bought": false,
+   "_type": "",
    "mods": [
     {
-     "label": "Grapple & line spool",
-     "preset": "Grapple & line spool",
-     "slotLock": "wrist",
+     "label": "High-capacity drum",
+     "note": "Huge mag sized to the frame; +1 Rcl from weight imbalance.",
+     "shots": 40,
+     "preset": "High-capacity drum",
      "tier": "pol",
-     "note": "20 m micro-line, 200 kg rated; swing/ascend at Move 4; doubles as a snare (DX roll to entangle).",
-     "wt": 2,
-     "cost": 2800
-    },
-    {
-     "label": "Multispectrum HUD",
-     "preset": "Multispectrum HUD",
-     "slotLock": "visor",
-     "tier": "mil",
-     "note": "+1 Acc with linked ranged weapons; thermal + ultrasonic overlay (−3 vs Stealth fields).",
-     "acc": 1,
-     "wt": 0.5,
-     "cost": 6400
-    },
-    {
-     "label": "Medisystem injector",
-     "preset": "Medisystem injector",
-     "slotLock": "systems",
-     "tier": "pol",
-     "note": "Auto-injects: 2 stim doses; as a free action once per fight, heal 2 HP or shrug one stun.",
-     "wt": 1,
-     "cost": 5200
-    },
-    {
-     "label": "Vacuum-seal underlay",
-     "preset": "Vacuum-seal underlay",
-     "slotLock": "underlay",
-     "tier": "mil",
-     "note": "10 minutes hard-vacuum survival; requires a sealed helmet system.",
-     "wt": 2,
-     "cost": 6200,
-     "prereq": "Sealed helmet/visor fitted"
+     "slot": "power",
+     "wt": 1.5,
+     "cost": 960
     }
    ],
-   "cover": [
-    "neck",
-    "chest",
-    "vitals",
-    "groin",
-    "armR",
-    "armL",
-    "handR",
-    "handL",
-    "legR",
-    "legL",
-    "footR",
-    "footL",
-    "face",
-    "eyes"
-   ]
-  },
-  {
-   "name": "Beskar plate (single piece)",
-   "notes": "over the heart",
-   "cover": [
-    "vitals",
-    "chest"
-   ],
-   "ovr": {
-    "wt": "5.29"
-   }
-  },
-  {
-   "name": "Beskar plate (single piece)",
-   "cover": [
-    "skull"
-   ],
-   "notes": "helm crown"
+   "material": 0
   }
  ],
- "concept": "Mandalorian — Protector of the clans, Tylo’s shadow, professional damage sponge",
- "age": "41",
- "layout": {},
- "force": {
-  "primary": "IQ",
-  "bonded": false,
-  "saberPoints": 0,
-  "powers": [],
-  "books": {},
-  "bookTiers": {},
-  "tradition": "",
-  "activeBook": "",
-  "viewBook": "",
-  "holocrons": [],
-  "holoRes": {
-   "frag": 0,
-   "frame": 0,
-   "kyber": 0
-  }
- },
- "ptTarget": 785,
  "traits": [
   {
    "name": "Combat Reflexes",
@@ -810,8 +829,33 @@
    "spec": "Two-Handed Sword"
   }
  ],
- "trainRate": 200,
- "height": "2.0m",
+ "sm": 0,
+ "ptTarget": 785,
+ "conditions": {},
+ "builder": {
+  "droid": {
+   "parts": {},
+   "name": "My Droid",
+   "deg": "5th"
+  },
+  "ship": {
+   "parts": {},
+   "name": "My Custom Vessel",
+   "role": ""
+  }
+ },
+ "shields": [
+  {
+   "name": "SoroSuub corporate guard shield"
+  }
+ ],
+ "appearance": "Average",
+ "gm": "James",
+ "_meta": {
+  "savedAt": "2026-06-21T13:21:48.596Z",
+  "savedBy": "Anthony"
+ },
+ "trainHoursTotal": 110,
  "inventory": [
   {
    "kind": "weapons",
@@ -852,49 +896,5 @@
    "kind": "weapons",
    "name": "Heavy blaster pistol"
   }
- ],
- "weapons": [
-  {
-   "name": "Experimental greatsword (2H)",
-   "cls": "Melee",
-   "_cat": "Mandalorian",
-   "_bought": false,
-   "_type": ""
-  },
-  {
-   "name": "Mandalorian blaster rifle",
-   "cls": "Ranged",
-   "_cat": "Mandalorian",
-   "_bought": false,
-   "_type": "",
-   "mods": [
-    {
-     "label": "High-capacity drum",
-     "note": "Huge mag sized to the frame; +1 Rcl from weight imbalance.",
-     "shots": 40,
-     "preset": "High-capacity drum",
-     "tier": "pol",
-     "slot": "power",
-     "wt": 1.5,
-     "cost": 960
-    }
-   ],
-   "material": 0
-  }
- ],
- "weight": "160",
- "cyber": [],
- "homeworld": "Mandalore",
- "builder": {
-  "droid": {
-   "parts": {},
-   "name": "My Droid",
-   "deg": "5th"
-  },
-  "ship": {
-   "parts": {},
-   "name": "My Custom Vessel",
-   "role": ""
-  }
- }
+ ]
 }

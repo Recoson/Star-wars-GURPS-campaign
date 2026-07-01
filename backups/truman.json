@@ -1,231 +1,170 @@
 {
- "layout": {},
- "height": "1.9",
- "rank": "adjudicator",
- "builder": {
-  "droid": {
-   "parts": {},
-   "name": "My Droid",
-   "deg": "5th"
-  },
-  "ship": {
-   "parts": {},
-   "name": "My Custom Vessel",
-   "role": ""
-  }
- },
- "combat": {
-  "hp": null,
-  "fp": null,
-  "statuses": [],
-  "concentrations": [],
-  "charges": [],
-  "turn": 0,
-  "log": [],
-  "wounds": {
-   "Skull": 0,
-   "Face": 0,
-   "Neck": 0,
-   "Torso": 0,
-   "Vitals": 0,
-   "Groin": 0,
-   "Right Arm": 0,
-   "Left Arm": 0,
-   "Right Hand": 0,
-   "Left Hand": 0,
-   "Right Leg": 0,
-   "Left Leg": 0,
-   "Right Foot": 0,
-   "Left Foot": 0
-  },
-  "inits": []
- },
- "reputation": "",
- "creditLog": [],
- "name": "Truman",
- "weight": "110",
- "languages2": [],
- "sm": 1,
- "gear": [
-  {
-   "name": "Military med pack",
-   "qty": 1
-  },
-  {
-   "name": "Kolto patch",
-   "qty": 1
-  },
-  {
-   "name": "Standard med pack",
-   "qty": 1
-  }
- ],
- "statusLevel": 5,
- "react": "",
- "droids": [],
- "hand": "Ambidextrous",
- "vehicles": [
-  {
-   "name": "Ebon Hawk-class light freighter",
-   "cat": "Light Freighter",
-   "hullDR": "16",
-   "shieldDR": "350",
-   "shieldNow": 350,
-   "hpMax": 96,
-   "hpNow": 96,
-   "move": 34,
-   "hd": "1",
-   "weapons": "2× quad laser turrets; concussion missile launcher",
-   "crew": "2 + 4",
-   "fuel": "80/12",
-   "cost": "1,000,000",
-   "lc": "Res",
-   "notes": "The famed Dynamic-class light freighter of the era — fast, sturdy, and endlessly modified. Dual quad-laser turrets and a concealed concussion launcher ride under a courier’s manifest, and an exceptional hyperdrive outruns most pursuit. The smuggler’s dream hull.",
-   "parts": [
-    {
-     "cat": "Hull",
-     "name": "Hull plating",
-     "status": "ok",
-     "hpPct": 100
-    },
-    {
-     "cat": "Sublight",
-     "name": "Sublight engines",
-     "status": "ok",
-     "hpPct": 100
-    },
-    {
-     "cat": "Reactor",
-     "name": "Power plant",
-     "status": "ok",
-     "hpPct": 100
-    },
-    {
-     "cat": "Shields",
-     "name": "Shield generator",
-     "status": "ok",
-     "hpPct": 100
-    },
-    {
-     "cat": "Sensors",
-     "name": "Sensor array",
-     "status": "ok",
-     "hpPct": 100
-    },
-    {
-     "cat": "Targeting",
-     "name": "Targeting computer",
-     "status": "ok",
-     "hpPct": 100
-    },
-    {
-     "cat": "Life Support",
-     "name": "Life-support system",
-     "status": "ok",
-     "hpPct": 100
-    },
-    {
-     "cat": "Astrogation",
-     "name": "Navicomputer",
-     "status": "ok",
-     "hpPct": 100
-    },
-    {
-     "cat": "Hyperdrive",
-     "name": "Hyperdrive motivator",
-     "status": "ok",
-     "hpPct": 100
-    },
-    {
-     "cat": "Crew",
-     "name": "Crew quarters",
-     "status": "ok",
-     "hpPct": 100
-    },
-    {
-     "cat": "Cargo",
-     "name": "Cargo hold",
-     "status": "ok",
-     "hpPct": 100
-    },
-    {
-     "cat": "Weapon",
-     "name": "Defensive turret",
-     "status": "ok",
-     "hpPct": 100
-    }
-   ],
-   "rfNow": 80,
-   "hfNow": 12,
-   "mounts": [
-    {
-     "label": "Quad laser turrets",
-     "w": "Quad laser cannon",
-     "n": 2,
-     "shots": null,
-     "shotsNow": null
-    },
-    {
-     "label": "Concussion missile launcher",
-     "w": "Neuralyzer array",
-     "n": 1,
-     "shots": null,
-     "shotsNow": null
-    },
-    {
-     "label": "Heavy",
-     "w": "Heavy laser cannon",
-     "n": 1,
-     "shots": null,
-     "shotsNow": null
-    }
-   ],
-   "modules": [
-    {
-     "m": "Stygium cloaking device"
-    },
-    {
-     "m": "Encrypted comms suite"
-    },
-    {
-     "m": "Concealed smuggling hold"
-    },
-    {
-     "m": "Holographic transponder mask"
-    },
-    {
-     "m": "Astromech socket"
-    },
-    {
-     "m": "Medbay / bacta tank"
-    },
-    {
-     "m": "Escape-pod bank"
-    },
-    {
-     "m": "Chaff / decoy launcher"
-    },
-    {
-     "m": "Military ECM suite"
-    }
-   ],
-   "core": {
-    "Reactor": "Verpine Microfusion Core",
-    "Sublight": "Heavy Cluster Ion Bank",
-    "Shields": "Standard Deflector Array",
-    "Armour": "Durasteel Plating"
+ "force": {
+  "morality": 50,
+  "primary": "DX",
+  "bonded": false,
+  "saberPoints": 0,
+  "conflict": 0,
+  "channeling": false,
+  "powers": [
+   {
+    "name": "Force Balance Walk",
+    "skill": "Force",
+    "aff": "DX",
+    "fp": "1",
+    "tier": 1,
+    "pts": 5,
+    "book": "Common Force"
    },
-   "custom": false
-  }
- ],
- "trainHoursAvail": 200,
- "ptTarget": 1179,
- "attr": {
-  "ST": 60,
-  "DX": 320,
-  "IQ": 20,
-  "HT": 40
+   {
+    "name": "Force Brace",
+    "skill": "Force",
+    "aff": "ST",
+    "fp": "1",
+    "tier": 1,
+    "pts": 5,
+    "book": "Common Force"
+   },
+   {
+    "name": "Force Echo",
+    "skill": "Force",
+    "aff": "Will",
+    "fp": "2",
+    "tier": 1,
+    "pts": 5,
+    "book": "Common Force"
+   },
+   {
+    "name": "Force Focus",
+    "skill": "Force",
+    "aff": "Will",
+    "fp": "1",
+    "tier": 1,
+    "pts": 5,
+    "book": "Common Force"
+   },
+   {
+    "name": "Force Leap",
+    "skill": "Force",
+    "aff": "DX",
+    "fp": "1",
+    "tier": 1,
+    "pts": 5,
+    "book": "Common Force"
+   },
+   {
+    "name": "Force Object Sense",
+    "skill": "Force",
+    "aff": "Will",
+    "fp": "2",
+    "tier": 1,
+    "pts": 5,
+    "book": "Common Force"
+   },
+   {
+    "name": "Force Pull",
+    "skill": "Force",
+    "aff": "ST",
+    "fp": "1",
+    "tier": 1,
+    "pts": 5,
+    "book": "Common Force"
+   },
+   {
+    "name": "Force Push",
+    "skill": "Force",
+    "aff": "ST",
+    "fp": "1",
+    "tier": 1,
+    "pts": 5,
+    "book": "Common Force"
+   },
+   {
+    "name": "Force Sense",
+    "skill": "Force",
+    "aff": "Will",
+    "fp": "2",
+    "tier": 1,
+    "pts": 5,
+    "book": "Common Force"
+   },
+   {
+    "name": "Force Stealth",
+    "skill": "Force",
+    "aff": "DX",
+    "fp": "2",
+    "tier": 1,
+    "pts": 5,
+    "book": "Common Force"
+   },
+   {
+    "name": "Veil of the Quiet Self",
+    "skill": "Force",
+    "aff": "Will",
+    "fp": "2",
+    "tier": 1,
+    "pts": 5,
+    "book": "Common Force"
+   },
+   {
+    "name": "Visions of the Branch",
+    "skill": "Force",
+    "aff": "IQ",
+    "fp": "5",
+    "tier": 3,
+    "pts": 20,
+    "book": "Minor Traditions"
+   },
+   {
+    "name": "Flash of Warning",
+    "skill": "Force",
+    "aff": "Per",
+    "fp": "2",
+    "tier": 1,
+    "pts": 5,
+    "book": "Minor Traditions"
+   },
+   {
+    "name": "Walk the Unwritten",
+    "skill": "Force",
+    "aff": "Will",
+    "fp": "10",
+    "tier": 5,
+    "pts": 60,
+    "book": "Minor Traditions"
+   }
+  ],
+  "books": {
+   "Common Force": true,
+   "Minor Traditions": true
+  },
+  "bookTiers": {
+   "Common Force": 3
+  },
+  "tradition": "",
+  "darkSurgeLog": [],
+  "activeBook": "Minor Traditions",
+  "training": {
+   "Common Force": {
+    "tier": 1,
+    "hours": 0,
+    "regimen": "Open Hours",
+    "mentor": "",
+    "log": []
+   },
+   "Minor Traditions": {
+    "tier": 1,
+    "hours": 0,
+    "regimen": "Open Hours",
+    "mentor": "",
+    "log": []
+   }
+  },
+  "viewBook": "Common Force",
+  "mtTrad": "Iktotchi"
  },
+ "conditions": {},
+ "weight": "110",
  "forms": [
   {
    "name": "Form IX: Saberstaff",
@@ -238,10 +177,55 @@
    "active": false
   }
  ],
- "xpEarned": 192,
- "age": "56",
- "conditions": {},
- "explosives": [],
+ "study": [],
+ "sm": 1,
+ "techniques": [
+  {
+   "name": "Saber Throw",
+   "active": false
+  },
+  {
+   "name": "Saber Bind",
+   "active": false
+  },
+  {
+   "name": "Saber Bash",
+   "active": false
+  },
+  {
+   "name": "Bolt Deflection",
+   "active": false
+  }
+ ],
+ "notes": "Imported from Truman_SW.xlsm.\nTrait details from source: Social Stigma (subjugated) = force user; Social Stigma (minority group) / Fanaticism = iktotchi (telepathy & strong); Code of Honor (high) = 'grey code'.\nDefenses (source): Dodge 14, Parry 22 (Force Sword), Parry 22 (Staff), Parry 18 (Brawling), DR 3.\nSource point totals (ignored on import): 833 spent, attrs 537, advantages 110, disadvantages -85, skills 271.\n\nINVENTORY:\n15 Standard stems\n15 Military stims\n\nSHIP:\n48 minutes stealth\n\n6 proton torpedos",
+ "_meta": {
+  "savedAt": "2026-06-14T03:30:58.958Z",
+  "savedBy": "Csuman"
+ },
+ "languages2": [],
+ "trainRate": 200,
+ "homeworld": "",
+ "customDB": {
+  "weapons": [],
+  "armour": [],
+  "shields": [
+   {
+    "name": "Personal shield",
+    "dr": "50",
+    "vs": "both",
+    "cost": 0
+   }
+  ],
+  "explosives": [],
+  "gear": [],
+  "skills": [],
+  "species": [],
+  "forcePowers": [],
+  "shipParts": [],
+  "droidParts": [],
+  "cyber": []
+ },
+ "statusLevel": 5,
  "skills": [
   {
    "name": "Acrobatics",
@@ -450,6 +434,10 @@
    "diff": "A"
   }
  ],
+ "layout": {},
+ "name": "Truman",
+ "react": "",
+ "explosives": [],
  "armour": [
   {
    "name": "Iktotchi stormguard plate",
@@ -497,66 +485,8 @@
    }
   }
  ],
+ "droids": [],
  "player": "Csuman",
- "weapons": [
-  {
-   "name": "Standard lightsaber",
-   "cls": "Melee",
-   "_cat": "Jedi Order",
-   "mods": [
-    {
-     "label": "Dual-grip hilt (saberstaff)",
-     "preset": "Dual-grip hilt (saberstaff)",
-     "slotLock": "grip",
-     "tier": "mil",
-     "note": "Two-bladed double saber: 2 attacks per turn at -2 each; requires Two-Handed style.",
-     "wt": 0.5,
-     "cost": 4200,
-     "prereq": "Saberstaff form training (Doc VI)"
-    }
-   ]
-  },
-  {
-   "name": "Electrostaff",
-   "cls": "Melee",
-   "_bought": false,
-   "_cat": "Independent / Civilian",
-   "_type": ""
-  }
- ],
- "stances": [
-  {
-   "name": "Iktotchi Foresight Guard",
-   "active": false
-  },
-  {
-   "name": "Iktotchi Windreader’s Aim",
-   "active": false
-  },
-  {
-   "name": "Judicial Takedown",
-   "active": false
-  }
- ],
- "techniques": [
-  {
-   "name": "Saber Throw",
-   "active": false
-  },
-  {
-   "name": "Saber Bind",
-   "active": false
-  },
-  {
-   "name": "Saber Bash",
-   "active": false
-  },
-  {
-   "name": "Bolt Deflection",
-   "active": false
-  }
- ],
- "fright": "",
  "shields": [
   {
    "name": "Personal shield",
@@ -566,179 +496,39 @@
    "_type": ""
   }
  ],
- "appearance": "Average",
- "concept": "",
- "_meta": {
-  "savedAt": "2026-06-14T03:30:58.958Z",
-  "savedBy": "Csuman"
+ "builder": {
+  "droid": {
+   "parts": {},
+   "name": "My Droid",
+   "deg": "5th"
+  },
+  "ship": {
+   "parts": {},
+   "name": "My Custom Vessel",
+   "role": ""
+  }
  },
- "gender": "Male",
- "tl": 10,
- "manualInv": [],
  "bio": "",
- "force": {
-  "morality": 50,
-  "primary": "DX",
-  "bonded": false,
-  "saberPoints": 0,
-  "conflict": 0,
-  "channeling": false,
-  "powers": [
-   {
-    "name": "Force Balance Walk",
-    "skill": "Force",
-    "aff": "DX",
-    "fp": "1",
-    "tier": 1,
-    "pts": 5,
-    "book": "Common Force"
-   },
-   {
-    "name": "Force Brace",
-    "skill": "Force",
-    "aff": "ST",
-    "fp": "1",
-    "tier": 1,
-    "pts": 5,
-    "book": "Common Force"
-   },
-   {
-    "name": "Force Echo",
-    "skill": "Force",
-    "aff": "Will",
-    "fp": "2",
-    "tier": 1,
-    "pts": 5,
-    "book": "Common Force"
-   },
-   {
-    "name": "Force Focus",
-    "skill": "Force",
-    "aff": "Will",
-    "fp": "1",
-    "tier": 1,
-    "pts": 5,
-    "book": "Common Force"
-   },
-   {
-    "name": "Force Leap",
-    "skill": "Force",
-    "aff": "DX",
-    "fp": "1",
-    "tier": 1,
-    "pts": 5,
-    "book": "Common Force"
-   },
-   {
-    "name": "Force Object Sense",
-    "skill": "Force",
-    "aff": "Will",
-    "fp": "2",
-    "tier": 1,
-    "pts": 5,
-    "book": "Common Force"
-   },
-   {
-    "name": "Force Pull",
-    "skill": "Force",
-    "aff": "ST",
-    "fp": "1",
-    "tier": 1,
-    "pts": 5,
-    "book": "Common Force"
-   },
-   {
-    "name": "Force Push",
-    "skill": "Force",
-    "aff": "ST",
-    "fp": "1",
-    "tier": 1,
-    "pts": 5,
-    "book": "Common Force"
-   },
-   {
-    "name": "Force Sense",
-    "skill": "Force",
-    "aff": "Will",
-    "fp": "2",
-    "tier": 1,
-    "pts": 5,
-    "book": "Common Force"
-   },
-   {
-    "name": "Force Stealth",
-    "skill": "Force",
-    "aff": "DX",
-    "fp": "2",
-    "tier": 1,
-    "pts": 5,
-    "book": "Common Force"
-   },
-   {
-    "name": "Veil of the Quiet Self",
-    "skill": "Force",
-    "aff": "Will",
-    "fp": "2",
-    "tier": 1,
-    "pts": 5,
-    "book": "Common Force"
-   },
-   {
-    "name": "Visions of the Branch",
-    "skill": "Force",
-    "aff": "IQ",
-    "fp": "5",
-    "tier": 3,
-    "pts": 20,
-    "book": "Minor Traditions"
-   },
-   {
-    "name": "Flash of Warning",
-    "skill": "Force",
-    "aff": "Per",
-    "fp": "2",
-    "tier": 1,
-    "pts": 5,
-    "book": "Minor Traditions"
-   },
-   {
-    "name": "Walk the Unwritten",
-    "skill": "Force",
-    "aff": "Will",
-    "fp": "10",
-    "tier": 5,
-    "pts": 60,
-    "book": "Minor Traditions"
-   }
-  ],
-  "books": {
-   "Common Force": true,
-   "Minor Traditions": true
-  },
-  "bookTiers": {
-   "Common Force": 3
-  },
-  "tradition": "",
-  "darkSurgeLog": [],
-  "activeBook": "Minor Traditions",
-  "training": {
-   "Common Force": {
-    "tier": 1,
-    "hours": 0,
-    "regimen": "Open Hours",
-    "mentor": "",
-    "log": []
-   },
-   "Minor Traditions": {
-    "tier": 1,
-    "hours": 0,
-    "regimen": "Open Hours",
-    "mentor": "",
-    "log": []
-   }
-  },
-  "viewBook": "Common Force",
-  "mtTrad": "Iktotchi"
+ "languages": "",
+ "wealthLevel": "Wealthy",
+ "attr": {
+  "ST": 60,
+  "DX": 320,
+  "IQ": 20,
+  "HT": 40
+ },
+ "ptTarget": 1179,
+ "concept": "",
+ "hand": "Ambidextrous",
+ "credits": 595260,
+ "xpEarned": 192,
+ "sec": {
+  "HP": 40,
+  "Will": 10,
+  "Per": 5,
+  "FP": 42,
+  "Speed": 0,
+  "Move": 0
  },
  "traits": [
   {
@@ -863,33 +653,254 @@
    "varCost": 0
   }
  ],
- "customDB": {
-  "weapons": [],
-  "armour": [],
-  "shields": [
-   {
-    "name": "Personal shield",
-    "dr": "50",
-    "vs": "both",
-    "cost": 0
-   }
-  ],
-  "explosives": [],
-  "gear": [],
-  "skills": [],
-  "species": [],
-  "forcePowers": [],
-  "shipParts": [],
-  "droidParts": [],
-  "cyber": []
- },
- "study": [],
- "languages": "",
- "credits": 595260,
- "wealthLevel": "Wealthy",
- "gm": "some loser",
+ "height": "1.9",
+ "gear": [
+  {
+   "name": "Military med pack",
+   "qty": 1
+  },
+  {
+   "name": "Kolto patch",
+   "qty": 1
+  },
+  {
+   "name": "Standard med pack",
+   "qty": 1
+  }
+ ],
+ "trainHoursAvail": 200,
+ "creditLog": [],
+ "weapons": [
+  {
+   "name": "Standard lightsaber",
+   "cls": "Melee",
+   "_cat": "Jedi Order",
+   "mods": [
+    {
+     "label": "Dual-grip hilt (saberstaff)",
+     "preset": "Dual-grip hilt (saberstaff)",
+     "slotLock": "grip",
+     "tier": "mil",
+     "note": "Two-bladed double saber: 2 attacks per turn at -2 each; requires Two-Handed style.",
+     "wt": 0.5,
+     "cost": 4200,
+     "prereq": "Saberstaff form training (Doc VI)"
+    }
+   ]
+  },
+  {
+   "name": "Electrostaff",
+   "cls": "Melee",
+   "_bought": false,
+   "_cat": "Independent / Civilian",
+   "_type": ""
+  }
+ ],
+ "stances": [
+  {
+   "name": "Iktotchi Foresight Guard",
+   "active": false
+  },
+  {
+   "name": "Iktotchi Windreader’s Aim",
+   "active": false
+  },
+  {
+   "name": "Judicial Takedown",
+   "active": false
+  }
+ ],
+ "gender": "Male",
+ "rank": "adjudicator",
+ "tl": 10,
  "species": "Iktotchi",
- "homeworld": "",
+ "vehicles": [
+  {
+   "name": "Ebon Hawk-class light freighter",
+   "cat": "Light Freighter",
+   "hullDR": "16",
+   "shieldDR": "350",
+   "shieldNow": 350,
+   "hpMax": 2400,
+   "hpNow": 2400,
+   "move": 34,
+   "hd": "1",
+   "weapons": "2× quad laser turrets; concussion missile launcher",
+   "crew": "2 + 4",
+   "fuel": "80/12",
+   "cost": "1,000,000",
+   "lc": "Res",
+   "notes": "The famed Dynamic-class light freighter of the era — fast, sturdy, and endlessly modified. Dual quad-laser turrets and a concealed concussion launcher ride under a courier’s manifest, and an exceptional hyperdrive outruns most pursuit. The smuggler’s dream hull.",
+   "parts": [
+    {
+     "cat": "Hull",
+     "name": "Hull plating",
+     "status": "ok",
+     "hpPct": 100
+    },
+    {
+     "cat": "Sublight",
+     "name": "Sublight engines",
+     "status": "ok",
+     "hpPct": 100
+    },
+    {
+     "cat": "Reactor",
+     "name": "Power plant",
+     "status": "ok",
+     "hpPct": 100
+    },
+    {
+     "cat": "Shields",
+     "name": "Shield generator",
+     "status": "ok",
+     "hpPct": 100
+    },
+    {
+     "cat": "Sensors",
+     "name": "Sensor array",
+     "status": "ok",
+     "hpPct": 100
+    },
+    {
+     "cat": "Targeting",
+     "name": "Targeting computer",
+     "status": "ok",
+     "hpPct": 100
+    },
+    {
+     "cat": "Life Support",
+     "name": "Life-support system",
+     "status": "ok",
+     "hpPct": 100
+    },
+    {
+     "cat": "Astrogation",
+     "name": "Navicomputer",
+     "status": "ok",
+     "hpPct": 100
+    },
+    {
+     "cat": "Hyperdrive",
+     "name": "Hyperdrive motivator",
+     "status": "ok",
+     "hpPct": 100
+    },
+    {
+     "cat": "Crew",
+     "name": "Crew quarters",
+     "status": "ok",
+     "hpPct": 100
+    },
+    {
+     "cat": "Cargo",
+     "name": "Cargo hold",
+     "status": "ok",
+     "hpPct": 100
+    },
+    {
+     "cat": "Weapon",
+     "name": "Defensive turret",
+     "status": "ok",
+     "hpPct": 100
+    }
+   ],
+   "rfNow": 80,
+   "hfNow": 12,
+   "mounts": [
+    {
+     "label": "Quad laser turrets",
+     "w": "Quad laser cannon",
+     "n": 2,
+     "shots": null,
+     "shotsNow": null
+    },
+    {
+     "label": "Concussion missile launcher",
+     "w": "Neuralyzer array",
+     "n": 1,
+     "shots": null,
+     "shotsNow": null
+    },
+    {
+     "label": "Heavy",
+     "w": "Heavy laser cannon",
+     "n": 1,
+     "shots": null,
+     "shotsNow": null
+    }
+   ],
+   "modules": [
+    {
+     "m": "Stygium cloaking device"
+    },
+    {
+     "m": "Encrypted comms suite"
+    },
+    {
+     "m": "Concealed smuggling hold"
+    },
+    {
+     "m": "Holographic transponder mask"
+    },
+    {
+     "m": "Astromech socket"
+    },
+    {
+     "m": "Medbay / bacta tank"
+    },
+    {
+     "m": "Escape-pod bank"
+    },
+    {
+     "m": "Chaff / decoy launcher"
+    },
+    {
+     "m": "Military ECM suite"
+    }
+   ],
+   "core": {
+    "Reactor": "Verpine Microfusion Core",
+    "Sublight": "Heavy Cluster Ion Bank",
+    "Shields": "Standard Deflector Array",
+    "Armour": "Durasteel Plating",
+    "Hull": "Medium Freighter frame"
+   },
+   "custom": false
+  }
+ ],
+ "forceStudy": [],
+ "fright": "",
+ "manualInv": [],
+ "gm": "some loser",
+ "age": "56",
+ "appearance": "Average",
+ "combat": {
+  "hp": null,
+  "fp": null,
+  "statuses": [],
+  "concentrations": [],
+  "charges": [],
+  "turn": 0,
+  "log": [],
+  "wounds": {
+   "Skull": 0,
+   "Face": 0,
+   "Neck": 0,
+   "Torso": 0,
+   "Vitals": 0,
+   "Groin": 0,
+   "Right Arm": 0,
+   "Left Arm": 0,
+   "Right Hand": 0,
+   "Left Hand": 0,
+   "Right Leg": 0,
+   "Left Leg": 0,
+   "Right Foot": 0,
+   "Left Foot": 0
+  },
+  "inits": []
+ },
  "inventory": [
   {
    "kind": "gear",
@@ -924,16 +935,6 @@
    ]
   }
  ],
- "sec": {
-  "HP": 40,
-  "Will": 10,
-  "Per": 5,
-  "FP": 42,
-  "Speed": 0,
-  "Move": 0
- },
- "notes": "Imported from Truman_SW.xlsm.\nTrait details from source: Social Stigma (subjugated) = force user; Social Stigma (minority group) / Fanaticism = iktotchi (telepathy & strong); Code of Honor (high) = 'grey code'.\nDefenses (source): Dodge 14, Parry 22 (Force Sword), Parry 22 (Staff), Parry 18 (Brawling), DR 3.\nSource point totals (ignored on import): 833 spent, attrs 537, advantages 110, disadvantages -85, skills 271.\n\nINVENTORY:\n15 Standard stems\n15 Military stims\n\nSHIP:\n48 minutes stealth\n\n6 proton torpedos",
- "forceStudy": [],
- "trainRate": 200,
+ "reputation": "",
  "cyber": []
 }

@@ -1,41 +1,35 @@
 {
- "homeworld": "",
- "reputation": "",
- "manualInv": [],
- "builder": {
-  "ship": {
-   "parts": {},
-   "name": "My Custom Vessel",
-   "role": ""
-  },
-  "droid": {
-   "parts": {},
-   "name": "My Droid",
-   "deg": "5th"
-  }
- },
- "cyber": [],
- "sec": {
-  "HP": 0,
-  "Will": 0,
-  "Per": 0,
-  "FP": 0,
-  "Speed": 0,
-  "Move": 0
- },
- "armour": [],
- "conditions": {},
- "tl": 10,
- "shields": [],
- "inventory": [],
- "wealthLevel": "Average",
- "trainHoursTotal": 0,
+ "ptTarget": 350,
+ "explosives": [],
  "attr": {
   "ST": 0,
   "DX": 0,
   "IQ": 0,
   "HT": 0
  },
+ "jetpack": {
+  "pack": "std",
+  "massKg": 0,
+  "burstsUsed": 0,
+  "spareCells": 0,
+  "userPack": false
+ },
+ "credits": 0,
+ "attrStudy": [],
+ "techniques": [],
+ "trainHoursAvail": 0,
+ "bio": "",
+ "trainRate": 200,
+ "trainHoursTotal": 0,
+ "fright": "",
+ "react": "",
+ "shields": [],
+ "reputation": "",
+ "gm": "",
+ "forceStudy": [],
+ "layout": {},
+ "traits": [],
+ "player": "Chatni",
  "skills": [
   {
    "name": "",
@@ -68,32 +62,68 @@
    "diff": ""
   }
  ],
- "jetpack": {
-  "pack": "std",
-  "massKg": 0,
-  "burstsUsed": 0,
-  "spareCells": 0,
-  "userPack": false
- },
- "notes": "",
- "forceStudy": [],
- "vehicles": [],
- "name": "",
- "layout": {},
- "credits": 0,
- "creditLog": [],
  "weapons": [],
+ "builder": {
+  "ship": {
+   "parts": {},
+   "name": "My Custom Vessel",
+   "role": ""
+  },
+  "droid": {
+   "parts": {},
+   "name": "My Droid",
+   "deg": "5th"
+  }
+ },
+ "manualInv": [],
+ "species": "Human",
+ "tl": 10,
+ "conditions": {},
+ "statusLevel": 0,
+ "homeworld": "",
+ "creditLog": [],
+ "gender": "",
  "forms": [],
- "attrStudy": [],
- "gm": "",
- "gear": [],
- "hand": "Right",
+ "armour": [],
+ "name": "",
+ "vehicles": [],
  "rank": "",
- "techniques": [],
- "bio": "",
- "explosives": [],
- "traits": [],
- "concept": "Crystal Phantom",
+ "sm": 0,
+ "height": "",
+ "force": {
+  "primary": "Will",
+  "bonded": false,
+  "saberPoints": 0,
+  "powers": [],
+  "books": {},
+  "bookTiers": {},
+  "tradition": "",
+  "activeBook": "",
+  "viewBook": "",
+  "mtTrad": "Iktotchi",
+  "holocrons": [],
+  "holoRes": {
+   "frag": 0,
+   "frame": 0,
+   "kyber": 0
+  }
+ },
+ "age": "",
+ "notes": "",
+ "languages": "",
+ "study": [],
+ "cyber": [],
+ "stances": [],
+ "appearance": "Average",
+ "hand": "Right",
+ "sec": {
+  "HP": 0,
+  "Will": 0,
+  "Per": 0,
+  "FP": 0,
+  "Speed": 0,
+  "Move": 0
+ },
  "combat": {
   "hp": null,
   "fp": null,
@@ -120,32 +150,11 @@
   },
   "inits": []
  },
- "study": [],
- "height": "",
- "languages2": [],
- "age": "",
- "player": "Chatni",
- "react": "",
+ "concept": "Crystal Phantom",
+ "droids": [],
  "weight": "",
- "force": {
-  "primary": "Will",
-  "bonded": false,
-  "saberPoints": 0,
-  "powers": [],
-  "books": {},
-  "bookTiers": {},
-  "tradition": "",
-  "activeBook": "",
-  "viewBook": "",
-  "mtTrad": "Iktotchi",
-  "holocrons": [],
-  "holoRes": {
-   "frag": 0,
-   "frame": 0,
-   "kyber": 0
-  }
- },
- "stances": [],
+ "languages2": [],
+ "wealthLevel": "Average",
  "customDB": {
   "weapons": [],
   "armour": [],
@@ -159,15 +168,6 @@
   "droidParts": [],
   "cyber": []
  },
- "trainRate": 200,
- "ptTarget": 350,
- "droids": [],
- "languages": "",
- "fright": "",
- "species": "Human",
- "trainHoursAvail": 0,
- "statusLevel": 0,
- "appearance": "Average",
- "sm": 0,
- "gender": ""
+ "inventory": [],
+ "gear": []
 }
