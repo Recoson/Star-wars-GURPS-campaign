@@ -953,3 +953,24 @@ factions (10B.0, Who's Who banner unnumbered). Numbering is now complete + consi
 
 Still pending: engine-first primer swap; §-ref conversion (the ~295 "Doc N"/"Document N" cross-ref links
 still read as words, e.g. "Document X (The Galaxy)" — to become §N.k); optional running-header section indicator.
+
+
+### 2026-07-01 (cont.) — Engine-first primer swap (Core Game now Primer A)
+
+Reordered the two Player's Primers so the dice engine comes before character creation:
+  OLD: A = Creating a Character, B = The Core Game
+  NEW: A = The Core Game (the 3d6 engine), B = Creating a Character
+Reading order is now engine -> character build -> Document I. Confirmed there are ZERO references to the
+primers by letter anywhere outside their own blocks ("Primer A/B" and "A.k/B.k" only occur in the primer
+divider/nav/secnums), and cross-refs use #book-chargen / #book-coregame anchors which travel with the sections
+— so nothing external breaks.
+
+Mechanics: extracted all six blocks (body <section>, sidenav <details>, main-TOC <div class=toc__book> — two
+each), relabelled each independently to avoid A<->B collision (divider "· A"<->"· B", sidenav/TOC booknum
+"Primer A"<->"Primer B", secnums/toc__n A.k<->B.k, 10 swaps chargen-side + 7 coregame-side in every structure),
+then reassembled each region in coregame-first order. Zero byte delta (pure reorder + equal-length letter flip).
+check.py green; render-verified both primers (Core Game A.0/A.1 purple, Creating a Character B.0/B.1 green,
+accent colours preserved). Anchors #book-chargen/#book-coregame unchanged.
+
+Next: selective §-ref pass — convert cross-refs that point at a specific numbered SECTION to §N.k, but leave
+document-level "Doc N"/"Document N" refs as readable words (most refs are document-level).
