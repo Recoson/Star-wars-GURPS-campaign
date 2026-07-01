@@ -5770,7 +5770,9 @@ const SHIP_MODULES=[{"name":"Stygium cloaking device","size":"L","cat":"Cloak","
 function vehicleModules(v){ if(!v.modules)v.modules=[]; return v.modules; }
 function addVehicleModule(i){const v=C.vehicles[i];if(!v)return;vehicleModules(v).push({m:''});touch();renderVehicles();}
 function delVehicleModule(i,j){const v=C.vehicles[i];if(!v)return;vehicleModules(v).splice(j,1);touch();renderVehicles();}
-function setVehicleModuleField(i,j,f,val){const v=C.vehicles[i];if(!v)return;const mods=vehicleModules(v);const md=mods[j];if(!md)return;if(!v.custom&&f==='m'&&val){const probe=mods.map((x,k)=>k===j?Object.assign({},x,{m:val}):x);const bad=econWouldExceed(v,null,probe);if(bad){alert('No room for that module \u2014 '+(bad.powerOver?'reactor power':'mass capacity')+' would be exceeded. Turn on \u201ccustom loadout\u201d to override.');renderVehicles();return;}}if(f==='chargesNow'){const _M=SHIP_MODULES.find(function(x){return x.name===md.m;});const mx=(_M&&_M.charges)||0;md.chargesNow=(val===''||val==null)?null:Math.max(0,Math.min(mx,parseInt(val)||0));touch();renderVehicles();return;}if(f==='auto'){md.auto=!!val;touch();renderVehicles();return;}md[f]=val;touch();renderVehicles();}
+function toggleShipPart(i,type,idx){const v=C.vehicles&&C.vehicles[i];if(!v)return;if(type==='mount'){const m=shipMounts(v)[idx];if(m)m.off=!m.off;}else if(type==='module'){const md=vehicleModules(v)[idx];if(md)md.off=!md.off;}touch();renderVehicles();}
+function toggleReactorMode(i){const v=C.vehicles&&C.vehicles[i];if(!v)return;v.reactorMode=(v.reactorMode==='overdrive')?'normal':'overdrive';touch();renderVehicles();}
+function setVehicleModuleField(i,j,f,val){const v=C.vehicles[i];if(!v)return;const mods=vehicleModules(v);const md=mods[j];if(!md)return;if(!v.custom&&f==='m'&&val){const probe=mods.map((x,k)=>k===j?Object.assign({},x,{m:val}):x);const bad=econWouldExceed(v,null,probe);if(bad){if(bad.massOver&&!bad.powerOver){alert('No room \u2014 mass capacity would be exceeded (mass counts even when powered down). Turn on \u201ccustom loadout\u201d to override.');renderVehicles();return;}md.m=val;md.off=true;touch();renderVehicles();alert('Installed powered-down \u2014 at full power it would overdraw the reactor. Toggle it on in the \u2699 Power & Mass panel when you can spare the draw (or shed shields/weapons, or overdrive).');return;}}if(f==='chargesNow'){const _M=SHIP_MODULES.find(function(x){return x.name===md.m;});const mx=(_M&&_M.charges)||0;md.chargesNow=(val===''||val==null)?null:Math.max(0,Math.min(mx,parseInt(val)||0));touch();renderVehicles();return;}if(f==='auto'){md.auto=!!val;touch();renderVehicles();return;}md[f]=val;touch();renderVehicles();}
 // ─── SHIP POWER / MASS ECONOMY ───────────────────────────────────────────────
 // Per-class reactor output + core-system draw, mass capacity + core structural mass.
 // Calibrated so every catalogue ship's armament fits with headroom (house values).
@@ -5845,15 +5847,15 @@ function shipPowerMass(v){
   parts.push(AR?{name:_hn+' + '+AR.name,role:'core',pwr:0,mass:_hm+(+AR.mass||0),cat:'Armour'}
               :{name:_hn,role:'core',pwr:0,mass:_hm,cat:'Hull'});
  }
- (shipMounts(v)||[]).forEach(mt=>{const W=mt.w?SHIP_WEAPONS.find(x=>x.name===mt.w):null;if(W){const n=+mt.n||1;parts.push({name:(mt.label||W.name)+(n>1?' ×'+n:''),role:'weapon',pwr:(+W.pwr||0)*n,mass:(+W.mass||0)*n});}});
- (vehicleModules(v)||[]).forEach(md=>{const M=md&&md.m?SHIP_MODULES.find(x=>x.name===md.m):null;if(M)parts.push({name:M.name,role:'module',pwr:(+M.pwr||0),mass:(+M.mass||0)});});
+ (shipMounts(v)||[]).forEach((mt,mi)=>{const W=mt.w?SHIP_WEAPONS.find(x=>x.name===mt.w):null;if(W){const n=+mt.n||1;const _o=!!mt.off;parts.push({name:(mt.label||W.name)+(n>1?' ×'+n:''),role:'weapon',pwr:_o?0:(+W.pwr||0)*n,mass:(+W.mass||0)*n,off:_o,srcType:'mount',srcIdx:mi});}});
+ (vehicleModules(v)||[]).forEach((md,mj)=>{const M=md&&md.m?SHIP_MODULES.find(x=>x.name===md.m):null;if(M){const _o=!!md.off;parts.push({name:M.name,role:'module',pwr:_o?0:(+M.pwr||0),mass:(+M.mass||0),off:_o,srcType:'module',srcIdx:mj});}});
  let _bd=parts.reduce((t,p)=>t+(p.pwr>0?p.pwr:0),0);
  let _bm=parts.reduce((t,p)=>t+(p.mass||0),0);
  if(v&&v.coreMods){Object.keys(v.coreMods).forEach(function(c){(v.coreMods[c]||[]).forEach(function(md){const dp=+md.pwr||0,dm=+md.mass||0;_bd+=dp;_bm+=dm;if(dp||dm||md.label)parts.push({name:c+' mod'+(md.label?': '+md.label:''),role:'mod',pwr:dp,mass:dm});});});}
- const _mg=coreModSum(v,'gen'); if(_mg)gen+=_mg;
+ const _mg=coreModSum(v,'gen'); if(_mg)gen+=_mg; if(v&&v.reactorMode==='overdrive')gen=Math.round(gen*1.25);
  const draw=Math.max(0,_bd);
  const massUsed=_bm;
- return {gen,draw,cap,massUsed,parts,powerOver:draw>gen,massOver:massUsed>cap};
+ return {gen,draw,cap,massUsed,parts,powerOver:draw>gen,massOver:massUsed>cap,overdrive:!!(v&&v.reactorMode==='overdrive')};
 }
 // returns the offending econ if a proposed loadout would newly exceed (and increase) power/mass; else null
 function econWouldExceed(v,probeMounts,probeModules){
@@ -5972,18 +5974,18 @@ function vehicleEconomyHTML(v,i){
  const pPct=Math.min(100,Math.round(E.draw/Math.max(1,E.gen)*100));
  const mPct=Math.min(100,Math.round(E.massUsed/Math.max(1,E.cap)*100));
  const bar=(pct,over)=>'<div style="height:7px;background:var(--bg3);border-radius:4px;overflow:hidden;border:1px solid var(--border);margin-top:2px"><div style="height:100%;width:'+pct+'%;background:'+(over?'var(--red)':(pct>85?'var(--amber)':'var(--green)'))+'"></div></div>';
- const rows=E.parts.map(p=>{const col=p.role==='gen'?'var(--cyan)':(p.role==='weapon'?'var(--text)':(p.role==='module'?'var(--amber)':'var(--text2)'));const pw=p.pwr<0?('<span style="color:var(--cyan)">+'+(-p.pwr)+'</span>'):(p.pwr>0?p.pwr:'—');return '<tr><td style="color:'+col+'">'+esc(p.name)+'</td><td class="num">'+pw+'</td><td class="num">'+(p.mass||'—')+'</td></tr>';}).join('');
+ const rows=E.parts.map(p=>{const _off=!!p.off;const col=_off?'var(--text2)':(p.role==='gen'?'var(--cyan)':(p.role==='weapon'?'var(--text)':(p.role==='module'?'var(--amber)':'var(--text2)')));const pw=p.pwr<0?('<span style="color:var(--cyan)">+'+(-p.pwr)+'</span>'):(p.pwr>0?p.pwr:(_off?'<span class="dim">off</span>':'—'));const tog=p.srcType?(' <button onclick="toggleShipPart('+i+',\''+p.srcType+'\','+p.srcIdx+')" title="power this system on/off (mass stays; draw drops when off)" style="font-size:9px;padding:0 5px;border-radius:3px;border:1px solid var(--border);background:var(--bg3);color:'+(_off?'var(--text2)':'var(--green)')+';cursor:pointer">'+(_off?'○ off':'● on')+'</button>'):'';return '<tr'+(_off?' style="opacity:.55"':'')+'><td style="color:'+col+'">'+esc(p.name)+tog+'</td><td class="num">'+pw+'</td><td class="num">'+(p.mass||'—')+'</td></tr>';}).join('');
  const tgl='<label style="font-size:10px;color:var(--text2);display:inline-flex;align-items:center;gap:4px;cursor:pointer" title="Custom hull — ignore the rated power/mass limits (one-off or modified ships)."><input type="checkbox"'+(v.custom?' checked':'')+' onchange="toggleVehicleCustom('+i+')"> custom loadout</label>';
  return '<div style="margin-top:8px;padding:6px 9px;background:var(--bg2);border:1px solid var(--border);border-radius:6px">'
   +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px"><span style="font-size:11px;font-weight:700;color:var(--cyan)">⚙ Power & Mass'+(v.custom?' <span style="color:var(--amber);font-weight:400">— hull limits off</span>':'')+'</span>'+tgl+'</div>'
   +'<div style="display:flex;gap:16px;flex-wrap:wrap;font-size:11px">'
-   +'<div style="flex:1;min-width:150px"><span class="dim">⚡ Power</span> <b style="color:'+(E.powerOver?'var(--red)':'var(--text)')+'">'+E.draw+'</b><span class="dim"> drawn / '+E.gen+' output</span>'+bar(pPct,E.powerOver)+(E.powerOver?'<span style="color:var(--red);font-size:10px">reactor overdrawn — shed weapons or modules</span>':'')+'</div>'
+   +'<div style="flex:1;min-width:150px"><div style="display:flex;justify-content:space-between;align-items:center;gap:6px"><span><span class="dim">⚡ Power</span> <b style="color:'+(E.powerOver?'var(--red)':'var(--text)')+'">'+E.draw+'</b><span class="dim"> drawn / '+E.gen+' output'+(E.overdrive?' <span style="color:var(--amber)">(overdrive)</span>':'')+'</span></span><button onclick="toggleReactorMode('+i+')" title="Reactor overdrive: +25% output (runs hot / burns fuel faster). Buys headroom to run the cloak or extra guns." style="font-size:9.5px;padding:1px 7px;border-radius:4px;border:1px solid '+(E.overdrive?'var(--amber)':'var(--border)')+';background:var(--bg3);color:'+(E.overdrive?'var(--amber)':'var(--text2)')+';cursor:pointer;white-space:nowrap">⚡ Overdrive '+(E.overdrive?'ON':'off')+'</button></div>'+bar(pPct,E.powerOver)+(E.powerOver?'<span style="color:var(--red);font-size:10px">reactor overdrawn — toggle a system off below, or overdrive</span>':'')+'</div>'
    +'<div style="flex:1;min-width:150px"><span class="dim">⚖ Mass</span> <b style="color:'+(E.massOver?'var(--red)':'var(--text)')+'">'+E.massUsed+'</b><span class="dim"> used / '+E.cap+' capacity</span>'+bar(mPct,E.massOver)+(E.massOver?'<span style="color:var(--red);font-size:10px">over mass capacity — Handling/Move suffer</span>':'')+'</div>'
   +'</div>'
   +ovl
   +'<details style="margin-top:5px"><summary style="font-size:10px;color:var(--cyan);cursor:pointer">ship systems & loadout — power draw / mass per part</summary>'
    +'<table class="g" style="font-size:10px;margin-top:4px"><tr><th>Part</th><th title="+ generates power · a number draws power">Pwr</th><th>Mass</th></tr>'+rows+'</table>'
-   +'<div class="dim" style="font-size:9px;margin-top:3px">Core-system stats derive from hull class (house). Every weapon and module adds its own power draw + mass — more guns cost both.</div></details>'
+   +'<div class="dim" style="font-size:9px;margin-top:3px">Core-system stats derive from hull class (house). Every weapon and module adds its own power draw + mass. Use the on/off buttons to shed draw, or ⚡ Overdrive for +25% output.</div></details>'
   +'</div>';
 }
 function setVehicleHPNow(i,val){const v=C.vehicles[i];if(!v)return;const hm=vehicleEffectiveStat(v,'hpMax')||1;v.hpNow=Math.max(-Math.ceil(hm*0.6),Math.min(hm,parseInt(val)||0));touch();renderVehicles();}
