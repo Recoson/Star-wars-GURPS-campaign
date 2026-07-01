@@ -1039,3 +1039,21 @@ Still to do (harder): equipment (Weapon Materials is a part physically in the de
 renumber + nav-entry move; Crack Armour 7.12 unstamped); training (nav has 5.1-5.6 set + a second 5.7-5.11 set
 with numbers in titles, only 5.7-5.11 got stamped); damage (nav's 3.9 points at Quick Ref while Environmental
 part also carries 3.9).
+
+### 2026-07-01 (cont.) — Numbering: equipment renumbered to physical reading order
+
+Equipment had two defects: (1) "Weapon Materials" (a Reference-labelled part, ~5.6k chars) was numbered 7.9 but
+physically sits ~19th, in the detail half between Melee-in-Detail and Slug-in-Detail, so the body read
+...7.18, 7.9, 7.19...; (2) "How to Crack Heavy Armour" (h2, nav 7.12) was unstamped in the body.
+
+Chose to renumber to physical order (numbering latitude, not content-move): Armour 7.10->7.9, Armour Materials
+7.11->7.10, Crack Armour stamped 7.11, Adventuring 7.13->7.12 ... Melee-in-Detail 7.18->7.17, Weapon Materials
+7.9->7.18. 7.0-7.8 and 7.19-7.31 unchanged. Also MOVED the single Weapon Materials nav <li> (sidenav + main TOC)
+from after-Grenades to after-Melee-in-Detail so nav order follows the body. Result: body + both nav structures
+all monotonic 7.0-7.31, one WM entry each. Crack Armour secnum renders on its title-first heading (verified).
+check.py green. (Resolver gotcha: nav ids ending -2 are the INNER part h1 ids the nav links directly; Crack
+Armour's h2 carries a style attr after the id — both must be matched, else the physical-order map mis-sorts.)
+
+Still to do: training (nav has clean 5.1-5.6 set + a second 5.7-5.11 set with numbers baked into titles; only
+5.7-5.11 stamped in body — the 5.1-5.6 nav targets' body headings not yet located); damage (nav 3.9 points at
+Quick Ref while Environmental part also carries 3.9).
