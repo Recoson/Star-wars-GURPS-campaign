@@ -974,3 +974,37 @@ accent colours preserved). Anchors #book-chargen/#book-coregame unchanged.
 
 Next: selective §-ref pass — convert cross-refs that point at a specific numbered SECTION to §N.k, but leave
 document-level "Doc N"/"Document N" refs as readable words (most refs are document-level).
+
+### 2026-07-01 (cont.) — Live Firestore is the truth: Chatni de-dup, backup tool, sync v5.1 hardening
+
+Session goal = data integrity ("stop losing character data"). Worked against the LIVE Firestore docs
+(named `kotor` DB) via the GM account + `tools/gm_push.py`, NOT the repo JSONs — which are stale and,
+crucially, DISCONNECTED from live: editing `characters/*.json` does nothing to players. Proof: `a247bac`
+"dropped Brawling +20" only touched the dead repo file; Chatni's live doc still carried it. Live totals
+(tool-computed, match the sheet): **Tylo 1271, Sekan 764, Chatni 1655**. (`ptTarget`s are stale, not the
+sheets.)
+
+- **Backup safety net — `tools/backup_live.py` (NEW):** read-only per-doc GET of every character (Firestore
+  rules allow get, not list → known-id set, extendable via CLI) → `backups/<id>.json`, `sort_keys` for stable
+  diffs. NEVER writes Firestore → cannot conflict with live edits. Git history = versioned, recoverable
+  snapshots (the real answer to "we keep losing data"). Committed snapshots of all 4 docs incl. blank `default`.
+- **Chatni live de-dup (gm_push `patch chatni {skills}` → f.skills field-level merge):** removed the zombie
+  Brawling +20 (deprecated Tutaminis stand-in) + 3 exact-dupe rows (Fast-Talk, Observation, Smith). 88→84 rows,
+  1655→1651. Zero distinct skills lost; Lightsaber +20 and all 58 other keys untouched. Full backup taken first.
+- **`firebase-sync.js` v5.1 (data-loss hardening):** signed-out on a real char now FORCES the login modal (was
+  a passive pill — the "silently editing offline → lost on device-switch" vector) and re-nags every 20s; still
+  dismissible so genuinely-offline users can work + local-export. `charId=='default'` (sheet opened with no
+  `?char=`) shows a warning banner and NEVER syncs (pushDelta blocked, subscribe skipped, even signed-in) so
+  edits can't land in the blank scratch doc. Signed-in-on-real-char path unchanged. Verified `node --check` +
+  jsdom 4/4. v5 conflict model already correct (cloud-priority same-key; a stale/returning device adopts cloud
+  before it is allowed to push) — left as-is.
+
+**PENDING JAMES DECISION — make lightsaber Force-scaling a COMPUTED rule (don't silently implement).**
+Compendium doctrine (quote): "a Force-user's effective saber skill runs as much as +20 above raw." Today it's
+faked as a STATIC `bonus:20` on Chatni's Lightsaber (correct for her ONLY because she caps out) and ABSENT on
+Tylo (correct ONLY because his Force primary IS DX → uplift 0). Fragile + non-uniform + a "conflicting info"
+risk. Reverse-engineered formula that reproduces BOTH PCs exactly: **Lightsaber bonus = clamp(Force_primary_attr
+− DX, 0, 20)** (Tylo 26−26=0 → 32; Chatni 37−11=26 → cap 20 → 38). Proposal: compute it in `skillLevel` for the
+Lightsaber skill and drop Chatni's static +20 (net-zero for both current PCs, but makes the rule real and
+self-maintaining). NOT done — awaiting James's confirm of the formula + scope (Lightsaber only, or also
+Staff/saberstaff?).
