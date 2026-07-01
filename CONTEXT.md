@@ -1008,3 +1008,17 @@ risk. Reverse-engineered formula that reproduces BOTH PCs exactly: **Lightsaber 
 Lightsaber skill and drop Chatni's static +20 (net-zero for both current PCs, but makes the rule real and
 self-maintaining). NOT done — awaiting James's confirm of the formula + scope (Lightsaber only, or also
 Staff/saberstaff?).
+
+### 2026-07-01 (cont.) — Lightsaber Force-scaling: RESOLVED + implemented (commit this session)
+
+James confirmed formula + scope. Implemented in `sheet.html` `skillLevel()` as a computed rule:
+**Lightsaber bonus = clamp(Force_primary_value − DX, 0, 20)** via new `lightsaberForceBonus()`.
+DX-primary → 0 (DX drives the skill natively/uncapped — Tylo, 'endless scaling for DX'); non-DX
+primary → capped uplift, maxing when the attribute ≈ 30 (Chatni Will 37 → +20). Computed value
+SUPERSEDES any manual `bonus` on Lightsaber ONLY (Chatni's legacy static +20 is now ignored, not
+double-counted, and left in her data on purpose → old & new sheets both read 38 = transition-safe;
+can be tidied out later once all devices are on the new sheet, no rush). Non-lightsaber manual
+bonuses unchanged. Flows into attacks + Lightsaber Parry via `weaponSkillLevel`. Cell badge = '(F+N)'.
+Scope = **Lightsaber skill only** — Tylo's `Staff` skill is his ELECTRO staff, NOT his saberstaff
+(the saberstaff is governed by Lightsaber). Verified node --check + extracted-fn tests 5/5
+(Chatni 38 / Tylo 32 unchanged; sub-cap Will→+10; DX-endless; non-LS bonus preserved).
