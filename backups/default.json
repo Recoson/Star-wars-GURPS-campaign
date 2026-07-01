@@ -1,173 +1,173 @@
 {
- "ptTarget": 350,
- "explosives": [],
- "attr": {
-  "ST": 0,
-  "DX": 0,
-  "IQ": 0,
-  "HT": 0
- },
- "jetpack": {
-  "pack": "std",
-  "massKg": 0,
-  "burstsUsed": 0,
-  "spareCells": 0,
-  "userPack": false
- },
- "credits": 0,
- "attrStudy": [],
- "techniques": [],
- "trainHoursAvail": 0,
- "bio": "",
- "trainRate": 200,
- "trainHoursTotal": 0,
- "fright": "",
- "react": "",
- "shields": [],
- "reputation": "",
- "gm": "",
- "forceStudy": [],
- "layout": {},
- "traits": [],
- "player": "Chatni",
- "skills": [
-  {
-   "name": "",
-   "pts": 1,
-   "attr": "",
-   "diff": ""
-  },
-  {
-   "name": "",
-   "pts": 1,
-   "attr": "",
-   "diff": ""
-  },
-  {
-   "name": "",
-   "pts": 1,
-   "attr": "",
-   "diff": ""
-  },
-  {
-   "name": "",
-   "pts": 1,
-   "attr": "",
-   "diff": ""
-  },
-  {
-   "name": "",
-   "pts": 1,
-   "attr": "",
-   "diff": ""
-  }
- ],
- "weapons": [],
- "builder": {
-  "ship": {
-   "parts": {},
-   "name": "My Custom Vessel",
-   "role": ""
-  },
-  "droid": {
-   "parts": {},
-   "name": "My Droid",
-   "deg": "5th"
-  }
- },
- "manualInv": [],
- "species": "Human",
- "tl": 10,
- "conditions": {},
- "statusLevel": 0,
- "homeworld": "",
- "creditLog": [],
- "gender": "",
- "forms": [],
+ "age": "",
+ "appearance": "Average",
  "armour": [],
- "name": "",
- "vehicles": [],
- "rank": "",
- "sm": 0,
- "height": "",
+ "attr": {
+  "DX": 0,
+  "HT": 0,
+  "IQ": 0,
+  "ST": 0
+ },
+ "attrStudy": [],
+ "bio": "",
+ "builder": {
+  "droid": {
+   "deg": "5th",
+   "name": "My Droid",
+   "parts": {}
+  },
+  "ship": {
+   "name": "My Custom Vessel",
+   "parts": {},
+   "role": ""
+  }
+ },
+ "combat": {
+  "charges": [],
+  "concentrations": [],
+  "fp": null,
+  "hp": null,
+  "inits": [],
+  "log": [],
+  "statuses": [],
+  "turn": 0,
+  "wounds": {
+   "Face": 0,
+   "Groin": 0,
+   "Left Arm": 0,
+   "Left Foot": 0,
+   "Left Hand": 0,
+   "Left Leg": 0,
+   "Neck": 0,
+   "Right Arm": 0,
+   "Right Foot": 0,
+   "Right Hand": 0,
+   "Right Leg": 0,
+   "Skull": 0,
+   "Torso": 0,
+   "Vitals": 0
+  }
+ },
+ "concept": "Crystal Phantom",
+ "conditions": {},
+ "creditLog": [],
+ "credits": 0,
+ "customDB": {
+  "armour": [],
+  "cyber": [],
+  "droidParts": [],
+  "explosives": [],
+  "forcePowers": [],
+  "gear": [],
+  "shields": [],
+  "shipParts": [],
+  "skills": [],
+  "species": [],
+  "weapons": []
+ },
+ "cyber": [],
+ "droids": [],
+ "explosives": [],
  "force": {
-  "primary": "Will",
-  "bonded": false,
-  "saberPoints": 0,
-  "powers": [],
-  "books": {},
-  "bookTiers": {},
-  "tradition": "",
   "activeBook": "",
-  "viewBook": "",
-  "mtTrad": "Iktotchi",
-  "holocrons": [],
+  "bonded": false,
+  "bookTiers": {},
+  "books": {},
   "holoRes": {
    "frag": 0,
    "frame": 0,
    "kyber": 0
-  }
- },
- "age": "",
- "notes": "",
- "languages": "",
- "study": [],
- "cyber": [],
- "stances": [],
- "appearance": "Average",
- "hand": "Right",
- "sec": {
-  "HP": 0,
-  "Will": 0,
-  "Per": 0,
-  "FP": 0,
-  "Speed": 0,
-  "Move": 0
- },
- "combat": {
-  "hp": null,
-  "fp": null,
-  "statuses": [],
-  "concentrations": [],
-  "charges": [],
-  "turn": 0,
-  "log": [],
-  "wounds": {
-   "Skull": 0,
-   "Face": 0,
-   "Neck": 0,
-   "Torso": 0,
-   "Vitals": 0,
-   "Groin": 0,
-   "Right Arm": 0,
-   "Left Arm": 0,
-   "Right Hand": 0,
-   "Left Hand": 0,
-   "Right Leg": 0,
-   "Left Leg": 0,
-   "Right Foot": 0,
-   "Left Foot": 0
   },
-  "inits": []
+  "holocrons": [],
+  "mtTrad": "Iktotchi",
+  "powers": [],
+  "primary": "Will",
+  "saberPoints": 0,
+  "tradition": "",
+  "viewBook": ""
  },
- "concept": "Crystal Phantom",
- "droids": [],
- "weight": "",
- "languages2": [],
- "wealthLevel": "Average",
- "customDB": {
-  "weapons": [],
-  "armour": [],
-  "shields": [],
-  "explosives": [],
-  "gear": [],
-  "skills": [],
-  "species": [],
-  "forcePowers": [],
-  "shipParts": [],
-  "droidParts": [],
-  "cyber": []
- },
+ "forceStudy": [],
+ "forms": [],
+ "fright": "",
+ "gear": [],
+ "gender": "",
+ "gm": "",
+ "hand": "Right",
+ "height": "",
+ "homeworld": "",
  "inventory": [],
- "gear": []
+ "jetpack": {
+  "burstsUsed": 0,
+  "massKg": 0,
+  "pack": "std",
+  "spareCells": 0,
+  "userPack": false
+ },
+ "languages": "",
+ "languages2": [],
+ "layout": {},
+ "manualInv": [],
+ "name": "",
+ "notes": "",
+ "player": "Chatni",
+ "ptTarget": 350,
+ "rank": "",
+ "react": "",
+ "reputation": "",
+ "sec": {
+  "FP": 0,
+  "HP": 0,
+  "Move": 0,
+  "Per": 0,
+  "Speed": 0,
+  "Will": 0
+ },
+ "shields": [],
+ "skills": [
+  {
+   "attr": "",
+   "diff": "",
+   "name": "",
+   "pts": 1
+  },
+  {
+   "attr": "",
+   "diff": "",
+   "name": "",
+   "pts": 1
+  },
+  {
+   "attr": "",
+   "diff": "",
+   "name": "",
+   "pts": 1
+  },
+  {
+   "attr": "",
+   "diff": "",
+   "name": "",
+   "pts": 1
+  },
+  {
+   "attr": "",
+   "diff": "",
+   "name": "",
+   "pts": 1
+  }
+ ],
+ "sm": 0,
+ "species": "Human",
+ "stances": [],
+ "statusLevel": 0,
+ "study": [],
+ "techniques": [],
+ "tl": 10,
+ "trainHoursAvail": 0,
+ "trainHoursTotal": 0,
+ "trainRate": 200,
+ "traits": [],
+ "vehicles": [],
+ "wealthLevel": "Average",
+ "weapons": [],
+ "weight": ""
 }

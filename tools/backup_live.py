@@ -84,7 +84,7 @@ def main():
         if doc is None:
             print("  %-12s (no doc)" % cid); continue
         C = reconstruct(doc)
-        json.dump(C, open(os.path.join(outdir, cid + ".json"), "w"), indent=1, ensure_ascii=False)
+        json.dump(C, open(os.path.join(outdir, cid + ".json"), "w"), indent=1, ensure_ascii=False, sort_keys=True)
         upd = _unwrap(doc["fields"]["updatedAt"]) if "updatedAt" in doc.get("fields", {}) else "?"
         print("  %-12s keys=%-3d skills=%-3d powers=%-3d updatedAt=%s"
               % (cid, len(C),

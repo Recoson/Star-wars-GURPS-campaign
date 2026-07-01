@@ -1,446 +1,12 @@
 {
- "force": {
-  "morality": 50,
-  "primary": "DX",
-  "bonded": false,
-  "saberPoints": 0,
-  "conflict": 0,
-  "channeling": false,
-  "powers": [
-   {
-    "name": "Force Balance Walk",
-    "skill": "Force",
-    "aff": "DX",
-    "fp": "1",
-    "tier": 1,
-    "pts": 5,
-    "book": "Common Force"
-   },
-   {
-    "name": "Force Brace",
-    "skill": "Force",
-    "aff": "ST",
-    "fp": "1",
-    "tier": 1,
-    "pts": 5,
-    "book": "Common Force"
-   },
-   {
-    "name": "Force Echo",
-    "skill": "Force",
-    "aff": "Will",
-    "fp": "2",
-    "tier": 1,
-    "pts": 5,
-    "book": "Common Force"
-   },
-   {
-    "name": "Force Focus",
-    "skill": "Force",
-    "aff": "Will",
-    "fp": "1",
-    "tier": 1,
-    "pts": 5,
-    "book": "Common Force"
-   },
-   {
-    "name": "Force Leap",
-    "skill": "Force",
-    "aff": "DX",
-    "fp": "1",
-    "tier": 1,
-    "pts": 5,
-    "book": "Common Force"
-   },
-   {
-    "name": "Force Object Sense",
-    "skill": "Force",
-    "aff": "Will",
-    "fp": "2",
-    "tier": 1,
-    "pts": 5,
-    "book": "Common Force"
-   },
-   {
-    "name": "Force Pull",
-    "skill": "Force",
-    "aff": "ST",
-    "fp": "1",
-    "tier": 1,
-    "pts": 5,
-    "book": "Common Force"
-   },
-   {
-    "name": "Force Push",
-    "skill": "Force",
-    "aff": "ST",
-    "fp": "1",
-    "tier": 1,
-    "pts": 5,
-    "book": "Common Force"
-   },
-   {
-    "name": "Force Sense",
-    "skill": "Force",
-    "aff": "Will",
-    "fp": "2",
-    "tier": 1,
-    "pts": 5,
-    "book": "Common Force"
-   },
-   {
-    "name": "Force Stealth",
-    "skill": "Force",
-    "aff": "DX",
-    "fp": "2",
-    "tier": 1,
-    "pts": 5,
-    "book": "Common Force"
-   },
-   {
-    "name": "Veil of the Quiet Self",
-    "skill": "Force",
-    "aff": "Will",
-    "fp": "2",
-    "tier": 1,
-    "pts": 5,
-    "book": "Common Force"
-   },
-   {
-    "name": "Visions of the Branch",
-    "skill": "Force",
-    "aff": "IQ",
-    "fp": "5",
-    "tier": 3,
-    "pts": 20,
-    "book": "Minor Traditions"
-   },
-   {
-    "name": "Flash of Warning",
-    "skill": "Force",
-    "aff": "Per",
-    "fp": "2",
-    "tier": 1,
-    "pts": 5,
-    "book": "Minor Traditions"
-   },
-   {
-    "name": "Walk the Unwritten",
-    "skill": "Force",
-    "aff": "Will",
-    "fp": "10",
-    "tier": 5,
-    "pts": 60,
-    "book": "Minor Traditions"
-   }
-  ],
-  "books": {
-   "Common Force": true,
-   "Minor Traditions": true
-  },
-  "bookTiers": {
-   "Common Force": 3
-  },
-  "tradition": "",
-  "darkSurgeLog": [],
-  "activeBook": "Minor Traditions",
-  "training": {
-   "Common Force": {
-    "tier": 1,
-    "hours": 0,
-    "regimen": "Open Hours",
-    "mentor": "",
-    "log": []
-   },
-   "Minor Traditions": {
-    "tier": 1,
-    "hours": 0,
-    "regimen": "Open Hours",
-    "mentor": "",
-    "log": []
-   }
-  },
-  "viewBook": "Common Force",
-  "mtTrad": "Iktotchi"
- },
- "conditions": {},
- "weight": "110",
- "forms": [
-  {
-   "name": "Form IX: Saberstaff",
-   "tier": 2,
-   "active": true
-  },
-  {
-   "name": "Form I: Shii-Cho",
-   "tier": 1,
-   "active": false
-  }
- ],
- "study": [],
- "sm": 1,
- "techniques": [
-  {
-   "name": "Saber Throw",
-   "active": false
-  },
-  {
-   "name": "Saber Bind",
-   "active": false
-  },
-  {
-   "name": "Saber Bash",
-   "active": false
-  },
-  {
-   "name": "Bolt Deflection",
-   "active": false
-  }
- ],
- "notes": "Imported from Truman_SW.xlsm.\nTrait details from source: Social Stigma (subjugated) = force user; Social Stigma (minority group) / Fanaticism = iktotchi (telepathy & strong); Code of Honor (high) = 'grey code'.\nDefenses (source): Dodge 14, Parry 22 (Force Sword), Parry 22 (Staff), Parry 18 (Brawling), DR 3.\nSource point totals (ignored on import): 833 spent, attrs 537, advantages 110, disadvantages -85, skills 271.\n\nINVENTORY:\n15 Standard stems\n15 Military stims\n\nSHIP:\n48 minutes stealth\n\n6 proton torpedos",
  "_meta": {
   "savedAt": "2026-06-14T03:30:58.958Z",
   "savedBy": "Csuman"
  },
- "languages2": [],
- "trainRate": 200,
- "homeworld": "",
- "customDB": {
-  "weapons": [],
-  "armour": [],
-  "shields": [
-   {
-    "name": "Personal shield",
-    "dr": "50",
-    "vs": "both",
-    "cost": 0
-   }
-  ],
-  "explosives": [],
-  "gear": [],
-  "skills": [],
-  "species": [],
-  "forcePowers": [],
-  "shipParts": [],
-  "droidParts": [],
-  "cyber": []
- },
- "statusLevel": 5,
- "skills": [
-  {
-   "name": "Acrobatics",
-   "pts": 16,
-   "attr": "DX",
-   "diff": "H"
-  },
-  {
-   "name": "Astrogation (Hyperspace Navigation)",
-   "pts": 16,
-   "attr": "IQ",
-   "diff": "A",
-   "spec": ""
-  },
-  {
-   "name": "Blasters",
-   "pts": 8,
-   "attr": "DX",
-   "diff": "E",
-   "spec": "Pistol"
-  },
-  {
-   "name": "Brawling",
-   "pts": 8,
-   "attr": "DX",
-   "diff": "E"
-  },
-  {
-   "name": "Breath Control",
-   "pts": 1,
-   "attr": "HT",
-   "diff": "H",
-   "spec": ""
-  },
-  {
-   "name": "Climbing",
-   "pts": 4,
-   "attr": "DX",
-   "diff": "A"
-  },
-  {
-   "name": "Dancing",
-   "pts": 4,
-   "attr": "DX",
-   "diff": "A"
-  },
-  {
-   "name": "Fast-Draw",
-   "pts": 8,
-   "attr": "DX",
-   "diff": "E"
-  },
-  {
-   "name": "Fast-Talk",
-   "pts": 4,
-   "attr": "IQ",
-   "diff": "A"
-  },
-  {
-   "name": "Gambling",
-   "pts": 8,
-   "attr": "IQ",
-   "diff": "A"
-  },
-  {
-   "name": "Gunner",
-   "pts": 4,
-   "attr": "DX",
-   "diff": "E",
-   "spec": "Beams"
-  },
-  {
-   "name": "Intimidation",
-   "pts": 4,
-   "attr": "Will",
-   "diff": "A"
-  },
-  {
-   "name": "Ion Pistol",
-   "pts": 1,
-   "attr": "DX",
-   "diff": "A",
-   "spec": ""
-  },
-  {
-   "name": "Lightsaber",
-   "pts": 32,
-   "attr": "DX",
-   "diff": "VH",
-   "spec": ""
-  },
-  {
-   "name": "Mechanic",
-   "pts": 8,
-   "attr": "IQ",
-   "diff": "A",
-   "spec": "Walker / Locomotion"
-  },
-  {
-   "name": "Meditation",
-   "pts": 1,
-   "attr": "DX",
-   "diff": "H",
-   "spec": ""
-  },
-  {
-   "name": "Merchant",
-   "pts": 12,
-   "attr": "IQ",
-   "diff": "A"
-  },
-  {
-   "name": "Mind Block",
-   "pts": 12,
-   "attr": "Will",
-   "diff": "A"
-  },
-  {
-   "name": "Persuade",
-   "pts": 16,
-   "attr": "Will",
-   "diff": "H"
-  },
-  {
-   "name": "Piloting",
-   "pts": 16,
-   "attr": "DX",
-   "diff": "A",
-   "spec": "Starfighter"
-  },
-  {
-   "name": "Search",
-   "pts": 8,
-   "attr": "Per",
-   "diff": "A"
-  },
-  {
-   "name": "Smuggling",
-   "pts": 4,
-   "attr": "IQ",
-   "diff": "A"
-  },
-  {
-   "name": "Soldier",
-   "pts": 12,
-   "attr": "IQ",
-   "diff": "A",
-   "spec": "Special Ops"
-  },
-  {
-   "name": "Spacer",
-   "pts": 12,
-   "attr": "IQ",
-   "diff": "E",
-   "spec": ""
-  },
-  {
-   "name": "Staff",
-   "pts": 24,
-   "attr": "DX",
-   "diff": "A",
-   "spec": ""
-  },
-  {
-   "name": "Strategy",
-   "pts": 1,
-   "attr": "IQ",
-   "diff": "H"
-  },
-  {
-   "name": "Streetwise",
-   "pts": 4,
-   "attr": "IQ",
-   "diff": "A"
-  },
-  {
-   "name": "Submarine",
-   "pts": 1,
-   "attr": "DX",
-   "diff": "A",
-   "spec": ""
-  },
-  {
-   "name": "Submersible Piloting",
-   "pts": 1,
-   "attr": "DX",
-   "diff": "A",
-   "spec": ""
-  },
-  {
-   "name": "Teaching",
-   "pts": 16,
-   "attr": "IQ",
-   "diff": "A"
-  },
-  {
-   "name": "Throwing",
-   "pts": 4,
-   "attr": "DX",
-   "diff": "A"
-  },
-  {
-   "name": "Urban Survival",
-   "pts": 4,
-   "attr": "Per",
-   "diff": "A"
-  }
- ],
- "layout": {},
- "name": "Truman",
- "react": "",
- "explosives": [],
+ "age": "56",
+ "appearance": "Average",
  "armour": [
   {
-   "name": "Iktotchi stormguard plate",
    "_cat": "Iktotchi",
    "cover": [
     "skull",
@@ -461,199 +27,281 @@
    ],
    "mods": [
     {
+     "cost": 6200,
      "label": "Vacuum-seal underlay",
+     "note": "10 minutes hard-vacuum survival; requires a sealed helmet system.",
+     "prereq": "Sealed helmet/visor fitted",
      "preset": "Vacuum-seal underlay",
      "slotLock": "underlay",
      "tier": "mil",
-     "note": "10 minutes hard-vacuum survival; requires a sealed helmet system.",
-     "wt": 2,
-     "cost": 6200,
-     "prereq": "Sealed helmet/visor fitted"
+     "wt": 2
     },
     {
+     "cost": 2600,
      "label": "Sealed breather helm",
+     "note": "Filters toxins/gas (+3 HT vs inhaled); 30 min internal air.",
      "preset": "Sealed breather helm",
      "slotLock": "visor",
      "tier": "pol",
-     "note": "Filters toxins/gas (+3 HT vs inhaled); 30 min internal air.",
-     "wt": 0.8,
-     "cost": 2600
+     "wt": 0.8
     }
    ],
+   "name": "Iktotchi stormguard plate",
    "ovr": {
     "ddVs": "all"
    }
   }
  ],
- "droids": [],
- "player": "Csuman",
- "shields": [
-  {
-   "name": "Personal shield",
-   "equipped": false,
-   "_cat": "Dual-phase (both)",
-   "_bought": false,
-   "_type": ""
-  }
- ],
+ "attr": {
+  "DX": 320,
+  "HT": 40,
+  "IQ": 20,
+  "ST": 60
+ },
+ "bio": "",
  "builder": {
   "droid": {
-   "parts": {},
+   "deg": "5th",
    "name": "My Droid",
-   "deg": "5th"
+   "parts": {}
   },
   "ship": {
-   "parts": {},
    "name": "My Custom Vessel",
+   "parts": {},
    "role": ""
   }
  },
- "bio": "",
- "languages": "",
- "wealthLevel": "Wealthy",
- "attr": {
-  "ST": 60,
-  "DX": 320,
-  "IQ": 20,
-  "HT": 40
+ "combat": {
+  "charges": [],
+  "concentrations": [],
+  "fp": null,
+  "hp": null,
+  "inits": [],
+  "log": [],
+  "statuses": [],
+  "turn": 0,
+  "wounds": {
+   "Face": 0,
+   "Groin": 0,
+   "Left Arm": 0,
+   "Left Foot": 0,
+   "Left Hand": 0,
+   "Left Leg": 0,
+   "Neck": 0,
+   "Right Arm": 0,
+   "Right Foot": 0,
+   "Right Hand": 0,
+   "Right Leg": 0,
+   "Skull": 0,
+   "Torso": 0,
+   "Vitals": 0
+  }
  },
- "ptTarget": 1179,
  "concept": "",
- "hand": "Ambidextrous",
+ "conditions": {},
+ "creditLog": [],
  "credits": 595260,
- "xpEarned": 192,
- "sec": {
-  "HP": 40,
-  "Will": 10,
-  "Per": 5,
-  "FP": 42,
-  "Speed": 0,
-  "Move": 0
+ "customDB": {
+  "armour": [],
+  "cyber": [],
+  "droidParts": [],
+  "explosives": [],
+  "forcePowers": [],
+  "gear": [],
+  "shields": [
+   {
+    "cost": 0,
+    "dr": "50",
+    "name": "Personal shield",
+    "vs": "both"
+   }
+  ],
+  "shipParts": [],
+  "skills": [],
+  "species": [],
+  "weapons": []
  },
- "traits": [
+ "cyber": [],
+ "droids": [],
+ "explosives": [],
+ "force": {
+  "activeBook": "Minor Traditions",
+  "bonded": false,
+  "bookTiers": {
+   "Common Force": 3
+  },
+  "books": {
+   "Common Force": true,
+   "Minor Traditions": true
+  },
+  "channeling": false,
+  "conflict": 0,
+  "darkSurgeLog": [],
+  "morality": 50,
+  "mtTrad": "Iktotchi",
+  "powers": [
+   {
+    "aff": "DX",
+    "book": "Common Force",
+    "fp": "1",
+    "name": "Force Balance Walk",
+    "pts": 5,
+    "skill": "Force",
+    "tier": 1
+   },
+   {
+    "aff": "ST",
+    "book": "Common Force",
+    "fp": "1",
+    "name": "Force Brace",
+    "pts": 5,
+    "skill": "Force",
+    "tier": 1
+   },
+   {
+    "aff": "Will",
+    "book": "Common Force",
+    "fp": "2",
+    "name": "Force Echo",
+    "pts": 5,
+    "skill": "Force",
+    "tier": 1
+   },
+   {
+    "aff": "Will",
+    "book": "Common Force",
+    "fp": "1",
+    "name": "Force Focus",
+    "pts": 5,
+    "skill": "Force",
+    "tier": 1
+   },
+   {
+    "aff": "DX",
+    "book": "Common Force",
+    "fp": "1",
+    "name": "Force Leap",
+    "pts": 5,
+    "skill": "Force",
+    "tier": 1
+   },
+   {
+    "aff": "Will",
+    "book": "Common Force",
+    "fp": "2",
+    "name": "Force Object Sense",
+    "pts": 5,
+    "skill": "Force",
+    "tier": 1
+   },
+   {
+    "aff": "ST",
+    "book": "Common Force",
+    "fp": "1",
+    "name": "Force Pull",
+    "pts": 5,
+    "skill": "Force",
+    "tier": 1
+   },
+   {
+    "aff": "ST",
+    "book": "Common Force",
+    "fp": "1",
+    "name": "Force Push",
+    "pts": 5,
+    "skill": "Force",
+    "tier": 1
+   },
+   {
+    "aff": "Will",
+    "book": "Common Force",
+    "fp": "2",
+    "name": "Force Sense",
+    "pts": 5,
+    "skill": "Force",
+    "tier": 1
+   },
+   {
+    "aff": "DX",
+    "book": "Common Force",
+    "fp": "2",
+    "name": "Force Stealth",
+    "pts": 5,
+    "skill": "Force",
+    "tier": 1
+   },
+   {
+    "aff": "Will",
+    "book": "Common Force",
+    "fp": "2",
+    "name": "Veil of the Quiet Self",
+    "pts": 5,
+    "skill": "Force",
+    "tier": 1
+   },
+   {
+    "aff": "IQ",
+    "book": "Minor Traditions",
+    "fp": "5",
+    "name": "Visions of the Branch",
+    "pts": 20,
+    "skill": "Force",
+    "tier": 3
+   },
+   {
+    "aff": "Per",
+    "book": "Minor Traditions",
+    "fp": "2",
+    "name": "Flash of Warning",
+    "pts": 5,
+    "skill": "Force",
+    "tier": 1
+   },
+   {
+    "aff": "Will",
+    "book": "Minor Traditions",
+    "fp": "10",
+    "name": "Walk the Unwritten",
+    "pts": 60,
+    "skill": "Force",
+    "tier": 5
+   }
+  ],
+  "primary": "DX",
+  "saberPoints": 0,
+  "tradition": "",
+  "training": {
+   "Common Force": {
+    "hours": 0,
+    "log": [],
+    "mentor": "",
+    "regimen": "Open Hours",
+    "tier": 1
+   },
+   "Minor Traditions": {
+    "hours": 0,
+    "log": [],
+    "mentor": "",
+    "regimen": "Open Hours",
+    "tier": 1
+   }
+  },
+  "viewBook": "Common Force"
+ },
+ "forceStudy": [],
+ "forms": [
   {
-   "name": "Combat Reflexes",
-   "type": "advantage",
-   "levels": 1,
-   "enh": [],
-   "lim": [],
-   "varCost": 0,
-   "_mods": false
+   "active": true,
+   "name": "Form IX: Saberstaff",
+   "tier": 2
   },
   {
-   "name": "High Pain Threshold",
-   "type": "advantage",
-   "levels": 1,
-   "enh": [],
-   "lim": [],
-   "varCost": 0
-  },
-  {
-   "name": "Very Fit",
-   "type": "advantage",
-   "levels": 1,
-   "enh": [],
-   "lim": [],
-   "varCost": 0
-  },
-  {
-   "name": "Ambidexterity",
-   "type": "advantage",
-   "levels": 1,
-   "enh": [],
-   "lim": [],
-   "varCost": 0
-  },
-  {
-   "name": "Precognition",
-   "type": "advantage",
-   "levels": 1,
-   "enh": [],
-   "lim": [],
-   "varCost": 0
-  },
-  {
-   "name": "Damage Resistance_Normal",
-   "type": "advantage",
-   "levels": 3,
-   "enh": [],
-   "lim": [],
-   "varCost": 0
-  },
-  {
-   "name": "Extra Attack",
-   "type": "advantage",
-   "levels": 1,
-   "enh": [],
-   "lim": [],
-   "varCost": 0
-  },
-  {
-   "name": "Ham-Fisted 2",
-   "type": "disadvantage",
-   "levels": 1,
-   "enh": [],
-   "lim": [],
-   "varCost": 0
-  },
-  {
-   "name": "Incurious",
-   "type": "disadvantage",
-   "levels": 1,
-   "enh": [],
-   "lim": [],
-   "varCost": 0
-  },
-  {
-   "name": "Social Stigma (subjugated)",
-   "type": "disadvantage",
-   "levels": 1,
-   "enh": [],
-   "lim": [],
-   "varCost": 0
-  },
-  {
-   "name": "Social Stigma (minority group)",
-   "type": "disadvantage",
-   "levels": 1,
-   "enh": [],
-   "lim": [],
-   "varCost": 0
-  },
-  {
-   "name": "Stubbornness",
-   "type": "disadvantage",
-   "levels": 1,
-   "enh": [],
-   "lim": [],
-   "varCost": 0
-  },
-  {
-   "name": "Fanaticism",
-   "type": "disadvantage",
-   "levels": 1,
-   "enh": [],
-   "lim": [],
-   "varCost": 0
-  },
-  {
-   "name": "Trained By A Master",
-   "type": "Advantage",
-   "levels": 1,
-   "enh": [],
-   "lim": [],
-   "varCost": 0
-  },
-  {
-   "name": "Weapon Master (Single Wpn)",
-   "type": "Advantage",
-   "levels": 1,
-   "enh": [],
-   "lim": [],
-   "varCost": 0
+   "active": false,
+   "name": "Form I: Shii-Cho",
+   "tier": 1
   }
  ],
- "height": "1.9",
+ "fright": "",
  "gear": [
   {
    "name": "Military med pack",
@@ -668,168 +316,463 @@
    "qty": 1
   }
  ],
- "trainHoursAvail": 200,
- "creditLog": [],
- "weapons": [
+ "gender": "Male",
+ "gm": "some loser",
+ "hand": "Ambidextrous",
+ "height": "1.9",
+ "homeworld": "",
+ "inventory": [
   {
-   "name": "Standard lightsaber",
-   "cls": "Melee",
-   "_cat": "Jedi Order",
+   "_bagId": "bagcclu5j0",
+   "_bought": false,
+   "_cat": "Czerka Corporation",
+   "_type": "Storage",
+   "kind": "gear",
+   "name": "Czerka shipping crate (portable)",
+   "qty": 1,
+   "stored": true
+  },
+  {
+   "_bought": false,
+   "_cat": "BlasTech",
+   "_type": "",
+   "cls": "Ranged",
+   "kind": "weapons",
+   "name": "Blaster pistol"
+  },
+  {
+   "_cat": "BlasTech",
+   "cls": "Ranged",
+   "kind": "weapons",
+   "material": 0,
    "mods": [
     {
-     "label": "Dual-grip hilt (saberstaff)",
-     "preset": "Dual-grip hilt (saberstaff)",
-     "slotLock": "grip",
-     "tier": "mil",
-     "note": "Two-bladed double saber: 2 attacks per turn at -2 each; requires Two-Handed style.",
-     "wt": 0.5,
-     "cost": 4200,
-     "prereq": "Saberstaff form training (Doc VI)"
+     "label": "",
+     "note": ""
     }
-   ]
-  },
-  {
-   "name": "Electrostaff",
-   "cls": "Melee",
-   "_bought": false,
-   "_cat": "Independent / Civilian",
-   "_type": ""
+   ],
+   "name": "Ion pistol",
+   "quality": 0
   }
  ],
+ "languages": "",
+ "languages2": [],
+ "layout": {},
+ "manualInv": [],
+ "name": "Truman",
+ "notes": "Imported from Truman_SW.xlsm.\nTrait details from source: Social Stigma (subjugated) = force user; Social Stigma (minority group) / Fanaticism = iktotchi (telepathy & strong); Code of Honor (high) = 'grey code'.\nDefenses (source): Dodge 14, Parry 22 (Force Sword), Parry 22 (Staff), Parry 18 (Brawling), DR 3.\nSource point totals (ignored on import): 833 spent, attrs 537, advantages 110, disadvantages -85, skills 271.\n\nINVENTORY:\n15 Standard stems\n15 Military stims\n\nSHIP:\n48 minutes stealth\n\n6 proton torpedos",
+ "player": "Csuman",
+ "ptTarget": 1179,
+ "rank": "adjudicator",
+ "react": "",
+ "reputation": "",
+ "sec": {
+  "FP": 42,
+  "HP": 40,
+  "Move": 0,
+  "Per": 5,
+  "Speed": 0,
+  "Will": 10
+ },
+ "shields": [
+  {
+   "_bought": false,
+   "_cat": "Dual-phase (both)",
+   "_type": "",
+   "equipped": false,
+   "name": "Personal shield"
+  }
+ ],
+ "skills": [
+  {
+   "attr": "DX",
+   "diff": "H",
+   "name": "Acrobatics",
+   "pts": 16
+  },
+  {
+   "attr": "IQ",
+   "diff": "A",
+   "name": "Astrogation (Hyperspace Navigation)",
+   "pts": 16,
+   "spec": ""
+  },
+  {
+   "attr": "DX",
+   "diff": "E",
+   "name": "Blasters",
+   "pts": 8,
+   "spec": "Pistol"
+  },
+  {
+   "attr": "DX",
+   "diff": "E",
+   "name": "Brawling",
+   "pts": 8
+  },
+  {
+   "attr": "HT",
+   "diff": "H",
+   "name": "Breath Control",
+   "pts": 1,
+   "spec": ""
+  },
+  {
+   "attr": "DX",
+   "diff": "A",
+   "name": "Climbing",
+   "pts": 4
+  },
+  {
+   "attr": "DX",
+   "diff": "A",
+   "name": "Dancing",
+   "pts": 4
+  },
+  {
+   "attr": "DX",
+   "diff": "E",
+   "name": "Fast-Draw",
+   "pts": 8
+  },
+  {
+   "attr": "IQ",
+   "diff": "A",
+   "name": "Fast-Talk",
+   "pts": 4
+  },
+  {
+   "attr": "IQ",
+   "diff": "A",
+   "name": "Gambling",
+   "pts": 8
+  },
+  {
+   "attr": "DX",
+   "diff": "E",
+   "name": "Gunner",
+   "pts": 4,
+   "spec": "Beams"
+  },
+  {
+   "attr": "Will",
+   "diff": "A",
+   "name": "Intimidation",
+   "pts": 4
+  },
+  {
+   "attr": "DX",
+   "diff": "A",
+   "name": "Ion Pistol",
+   "pts": 1,
+   "spec": ""
+  },
+  {
+   "attr": "DX",
+   "diff": "VH",
+   "name": "Lightsaber",
+   "pts": 32,
+   "spec": ""
+  },
+  {
+   "attr": "IQ",
+   "diff": "A",
+   "name": "Mechanic",
+   "pts": 8,
+   "spec": "Walker / Locomotion"
+  },
+  {
+   "attr": "DX",
+   "diff": "H",
+   "name": "Meditation",
+   "pts": 1,
+   "spec": ""
+  },
+  {
+   "attr": "IQ",
+   "diff": "A",
+   "name": "Merchant",
+   "pts": 12
+  },
+  {
+   "attr": "Will",
+   "diff": "A",
+   "name": "Mind Block",
+   "pts": 12
+  },
+  {
+   "attr": "Will",
+   "diff": "H",
+   "name": "Persuade",
+   "pts": 16
+  },
+  {
+   "attr": "DX",
+   "diff": "A",
+   "name": "Piloting",
+   "pts": 16,
+   "spec": "Starfighter"
+  },
+  {
+   "attr": "Per",
+   "diff": "A",
+   "name": "Search",
+   "pts": 8
+  },
+  {
+   "attr": "IQ",
+   "diff": "A",
+   "name": "Smuggling",
+   "pts": 4
+  },
+  {
+   "attr": "IQ",
+   "diff": "A",
+   "name": "Soldier",
+   "pts": 12,
+   "spec": "Special Ops"
+  },
+  {
+   "attr": "IQ",
+   "diff": "E",
+   "name": "Spacer",
+   "pts": 12,
+   "spec": ""
+  },
+  {
+   "attr": "DX",
+   "diff": "A",
+   "name": "Staff",
+   "pts": 24,
+   "spec": ""
+  },
+  {
+   "attr": "IQ",
+   "diff": "H",
+   "name": "Strategy",
+   "pts": 1
+  },
+  {
+   "attr": "IQ",
+   "diff": "A",
+   "name": "Streetwise",
+   "pts": 4
+  },
+  {
+   "attr": "DX",
+   "diff": "A",
+   "name": "Submarine",
+   "pts": 1,
+   "spec": ""
+  },
+  {
+   "attr": "DX",
+   "diff": "A",
+   "name": "Submersible Piloting",
+   "pts": 1,
+   "spec": ""
+  },
+  {
+   "attr": "IQ",
+   "diff": "A",
+   "name": "Teaching",
+   "pts": 16
+  },
+  {
+   "attr": "DX",
+   "diff": "A",
+   "name": "Throwing",
+   "pts": 4
+  },
+  {
+   "attr": "Per",
+   "diff": "A",
+   "name": "Urban Survival",
+   "pts": 4
+  }
+ ],
+ "sm": 1,
+ "species": "Iktotchi",
  "stances": [
   {
-   "name": "Iktotchi Foresight Guard",
-   "active": false
+   "active": false,
+   "name": "Iktotchi Foresight Guard"
   },
   {
-   "name": "Iktotchi Windreader’s Aim",
-   "active": false
+   "active": false,
+   "name": "Iktotchi Windreader’s Aim"
   },
   {
-   "name": "Judicial Takedown",
-   "active": false
+   "active": false,
+   "name": "Judicial Takedown"
   }
  ],
- "gender": "Male",
- "rank": "adjudicator",
+ "statusLevel": 5,
+ "study": [],
+ "techniques": [
+  {
+   "active": false,
+   "name": "Saber Throw"
+  },
+  {
+   "active": false,
+   "name": "Saber Bind"
+  },
+  {
+   "active": false,
+   "name": "Saber Bash"
+  },
+  {
+   "active": false,
+   "name": "Bolt Deflection"
+  }
+ ],
  "tl": 10,
- "species": "Iktotchi",
+ "trainHoursAvail": 200,
+ "trainRate": 200,
+ "traits": [
+  {
+   "_mods": false,
+   "enh": [],
+   "levels": 1,
+   "lim": [],
+   "name": "Combat Reflexes",
+   "type": "advantage",
+   "varCost": 0
+  },
+  {
+   "enh": [],
+   "levels": 1,
+   "lim": [],
+   "name": "High Pain Threshold",
+   "type": "advantage",
+   "varCost": 0
+  },
+  {
+   "enh": [],
+   "levels": 1,
+   "lim": [],
+   "name": "Very Fit",
+   "type": "advantage",
+   "varCost": 0
+  },
+  {
+   "enh": [],
+   "levels": 1,
+   "lim": [],
+   "name": "Ambidexterity",
+   "type": "advantage",
+   "varCost": 0
+  },
+  {
+   "enh": [],
+   "levels": 1,
+   "lim": [],
+   "name": "Precognition",
+   "type": "advantage",
+   "varCost": 0
+  },
+  {
+   "enh": [],
+   "levels": 3,
+   "lim": [],
+   "name": "Damage Resistance_Normal",
+   "type": "advantage",
+   "varCost": 0
+  },
+  {
+   "enh": [],
+   "levels": 1,
+   "lim": [],
+   "name": "Extra Attack",
+   "type": "advantage",
+   "varCost": 0
+  },
+  {
+   "enh": [],
+   "levels": 1,
+   "lim": [],
+   "name": "Ham-Fisted 2",
+   "type": "disadvantage",
+   "varCost": 0
+  },
+  {
+   "enh": [],
+   "levels": 1,
+   "lim": [],
+   "name": "Incurious",
+   "type": "disadvantage",
+   "varCost": 0
+  },
+  {
+   "enh": [],
+   "levels": 1,
+   "lim": [],
+   "name": "Social Stigma (subjugated)",
+   "type": "disadvantage",
+   "varCost": 0
+  },
+  {
+   "enh": [],
+   "levels": 1,
+   "lim": [],
+   "name": "Social Stigma (minority group)",
+   "type": "disadvantage",
+   "varCost": 0
+  },
+  {
+   "enh": [],
+   "levels": 1,
+   "lim": [],
+   "name": "Stubbornness",
+   "type": "disadvantage",
+   "varCost": 0
+  },
+  {
+   "enh": [],
+   "levels": 1,
+   "lim": [],
+   "name": "Fanaticism",
+   "type": "disadvantage",
+   "varCost": 0
+  },
+  {
+   "enh": [],
+   "levels": 1,
+   "lim": [],
+   "name": "Trained By A Master",
+   "type": "Advantage",
+   "varCost": 0
+  },
+  {
+   "enh": [],
+   "levels": 1,
+   "lim": [],
+   "name": "Weapon Master (Single Wpn)",
+   "type": "Advantage",
+   "varCost": 0
+  }
+ ],
  "vehicles": [
   {
-   "name": "Ebon Hawk-class light freighter",
    "cat": "Light Freighter",
-   "hullDR": "16",
-   "shieldDR": "350",
-   "shieldNow": 350,
-   "hpMax": 2400,
-   "hpNow": 2400,
-   "move": 34,
-   "hd": "1",
-   "weapons": "2× quad laser turrets; concussion missile launcher",
-   "crew": "2 + 4",
-   "fuel": "80/12",
+   "core": {
+    "Armour": "Durasteel Plating",
+    "Hull": "Light Freighter frame",
+    "Reactor": "Heavy Fusion Reactor",
+    "Shields": "Standard Deflector Array",
+    "Sublight": "Koensayr R-300 Drive"
+   },
    "cost": "1,000,000",
-   "lc": "Res",
-   "notes": "The famed Dynamic-class light freighter of the era — fast, sturdy, and endlessly modified. Dual quad-laser turrets and a concealed concussion launcher ride under a courier’s manifest, and an exceptional hyperdrive outruns most pursuit. The smuggler’s dream hull.",
-   "parts": [
-    {
-     "cat": "Hull",
-     "name": "Hull plating",
-     "status": "ok",
-     "hpPct": 100
-    },
-    {
-     "cat": "Sublight",
-     "name": "Sublight engines",
-     "status": "ok",
-     "hpPct": 100
-    },
-    {
-     "cat": "Reactor",
-     "name": "Power plant",
-     "status": "ok",
-     "hpPct": 100
-    },
-    {
-     "cat": "Shields",
-     "name": "Shield generator",
-     "status": "ok",
-     "hpPct": 100
-    },
-    {
-     "cat": "Sensors",
-     "name": "Sensor array",
-     "status": "ok",
-     "hpPct": 100
-    },
-    {
-     "cat": "Targeting",
-     "name": "Targeting computer",
-     "status": "ok",
-     "hpPct": 100
-    },
-    {
-     "cat": "Life Support",
-     "name": "Life-support system",
-     "status": "ok",
-     "hpPct": 100
-    },
-    {
-     "cat": "Astrogation",
-     "name": "Navicomputer",
-     "status": "ok",
-     "hpPct": 100
-    },
-    {
-     "cat": "Hyperdrive",
-     "name": "Hyperdrive motivator",
-     "status": "ok",
-     "hpPct": 100
-    },
-    {
-     "cat": "Crew",
-     "name": "Crew quarters",
-     "status": "ok",
-     "hpPct": 100
-    },
-    {
-     "cat": "Cargo",
-     "name": "Cargo hold",
-     "status": "ok",
-     "hpPct": 100
-    },
-    {
-     "cat": "Weapon",
-     "name": "Defensive turret",
-     "status": "ok",
-     "hpPct": 100
-    }
-   ],
-   "rfNow": 80,
+   "crew": "2 + 4",
+   "custom": false,
+   "fuel": "80/12",
+   "hd": "1",
    "hfNow": 12,
-   "mounts": [
-    {
-     "label": "Quad laser turrets",
-     "w": "Quad laser cannon",
-     "n": 2,
-     "shots": null,
-     "shotsNow": null
-    },
-    {
-     "label": "Concussion missile launcher",
-     "w": "Neuralyzer array",
-     "n": 1,
-     "shots": null,
-     "shotsNow": null
-    },
-    {
-     "label": "Heavy",
-     "w": "Heavy laser cannon",
-     "n": 1,
-     "shots": null,
-     "shotsNow": null
-    }
-   ],
+   "hpMax": 1100,
+   "hpNow": 1100,
+   "hullDR": "16",
+   "lc": "Res",
    "modules": [
     {
      "m": "Stygium cloaking device"
@@ -859,82 +802,139 @@
      "m": "Military ECM suite"
     }
    ],
-   "core": {
-    "Reactor": "Verpine Microfusion Core",
-    "Sublight": "Heavy Cluster Ion Bank",
-    "Shields": "Standard Deflector Array",
-    "Armour": "Durasteel Plating",
-    "Hull": "Medium Freighter frame"
-   },
-   "custom": false
+   "mounts": [
+    {
+     "label": "Quad laser turrets",
+     "n": 2,
+     "shots": null,
+     "shotsNow": null,
+     "w": "Quad laser cannon"
+    },
+    {
+     "label": "Concussion missile launcher",
+     "n": 1,
+     "shots": null,
+     "shotsNow": null,
+     "w": "Neuralyzer array"
+    },
+    {
+     "label": "Heavy",
+     "n": 1,
+     "shots": null,
+     "shotsNow": null,
+     "w": "Heavy laser cannon"
+    }
+   ],
+   "move": 34,
+   "name": "Ebon Hawk-class light freighter",
+   "notes": "The famed Dynamic-class light freighter of the era — fast, sturdy, and endlessly modified. Dual quad-laser turrets and a concealed concussion launcher ride under a courier’s manifest, and an exceptional hyperdrive outruns most pursuit. The smuggler’s dream hull.",
+   "parts": [
+    {
+     "cat": "Hull",
+     "hpPct": 100,
+     "name": "Hull plating",
+     "status": "ok"
+    },
+    {
+     "cat": "Sublight",
+     "hpPct": 100,
+     "name": "Sublight engines",
+     "status": "ok"
+    },
+    {
+     "cat": "Reactor",
+     "hpPct": 100,
+     "name": "Power plant",
+     "status": "ok"
+    },
+    {
+     "cat": "Shields",
+     "hpPct": 100,
+     "name": "Shield generator",
+     "status": "ok"
+    },
+    {
+     "cat": "Sensors",
+     "hpPct": 100,
+     "name": "Sensor array",
+     "status": "ok"
+    },
+    {
+     "cat": "Targeting",
+     "hpPct": 100,
+     "name": "Targeting computer",
+     "status": "ok"
+    },
+    {
+     "cat": "Life Support",
+     "hpPct": 100,
+     "name": "Life-support system",
+     "status": "ok"
+    },
+    {
+     "cat": "Astrogation",
+     "hpPct": 100,
+     "name": "Navicomputer",
+     "status": "ok"
+    },
+    {
+     "cat": "Hyperdrive",
+     "hpPct": 100,
+     "name": "Hyperdrive motivator",
+     "status": "ok"
+    },
+    {
+     "cat": "Crew",
+     "hpPct": 100,
+     "name": "Crew quarters",
+     "status": "ok"
+    },
+    {
+     "cat": "Cargo",
+     "hpPct": 100,
+     "name": "Cargo hold",
+     "status": "ok"
+    },
+    {
+     "cat": "Weapon",
+     "hpPct": 100,
+     "name": "Defensive turret",
+     "status": "ok"
+    }
+   ],
+   "rfNow": 80,
+   "shieldDR": "350",
+   "shieldNow": 350,
+   "weapons": "2× quad laser turrets; concussion missile launcher"
   }
  ],
- "forceStudy": [],
- "fright": "",
- "manualInv": [],
- "gm": "some loser",
- "age": "56",
- "appearance": "Average",
- "combat": {
-  "hp": null,
-  "fp": null,
-  "statuses": [],
-  "concentrations": [],
-  "charges": [],
-  "turn": 0,
-  "log": [],
-  "wounds": {
-   "Skull": 0,
-   "Face": 0,
-   "Neck": 0,
-   "Torso": 0,
-   "Vitals": 0,
-   "Groin": 0,
-   "Right Arm": 0,
-   "Left Arm": 0,
-   "Right Hand": 0,
-   "Left Hand": 0,
-   "Right Leg": 0,
-   "Left Leg": 0,
-   "Right Foot": 0,
-   "Left Foot": 0
-  },
-  "inits": []
- },
- "inventory": [
+ "wealthLevel": "Wealthy",
+ "weapons": [
   {
-   "kind": "gear",
-   "name": "Czerka shipping crate (portable)",
-   "qty": 1,
-   "_type": "Storage",
-   "_cat": "Czerka Corporation",
-   "_bought": false,
-   "_bagId": "bagcclu5j0",
-   "stored": true
-  },
-  {
-   "kind": "weapons",
-   "name": "Blaster pistol",
-   "cls": "Ranged",
-   "_bought": false,
-   "_cat": "BlasTech",
-   "_type": ""
-  },
-  {
-   "kind": "weapons",
-   "name": "Ion pistol",
-   "cls": "Ranged",
-   "_cat": "BlasTech",
-   "material": 0,
-   "quality": 0,
+   "_cat": "Jedi Order",
+   "cls": "Melee",
    "mods": [
     {
-     "label": "",
-     "note": ""
+     "cost": 4200,
+     "label": "Dual-grip hilt (saberstaff)",
+     "note": "Two-bladed double saber: 2 attacks per turn at -2 each; requires Two-Handed style.",
+     "prereq": "Saberstaff form training (Doc VI)",
+     "preset": "Dual-grip hilt (saberstaff)",
+     "slotLock": "grip",
+     "tier": "mil",
+     "wt": 0.5
     }
-   ]
+   ],
+   "name": "Standard lightsaber"
+  },
+  {
+   "_bought": false,
+   "_cat": "Independent / Civilian",
+   "_type": "",
+   "cls": "Melee",
+   "name": "Electrostaff"
   }
  ],
- "reputation": "",
- "cyber": []
+ "weight": "110",
+ "xpEarned": 192
 }
