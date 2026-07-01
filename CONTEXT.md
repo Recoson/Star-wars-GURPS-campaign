@@ -933,3 +933,23 @@ STILL TODO (small): 4 parts genuinely lack a sidenav number -> body currently un
   ranged Combinations = 2.9, damage Environmental = 3.9, vehicles Starship Stat Blocks = 6.16, economy Trade banner.
   A few symbol-marked secs (★ Starship Combat etc.) and the 7b/10b -> 7B/10B case normalisation.
 Then: engine-first primer swap, then §-ref conversion (295 "Doc N" refs -> §N.k).
+
+
+### 2026-07-01 (cont.) — Numbering consistency: gap-fills + 7B/10B case normalisation
+
+Follow-up to the 145-division stamping pass. Closed the remaining inconsistencies so the decimal
+numbering is uniform end to end:
+- Filled the 4 unnumbered part-openers: ranged Combinations Reference = 2.9, damage Environmental = 3.9,
+  vehicles Starship Stat Blocks = 6.16 (each stamped on the body; 2.9 and 6.16 also added to the sidenav +
+  main TOC as new <li> rows — 3.9 shares its number with the existing "Environmental Damage Quick Reference"
+  companion section, so no duplicate nav row). economy "Trade & the Galactic Economy" and factions
+  "Who's Who in the Galaxy" are decorative content-intro part banners in otherwise-flat docs — left
+  UNNUMBERED by design (numbering them would shift the established 7B.1-7B.7 / 10B.1-10B.7 sections).
+- Case-normalised the appendix numbers 7b->7B and 10b->10B (45 occurrences: body secnums, sidenav/TOC
+  toc__n labels, AND the factions topic->section <td> reference table) to match the "Document VII · B" /
+  "Document X · B" divider labels.
+secnum count 160 -> 163. check.py green; render-verified economy (7B.0/7B.1, Trade banner unnumbered) and
+factions (10B.0, Who's Who banner unnumbered). Numbering is now complete + consistent across all 10 Documents.
+
+Still pending: engine-first primer swap; §-ref conversion (the ~295 "Doc N"/"Document N" cross-ref links
+still read as words, e.g. "Document X (The Galaxy)" — to become §N.k); optional running-header section indicator.
