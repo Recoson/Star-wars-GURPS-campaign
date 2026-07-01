@@ -1025,3 +1025,17 @@ bonuses unchanged. Flows into attacks + Lightsaber Parry via `weaponSkillLevel`.
 Scope = **Lightsaber skill only** — Tylo's `Staff` skill is his ELECTRO staff, NOT his saberstaff
 (the saberstaff is governed by Lightsaber). Verified node --check + extracted-fn tests 5/5
 (Chatni 38 / Tylo 32 unchanged; sub-cap Will→+10; DX-endless; non-LS bonus preserved).
+
+
+### 2026-07-01 (cont.) — Numbering: body↔nav sync (galaxy + economy)
+
+Earlier body-stamping pass stamped only h1/h2 and SKIPPED h3 sub-sections the sidenav numbers. Sidenav is the
+source of truth (continuous); body just lacked secnums on some h3s. Fixed by stamping the missing h3s to match
+the nav (not renumbering): galaxy 6 war sub-sections (10.3-10.8) -> body continuous 10.0-10.21; economy
+"Manufactured Trade Goods" (7B.5) -> body 7B.0-7B.7. (An earlier attempt wrongly deleted the 7B.5 nav entry as
+"dangling" — it is a real h3; reverted.) .secnum renders on h3 (verified). check.py green.
+
+Still to do (harder): equipment (Weapon Materials is a part physically in the detail half but numbered 7.9 ->
+renumber + nav-entry move; Crack Armour 7.12 unstamped); training (nav has 5.1-5.6 set + a second 5.7-5.11 set
+with numbers in titles, only 5.7-5.11 got stamped); damage (nav's 3.9 points at Quick Ref while Environmental
+part also carries 3.9).
