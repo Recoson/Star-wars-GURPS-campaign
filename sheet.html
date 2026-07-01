@@ -5014,7 +5014,7 @@ function addDroidFromCatalog(name){
 // ─── RENDER: enhanced renderVehicles with Ship Builder ───
 function migrateVehicleStats(){
  (C.vehicles||[]).forEach(v=>{
-  const c=SHIPS_FULL.find(s=>s.name===v.name); if(!c)return;
+  const c=SHIPS_FULL.find(s=>s.name===v.name); if(!c||v.hpLock)return;
   if(String(v.hullDR)!==String(c.hullDR)||String(v.shieldDR)!==String(c.shieldDR)){
    const oldCap=parseInt(v.shieldDR)||0, newCap=parseInt(c.shieldDR)||0;
    const ratio=oldCap?newCap/oldCap:1;
