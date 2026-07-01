@@ -358,6 +358,9 @@ grep -o '<span class="stat-k">Upkeep</span>' "Star Wars the Old Republic GURPS 4
 
 ## 11. IMMEDIATE NEXT STEP
 
+**SHIP-BUILDER: power-model + Ebon Hawk fit-out — IN PROGRESS (claimed 2026-07-01, this session).**
+Batches: (A) fill every core slot incl. Hull/Armour w/o overriding rated DR/HP [1b] + "Fit out" button + load-migration; (B) per-module/weapon on-off toggle pulling draw from the power line + reactor overdrive + fill 420->1200 reactor gap; (C) modules=special bolt-ons, drop redundant Military ECM suite (ECM double-count); (D) stygium cloak rework (small-hull gate, size S ~2 mass, ~150 draw, stygium-crystal countdown timer refuelable, 0 mass) + Neuralyser array module + fit Tylo's Ebon Hawk (truman.json + live Firebase push) w/ ECM+2x chaff+cloak+neuralyser+2 lasers. check.py + jsdom each batch.
+
 **SHIP-BUILDER WORKSTREAM (separate from the Force/RAW work below).** A full vehicle/ship-builder overhaul
 shipped this session — size-first mounts, swivel+location firing arcs, compendium range bands + warhead
 flight, hardpoints-from-hull, free-form per-part mods, a frame-scale part filter, 3 capital frames, and
