@@ -1057,3 +1057,25 @@ Armour's h2 carries a style attr after the id — both must be matched, else the
 Still to do: training (nav has clean 5.1-5.6 set + a second 5.7-5.11 set with numbers baked into titles; only
 5.7-5.11 stamped in body — the 5.1-5.6 nav targets' body headings not yet located); damage (nav 3.9 points at
 Quick Ref while Environmental part also carries 3.9).
+
+### 2026-07-01 (cont.) — Numbering: training, damage, makers (pass complete)
+
+Continued the body<->nav sync across the remaining docs. ALL 13 docs now verified: body monotonic at every
+heading level AND body/nav endpoints match. Two intentional sub-markers left as-is (in body, not nav):
+chargen B.5a (Codes of Honour, a sub-section of B.5 Advantages) and combat 1.8½ — both deliberate.
+
+- training: the 5.1-5.6 sections are part-openers (class "part-opener part-training") whose inner h2 titles
+  had no id and no secnum (why earlier audits missed them); stamped all six. Also normalized the 5.7-5.11
+  sidenav entries from inline "5.7 — Title" to <span class="toc__n"> form (main TOC already used toc__n).
+  Body + sidenav + TOC now uniform 5.1-5.11.
+- damage: the ⑤ Environmental Damage Quick Reference is part of a card series (⑤ Environmental, ⑥ Healing &
+  Medical Reference, ⑦ Damage Calculation Cheat Sheet) that sits after the Playbook part closes; ⑥⑦ have no
+  3.x secnum. Only ⑤ erroneously carried 3.9 (duplicating the real Environmental PART at position 9).
+  Removed ⑤'s 3.9 secnum (now matches ⑥⑦) and repointed the nav's 3.9 entry from the Quick Ref to the actual
+  Environmental part (sec-environmentaldamage-2). Body now 3.0-3.11 monotonic; nav 3.9 links correctly.
+- makers (Skills): all 18 nav-numbered sections (9.1-9.18, "Part I..Part XII" + quickrefs) were unstamped;
+  they use a DIFFERENT heading format — <h2 id="X" class="section-h2"> (id-first, class section-h2 not
+  section-head) with titles "Part I · How Skills Work" while the nav shows "How Skills Work". Stamped all 18
+  by anchoring on class="section-h2". .secnum renders fine on section-h2 (verified). Body now 9.0-9.18.
+
+Numbering-consistency pass DONE across all 13 book-sections.
