@@ -5209,7 +5209,7 @@ function renderVehicles(){ migrateVehicleStats();
    </details>
    ${_pwarn}
    <details style="margin-top:6px"><summary style="font-size:11px;color:var(--cyan);cursor:pointer">core systems &amp; log</summary>
-   <div style="font-size:10px;color:var(--text2);margin:5px 0 3px">Swap a core part to change the ship\u2019s stats and power/mass. Leave a slot on <b>stock</b> to keep the catalogue value.</div>
+   <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;margin:5px 0 3px"><span style="font-size:10px;color:var(--text2)">Every slot shows a concrete part. Hull is the rated frame; swapping in a heavier frame <b>overrides</b> rated HP/DR. \u201cFit out fully\u201d fills the rest with class-matched parts.</span><button onclick="fitOutVehicle(${i})" style="font-size:10px;padding:2px 9px;background:var(--bg3);border:1px solid var(--cyan);border-radius:4px;color:var(--cyan);cursor:pointer;white-space:nowrap">\u2699 Fit out fully</button></div>
    <table class="g" style="margin-top:2px;font-size:10.5px">
     <tr><td class="label" style="width:78px" title="Hull frame \u2014 sets the hardpoint budget (mounts); modify it to add HP / DR / a mount / etc.">Hull</td><td>${coreSel(v,i,'Hull','slots','slots')}${coreModHTML(v,i,'Hull')}</td></tr>
     <tr><td class="label" style="width:78px" title="Reactor \u2014 sets power output">Reactor</td><td>${coreSel(v,i,'Reactor','power','pw')}${coreModHTML(v,i,'Reactor')}</td></tr>
@@ -5838,10 +5838,12 @@ function shipPowerMass(v){
   });
   ['Cargo','Crew'].forEach(function(c){const P=cp(c);if(P)parts.push({name:P.name+' ('+c+')',role:'core',pwr:0,mass:+P.mass||0,cat:c});});
   const _H=cp('Hull');
-  const _hm=_H?(+_H.mass||0):Math.round(cm*MSF.Hull);
+  const _NF=_H?null:nativeHullFrame(v);
+  const _hm=_H?(+_H.mass||0):(_NF?(+_NF.mass||0):Math.round(cm*MSF.Hull));
+  const _hn=_H?_H.name:(_NF?_NF.name+' (rated)':'Hull frame');
   const AR=cp('Armour');
-  parts.push(AR?{name:(_H?_H.name:'Hull')+' + '+AR.name,role:'core',pwr:0,mass:_hm+(+AR.mass||0),cat:'Armour'}
-              :{name:(_H?_H.name:'Hull + armour frame'),role:'core',pwr:0,mass:_hm,cat:'Hull'});
+  parts.push(AR?{name:_hn+' + '+AR.name,role:'core',pwr:0,mass:_hm+(+AR.mass||0),cat:'Armour'}
+              :{name:_hn,role:'core',pwr:0,mass:_hm,cat:'Hull'});
  }
  (shipMounts(v)||[]).forEach(mt=>{const W=mt.w?SHIP_WEAPONS.find(x=>x.name===mt.w):null;if(W){const n=+mt.n||1;parts.push({name:(mt.label||W.name)+(n>1?' ×'+n:''),role:'weapon',pwr:(+W.pwr||0)*n,mass:(+W.mass||0)*n});}});
  (vehicleModules(v)||[]).forEach(md=>{const M=md&&md.m?SHIP_MODULES.find(x=>x.name===md.m):null;if(M)parts.push({name:M.name,role:'module',pwr:(+M.pwr||0),mass:(+M.mass||0)});});
@@ -5924,16 +5926,35 @@ function partFrameBand(p){
  return [0,5];
 }
 function partFitsFrame(p,frameSize){if(!frameSize)return true;const r=FRAME_RANK[frameSize];if(r==null)return true;const b=partFrameBand(p);return r>=b[0]&&r<=b[1];}
+// Native (rated) hull frame for a catalogue/hand-entered ship: names the Hull slot's default state
+// and feeds its real structural mass into power/mass. NOT written to v.core (so it never triggers the
+// frame-scale HP/DR override) - the ship keeps its rated DR/HP.
+function nativeHullFrame(v){
+ const parts=SHIP_PARTS.filter(function(x){return x.cat==='Hull';});if(!parts.length)return null;
+ const byName=function(n){return parts.find(function(x){return x.name===n;});};
+ const s=String((v&&(v.cat||v.hpClassHint||v.class||v.frame||''))||'').toLowerCase();
+ const map=[[/dreadn|battleship|battlecruiser|destroyer|flagship/,'Dreadnought frame'],[/carrier/,'Carrier frame'],[/cruiser/,'Cruiser frame'],[/frigate/,'Light Frigate frame'],[/corvette|patrol/,'Patrol Corvette frame'],[/heavy freighter|bulk|hauler/,'Heavy Freighter frame'],[/medium freighter/,'Medium Freighter frame'],[/freighter|transport|courier|smuggl/,'Light Freighter frame'],[/gunship/,'Gunship frame'],[/shuttle|drop|lander|tender/,'Shuttle frame'],[/bomber/,'Bomber frame'],[/intercept/,'Interceptor frame'],[/heavy fighter/,'Heavy Fighter frame'],[/fighter|starfighter/,'Light Fighter frame'],[/scout|skiff|speeder|swoop|bike/,'Scout Skiff frame']];
+ for(let k=0;k<map.length;k++){if(map[k][0].test(s)){const f=byName(map[k][1]);if(f)return f;}}
+ const E=shipClassEcon(v);const cm=+E.mass||15;let best=parts[0],bd=Infinity;
+ parts.forEach(function(x){const d=Math.abs((+x.mass||0)-cm);if(d<bd){bd=d;best=x;}});
+ return best;
+}
+function fitOutVehicle(i){const v=C.vehicles&&C.vehicles[i];if(!v)return;assignCatalogParts(v);touch();renderVehicles();}
 function coreSel(v,i,cat,statKey,lab){
  const _fs=vehFrameSize(v);
- const opts=SHIP_PARTS.filter(x=>x.cat===cat&&(cat==='Hull'||partFitsFrame(x,_fs)||(v.core&&v.core[cat]===x.name))).map(x=>'<option value="'+esc(x.name)+'"'+(v.core&&v.core[cat]===x.name?' selected':'')+'>'+esc(x.name)+(x[statKey]!=null?' \u00b7 '+x[statKey]+' '+lab:'')+'</option>').join('');
+ const _isHull=cat==='Hull', _isArm=cat==='Armour';
+ const opts=SHIP_PARTS.filter(x=>x.cat===cat&&(_isHull||partFitsFrame(x,_fs)||(v.core&&v.core[cat]===x.name))).map(function(x){const sel=(v.core&&v.core[cat]===x.name)?' selected':'';let lb=esc(x.name);if(_isHull){lb+=' \u00b7 HP '+(x.hp!=null?x.hp:'?')+' DR '+(x.dr!=null?x.dr:'?')+' (overrides rated)';}else if(x[statKey]!=null){lb+=' \u00b7 '+x[statKey]+' '+lab;}return '<option value="'+esc(x.name)+'"'+sel+'>'+lb+'</option>';}).join('');
  const cur=v.core&&v.core[cat]?SHIP_PARTS.find(x=>x.cat===cat&&x.name===v.core[cat]):null;
- const _mm=(cur&&cat!=='Hull'&&_fs&&!partFitsFrame(cur,_fs))?' <span style="color:var(--red);font-size:9px">off-scale for this hull</span>':'';
+ const _mm=(cur&&!_isHull&&_fs&&!partFitsFrame(cur,_fs))?' <span style="color:var(--red);font-size:9px">off-scale for this hull</span>':'';
  const _mk={sensorRng:'sens',cargo:'cargo',pax:'pax'}[statKey];
  const _b=cur&&cur[statKey]!=null?+cur[statKey]:0;
  const _md=_mk?coreModSum(v,_mk):0;
- const tag=_mk?((_b||_md)?(' <span class="dim">\u2192 '+lab+' '+(_b+_md)+'</span>'):' <span class="dim">\u2192 stock</span>'):(cur?(' <span class="dim">\u2192 '+lab+' '+(cur[statKey]!=null?cur[statKey]:'?')+'</span>'):' <span class="dim">\u2192 stock</span>');
- return '<select class="cell" style="width:100%;max-width:240px" onchange="setVehicleCore('+i+',\''+cat+'\',this.value)"><option value="">\u2014 stock \u2014</option>'+opts+'</select>'+tag+_mm;
+ // Default (unassigned) state gets a concrete, named label instead of the word "stock".
+ let dOpt='\u2014 class default \u2014', dTag=' <span class="dim">\u2192 class default</span>';
+ if(_isHull){const NF=nativeHullFrame(v);dOpt=(NF?esc(NF.name):'Rated hull')+' \u00b7 rated';dTag=' <span class="dim">\u2192 '+(NF?esc(NF.name):'rated hull')+' (rated) \u00b7 DR '+vehHullDR(v)+'</span>';}
+ else if(_isArm){dOpt='Bare hull \u00b7 no plating';dTag=' <span class="dim">\u2192 bare hull</span>';}
+ const tag=cur?(_mk?(' <span class="dim">\u2192 '+lab+' '+(_b+_md)+'</span>'):(' <span class="dim">\u2192 '+lab+' '+(cur[statKey]!=null?cur[statKey]:'?')+'</span>')):((_mk&&_md)?(' <span class="dim">\u2192 '+lab+' '+_md+'</span>'):dTag);
+ return '<select class="cell" style="width:100%;max-width:240px" onchange="setVehicleCore('+i+',\''+cat+'\',this.value)"><option value="">'+dOpt+'</option>'+opts+'</select>'+tag+_mm;
 }
 function shipOverloadPenalty(v){
  const E=shipPowerMass(v);
