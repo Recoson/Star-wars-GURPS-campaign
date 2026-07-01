@@ -1,0 +1,173 @@
+{
+ "homeworld": "",
+ "reputation": "",
+ "manualInv": [],
+ "builder": {
+  "ship": {
+   "parts": {},
+   "name": "My Custom Vessel",
+   "role": ""
+  },
+  "droid": {
+   "parts": {},
+   "name": "My Droid",
+   "deg": "5th"
+  }
+ },
+ "cyber": [],
+ "sec": {
+  "HP": 0,
+  "Will": 0,
+  "Per": 0,
+  "FP": 0,
+  "Speed": 0,
+  "Move": 0
+ },
+ "armour": [],
+ "conditions": {},
+ "tl": 10,
+ "shields": [],
+ "inventory": [],
+ "wealthLevel": "Average",
+ "trainHoursTotal": 0,
+ "attr": {
+  "ST": 0,
+  "DX": 0,
+  "IQ": 0,
+  "HT": 0
+ },
+ "skills": [
+  {
+   "name": "",
+   "pts": 1,
+   "attr": "",
+   "diff": ""
+  },
+  {
+   "name": "",
+   "pts": 1,
+   "attr": "",
+   "diff": ""
+  },
+  {
+   "name": "",
+   "pts": 1,
+   "attr": "",
+   "diff": ""
+  },
+  {
+   "name": "",
+   "pts": 1,
+   "attr": "",
+   "diff": ""
+  },
+  {
+   "name": "",
+   "pts": 1,
+   "attr": "",
+   "diff": ""
+  }
+ ],
+ "jetpack": {
+  "pack": "std",
+  "massKg": 0,
+  "burstsUsed": 0,
+  "spareCells": 0,
+  "userPack": false
+ },
+ "notes": "",
+ "forceStudy": [],
+ "vehicles": [],
+ "name": "",
+ "layout": {},
+ "credits": 0,
+ "creditLog": [],
+ "weapons": [],
+ "forms": [],
+ "attrStudy": [],
+ "gm": "",
+ "gear": [],
+ "hand": "Right",
+ "rank": "",
+ "techniques": [],
+ "bio": "",
+ "explosives": [],
+ "traits": [],
+ "concept": "Crystal Phantom",
+ "combat": {
+  "hp": null,
+  "fp": null,
+  "statuses": [],
+  "concentrations": [],
+  "charges": [],
+  "turn": 0,
+  "log": [],
+  "wounds": {
+   "Skull": 0,
+   "Face": 0,
+   "Neck": 0,
+   "Torso": 0,
+   "Vitals": 0,
+   "Groin": 0,
+   "Right Arm": 0,
+   "Left Arm": 0,
+   "Right Hand": 0,
+   "Left Hand": 0,
+   "Right Leg": 0,
+   "Left Leg": 0,
+   "Right Foot": 0,
+   "Left Foot": 0
+  },
+  "inits": []
+ },
+ "study": [],
+ "height": "",
+ "languages2": [],
+ "age": "",
+ "player": "Chatni",
+ "react": "",
+ "weight": "",
+ "force": {
+  "primary": "Will",
+  "bonded": false,
+  "saberPoints": 0,
+  "powers": [],
+  "books": {},
+  "bookTiers": {},
+  "tradition": "",
+  "activeBook": "",
+  "viewBook": "",
+  "mtTrad": "Iktotchi",
+  "holocrons": [],
+  "holoRes": {
+   "frag": 0,
+   "frame": 0,
+   "kyber": 0
+  }
+ },
+ "stances": [],
+ "customDB": {
+  "weapons": [],
+  "armour": [],
+  "shields": [],
+  "explosives": [],
+  "gear": [],
+  "skills": [],
+  "species": [],
+  "forcePowers": [],
+  "shipParts": [],
+  "droidParts": [],
+  "cyber": []
+ },
+ "trainRate": 200,
+ "ptTarget": 350,
+ "droids": [],
+ "languages": "",
+ "fright": "",
+ "species": "Human",
+ "trainHoursAvail": 0,
+ "statusLevel": 0,
+ "appearance": "Average",
+ "sm": 0,
+ "gender": ""
+}

@@ -1,0 +1,1575 @@
+{
+ "customDB": {
+  "weapons": [
+   {
+    "name": "Lightsaber (Ghost-fire crystal)",
+    "cat": "Lightsaber",
+    "cls": "Melee",
+    "fixed": "8d+8",
+    "dtype": "imp+burn",
+    "ad": 5,
+    "reach": "1,2",
+    "parry": "0F",
+    "wt": 0.5,
+    "cost": "build",
+    "notes": "Ghost-fire crystal. Audible: full 8d+8 with sound/light. Silent mode: 6d+6, blade invisible & silent — foes −3 to Parry.",
+    "altProfile": {
+     "label": "Silent / invisible mode",
+     "sw": {
+      "fixed": "6d+6",
+      "dtype": "imp+burn",
+      "ad": 5
+     }
+    }
+   }
+  ],
+  "armour": [],
+  "shields": [],
+  "explosives": [],
+  "gear": [],
+  "skills": [],
+  "species": [],
+  "forcePowers": [],
+  "shipParts": [],
+  "droidParts": [],
+  "cyber": []
+ },
+ "stances": [
+  {
+   "name": "Czerka Security Lockdown",
+   "active": false
+  }
+ ],
+ "skills": [
+  {
+   "name": "Biology",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "H",
+   "spec": "Genetics"
+  },
+  {
+   "name": "Accounting",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "H",
+   "spec": ""
+  },
+  {
+   "name": "Acrobatics",
+   "attr": "DX",
+   "diff": "H",
+   "pts": 12
+  },
+  {
+   "name": "Acting",
+   "attr": "IQ",
+   "diff": "A",
+   "pts": 1
+  },
+  {
+   "name": "Administration",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "A",
+   "spec": ""
+  },
+  {
+   "name": "Astrogation (Hyperspace Navigation)",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "A",
+   "spec": "",
+   "bonus": 0
+  },
+  {
+   "name": "Blasters",
+   "attr": "DX",
+   "diff": "E",
+   "pts": 16,
+   "spec": "Pistol"
+  },
+  {
+   "name": "Blind Fighting",
+   "pts": 1,
+   "attr": "Per",
+   "diff": "VH",
+   "spec": ""
+  },
+  {
+   "name": "Body Language",
+   "attr": "Per",
+   "diff": "A",
+   "pts": 1
+  },
+  {
+   "name": "Brawling",
+   "pts": 1,
+   "attr": "DX",
+   "diff": "E",
+   "spec": ""
+  },
+  {
+   "name": "Brawling",
+   "attr": "DX",
+   "diff": "E",
+   "pts": 1,
+   "bonus": 20
+  },
+  {
+   "name": "Breath Control",
+   "attr": "HT",
+   "diff": "H",
+   "pts": 4
+  },
+  {
+   "name": "Chemistry",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "H",
+   "spec": ""
+  },
+  {
+   "name": "Computer Hacking (Slicing)",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "H",
+   "spec": ""
+  },
+  {
+   "name": "Computer Operation",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "E",
+   "spec": ""
+  },
+  {
+   "name": "Computer Operation",
+   "attr": "IQ",
+   "diff": "E",
+   "pts": 2,
+   "spec": "Droids"
+  },
+  {
+   "name": "Computer Programming",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "H",
+   "spec": ""
+  },
+  {
+   "name": "Computer Programming",
+   "attr": "IQ",
+   "diff": "H",
+   "pts": 1,
+   "spec": "Shields"
+  },
+  {
+   "name": "Counterfeiting",
+   "attr": "IQ",
+   "diff": "H",
+   "pts": 2
+  },
+  {
+   "name": "Dancing",
+   "pts": 1,
+   "attr": "DX",
+   "diff": "A",
+   "spec": ""
+  },
+  {
+   "name": "Detect Lies",
+   "attr": "Per",
+   "diff": "H",
+   "pts": 4
+  },
+  {
+   "name": "Diplomacy",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "H",
+   "spec": ""
+  },
+  {
+   "name": "Driving",
+   "attr": "DX",
+   "diff": "A",
+   "pts": 8,
+   "spec": "Repulsorlift"
+  },
+  {
+   "name": "Droid Mechanic",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "A",
+   "spec": "Astromech"
+  },
+  {
+   "name": "Economics",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "H",
+   "spec": ""
+  },
+  {
+   "name": "Electrician",
+   "attr": "IQ",
+   "diff": "A",
+   "pts": 1,
+   "spec": ""
+  },
+  {
+   "name": "Electronics Repair",
+   "attr": "IQ",
+   "diff": "A",
+   "pts": 1,
+   "spec": "Computers"
+  },
+  {
+   "name": "Engineer",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "H",
+   "spec": "Electronics"
+  },
+  {
+   "name": "Escape",
+   "attr": "DX",
+   "diff": "H",
+   "pts": 16
+  },
+  {
+   "name": "Explosives",
+   "attr": "IQ",
+   "diff": "A",
+   "pts": 8,
+   "spec": "Demolition"
+  },
+  {
+   "name": "Fast-Draw",
+   "attr": "DX",
+   "diff": "E",
+   "pts": 20,
+   "spec": "Lightsaber"
+  },
+  {
+   "name": "Fast-Talk",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "A",
+   "spec": ""
+  },
+  {
+   "name": "Fast-Talk",
+   "attr": "IQ",
+   "diff": "A",
+   "pts": 1
+  },
+  {
+   "name": "Finance",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "H",
+   "spec": ""
+  },
+  {
+   "name": "First Aid",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "E",
+   "spec": ""
+  },
+  {
+   "name": "Forgery",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "H",
+   "spec": ""
+  },
+  {
+   "name": "Gambling",
+   "attr": "IQ",
+   "diff": "A",
+   "pts": 4
+  },
+  {
+   "name": "Gesture",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "E",
+   "spec": ""
+  },
+  {
+   "name": "Hazardous Materials",
+   "attr": "IQ",
+   "diff": "A",
+   "pts": 1,
+   "spec": "Chemical"
+  },
+  {
+   "name": "Heraldry",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "A",
+   "spec": ""
+  },
+  {
+   "name": "History",
+   "attr": "IQ",
+   "diff": "H",
+   "pts": 1,
+   "spec": "Krath / war-droids, the Jedi "
+  },
+  {
+   "name": "Holdout",
+   "attr": "IQ",
+   "diff": "A",
+   "pts": 1
+  },
+  {
+   "name": "Intelligence Analysis",
+   "attr": "IQ",
+   "diff": "H",
+   "pts": 2
+  },
+  {
+   "name": "Intimidation",
+   "attr": "Will",
+   "diff": "A",
+   "pts": 1
+  },
+  {
+   "name": "Leadership",
+   "attr": "IQ",
+   "diff": "A",
+   "pts": 1
+  },
+  {
+   "name": "Lightsaber",
+   "attr": "DX",
+   "diff": "A",
+   "pts": 28,
+   "bonus": 20
+  },
+  {
+   "name": "Linguistics",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "H",
+   "spec": ""
+  },
+  {
+   "name": "Lip Reading",
+   "attr": "Per",
+   "diff": "A",
+   "pts": 1
+  },
+  {
+   "name": "Lockpicking",
+   "attr": "IQ",
+   "diff": "A",
+   "pts": 1
+  },
+  {
+   "name": "Machinist",
+   "attr": "IQ",
+   "diff": "A",
+   "pts": 2,
+   "spec": "Lightsaber"
+  },
+  {
+   "name": "Market Analysis",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "H",
+   "spec": ""
+  },
+  {
+   "name": "Meditation",
+   "attr": "Will",
+   "diff": "H",
+   "pts": 4
+  },
+  {
+   "name": "Merchant",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "A",
+   "spec": ""
+  },
+  {
+   "name": "Metallurgy",
+   "attr": "IQ",
+   "diff": "H",
+   "pts": 1,
+   "spec": "Holocrons"
+  },
+  {
+   "name": "Mind Block",
+   "attr": "Will",
+   "diff": "A",
+   "pts": 12
+  },
+  {
+   "name": "Navigation",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "A",
+   "spec": "Land"
+  },
+  {
+   "name": "Observation",
+   "pts": 1,
+   "attr": "Per",
+   "diff": "A",
+   "spec": ""
+  },
+  {
+   "name": "Observation",
+   "attr": "Per",
+   "diff": "A",
+   "pts": 1
+  },
+  {
+   "name": "Persuade",
+   "attr": "Will",
+   "diff": "H",
+   "pts": 2
+  },
+  {
+   "name": "Pharmacy",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "H",
+   "spec": ""
+  },
+  {
+   "name": "Physician",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "H",
+   "spec": ""
+  },
+  {
+   "name": "Physiology",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "H",
+   "spec": ""
+  },
+  {
+   "name": "Piloting",
+   "attr": "DX",
+   "diff": "A",
+   "pts": 16,
+   "spec": "Starfighter"
+  },
+  {
+   "name": "Poisons",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "H",
+   "spec": "Respiratory"
+  },
+  {
+   "name": "Professional Skill",
+   "pts": 1,
+   "attr": "HT",
+   "diff": "A",
+   "spec": " Catwalking"
+  },
+  {
+   "name": "Propaganda",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "A",
+   "spec": ""
+  },
+  {
+   "name": "Research",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "A",
+   "spec": ""
+  },
+  {
+   "name": "Ritual Magic",
+   "attr": "IQ",
+   "diff": "VH",
+   "pts": 12,
+   "spec": "Inscribed"
+  },
+  {
+   "name": "Savoir-Faire",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "E",
+   "spec": ""
+  },
+  {
+   "name": "Scrounging",
+   "pts": 1,
+   "attr": "Per",
+   "diff": "E",
+   "spec": ""
+  },
+  {
+   "name": "Shadowing",
+   "attr": "IQ",
+   "diff": "A",
+   "pts": 2
+  },
+  {
+   "name": "Sith Alchemy",
+   "attr": "IQ",
+   "diff": "VH",
+   "pts": 2
+  },
+  {
+   "name": "Smith",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "A",
+   "spec": "Lightsaber Components"
+  },
+  {
+   "name": "Smith",
+   "attr": "IQ",
+   "diff": "A",
+   "pts": 1,
+   "spec": "Lightsaber Components"
+  },
+  {
+   "name": "Smuggling",
+   "attr": "IQ",
+   "diff": "A",
+   "pts": 2
+  },
+  {
+   "name": "Spacer",
+   "attr": "IQ",
+   "diff": "E",
+   "pts": 1
+  },
+  {
+   "name": "Stealth",
+   "attr": "DX",
+   "diff": "A",
+   "pts": 16
+  },
+  {
+   "name": "Strategy",
+   "attr": "IQ",
+   "diff": "H",
+   "pts": 1
+  },
+  {
+   "name": "Streetwise",
+   "pts": 1,
+   "attr": "IQ",
+   "diff": "A",
+   "spec": ""
+  },
+  {
+   "name": "Submersible Piloting",
+   "attr": "DX",
+   "diff": "A",
+   "pts": 2
+  },
+  {
+   "name": "Suggest",
+   "attr": "Will",
+   "diff": "H",
+   "pts": 1
+  },
+  {
+   "name": "Tactics",
+   "attr": "IQ",
+   "diff": "H",
+   "pts": 1
+  },
+  {
+   "name": "Teaching",
+   "attr": "IQ",
+   "diff": "A",
+   "pts": 4
+  },
+  {
+   "name": "Thrown Weapon",
+   "attr": "DX",
+   "diff": "E",
+   "pts": 56,
+   "spec": "Pike"
+  },
+  {
+   "name": "Tracking",
+   "attr": "Per",
+   "diff": "A",
+   "pts": 1
+  },
+  {
+   "name": "Traps",
+   "attr": "IQ",
+   "diff": "A",
+   "pts": 4
+  },
+  {
+   "name": "Tutaminis (Energy Absorption)",
+   "pts": 16,
+   "attr": "Force",
+   "diff": "VH",
+   "spec": ""
+  },
+  {
+   "name": "Watercraft Crew",
+   "attr": "IQ",
+   "diff": "E",
+   "pts": 1
+  }
+ ],
+ "statusLevel": 0,
+ "shields": [
+  {
+   "name": "SoroSuub corporate guard shield"
+  }
+ ],
+ "trainRate": 200,
+ "manualInv": [],
+ "react": "",
+ "name": "Chatni",
+ "inventory": [],
+ "techniques": [
+  {
+   "name": "Saber Throw",
+   "active": false
+  },
+  {
+   "name": "Trakata",
+   "active": false
+  },
+  {
+   "name": "Bolt Deflection",
+   "active": false
+  }
+ ],
+ "homeworld": "Dathomir",
+ "wealthLevel": "Average",
+ "combat": {
+  "hp": null,
+  "fp": null,
+  "statuses": [],
+  "concentrations": [],
+  "charges": [],
+  "turn": 0,
+  "log": [],
+  "wounds": {
+   "Skull": 0,
+   "Face": 0,
+   "Neck": 0,
+   "Torso": 0,
+   "Vitals": 0,
+   "Groin": 0,
+   "Right Arm": 0,
+   "Left Arm": 0,
+   "Right Hand": 0,
+   "Left Hand": 0,
+   "Right Leg": 0,
+   "Left Leg": 0,
+   "Right Foot": 0,
+   "Left Foot": 0
+  },
+  "inits": []
+ },
+ "explosives": [
+  {
+   "name": "Thermal detonator",
+   "qty": 1
+  },
+  {
+   "name": "FEX-M3 nerve agent (dose)",
+   "qty": 1
+  },
+  {
+   "name": "Concussion grenade",
+   "qty": 1
+  },
+  {
+   "name": "Gas dispersal canister (wide-area)",
+   "qty": 1
+  },
+  {
+   "name": "Knockout gas canister (silent)",
+   "qty": 1
+  }
+ ],
+ "attr": {
+  "ST": 30,
+  "DX": 20,
+  "IQ": 180,
+  "HT": 60
+ },
+ "weight": "55",
+ "traits": [
+  {
+   "name": "Magery",
+   "type": "Advantage",
+   "levels": 4,
+   "varCost": 45
+  },
+  {
+   "name": "Combat Reflexes",
+   "type": "Advantage",
+   "levels": 1,
+   "varCost": 15
+  },
+  {
+   "name": "High Pain Threshold",
+   "type": "Advantage",
+   "levels": 1,
+   "varCost": 10
+  },
+  {
+   "name": "Very Fit",
+   "type": "Advantage",
+   "levels": 1,
+   "varCost": 15
+  },
+  {
+   "name": "Appearance (Handsome/Beautiful)",
+   "type": "Advantage",
+   "levels": 1,
+   "varCost": 12
+  },
+  {
+   "name": "Ambidexterity",
+   "type": "Advantage",
+   "levels": 1,
+   "varCost": 5
+  },
+  {
+   "name": "Favor Soc",
+   "type": "Advantage",
+   "levels": 1,
+   "varCost": 2
+  },
+  {
+   "name": "Less Sleep",
+   "type": "Advantage",
+   "levels": 2,
+   "varCost": 8
+  },
+  {
+   "name": "Weapon Master (Single Wpn)",
+   "type": "Advantage",
+   "levels": 1,
+   "varCost": 20
+  },
+  {
+   "name": "Empathy (Full)",
+   "type": "Advantage",
+   "levels": 1,
+   "varCost": 15
+  },
+  {
+   "name": "Compartmentalized Mind",
+   "type": "Advantage",
+   "levels": 1,
+   "varCost": 50
+  },
+  {
+   "name": "Extra Attack",
+   "type": "Advantage",
+   "levels": 1,
+   "varCost": 25
+  },
+  {
+   "name": "Social Stigma (subjugated)",
+   "type": "Disadvantage",
+   "levels": 1,
+   "varCost": -20
+  },
+  {
+   "name": "Curious",
+   "type": "Disadvantage",
+   "levels": 1,
+   "varCost": -5
+  },
+  {
+   "name": "Enemies",
+   "type": "Disadvantage",
+   "levels": 1,
+   "varCost": -15
+  },
+  {
+   "name": "Enemies",
+   "type": "Disadvantage",
+   "levels": 1,
+   "varCost": -10
+  },
+  {
+   "name": "Sense of Duty (small group)",
+   "type": "Disadvantage",
+   "levels": 1,
+   "varCost": -5
+  },
+  {
+   "name": "Code of Honor (high)",
+   "type": "Disadvantage",
+   "levels": 1,
+   "varCost": -20
+  }
+ ],
+ "bio": "She cute",
+ "trainHoursAvail": -2,
+ "layout": {},
+ "sec": {
+  "HP": 44,
+  "Will": 90,
+  "Per": 0,
+  "FP": 165,
+  "Speed": 0,
+  "Move": 0
+ },
+ "xpEarned": 231,
+ "builder": {
+  "ship": {
+   "parts": {},
+   "name": "My Custom Vessel",
+   "role": ""
+  },
+  "droid": {
+   "parts": {},
+   "name": "My Droid",
+   "deg": "5th"
+  }
+ },
+ "creditLog": [
+  {
+   "d": -45000,
+   "l": "rings for lover"
+  }
+ ],
+ "attrStudy": [
+  {
+   "attr": "FP",
+   "label": "FP (self-taught)",
+   "target": 71,
+   "req": 630,
+   "done": 0,
+   "hpm": 10,
+   "monumental": false,
+   "teacher": false,
+   "selfTeach": true,
+   "lastSync": "3 pt × 200 hr = 600 · FP 69+ × 0.7 · self-teach × 1.5 → 630",
+   "last": "✓ Raised FP to 71 (+3 pts). New target: 630 hrs.",
+   "lastKind": "crit"
+  },
+  {
+   "attr": "Will",
+   "label": "Will (self-taught)",
+   "target": 37,
+   "req": 1050,
+   "done": 384,
+   "hpm": 10,
+   "monumental": false,
+   "teacher": false,
+   "selfTeach": true,
+   "lastSync": "5 pt × 200 hr = 1000 · Will 35+ × 0.7 · self-teach × 1.5 → 1050",
+   "last": "✓ Success by 21 (5+5+6=16 vs 37) — 64 hrs (4 base + 6×10, cap 6).",
+   "lastKind": "ok"
+  }
+ ],
+ "cyber": [],
+ "languages2": [
+  {
+   "name": "basic",
+   "sp": 3,
+   "wr": 3
+  },
+  {
+   "name": "droid basic",
+   "sp": 3,
+   "wr": 3
+  },
+  {
+   "name": "huttese",
+   "sp": 1,
+   "wr": 1
+  },
+  {
+   "name": "Mando'ar",
+   "sp": 0,
+   "wr": 0
+  },
+  {
+   "name": "Esh'ka",
+   "sp": 3,
+   "wr": 3
+  },
+  {
+   "name": "Rakatan",
+   "sp": 1,
+   "wr": 2
+  }
+ ],
+ "age": "24",
+ "vehicles": [
+  {
+   "name": "X-70B Phantom-class prototype",
+   "cat": "Light Freighter",
+   "hullDR": 12,
+   "shieldDR": 425,
+   "shieldNow": 425,
+   "hpMax": 90,
+   "hpNow": 90,
+   "weapons": "2× quad laser turrets; sensor-stealth profile",
+   "crew": "2",
+   "fuel": "30/6",
+   "cost": "1,200,000",
+   "lc": "Res",
+   "notes": "Imperial recon prototype. Cloak + passive sensors — vanishes from scopes. (SWTOR Imperial Agent ship.)",
+   "parts": [
+    {
+     "cat": "Hull",
+     "name": "Hull plating",
+     "status": "ok",
+     "hpPct": 100
+    },
+    {
+     "cat": "Sublight",
+     "name": "Sublight engines",
+     "status": "ok",
+     "hpPct": 100
+    },
+    {
+     "cat": "Reactor",
+     "name": "Power plant",
+     "status": "ok",
+     "hpPct": 100
+    },
+    {
+     "cat": "Shields",
+     "name": "Shield generator",
+     "status": "ok",
+     "hpPct": 100
+    },
+    {
+     "cat": "Sensors",
+     "name": "Sensor array",
+     "status": "ok",
+     "hpPct": 100
+    },
+    {
+     "cat": "Targeting",
+     "name": "Targeting computer",
+     "status": "ok",
+     "hpPct": 100
+    },
+    {
+     "cat": "Life Support",
+     "name": "Life-support system",
+     "status": "ok",
+     "hpPct": 100
+    },
+    {
+     "cat": "Astrogation",
+     "name": "Navicomputer",
+     "status": "ok",
+     "hpPct": 100
+    },
+    {
+     "cat": "Hyperdrive",
+     "name": "Hyperdrive motivator",
+     "status": "ok",
+     "hpPct": 100
+    },
+    {
+     "cat": "Crew",
+     "name": "Crew quarters",
+     "status": "ok",
+     "hpPct": 100
+    },
+    {
+     "cat": "Cargo",
+     "name": "Cargo hold",
+     "status": "ok",
+     "hpPct": 100
+    },
+    {
+     "cat": "Weapon",
+     "name": "Defensive turret",
+     "status": "ok",
+     "hpPct": 100
+    }
+   ],
+   "rfNow": 30,
+   "hfNow": 6,
+   "mounts": [
+    {
+     "label": "Quad laser turrets",
+     "w": "Quad laser cannon",
+     "n": 2,
+     "shots": null,
+     "shotsNow": null
+    },
+    {
+     "label": "Sensor-stealth profile",
+     "w": "Point-defence laser",
+     "n": 1,
+     "shots": null,
+     "shotsNow": null
+    }
+   ],
+   "modules": []
+  }
+ ],
+ "gear": [
+  {
+   "name": "Stealth Field Generator",
+   "qty": 1
+  },
+  {
+   "name": "Standard med pack",
+   "qty": 1
+  },
+  {
+   "name": "Military med pack",
+   "qty": 1
+  },
+  {
+   "name": "Kolto patch",
+   "qty": 1
+  }
+ ],
+ "sm": 0,
+ "study": [],
+ "conditions": {},
+ "force": {
+  "primary": "Will",
+  "bonded": false,
+  "saberPoints": 0,
+  "powers": [
+   {
+    "name": "Phantom Stride",
+    "skill": "Force",
+    "fp": "2",
+    "tier": 1,
+    "pts": 5,
+    "book": "Inscribed Voice",
+    "aff": "Will"
+   },
+   {
+    "name": "Spirit Mend",
+    "skill": "Force",
+    "fp": "2",
+    "tier": 1,
+    "pts": 5,
+    "book": "Inscribed Voice",
+    "aff": "Will"
+   },
+   {
+    "name": "Spirit Sight",
+    "skill": "Force",
+    "fp": "2",
+    "tier": 1,
+    "pts": 5,
+    "book": "Inscribed Voice",
+    "aff": "Will"
+   },
+   {
+    "name": "Hex of Agony",
+    "skill": "Force",
+    "fp": "1",
+    "tier": 2,
+    "pts": 10,
+    "book": "Inscribed Voice",
+    "aff": "Will"
+   },
+   {
+    "name": "Spirit Sever",
+    "skill": "Force",
+    "fp": "3",
+    "tier": 2,
+    "pts": 10,
+    "book": "Inscribed Voice",
+    "aff": "Will"
+   },
+   {
+    "name": "Weighing of Hearts",
+    "skill": "Force",
+    "fp": "4",
+    "tier": 2,
+    "pts": 10,
+    "book": "Inscribed Voice",
+    "aff": "Will"
+   },
+   {
+    "name": "Witch Smoke",
+    "skill": "Force",
+    "fp": "1",
+    "tier": 2,
+    "pts": 10,
+    "book": "Inscribed Voice",
+    "aff": "Will"
+   },
+   {
+    "name": "Corporeal Phase",
+    "skill": "Force",
+    "fp": "6",
+    "tier": 3,
+    "pts": 20,
+    "book": "Inscribed Voice",
+    "aff": "Will"
+   },
+   {
+    "name": "Force Sense (Grey)",
+    "skill": "Force",
+    "fp": "2",
+    "tier": 1,
+    "pts": 5,
+    "book": "Concordance",
+    "aff": "Will"
+   },
+   {
+    "name": "Force Veil",
+    "skill": "Force",
+    "fp": "2",
+    "tier": 2,
+    "pts": 10,
+    "book": "Concordance",
+    "aff": "Will"
+   },
+   {
+    "name": "Force Anchor",
+    "skill": "Force",
+    "fp": "8",
+    "tier": 3,
+    "pts": 20,
+    "book": "Concordance",
+    "aff": "Will"
+   },
+   {
+    "name": "Unmaking",
+    "skill": "Force",
+    "fp": "7",
+    "tier": 3,
+    "pts": 20,
+    "book": "Concordance",
+    "aff": "Will"
+   },
+   {
+    "name": "Force Equilibrium",
+    "skill": "Force",
+    "fp": "4",
+    "tier": 1,
+    "pts": 5,
+    "book": "Concordance",
+    "aff": "Will"
+   },
+   {
+    "name": "Force Rebuke",
+    "skill": "Force",
+    "fp": "6",
+    "tier": 2,
+    "pts": 10,
+    "book": "Concordance",
+    "aff": "Will"
+   },
+   {
+    "name": "Force Void",
+    "skill": "Force",
+    "fp": "9",
+    "tier": 4,
+    "pts": 35,
+    "book": "Concordance",
+    "aff": "Will"
+   },
+   {
+    "name": "Force Balance Walk",
+    "skill": "Force",
+    "fp": "1",
+    "tier": 1,
+    "pts": 5,
+    "book": "Common Force",
+    "aff": "DX"
+   },
+   {
+    "name": "Force Brace",
+    "skill": "Force",
+    "fp": "1",
+    "tier": 1,
+    "pts": 5,
+    "book": "Common Force",
+    "aff": "ST"
+   },
+   {
+    "name": "Force Echo",
+    "skill": "Force",
+    "fp": "2",
+    "tier": 1,
+    "pts": 5,
+    "book": "Common Force",
+    "aff": "Will"
+   },
+   {
+    "name": "Force Focus",
+    "skill": "Force",
+    "fp": "1",
+    "tier": 1,
+    "pts": 5,
+    "book": "Common Force",
+    "aff": "Will"
+   },
+   {
+    "name": "Force Leap",
+    "skill": "Force",
+    "fp": "1",
+    "tier": 1,
+    "pts": 5,
+    "book": "Common Force",
+    "aff": "DX"
+   },
+   {
+    "name": "Force Object Sense",
+    "skill": "Force",
+    "fp": "2",
+    "tier": 1,
+    "pts": 5,
+    "book": "Common Force",
+    "aff": "Will"
+   },
+   {
+    "name": "Force Pull",
+    "skill": "Force",
+    "fp": "1",
+    "tier": 1,
+    "pts": 5,
+    "book": "Common Force",
+    "aff": "ST"
+   },
+   {
+    "name": "Force Push",
+    "skill": "Force",
+    "fp": "1",
+    "tier": 1,
+    "pts": 5,
+    "book": "Common Force",
+    "aff": "ST"
+   },
+   {
+    "name": "Force Sense",
+    "skill": "Force",
+    "fp": "2",
+    "tier": 1,
+    "pts": 5,
+    "book": "Common Force",
+    "aff": "Will"
+   },
+   {
+    "name": "Force Stealth",
+    "skill": "Force",
+    "fp": "2",
+    "tier": 1,
+    "pts": 5,
+    "book": "Common Force",
+    "aff": "DX"
+   },
+   {
+    "name": "Veil of the Quiet Self",
+    "skill": "Force",
+    "fp": "2",
+    "tier": 1,
+    "pts": 5,
+    "book": "Common Force",
+    "aff": "Will"
+   },
+   {
+    "name": "Force Deflection",
+    "skill": "Force",
+    "fp": "2",
+    "tier": 2,
+    "pts": 10,
+    "book": "Common Force",
+    "aff": "DX"
+   },
+   {
+    "name": "Force Speed",
+    "skill": "Force",
+    "fp": "1",
+    "tier": 2,
+    "pts": 10,
+    "book": "Common Force",
+    "aff": "DX"
+   },
+   {
+    "name": "Force Step",
+    "skill": "Force",
+    "fp": "1",
+    "tier": 2,
+    "pts": 10,
+    "book": "Common Force",
+    "aff": "DX"
+   },
+   {
+    "name": "Force Wave",
+    "skill": "Force",
+    "fp": "5",
+    "tier": 3,
+    "pts": 20,
+    "book": "Common Force",
+    "aff": "ST"
+   },
+   {
+    "name": "Battle Meditation",
+    "skill": "Force",
+    "fp": "20",
+    "tier": 4,
+    "pts": 35,
+    "book": "Common Force",
+    "aff": "Will"
+   },
+   {
+    "name": "Force Guidance",
+    "skill": "Force",
+    "fp": "1",
+    "tier": 1,
+    "pts": 5,
+    "book": "Living Path",
+    "aff": "Will"
+   },
+   {
+    "name": "Force Soothing",
+    "skill": "Force",
+    "fp": "1",
+    "tier": 1,
+    "pts": 5,
+    "book": "Living Path",
+    "aff": "Will"
+   },
+   {
+    "name": "Revitalize",
+    "skill": "Force",
+    "fp": "10",
+    "tier": 3,
+    "pts": 20,
+    "book": "Living Path",
+    "aff": "Will"
+   },
+   {
+    "name": "Greater Rebuke",
+    "skill": "Force",
+    "fp": "6+½",
+    "tier": 4,
+    "pts": 35,
+    "book": "Concordance",
+    "aff": "Will"
+   },
+   {
+    "name": "Force Denial",
+    "skill": "Force",
+    "aff": "Will",
+    "fp": "3",
+    "tier": 1,
+    "pts": 5,
+    "book": "Concordance"
+   },
+   {
+    "name": "Cure Poison",
+    "skill": "Force",
+    "aff": "Will",
+    "fp": "4",
+    "tier": 1,
+    "pts": 5,
+    "book": "Living Path"
+   },
+   {
+    "name": "Crystal Phantom",
+    "skill": "Force",
+    "aff": "Will",
+    "fp": "10",
+    "tier": 4,
+    "pts": 35,
+    "book": "Inscribed Voice"
+   },
+   {
+    "name": "Crystal Tether",
+    "skill": "Force",
+    "aff": "Will",
+    "fp": "2",
+    "tier": 2,
+    "pts": 10,
+    "book": "Inscribed Voice"
+   },
+   {
+    "name": "Holocron Tracing",
+    "skill": "Force",
+    "aff": "Will",
+    "fp": "var",
+    "tier": 3,
+    "pts": 20,
+    "book": "Inscribed Voice"
+   },
+   {
+    "name": "Cure Disease",
+    "skill": "Force",
+    "aff": "Will",
+    "fp": "8",
+    "tier": 2,
+    "pts": 10,
+    "book": "Living Path"
+   },
+   {
+    "name": "Ionize",
+    "skill": "Force",
+    "aff": "Will",
+    "fp": "3",
+    "tier": 2,
+    "pts": 10,
+    "book": "Living Path"
+   },
+   {
+    "name": "Force Barrier",
+    "skill": "Force",
+    "aff": "Will",
+    "fp": "8",
+    "tier": 3,
+    "pts": 20,
+    "book": "Living Path"
+   }
+  ],
+  "books": {
+   "Concordance": true,
+   "Common Force": true,
+   "Inscribed Voice": true,
+   "Living Path": true,
+   "Bonded Blade": true
+  },
+  "bookTiers": {
+   "Concordance": 4,
+   "Inscribed Voice": 4
+  },
+  "tradition": "",
+  "activeBook": "Concordance",
+  "viewBook": "Common Force",
+  "training": {
+   "Concordance": {
+    "tier": 1,
+    "hours": 0,
+    "regimen": "Open Hours",
+    "mentor": "",
+    "log": []
+   },
+   "Common Force": {
+    "tier": 1,
+    "hours": 0,
+    "regimen": "Open Hours",
+    "mentor": "",
+    "log": []
+   },
+   "Inscribed Voice": {
+    "tier": 1,
+    "hours": 0,
+    "regimen": "Open Hours",
+    "mentor": "",
+    "log": []
+   },
+   "Living Path": {
+    "tier": 1,
+    "hours": 0,
+    "regimen": "Open Hours",
+    "mentor": "",
+    "log": []
+   },
+   "Bonded Blade": {
+    "tier": 1,
+    "hours": 0,
+    "regimen": "Open Hours",
+    "mentor": "",
+    "log": []
+   }
+  },
+  "holocrons": [],
+  "holoRes": {
+   "frag": 0,
+   "frame": 0,
+   "kyber": 0
+  }
+ },
+ "height": "1.65",
+ "armour": [
+  {
+   "name": "Jedi Shadow armourweave"
+  }
+ ],
+ "appearance": "Very Beautiful",
+ "gender": "Female",
+ "hand": "Ambidextrous",
+ "droids": [],
+ "gm": "some loser",
+ "concept": "Force-user · Sith alchemist / saber duelist",
+ "player": "Zoe",
+ "notes": "Imported from SW Zoe (1).xlsm — 250-pt start, 640 exp, ~910 spent.\n• Force Sword → equipped as the dual-mode Lightsaber (Ghost-fire crystal). Toggle 'Silent / invisible mode' on its Equipment card: silent = foe −3 to Parry at 6d+6; audible = full 8d+8 with sound/light. Lightsaber & Brawling skills carry +20 (Weapon Master + Force deflection) so they read 37 / 30 as on the original.\n• Heavy Cloak (defensive): Block DB 2, DR 1/5 — no catalogue equivalent on this sheet, tracked here.\n• Detect Lies gets +3 vs others via Empathy (Full).\n• Skill specialties (Sith, Pike, lightsaber-crafting, droids, etc.) preserved as notes on each skill.\n• 'Navigation' → Astrogation convention applied; 'Guns (blaster pistols)' → Blasters (Pistol).\nThanks Claude",
+ "rank": "",
+ "xpSkillTrained": 1,
+ "reputation": "",
+ "weapons": [
+  {
+   "name": "Standard lightsaber",
+   "mods": [
+    {
+     "label": "Ghost-fire crystal",
+     "preset": "Ghost-fire crystal",
+     "slotLock": "crystal",
+     "tier": "unq",
+     "note": "Pale spectral flame. Adapts to its bearer: counts as matched affinity for the wielder’s Force attribute. Toggle Unseen blade below.",
+     "wt": 0,
+     "cost": 0,
+     "mode": {
+      "label": "Unseen blade",
+      "fxDice": -2,
+      "note": "Blade and sound vanish utterly — invisible, silent. −2 damage dice; defenders Parry at −3 against what they cannot see or hear."
+     },
+     "prereq": "Adaptive & unique — it chooses wielders who are strange in the Force (GM)"
+    }
+   ]
+  },
+  {
+   "name": "Vibro-pike (thrown)",
+   "cls": "Melee"
+  }
+ ],
+ "species": "Dathomiri Witch (Nightsister)",
+ "_meta": {
+  "savedAt": "2026-06-21T02:50:52.294Z",
+  "savedBy": "Zoe"
+ },
+ "credits": 1655000,
+ "languages": "",
+ "trainHoursTotal": 9433,
+ "fright": "",
+ "forceStudy": [],
+ "forms": [
+  {
+   "name": "Form III: Soresu",
+   "tier": 1,
+   "active": false
+  },
+  {
+   "name": "Form II: Makashi",
+   "tier": 2,
+   "active": false
+  },
+  {
+   "name": "Form VI: Niman",
+   "tier": 3,
+   "active": true
+  },
+  {
+   "name": "Form IV: Ataru",
+   "tier": 1,
+   "active": false
+  }
+ ],
+ "ptTarget": 1441,
+ "tl": 10
+}
