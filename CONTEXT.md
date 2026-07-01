@@ -910,3 +910,26 @@ Specificity: `.body-Ncol .boxclass` (0,2,0) beats the allow rule `.body-Ncol p` 
 Render-verified on Combat Part I (body-3col): sections now fill and balance all three columns. check.py green.
 DO NOT narrow this back to `.lore`-only. Classification method: scan `<p class>` CSS for background/border-
 radius/full-or-vertical border/vertical padding = box (exclude); border-left/padding-left only = splittable.
+
+
+### 2026-07-01 (cont.) — Section numbering surfaced onto body headings (145 divisions)
+
+The compendium's decimal numbering already lived COMPLETE in the sidenav/TOC (toc__n labels); it just wasn't
+shown on the body headings (only the 15 primer headings were, via the earlier pilot). This pass surfaces it.
+
+KEY GOTCHA (cost a wrong coverage analysis first): part-openers have an OUTER id `sec-X` on the <section> AND
+an INNER id `sec-X-2` on the <h1 class="part-opener__title">. The sidenav links to DIFFERENT ones per book —
+droids/equipment link the INNER `-2` id, ranged/damage link the OUTER id. So a part's number =
+`seen[inner] or seen[outer]`. Matching only one id makes half the book look "unnumbered" when it isn't.
+
+Pass: stamped `<span class="secnum">N.k</span>` onto every part-opener title (number from inner-or-outer id)
+and every TOC-numbered section-head (number from own id), decimal numbers only (DEC=`^\d+[Bb]?\.\d`), idempotent
+(skips the already-stamped primers). 145 applied; secnum count 15 -> 160. `.secnum` uses var(--accent) so each
+book's number takes its theme colour. Part "PART I" kicker retained; section-heads read "N.k Title" like primers.
+check.py green; render-verified droids (8.0/8.1 + sequential), ranged (2.0/2.1, outer-id parts). Living Force
+(no section-heads) and Skills (1 section) untouched, as expected.
+
+STILL TODO (small): 4 parts genuinely lack a sidenav number -> body currently unnumbered:
+  ranged Combinations = 2.9, damage Environmental = 3.9, vehicles Starship Stat Blocks = 6.16, economy Trade banner.
+  A few symbol-marked secs (★ Starship Combat etc.) and the 7b/10b -> 7B/10B case normalisation.
+Then: engine-first primer swap, then §-ref conversion (295 "Doc N" refs -> §N.k).
