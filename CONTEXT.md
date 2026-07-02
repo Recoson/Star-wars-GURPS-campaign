@@ -358,6 +358,8 @@ grep -o '<span class="stat-k">Upkeep</span>' "Star Wars the Old Republic GURPS 4
 
 ## 11. IMMEDIATE NEXT STEP
 
+**CLAIMED (2026-07-02, in progress): ship-parts coverage audit + gap-fill.** Goal: every hull class (frame size) has >=5 fitting variants per core part category (+ weapons per size), all parts schema-valid, rules cross-checked vs compendium. Touches the SHIP_PARTS/SHIP_WEAPONS data lines in sheet.html (insertion-only appends). Do not edit those lines in parallel until this claim clears.
+
 **SHIP-BUILDER: power-model + Ebon Hawk fit-out — COMPLETE (2026-07-01).** Shipped & pushed (0064dda, ef62d95, 652e321, 3763b8f, 8fb877e, 563f483, 5313494):
 - **(A)** Every core slot shows a *named* part, never "stock": Hull defaults to the rated **native class frame** (`nativeHullFrame(v)` — display+mass only, NOT written to `v.core`, so zero HP/DR drift); Armour defaults to "bare hull"; others "class default". + a **"⚙ Fit out fully"** button (`fitOutVehicle`). Power line uses the real frame mass.
 - **(B)** Live power dynamics: per-weapon & per-module **on/off toggles** in the ⚙ Power&Mass breakdown (`toggleShipPart` — zeroes draw, keeps mass); reactor **Overdrive** (`toggleReactorMode`, gen ×1.25); over-budget modules install **powered-down** (`md.off=true`) rather than being rejected (mass-exceed still hard-rejects). *(Reactor 420→1200 SKU gap NOT filled — low value, overdrive covers scaling, blob-line risk. Skipped.)*
