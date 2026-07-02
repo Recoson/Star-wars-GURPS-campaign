@@ -1090,3 +1090,21 @@ chargen B.5a (Codes of Honour, a sub-section of B.5 Advantages) and combat 1.8½
   by anchoring on class="section-h2". .secnum renders fine on section-h2 (verified). Body now 9.0-9.18.
 
 Numbering-consistency pass DONE across all 13 book-sections.
+
+### 2026-07-02 — Full link-integrity review (index + navigation panels)
+
+Audited every hyperlink across the toolset. Compendium: 860 internal #-links against 1098 unique ids — all
+resolve; 465 sidenav/TOC entries semantically checked (label vs target-heading title) — all correct after
+accounting for deliberate shorthand (book-number labels, §1.8½) and Doc IV's nav-side flavour aliases
+("4.4 The Living Path" -> body h2 "The Light Side", "4.9 The Unchained Path" -> "The Dark Side"; Doc IV is
+sealed, links land correctly, body left untouched).
+
+ONE real defect found and fixed: the ranged (Doc II) nav carried a stray duplicate "2.9 Combinations
+Reference" <li> in BOTH the sidenav and the main TOC, mislinked to #sec-combinations-reference (combat's 1.9
+section) alongside the correct entry (#sec-combinationsreference-2). This was the 12-vs-11 nav/body count
+asymmetry noted in the numbering pass. Both stray <li>s removed; ranged nav now 2.0-2.10, one entry each.
+
+Other 11 HTML tools: zero broken internal anchors, zero broken relative file links (GitHub Pages
+case-sensitivity checked), zero broken cross-file links into the compendium. All duplicate-id flags
+(console x7, ambience, group-storage, compendium qf-empty) are JS template strings / innerHTML literals —
+only one instance ever in the DOM; not defects.
